@@ -128,9 +128,6 @@ if( CCACHE_PROGRAM )
    set_property( GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}" )
 endif()
 
-# Define option() prefix
-set( _OPT  "saucedacity_" )
-
 # Our very own project
 project( Saucedacity )
 
@@ -140,20 +137,20 @@ include( AudacityFunctions )
 set_from_env(AUDACITY_ARCH_LABEL) # e.g. x86_64
 
 # Allow user to globally set the library preference
-cmd_option( ${_OPT}conan_enabled
+cmd_option( conan_enabled
             "Use Conan package manager for 3rd party dependencies" 
             On
 )
 
 # Allow user to globally set the library preference
-cmd_option( ${_OPT}lib_preference
+cmd_option( lib_preference
             "Library preference [system (if available), local]"
             "local"
             STRINGS "system" "local"
 )
 
 # Special mode, that will force dependencies to the packages provided by system unless they were set to local explicitly.
-cmd_option( ${_OPT}obey_system_dependencies
+cmd_option( obey_system_dependencies
             "Use system packages to satisfy dependencies"
             Off
 )
@@ -514,20 +511,20 @@ execute_process( COMMAND
 # Code signing
 #
 
-cmd_option( ${_OPT}perform_codesign
+cmd_option( perform_codesign
             "Perform code signing during the install step. This only works on Windows and macOS. WARNING: this might not work."
             Off
 )
 
 cmake_dependent_option(
-   ${_OPT}perform_notarization
+   perform_notarization
    "Perform notarization during the install step. This only works on macOS. WARNING: this might not work."
    Off
-   "${_OPT}perform_codesign;APPLE"
+   "perform_codesign;APPLE"
    Off
 )
 
-if( ${_OPT}perform_codesign )
+if( perform_codesign )
    include( AudacityCodeSigning )
 endif()
 
@@ -535,7 +532,7 @@ endif()
 # Packaging
 #
 
-cmd_option( ${_OPT}package_manual
+cmd_option( package_manual
             "Package the manual along with the DMG and InnoSetup targets"
             Off
 )
