@@ -87,7 +87,7 @@ if (use_ffmpeg)
 
    set( LIBRARIES
       PRIVATE
-      wxBase
+      wxWidgets::wxWidgets
       lib-preferences
       lib-files
       lib-math
