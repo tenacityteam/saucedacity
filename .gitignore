@@ -212,3 +212,8 @@ win/xaudacity.ico
 scripts/*.dot
 scripts/*.svg
 .idea/
+
+# VSCode
+.vscode/
+
+vcpkg_installed
