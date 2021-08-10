@@ -217,3 +217,5 @@ scripts/*.svg
 # AppImage
 linuxdeploy/*
 appimagetool/*
+
+vcpkg_installed
