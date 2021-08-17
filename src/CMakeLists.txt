@@ -131,6 +131,8 @@ list( APPEND SOURCES
       ImageManipulation.h
       Journal.cpp
       Journal.h
+      JournalRegistry.cpp
+      JournalRegistry.h
       KeyboardCapture.cpp
       KeyboardCapture.h
       LabelDialog.cpp
