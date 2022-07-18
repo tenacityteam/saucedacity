@@ -55,7 +55,7 @@ jobs:
 
         - name: macOS_ARM
           os: macos-latest
-          arch: aarch64
+          arch: arm64
           generator: Xcode
 
           # Windows (x86) config
