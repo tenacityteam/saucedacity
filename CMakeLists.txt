@@ -88,7 +88,13 @@ if( APPLE )
    set( CMAKE_XCODE_GENERATE_SCHEME ON )
 
    # Define the OSX compatibility parameters
-   set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
+   # Note: if CMAKE_OSX_ARCHITECTURES was not overriden, e.g. with
+   # -DCMAKE_OSX_ARCHITECTURES=arm64, then it is set to x86_64 by
+   # default.
+   if ( NOT ${CMAKE_OSX_ARCHITECTURES} )
+      set( CMAKE_OSX_ARCHITECTURES x86_64 CACHE INTERNAL "" )
+   endif()
+
    set( CMAKE_OSX_DEPLOYMENT_TARGET ${MIN_MACOS_VERSION} CACHE INTERNAL "" )
    set( CMAKE_OSX_SYSROOT macosx CACHE INTERNAL "" )
    set( CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "" CACHE INTERNAL "" )
