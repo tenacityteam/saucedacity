@@ -50,7 +50,7 @@ jobs:
 
         - name: macOS_Intel
           os: macos-latest
-          arch: Intel # as reported by Apple menu > About This Mac
+          arch: x86_64 # the arch to use for CMAKE_OSX_ARCHITECTURES
           generator: Xcode
 
         - name: macOS_ARM
