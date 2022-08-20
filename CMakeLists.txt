@@ -682,7 +682,6 @@ if(NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|Windows")
 endif()
 
 if(NOT WIN32)
-  set(wxWidgets_CONFIG_OPTIONS --version=3.1)
   find_package(wxWidgets 3.1 REQUIRED COMPONENTS adv base core html qa xml net)
   include(${wxWidgets_USE_FILE})
   # The FindwxWidgets.cmake module does not create an IMPORT target, so hack one together.
