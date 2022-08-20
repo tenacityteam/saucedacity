@@ -108,14 +108,12 @@ list( APPEND SOURCES
       Benchmark.h
       CellularPanel.cpp
       CellularPanel.h
-      ClassicThemeAsCeeCode.h
       ClientData.h
       ClientDataHelpers.h
       Clipboard.cpp
       Clipboard.h
       CommonCommandFlags.cpp
       CommonCommandFlags.h
-      DarkThemeAsCeeCode.h
       DBConnection.cpp
       DBConnection.h
       DeviceChange.cpp
@@ -134,7 +132,6 @@ list( APPEND SOURCES
       FreqWindow.h
       HelpText.cpp
       HelpText.h
-      HiContrastThemeAsCeeCode.h
       HistoryWindow.cpp
       HistoryWindow.h
       HitTestResult.h
@@ -150,7 +147,6 @@ list( APPEND SOURCES
       LangChoice.h
       Legacy.cpp
       Legacy.h
-      AudacityThemeAsCeeCode.h
       LogWindow.cpp
       LogWindow.h
       Lyrics.cpp
@@ -246,7 +242,6 @@ list( APPEND SOURCES
       Tags.h
       Theme.cpp
       Theme.h
-      ThemeAsCeeCode.h
       TimeDialog.cpp
       TimeDialog.h
       TimeTrack.cpp
@@ -294,6 +289,14 @@ list( APPEND SOURCES
       WrappedType.h
       ZoomInfo.cpp
       ZoomInfo.h
+
+      # Themes
+      AudacityThemeAsCeeCode.h
+      AudacityClassicThemeAsCeeCode.h
+      DarkThemeAsCeeCode.h
+      HiContrastThemeAsCeeCode.h
+      LightThemeAsCeeCode.h
+      SaucedacityThemeAsCeeCode.h
 
       # Commands
 
