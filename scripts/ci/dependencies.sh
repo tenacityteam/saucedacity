@@ -10,6 +10,7 @@ if [[ "${OSTYPE}" == msys* ]]; then # Windows
         # Chocolatey packages
         choco_packages=(
             sccache
+	    ninja
         )
 
         choco install "${choco_packages[@]}" -y
