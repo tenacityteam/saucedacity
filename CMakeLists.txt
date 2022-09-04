@@ -486,6 +486,12 @@ endif()
 # Do this before consistency checks for added third-party libraries
 include( "src/Experimental.cmake" )
 
+## Packages ###################################################################
+
+find_package(Boost 1.70 REQUIRED)
+
+###############################################################################
+
 # Add our children
 add_subdirectory( "cmake-proxies" )
 

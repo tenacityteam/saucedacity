@@ -66,7 +66,7 @@ On Debian or Ubuntu, you can install everything required using the following com
 $ sudo apt-get update
 $ sudo apt-get install -y build-essential cmake git python3-pip
 $ sudo pip3 install conan
-$ sudo apt-get install libgtk2.0-dev libasound2-dev libavformat-dev libjack-jackd2-dev uuid-dev
+$ sudo apt-get install libgtk2.0-dev libasound2-dev libavformat-dev libjack-jackd2-dev libboost-dev uuid-dev
 ```
 
 # Building Saucedacity
