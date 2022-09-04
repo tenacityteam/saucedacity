@@ -605,6 +605,7 @@ find_package(SndFile REQUIRED)
 find_package(Soxr REQUIRED)
 find_package(SQLite3 REQUIRED)
 find_package(PortAudio REQUIRED)
+find_package(Boost 1.70 REQUIRED)
 
 find_package(PortMidi)
 find_package(PortSMF)
