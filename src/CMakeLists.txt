@@ -84,9 +84,9 @@ set( USE_VST ${use_vst} CACHE INTERNAL "" )
 #
 list( APPEND SOURCES
    PRIVATE
-      AColor.cpp
-      AColor.h
-      AColorResources.h
+      PaintManager.cpp
+      PaintManager.h
+      PaintManagerResources.h
       ActiveProjects.cpp
       ActiveProjects.h
       AboutDialog.cpp

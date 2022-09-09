@@ -71,7 +71,7 @@
 #include "../widgets/AudacityMessageBox.h"
 #include "../widgets/Warning.h"
 #include "../widgets/HelpSystem.h"
-#include "../AColor.h"
+#include "../PaintManager.h"
 #include "../widgets/HelpSystem.h"
 #include "../widgets/ProgressDialog.h"
 
@@ -1218,7 +1218,7 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    double totAngle = ( asin( mHeight / ( 2.0 * radius ) ) * 2.0 );
 
    //draw tracks
-   memDC.SetBrush( AColor::envelopeBrush );
+   memDC.SetBrush( PaintManager::envelopeBrush );
    angle = totAngle / ( mMixerSpec->GetNumTracks() + 1 );
 
    int max = 0, w, h;
@@ -1249,7 +1249,7 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    }
 
    //draw channels
-   memDC.SetBrush( AColor::playRegionBrush[ 0 ] );
+   memDC.SetBrush( PaintManager::playRegionBrush[ 0 ] );
    angle = ( asin( mHeight / ( 2.0 * radius ) ) * 2.0 ) /
       ( mMixerSpec->GetNumChannels() + 1 );
 
@@ -1280,7 +1280,7 @@ void ExportMixerPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    for( unsigned int i = 0; i < mMixerSpec->GetNumTracks(); i++ )
       for( unsigned int j = 0; j < mMixerSpec->GetNumChannels(); j++ )
          if( mMixerSpec->mMap[ i ][ j ] )
-            AColor::Line(memDC, mTrackRects[ i ].x + mBoxWidth,
+            PaintManager::Line(memDC, mTrackRects[ i ].x + mBoxWidth,
                   mTrackRects[ i ].y + mTrackHeight / 2, mChannelRects[ j ].x,
                   mChannelRects[ j ].y + mChannelHeight / 2 );
 

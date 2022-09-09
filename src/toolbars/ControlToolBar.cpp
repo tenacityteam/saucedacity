@@ -58,7 +58,7 @@
 #include <lib-files/FileNames.h>
 #include <lib-preferences/Prefs.h>
 
-#include "../AColor.h"
+#include "../PaintManager.h"
 #include "../theme/AllThemeResources.h"
 #include "../AudioIO.h"
 #include "../ImageManipulation.h"
@@ -473,7 +473,7 @@ void ControlToolBar::Repaint( wxDC *dc )
    wxPoint p = mSizer->GetPosition();
 
    wxRect bevelRect( p.x, p.y, s.GetWidth() - 1, s.GetHeight() - 1 );
-   AColor::Bevel( *dc, true, bevelRect );
+   PaintManager::Bevel( *dc, true, bevelRect );
 #endif
 }
 

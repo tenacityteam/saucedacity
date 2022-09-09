@@ -75,7 +75,7 @@ It handles initialization and termination by subclassing wxApp.
 #include <lib-preferences/FileConfig.h>
 
 #include "AboutDialog.h"
-#include "AColor.h"
+#include "PaintManager.h"
 #include "SaucedacityFileConfig.h"
 #include "AudioIO.h"
 #include "Benchmark.h"
@@ -1032,8 +1032,8 @@ bool SaucedacityApp::OnInit()
 
    theTheme.EnsureInitialised();
 
-   // AColor depends on theTheme.
-   AColor::Init();
+   // PaintManager depends on theTheme.
+   PaintManager::Init();
 
    // If this fails, we must exit the program.
    if (!InitTempDir()) {

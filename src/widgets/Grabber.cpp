@@ -29,7 +29,7 @@ around to NEW positions.
 #include <wx/intl.h>
 #include <wx/window.h>
 
-#include "../AColor.h"
+#include "../PaintManager.h"
 #include "../theme/AllThemeResources.h"
 #include "../theme/Theme.h"
 
@@ -126,7 +126,7 @@ void Grabber::DrawGrabber( wxDC & dc )
    r.SetPosition( wxPoint(0,0) );
    int y, left, right, top, bottom;
 
-   AColor::Medium(&dc, mOver );
+   PaintManager::Medium(&dc, mOver );
    dc.DrawRectangle(r);
 
    // HACK: We used a wider rectangle to also cover one pixel of space just to the right.
@@ -138,7 +138,7 @@ void Grabber::DrawGrabber( wxDC & dc )
    // Add a box
    r.width -= 1;
    r.height -= 1;
-   AColor::Bevel(dc, !mPressed, r);
+   PaintManager::Bevel(dc, !mPressed, r);
    r.width += 1;
    r.height += 1;
 
@@ -161,26 +161,26 @@ void Grabber::DrawGrabber( wxDC & dc )
 
    // Draw the raised bumps
    if (mPressed) {
-      AColor::Dark(&dc, false);
+      PaintManager::Dark(&dc, false);
    }
    else {
-      AColor::Light(&dc, false);
+      PaintManager::Light(&dc, false);
    }
 
    for (y = top; y < bottom; y += 4) {
-      AColor::Line(dc, left, y, right, y);
+      PaintManager::Line(dc, left, y, right, y);
    }
 
    // Draw the pushed bumps
    if (mPressed) {
-      AColor::Light(&dc, false);
+      PaintManager::Light(&dc, false);
    }
    else {
-      AColor::Dark(&dc, false);
+      PaintManager::Dark(&dc, false);
    }
 
    for (y = top + 1; y <= bottom; y += 4) {
-      AColor::Line(dc, left, y, right, y);
+      PaintManager::Line(dc, left, y, right, y);
    }
 }
 

@@ -34,7 +34,7 @@
 #include "GUISettings.h"
 
 #include "ThemePrefs.h"
-#include "../AColor.h"
+#include "../PaintManager.h"
 #include "../widgets/AudacityMessageBox.h"
 
 GUIPrefs::GUIPrefs(wxWindow * parent, wxWindowID winid)
