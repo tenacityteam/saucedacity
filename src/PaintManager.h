@@ -20,6 +20,7 @@
 
 class wxDC;
 class wxGraphicsContext;
+class wxGraphicsRenderer;
 class wxRect;
 
 class SAUCEDACITY_DLL_API PaintManager {
@@ -36,6 +37,11 @@ class SAUCEDACITY_DLL_API PaintManager {
 
    static void Init();
    static void ReInit();
+
+   // wxGraphicsContext and wxGraphicsRenderer related members
+   static wxGraphicsContext* CreateGC(wxDC& dc);
+
+   static wxGraphicsRenderer* GetRenderer();
 
    static void Arrow(wxDC & dc, wxCoord x, wxCoord y, int width, bool down = true);
 
@@ -132,6 +138,7 @@ class SAUCEDACITY_DLL_API PaintManager {
    static wxBrush uglyBrush;
 
  private:
+   static wxGraphicsRenderer* renderer;
    static wxPen sparePen;
    static wxBrush spareBrush;
    static bool inited;
