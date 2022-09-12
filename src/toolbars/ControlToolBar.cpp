@@ -466,14 +466,14 @@ void ControlToolBar::ReCreateButtons()
    RegenerateTooltips();
 }
 
-void ControlToolBar::Repaint( wxDC *dc )
+void ControlToolBar::Repaint( wxGraphicsContext* gc )
 {
 #ifndef USE_AQUA_THEME
    wxSize s = mSizer->GetSize();
    wxPoint p = mSizer->GetPosition();
 
    wxRect bevelRect( p.x, p.y, s.GetWidth() - 1, s.GetHeight() - 1 );
-   PaintManager::Bevel( *dc, true, bevelRect );
+   PaintManager::Bevel( gc, true, bevelRect );
 #endif
 }
 

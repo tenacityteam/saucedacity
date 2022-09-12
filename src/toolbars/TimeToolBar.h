@@ -29,7 +29,7 @@ public:
    static const TimeToolBar &Get(const SaucedacityProject &project);
    
    void Populate() override;
-   void Repaint(wxDC * WXUNUSED(dc)) override {};
+   void Repaint(wxGraphicsContext* /* unused */) override {};
    void EnableDisableButtons() override {};
    void UpdatePrefs() override;
    void RegenerateTooltips() override {};

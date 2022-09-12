@@ -55,7 +55,7 @@ class SAUCEDACITY_DLL_API SelectionBar final : public ToolBar {
    void Create(wxWindow *parent) override;
 
    void Populate() override;
-   void Repaint(wxDC * WXUNUSED(dc)) override {};
+   void Repaint(wxGraphicsContext* /* unused */) override {};
    void EnableDisableButtons() override {};
    void UpdatePrefs() override;
 
