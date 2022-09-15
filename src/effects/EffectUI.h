@@ -70,7 +70,7 @@ private:
    SaucedacityProject &mProject;
 
    wxStaticText *mLatency;
-   int mLastLatency;
+   std::chrono::milliseconds mLastLatency;
 
    wxBitmap mPowerPushed;
    wxBitmap mPowerRaised;

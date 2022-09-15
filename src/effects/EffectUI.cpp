@@ -40,9 +40,12 @@
 #include <wx/tglbtn.h>
 
 #include "../commands/CommandContext.h"
-#include "../Prefs.h"
 #include "../Project.h"
+#include "../shuttle/ShuttleGui.h"
 #include "../widgets/wxPanelWrapper.h"
+
+// Saucedacity libraries
+#include <lib-preferences/Prefs.h>
 
 #include "../../images/EffectRack/EffectRack.h"
 
@@ -95,7 +98,7 @@ EffectRack::EffectRack( SaucedacityProject &project )
 {
    mBypassing = false;
    mNumEffects = 0;
-   mLastLatency = 0;
+   mLastLatency = std::chrono::milliseconds();
    mTimer.SetOwner(this);
 
    mPowerPushed = CreateBitmap(power_on_16x16_xpm, false, false);
@@ -113,38 +116,41 @@ EffectRack::EffectRack( SaucedacityProject &project )
    mRemovePushed = CreateBitmap(remove_16x16_xpm, false, true);
    mRemoveRaised = CreateBitmap(remove_16x16_xpm, true, true);
 
-   {
-      auto bs = std::make_unique<wxBoxSizer>(wxVERTICAL);
-      mPanel = safenew wxPanelWrapper(this, wxID_ANY);
-      bs->Add(mPanel, 1, wxEXPAND);
-      SetSizer(bs.release());
-   }
+   mPanel = safenew wxPanelWrapper(this, wxID_ANY);
 
+   ShuttleGui S(this, eIsCreating);
+
+   S.StartVerticalLay();
    {
-      auto bs = std::make_unique<wxBoxSizer>(wxVERTICAL);
+      ShuttleGui PanelGui(mPanel, eIsCreating);
+
+      // Setup our panel
+      PanelGui.StartHorizontalLay();
       {
-         auto hs = std::make_unique<wxBoxSizer>(wxHORIZONTAL);
-         wxASSERT(mPanel); // To justify safenew
-         hs->Add(safenew wxButton(mPanel, wxID_APPLY, _("&Apply")), 0, wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-         hs->AddStretchSpacer();
+         PanelGui.AddWindow(safenew wxButton(mPanel, wxID_APPLY, _("&Apply")));
          mLatency = safenew wxStaticText(mPanel, wxID_ANY, _("Latency: 0"));
-         hs->Add(mLatency, 0, wxALIGN_CENTER);
-         hs->AddStretchSpacer();
-         hs->Add(safenew wxToggleButton(mPanel, wxID_CLEAR, _("&Bypass")), 0, wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-         bs->Add(hs.release(), 0, wxEXPAND);
+         PanelGui.AddWindow(mLatency);
+         PanelGui.AddWindow(safenew wxToggleButton(mPanel, wxID_CLEAR, _("&Bypass")));
       }
-      bs->Add(safenew wxStaticLine(mPanel, wxID_ANY), 0, wxEXPAND);
+      PanelGui.EndHorizontalLay();
 
+      PanelGui.StartVerticalLay();
       {
-         auto uMainSizer = std::make_unique<wxFlexGridSizer>(7);
-         uMainSizer->AddGrowableCol(6);
-         uMainSizer->SetHGap(0);
-         uMainSizer->SetVGap(0);
-         bs->Add((mMainSizer = uMainSizer.release()), 1, wxEXPAND);
-      }
+         PanelGui.AddWindow(safenew wxStaticLine(mPanel, wxID_ANY));
 
-      mPanel->SetSizer(bs.release());
+         // Setup a flex grid sizer
+         {
+            auto uMainSizer = std::make_unique<wxFlexGridSizer>(7);
+            uMainSizer->AddGrowableCol(6);
+            uMainSizer->SetHGap(0);
+            uMainSizer->SetVGap(0);
+            PanelGui.GetSizer()->Add((mMainSizer = uMainSizer.release()), 1, wxEXPAND);
+         }
+      }
+      PanelGui.EndHorizontalLay();
    }
+   S.EndHorizontalLay();
+   S.AddWindow(mPanel);
 
    wxString oldPath = gPrefs->GetPath();
    gPrefs->SetPath(wxT("/EffectsRack"));
@@ -286,10 +292,10 @@ void EffectRack::OnClose(wxCloseEvent & evt)
 
 void EffectRack::OnTimer(wxTimerEvent & WXUNUSED(evt))
 {
-   int latency = RealtimeEffectManager::Get().GetRealtimeLatency();
+   auto latency = RealtimeEffectManager::Get().GetRealtimeLatency();
    if (latency != mLastLatency)
    {
-      mLatency->SetLabel(wxString::Format(_("Latency: %4d"), latency));
+      mLatency->SetLabel(wxString::Format(_("Latency: %4d"), latency.count()));
       mLatency->Refresh();
       mLastLatency = latency;
    }
