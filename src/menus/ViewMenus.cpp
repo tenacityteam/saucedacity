@@ -27,7 +27,7 @@
 #include "../tracks/ui/TrackView.h"
 
 #ifdef EXPERIMENTAL_EFFECTS_RACK
-#include "../effects/EffectUI.h"
+#include "../effects/EffectsRack.h"
 #endif
 
 #include <wx/app.h>
@@ -365,7 +365,7 @@ void OnShowNameOverlay(const CommandContext &context)
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 void OnShowEffectsRack(const CommandContext &context )
 {
-   auto &rack = EffectRack::Get( context.project );
+   auto &rack = EffectsRack::Get( context.project );
    rack.Show( !rack.IsShown() );
 }
 #endif
@@ -481,7 +481,7 @@ BaseItemSharedPtr ViewMenu()
          Command( wxT("ShowEffectsRack"), XXO("Show Effects Rack"),
             FN(OnShowEffectsRack), AlwaysEnabledFlag,
             Options{}.CheckTest( [](SaucedacityProject &project){
-               auto &rack = EffectRack::Get( project );
+               auto &rack = EffectsRack::Get( project );
                return rack.IsShown(); } ) )
    #endif
       )

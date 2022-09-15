@@ -408,6 +408,8 @@ list( APPEND SOURCES
       effects/Effect.h
       effects/EffectManager.cpp
       effects/EffectManager.h
+      effects/EffectsRack.cpp
+      effects/EffectsRack.h
       effects/EffectUI.cpp
       effects/EffectUI.h
       effects/Equalization.cpp
