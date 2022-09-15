@@ -146,7 +146,7 @@ set( EXPERIMENTAL_OPTIONS_LIST
    REALTIME_AUDACITY_EFFECTS
 
    # Define to include the effects rack (such as it is).
-   #EFFECTS_RACK
+   EFFECTS_RACK
 
    # Define to make the meters look like a row of LEDs
    #METER_LED_STYLE
