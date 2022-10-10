@@ -21,6 +21,8 @@
 #include <mutex>
 #include <wx/ustring.h>
 
+#include <boost/endian/conversion.hpp>
+
 // Saucedacity libraries
 #include <lib-xml/XMLStringWriter.h>
 
@@ -112,18 +114,7 @@ namespace {
 
    using LongLong = std::int64_t;
 
-   // Detect this computer's endianness
-   bool IsLittleEndian()
-   {
-      const std::uint32_t x = 1u;
-      return
-         static_cast<const unsigned char*>(static_cast<const void*>(&x))[0];
-      // We will assume the same for other widths!
-   }
-   // In C++20 this could be
-   // constexpr bool IsLittleEndian = (std::endian::native == std::endian::little);
-   // static_assert( IsLittleEndian || (std::endian::native == std::endian::big),
-   //    "Oh no!  I'm mixed-endian!" );
+   constexpr bool IsLittleEndian = (boost::endian::order::native == boost::endian::order::little) ? true : false;
 
    // Functions that can read and write native integer types to a canonicalized
    // little-endian file format.  (We don't bother to do the same for floating
@@ -166,26 +157,26 @@ namespace {
    }
 
    // Choose between implementations!
-   static const auto WriteUShort =   IsLittleEndian()
+   static const auto WriteUShort =   IsLittleEndian
       ? &WriteLittleEndian<UShort>   : &WriteBigEndian<UShort>;
-   static const auto WriteInt =      IsLittleEndian()
+   static const auto WriteInt =      IsLittleEndian
       ? &WriteLittleEndian<Int>      : &WriteBigEndian<Int>;
-   static const auto WriteLong =     IsLittleEndian()
+   static const auto WriteLong =     IsLittleEndian
       ? &WriteLittleEndian<Long>     : &WriteBigEndian<Long>;
-   static const auto WriteULong =    IsLittleEndian()
+   static const auto WriteULong =    IsLittleEndian
       ? &WriteLittleEndian<ULong>    : &WriteBigEndian<ULong>;
-   static const auto WriteLongLong = IsLittleEndian()
+   static const auto WriteLongLong = IsLittleEndian
       ? &WriteLittleEndian<LongLong> : &WriteBigEndian<LongLong>;
 
-   static const auto ReadUShort =   IsLittleEndian()
+   static const auto ReadUShort =   IsLittleEndian
       ? &ReadLittleEndian<UShort>   : &ReadBigEndian<UShort>;
-   static const auto ReadInt =      IsLittleEndian()
+   static const auto ReadInt =      IsLittleEndian
       ? &ReadLittleEndian<Int>      : &ReadBigEndian<Int>;
-   static const auto ReadLong =     IsLittleEndian()
+   static const auto ReadLong =     IsLittleEndian
       ? &ReadLittleEndian<Long>     : &ReadBigEndian<Long>;
-   static const auto ReadULong =    IsLittleEndian()
+   static const auto ReadULong =    IsLittleEndian
       ? &ReadLittleEndian<ULong>    : &ReadBigEndian<ULong>;
-   static const auto ReadLongLong = IsLittleEndian()
+   static const auto ReadLongLong = IsLittleEndian
       ? &ReadLittleEndian<LongLong> : &ReadBigEndian<LongLong>;
 
    // Functions to read and write certain lengths -- maybe we will change
