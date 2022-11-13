@@ -43,24 +43,24 @@
 
 #include "../../images/EffectsRack/EffectsRackImages.h"
 
-#define COL_POWER    0
-#define COL_EDITOR   1
-#define COL_UP       2
-#define COL_DOWN     3
-#define COL_FAV      4
-#define COL_REMOVE   5
-#define COL_NAME     6
-#define NUMCOLS      7
+constexpr int COL_POWER  = 0;
+constexpr int COL_EDITOR = 1;
+constexpr int COL_UP     = 2;
+constexpr int COL_DOWN   = 3;
+constexpr int COL_FAV    = 4;
+constexpr int COL_REMOVE = 5;
+constexpr int COL_NAME   = 6;
+constexpr int NUMCOLS    = 7;
 
-#define ID_BASE      20000
-#define ID_RANGE     100
-#define ID_POWER     (ID_BASE + (COL_POWER * ID_RANGE))
-#define ID_EDITOR    (ID_BASE + (COL_EDITOR * ID_RANGE))
-#define ID_UP        (ID_BASE + (COL_UP * ID_RANGE))
-#define ID_DOWN      (ID_BASE + (COL_DOWN * ID_RANGE))
-#define ID_FAV       (ID_BASE + (COL_FAV * ID_RANGE))
-#define ID_REMOVE    (ID_BASE + (COL_REMOVE * ID_RANGE))
-#define ID_NAME      (ID_BASE + (COL_NAME * ID_RANGE))
+constexpr int ID_BASE    = 20000;
+constexpr int ID_RANGE   = 100;
+constexpr int ID_POWER   = (ID_BASE + (COL_POWER * ID_RANGE));
+constexpr int ID_EDITOR  = (ID_BASE + (COL_EDITOR * ID_RANGE));
+constexpr int ID_UP      = (ID_BASE + (COL_UP * ID_RANGE));
+constexpr int ID_DOWN    = (ID_BASE + (COL_DOWN * ID_RANGE));
+constexpr int ID_FAV     = (ID_BASE + (COL_FAV * ID_RANGE));
+constexpr int ID_REMOVE  = (ID_BASE + (COL_REMOVE * ID_RANGE));
+constexpr int ID_NAME    = (ID_BASE + (COL_NAME * ID_RANGE));
 
 BEGIN_EVENT_TABLE(EffectsRack, wxFrame)
    EVT_CLOSE(EffectsRack::OnClose)
