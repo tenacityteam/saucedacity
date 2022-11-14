@@ -113,20 +113,27 @@ EffectsRack::EffectsRack( SaucedacityProject &project )
    mPanel = safenew wxPanelWrapper(this, wxID_ANY);
 
    ShuttleGui S(this, eIsCreating);
-
    S.StartVerticalLay();
    {
-      ShuttleGui PanelGui(mPanel, eIsCreating);
 
-      // Setup our panel
-      PanelGui.StartHorizontalLay();
+      // Setup the 'top' panel. This panel is used for the "Add Effect...",
+      // "Apply", and "Bypass" buttons
+      wxPanel* topPanel = safenew wxPanelWrapper(this, wxID_ANY);
+
+      ShuttleGui topPanelGui(topPanel, eIsCreating);
+      topPanelGui.StartHorizontalLay();
       {
-         PanelGui.AddWindow(safenew wxButton(mPanel, wxID_APPLY, _("&Apply")));
-         mLatency = safenew wxStaticText(mPanel, wxID_ANY, _("Latency: 0"));
-         PanelGui.AddWindow(mLatency);
-         PanelGui.AddWindow(safenew wxToggleButton(mPanel, wxID_CLEAR, _("&Bypass")));
+         topPanelGui.AddButton(XO("Apply"));
+         mLatency = topPanelGui.AddVariableText(XO("Latency: 0"));
+         topPanelGui.AddWindow(safenew wxToggleButton(topPanel, wxID_CLEAR, _("&Bypass")));
       }
-      PanelGui.EndHorizontalLay();
+      topPanelGui.EndHorizontalLay();
+
+      S.AddWindow(topPanel);
+
+
+      // Setup the other panel, which will list the effects in the effects rack.
+      ShuttleGui PanelGui(mPanel, eIsCreating);
 
       PanelGui.StartVerticalLay();
       {
