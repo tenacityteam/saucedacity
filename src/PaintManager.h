@@ -17,6 +17,8 @@
 #include <memory>
 #include <wx/brush.h> // member variable
 #include <wx/pen.h> // member variable
+#include <wx/window.h>
+#include <wx/graphics.h>
 
 class wxDC;
 class wxGraphicsContext;
