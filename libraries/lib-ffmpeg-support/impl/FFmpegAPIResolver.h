@@ -82,7 +82,7 @@ public:
 
    //! Compatible library versions to be sought at load time, ordered by
    //! decreasing preference (that is, newest version first)
-   std::vector<int> GetSuportedAVFormatVersions() const;
+   [[nodiscard]] std::vector<int> GetSuportedAVFormatVersions() const;
 
 private:
    std::map<int, AVCodecIDResolver> mAVCodecIDResolvers;

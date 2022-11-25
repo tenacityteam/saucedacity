@@ -91,12 +91,12 @@ void DelayL :: setDelay(StkFloat delay)
   omAlpha_ = (StkFloat) 1.0 - alpha_;
 }
 
-StkFloat DelayL :: getDelay(void) const
+StkFloat DelayL :: getDelay() const
 {
   return delay_;
 }
 
-StkFloat DelayL :: nextOut(void)
+StkFloat DelayL :: nextOut()
 {
   if ( doNextOut_ ) {
     // First 1/2 of interpolation

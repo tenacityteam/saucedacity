@@ -24,7 +24,7 @@ class Instrmnt : public Stk
   Instrmnt();
 
   //! Class destructor.
-  virtual ~Instrmnt();
+  ~Instrmnt() override;
 
   //! Start a note with the given frequency and amplitude.
   virtual void noteOn(StkFloat frequency, StkFloat amplitude) = 0;
@@ -45,7 +45,7 @@ class Instrmnt : public Stk
   StkFloat lastOutRight() const;
 
   //! Compute one sample and output.
-  StkFloat tick( void );
+  StkFloat tick( );
 
   //! Fill a channel of the StkFrames object with computed outputs.
   /*!
@@ -64,7 +64,7 @@ class Instrmnt : public Stk
   // This abstract function must be implemented in all subclasses.
   // It is used to get around a C++ problem with overloaded virtual
   // functions.
-  virtual StkFloat computeSample( void ) = 0;
+  virtual StkFloat computeSample( ) = 0;
 
   StkFloat lastOutput_;
 

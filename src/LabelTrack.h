@@ -64,7 +64,7 @@ public:
    /// and end of parent to be within a region that borders them (this makes
    /// it possible to DELETE capture all labels with a Select All).
    TimeRelations RegionRelation(double reg_t0, double reg_t1,
-                                const LabelTrack *parent = NULL) const;
+                                const LabelTrack *parent = nullptr) const;
 
 public:
    SelectedRegion selectedRegion;
@@ -90,7 +90,7 @@ class SAUCEDACITY_DLL_API LabelTrack final
    LabelTrack();
    LabelTrack(const LabelTrack &orig);
 
-   virtual ~ LabelTrack();
+   ~ LabelTrack() override;
 
    void SetLabel( size_t iLabel, const LabelStruct &newLabel );
 
@@ -196,7 +196,7 @@ struct LabelTrackEvent : TrackListEvent
    {}
 
    LabelTrackEvent( const LabelTrackEvent& ) = default;
-   wxEvent *Clone() const override {
+   [[nodiscard]] wxEvent *Clone() const override {
       // wxWidgets will own the event object
       return safenew LabelTrackEvent(*this); }
 

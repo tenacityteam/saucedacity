@@ -62,8 +62,8 @@ END_EVENT_TABLE()
 ExtImportPrefs::ExtImportPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint:  Title of dialog governing "Extended", or "advanced,"
  * audio file import options */
-:   PrefsPanel(parent, winid, XO("Extended Import")), RuleTable(NULL),
-    PluginList(NULL), mCreateTable (false), mDragFocus (NULL),
+:   PrefsPanel(parent, winid, XO("Extended Import")), RuleTable(nullptr),
+    PluginList(nullptr), mCreateTable (false), mDragFocus (nullptr),
     mFakeKeyEvent (false), mStopRecursiveSelection (false), last_selected (-1)
 {
    Populate();
@@ -120,7 +120,7 @@ void ExtImportPrefs::PopulateOrExchange(ShuttleGui & S)
       S.StartHorizontalLay (wxEXPAND, 1);
       {
          bool fillRuleTable = false;
-         if (RuleTable == NULL)
+         if (RuleTable == nullptr)
          {
             RuleTable = safenew Grid(S.GetParent(),EIPRuleTable);
 
@@ -259,7 +259,7 @@ void ExtImportPrefs::SwapPluginRows (int row1, int row2)
    ImportPlugin *ip1, *ip2;
 
    auto &items = Importer::Get().GetImportItems();
-   ExtImportItem *item = NULL;
+   ExtImportItem *item = nullptr;
    if( last_selected >= 0 )
       item = items[last_selected].get();
 
@@ -380,10 +380,10 @@ void ExtImportPrefs::OnPluginBeginDrag(wxListEvent& WXUNUSED(event))
    dragtext2->SetText(wxT(""));
    dragSource.SetData(*dragtext2);
    mDragFocus = PluginList;
-   if( mDragFocus == NULL )
+   if( mDragFocus == nullptr )
       return;
    wxDragResult result = dragSource.DoDragDrop(wxDrag_DefaultMove);
-   mDragFocus = NULL;
+   mDragFocus = nullptr;
    switch (result)
    {
       case wxDragCopy:
@@ -487,7 +487,7 @@ void ExtImportPrefs::DoOnRuleTableSelect (int toprow)
          PluginList->SetItemData (i, -1);
          shift = 1;
       }
-      if (item->filter_objects[i] != NULL)
+      if (item->filter_objects[i] != nullptr)
       {
          PluginList->InsertItem (i + shift,
                item->filter_objects[i]->GetPluginFormatDescription().Translation());
@@ -538,12 +538,12 @@ void ExtImportPrefs::OnRuleTableEdit (wxGridEvent& event)
       break;
    }
 
-   for (size_t i = 0; i < vals.size(); i++)
+   for (auto & val : vals)
    {
 
-      wxString trimmed = vals[i];
+      wxString trimmed = val;
       trimmed.Trim().Trim(false);
-      if (trimmed != vals[i])
+      if (trimmed != val)
       {
          if (!askedAboutSpaces)
          {
@@ -559,11 +559,11 @@ Audacity to trim spaces for you?"),
          }
          if (fixSpaces != wxYES)
          {
-            trimmed = vals[i];
+            trimmed = val;
          }
          else
          {
-            vals[i] = trimmed;
+            val = trimmed;
          }
       }
       switch (col)
@@ -594,7 +594,7 @@ Audacity to trim spaces for you?"),
 void ExtImportPrefs::AddItemToTable (int index, const ExtImportItem *item)
 {
    wxString extensions, mime_types;
-   if (item->extensions.size() > 0)
+   if (!item->extensions.empty())
    {
       extensions.Append (item->extensions[0]);
       for (unsigned int i = 1; i < item->extensions.size(); i++)
@@ -603,7 +603,7 @@ void ExtImportPrefs::AddItemToTable (int index, const ExtImportItem *item)
          extensions.Append (item->extensions[i]);
       }
    }
-   if (item->mime_types.size() > 0)
+   if (!item->mime_types.empty())
    {
       mime_types.Append (item->mime_types[0]);
       for (unsigned int i = 1; i < item->mime_types.size(); i++)
@@ -706,7 +706,7 @@ void ExtImportPrefs::OnRuleTableCellClick (wxGridEvent& event)
    dragSource.SetData(*dragtext1);
    mDragFocus = RuleTable;
    wxDragResult result = dragSource.DoDragDrop(wxDrag_DefaultMove);
-   mDragFocus = NULL;
+   mDragFocus = nullptr;
    switch (result)
    {
       case wxDragCopy: /* copy the data */
@@ -723,7 +723,7 @@ void ExtImportPrefs::OnRuleTableCellClick (wxGridEvent& event)
 ExtImportPrefsDropTarget::ExtImportPrefsDropTarget(wxDataObject *dataObject)
    : wxDropTarget(dataObject)
 {
-   mPrefs = NULL;
+   mPrefs = nullptr;
 }
 
 ExtImportPrefsDropTarget::~ExtImportPrefsDropTarget ()
@@ -766,7 +766,7 @@ long wxCustomFindItem(wxListCtrl *list, int x, int y)
 
 bool ExtImportPrefsDropTarget::OnDrop(wxCoord x, wxCoord y)
 {
-   if (mPrefs == NULL)
+   if (mPrefs == nullptr)
       return false;
    wxListCtrl *PluginList = mPrefs->GetPluginList();
    Grid *RuleTable = mPrefs->GetRuleTable();
@@ -782,7 +782,7 @@ bool ExtImportPrefsDropTarget::OnDrop(wxCoord x, wxCoord y)
       long item = wxCustomFindItem (PluginList, x, y);
 #else
       int flags = 0;
-      long item = PluginList->HitTest (wxPoint (x, y), flags, NULL);
+      long item = PluginList->HitTest (wxPoint (x, y), flags, nullptr);
 #endif
       if (item < 0)
          return false;
@@ -800,7 +800,7 @@ wxDragResult ExtImportPrefsDropTarget::OnEnter(wxCoord x, wxCoord y,
 wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
       wxDragResult WXUNUSED(def))
 {
-   if (mPrefs == NULL)
+   if (mPrefs == nullptr)
       return wxDragNone;
    wxListCtrl *PluginList = mPrefs->GetPluginList();
    Grid *RuleTable = mPrefs->GetRuleTable();
@@ -826,7 +826,7 @@ wxDragResult ExtImportPrefsDropTarget::OnDragOver(wxCoord x, wxCoord y,
       long item = wxCustomFindItem (PluginList, x, y);
 #else
       int flags = 0;
-      long item = PluginList->HitTest (wxPoint (x, y), flags, NULL);
+      long item = PluginList->HitTest (wxPoint (x, y), flags, nullptr);
 #endif
       if (item < 0)
          return wxDragNone;

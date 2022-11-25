@@ -31,7 +31,7 @@ class SAUCEDACITY_DLL_API BuiltinCommandsModule final : public ModuleInterface
 {
 public:
    BuiltinCommandsModule();
-   virtual ~BuiltinCommandsModule();
+   ~BuiltinCommandsModule() override;
 
    using Factory = std::function< std::unique_ptr<AudacityCommand> () >;
 

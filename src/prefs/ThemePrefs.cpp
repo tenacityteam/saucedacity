@@ -71,7 +71,7 @@ ThemePrefs::ThemePrefs(wxWindow * parent, wxWindowID winid)
    Populate();
 }
 
-ThemePrefs::~ThemePrefs(void)
+ThemePrefs::~ThemePrefs()
 {
 }
 

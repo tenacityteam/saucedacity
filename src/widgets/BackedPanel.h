@@ -23,7 +23,7 @@ public:
                const wxSize & size,
                long style);
 
-   ~BackedPanel();
+   ~BackedPanel() override;
 
    wxDC &GetBackingDC();
    wxDC &GetBackingDCForRepaint();

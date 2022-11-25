@@ -21,7 +21,7 @@ class TrackSelectHandle final : public UIHandle
    TrackSelectHandle(const TrackSelectHandle&) = delete;
 
 public:
-   explicit TrackSelectHandle( const std::shared_ptr<Track> &pTrack );
+   explicit TrackSelectHandle( std::shared_ptr<Track> pTrack );
 
    TrackSelectHandle &operator=(const TrackSelectHandle&) = default;
 
@@ -29,7 +29,7 @@ public:
       (std::weak_ptr<TrackSelectHandle> &holder,
        const std::shared_ptr<Track> &pTrack);
 
-   virtual ~TrackSelectHandle();
+   ~TrackSelectHandle() override;
 
    Result Click
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject) override;

@@ -462,8 +462,7 @@ KeyView::SetView(ViewByType type)
       SelectNode(LineToIndex(0));
    }
 
-   return;
-}
+   }
 
 //
 // Sets the filter
@@ -663,7 +662,7 @@ KeyView::RefreshBindings(const CommandIDs & names,
    int cnt = (int) names.size();
    for (int i = 0; i < cnt; i++)
    {
-      auto name = names[i];
+      const auto& name = names[i];
       int x, y;
 
       // Remove any menu code from the category and prefix
@@ -1307,8 +1306,7 @@ KeyView::OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const
       }
    }
 
-   return;
-}
+   }
 
 //
 // Provide the height of the given line

@@ -55,6 +55,7 @@
 #include "../widgets/valnum.h"
 
 #include <algorithm>
+#include <utility>
 #include <vector>
 #include <cmath>
 
@@ -209,15 +210,15 @@ class EffectNoiseReduction::Settings
 {
 public:
    Settings();
-   ~Settings() {}
+   ~Settings() = default;
 
    bool PromptUser(EffectNoiseReduction *effect,
       wxWindow &parent, bool bHasProfile, bool bAllowTwiddleSettings);
    bool PrefsIO(bool read);
    bool Validate(EffectNoiseReduction *effect) const;
 
-   size_t WindowSize() const { return 1u << (3 + mWindowSizeChoice); }
-   unsigned StepsPerWindow() const { return 1u << (1 + mStepsPerWindowChoice); }
+   [[nodiscard]] size_t WindowSize() const { return 1u << (3 + mWindowSizeChoice); }
+   [[nodiscard]] unsigned StepsPerWindow() const { return 1u << (1 + mStepsPerWindowChoice); }
 
    bool      mDoProfile;
 
@@ -287,7 +288,7 @@ private:
    inline bool Classify(const Statistics &statistics, int band);
    void ReduceNoise(const Statistics &statistics, WaveTrack *outputTrack);
    void RotateHistoryWindows();
-   void FinishTrackStatistics(Statistics &statistics);
+   static void FinishTrackStatistics(Statistics &statistics);
    void FinishTrack(Statistics &statistics, WaveTrack *outputTrack);
 
 private:
@@ -335,7 +336,7 @@ private:
 
    struct Record
    {
-      Record(size_t spectrumSize)
+      explicit Record(size_t spectrumSize)
          : mSpectrums(spectrumSize)
          , mGains(spectrumSize)
          , mRealFFTs(spectrumSize - 1)
@@ -376,7 +377,7 @@ public:
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
-   const Settings &GetTempSettings() const
+   [[nodiscard]] const Settings &GetTempSettings() const
    { return mTempSettings; }
 
 private:
@@ -434,8 +435,7 @@ EffectNoiseReduction::EffectNoiseReduction()
 }
 
 EffectNoiseReduction::~EffectNoiseReduction()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -665,8 +665,7 @@ bool EffectNoiseReduction::Process()
 }
 
 EffectNoiseReduction::Worker::~Worker()
-{
-}
+= default;
 
 bool EffectNoiseReduction::Worker::Process
 (EffectNoiseReduction &effect, Statistics &statistics, WaveTrackFactory &factory,
@@ -968,7 +967,7 @@ void EffectNoiseReduction::Worker::ProcessSamples
 void EffectNoiseReduction::Worker::FillFirstHistoryWindow()
 {
    // Transform samples to frequency domain, windowed as needed
-   if (mInWindow.size() > 0)
+   if (!mInWindow.empty())
       for (size_t ii = 0; ii < mWindowSize; ++ii)
          mFFTBuffer[ii] = mInWaveBuffer[ii] * mInWindow[ii];
    else
@@ -1274,7 +1273,7 @@ void EffectNoiseReduction::Worker::ReduceNoise
       InverseRealFFTf(&mFFTBuffer[0], hFFT.get());
 
       // Overlap-add
-      if (mOutWindow.size() > 0) {
+      if (!mOutWindow.empty()) {
          float *pOut = &mOutOverlapBuffer[0];
          float *pWindow = &mOutWindow[0];
          int *pBitReversed = &hFFT->BitReversed[0];
@@ -1310,7 +1309,7 @@ bool EffectNoiseReduction::Worker::ProcessOne
 (EffectNoiseReduction &effect,  Statistics &statistics, WaveTrackFactory &factory,
  int count, WaveTrack * track, sampleCount start, sampleCount len)
 {
-   if (track == NULL)
+   if (track == nullptr)
       return false;
 
    StartNewTrack();
@@ -1424,21 +1423,21 @@ namespace {
 struct ControlInfo {
    typedef double (EffectNoiseReduction::Settings::*MemberPointer);
 
-   double Value(long sliderSetting) const
+   [[nodiscard]] double Value(long sliderSetting) const
    {
       return
          valueMin +
          (double(sliderSetting) / sliderMax) * (valueMax - valueMin);
    }
 
-   long SliderSetting(double value) const
+   [[nodiscard]] long SliderSetting(double value) const
    {
       return TrapLong(
          0.5 + sliderMax * (value - valueMin) / (valueMax - valueMin),
          0, sliderMax);
    }
 
-   wxString Text(double value) const
+   [[nodiscard]] wxString Text(double value) const
    {
       if (formatAsInt)
          return wxString::Format(format, (int)(value));
@@ -1476,9 +1475,9 @@ struct ControlInfo {
    const TranslatableString sliderName;
 
    ControlInfo(MemberPointer f, double vMin, double vMax, long sMax, const wxChar* fmt, bool fAsInt,
-      const TranslatableString &caption, const TranslatableString &name)
+      TranslatableString caption, TranslatableString name)
       : field(f), valueMin(vMin), valueMax(vMax), sliderMax(sMax), format(fmt), formatAsInt(fAsInt)
-      , textBoxCaption(caption), sliderName(name)
+      , textBoxCaption(std::move(caption)), sliderName(std::move(name))
    {
    }
 };
@@ -1571,19 +1570,19 @@ EffectNoiseReduction::Dialog::Dialog
    , mbHasProfile(bHasProfile)
    , mbAllowTwiddleSettings(bAllowTwiddleSettings)
    // NULL out the control members until the controls are created.
-   , mKeepSignal(NULL)
+   , mKeepSignal(nullptr)
 #ifdef ISOLATE_CHOICE
    , mKeepNoise(NULL)
 #endif
 #ifdef RESIDUE_CHOICE
-   , mResidue(NULL)
+   , mResidue(nullptr)
 #endif
 {
    EffectDialog::Init();
 
-   wxButton *const pButtonPreview =
+   auto *const pButtonPreview =
       (wxButton *)wxWindow::FindWindowById(ID_EFFECT_PREVIEW, this);
-   wxButton *const pButtonReduceNoise =
+   auto *const pButtonReduceNoise =
       (wxButton *)wxWindow::FindWindowById(wxID_OK, this);
 
    if (mbHasProfile || mbAllowTwiddleSettings) {
@@ -1852,10 +1851,10 @@ bool EffectNoiseReduction::Dialog::TransferDataToWindow()
       return false;
 
    for (int id = FIRST_SLIDER; id < END_OF_SLIDERS; id += 2) {
-      wxSlider* slider =
-         static_cast<wxSlider*>(wxWindow::FindWindowById(id, this));
-      wxTextCtrl* text =
-         static_cast<wxTextCtrl*>(wxWindow::FindWindowById(id + 1, this));
+      auto* slider =
+         dynamic_cast<wxSlider*>(wxWindow::FindWindowById(id, this));
+      auto* text =
+         dynamic_cast<wxTextCtrl*>(wxWindow::FindWindowById(id + 1, this));
       const ControlInfo &info = controlInfo()[(id - FIRST_SLIDER) / 2];
       const double field = mTempSettings.*(info.field);
       text->SetValue(info.Text(field));
@@ -1898,10 +1897,10 @@ void EffectNoiseReduction::Dialog::OnText(wxCommandEvent &event)
    int id = event.GetId();
    int idx = (id - FIRST_SLIDER - 1) / 2;
    const ControlInfo &info = controlInfo()[idx];
-   wxTextCtrl* text =
-      static_cast<wxTextCtrl*>(wxWindow::FindWindowById(id, this));
-   wxSlider* slider =
-      static_cast<wxSlider*>(wxWindow::FindWindowById(id - 1, this));
+   auto* text =
+      dynamic_cast<wxTextCtrl*>(wxWindow::FindWindowById(id, this));
+   auto* slider =
+      dynamic_cast<wxSlider*>(wxWindow::FindWindowById(id - 1, this));
    double &field = mTempSettings.*(info.field);
 
    text->GetValue().ToDouble(&field);
@@ -1913,10 +1912,10 @@ void EffectNoiseReduction::Dialog::OnSlider(wxCommandEvent &event)
    int id = event.GetId();
    int idx = (id - FIRST_SLIDER) / 2;
    const ControlInfo &info = controlInfo()[idx];
-   wxSlider* slider =
-      static_cast<wxSlider*>(wxWindow::FindWindowById(id, this));
-   wxTextCtrl* text =
-      static_cast<wxTextCtrl*>(wxWindow::FindWindowById(id + 1, this));
+   auto* slider =
+      dynamic_cast<wxSlider*>(wxWindow::FindWindowById(id, this));
+   auto* text =
+      dynamic_cast<wxTextCtrl*>(wxWindow::FindWindowById(id + 1, this));
    double &field = mTempSettings.*(info.field);
 
    field = info.Value(slider->GetValue());

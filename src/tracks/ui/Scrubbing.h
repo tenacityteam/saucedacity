@@ -51,7 +51,7 @@ public:
    Scrubber(SaucedacityProject *project);
    Scrubber( const Scrubber & ) = delete;
    Scrubber &operator=( const Scrubber & ) = delete;
-   ~Scrubber();
+   ~Scrubber() override;
 
    static bool ShouldScrubPinned();
    
@@ -108,7 +108,7 @@ public:
    void Cancel()
    { mCancelled = true; }
 
-   bool ShouldDrawScrubSpeed();
+   bool ShouldDrawScrubSpeed() const;
    double FindScrubSpeed(bool seeking, double time) const;
    double GetMaxScrubSpeed() const { return mOptions.maxSpeed; }
 

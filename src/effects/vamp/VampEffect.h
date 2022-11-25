@@ -38,7 +38,7 @@ public:
               const PluginPath & path,
               int output,
               bool hasParameters);
-   virtual ~VampEffect();
+   ~VampEffect() override;
 
    // ComponentInterface implementation
 
@@ -73,7 +73,7 @@ public:
 private:
    // VampEffect implementation
 
-   void AddFeatures(LabelTrack *track, Vamp::Plugin::FeatureSet & features);
+   void AddFeatures(LabelTrack *track, Vamp::Plugin::FeatureSet & features) const;
 
    void UpdateFromPlugin();
 

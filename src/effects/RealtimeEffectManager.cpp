@@ -24,7 +24,7 @@ class RealtimeEffectState
 public:
    explicit RealtimeEffectState( EffectClientInterface &effect );
 
-   EffectClientInterface &GetEffect() const { return mEffect; }
+   [[nodiscard]] EffectClientInterface &GetEffect() const { return mEffect; }
 
    bool RealtimeSuspend();
    bool RealtimeResume();
@@ -64,8 +64,7 @@ RealtimeEffectManager::RealtimeEffectManager()
 }
 
 RealtimeEffectManager::~RealtimeEffectManager()
-{
-}
+= default;
 
 #if defined(EXPERIMENTAL_EFFECTS_RACK)
 void RealtimeEffectManager::RealtimeSetEffects(const EffectArray & effects)
@@ -110,10 +109,10 @@ void RealtimeEffectManager::RealtimeSetEffects(const EffectArray & effects)
 
 bool RealtimeEffectManager::RealtimeIsActive()
 {
-   return mStates.size() != 0;
+   return !mStates.empty();
 }
 
-bool RealtimeEffectManager::RealtimeIsSuspended()
+bool RealtimeEffectManager::RealtimeIsSuspended() const
 {
    return mRealtimeSuspended;
 }

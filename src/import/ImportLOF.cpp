@@ -110,7 +110,7 @@ public:
    {
    }
 
-   ~LOFImportPlugin() { }
+   ~LOFImportPlugin() override { }
 
    wxString GetPluginStringID() override { return wxT("lof"); }
    TranslatableString GetPluginFormatDescription() override;
@@ -124,7 +124,7 @@ class LOFImportFileHandle final : public ImportFileHandle
 public:
    LOFImportFileHandle( SaucedacityProject *pProject,
       const FilePath & name, std::unique_ptr<wxTextFile> &&file);
-   ~LOFImportFileHandle();
+   ~LOFImportFileHandle() override;
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
@@ -451,7 +451,7 @@ void LOFImportFileHandle::lofOpenFiles(wxString* ln)
                // t is now the last track in the project, unless the import of
                // all tracks failed, in which case it will be null. In that
                // case we return because we cannot offset a non-existent track.
-               if (t == NULL)
+               if (t == nullptr)
                   return;
 #ifdef USE_MIDI
                if (targetfile.AfterLast(wxT('.')).IsSameAs(wxT("mid"), false) ||

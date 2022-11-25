@@ -46,6 +46,7 @@
 #include "widgets/HelpSystem.h"
 
 #include <limits>
+#include <utility>
 
 enum Column
 {
@@ -103,8 +104,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
                          int index,
                          ViewInfo &viewinfo,
                          double rate,
-                         const NumericFormatSymbol & format,
-                         const NumericFormatSymbol &freqFormat)
+                         NumericFormatSymbol  format,
+                         NumericFormatSymbol freqFormat)
 : wxDialogWrapper(parent,
            wxID_ANY,
            XO("Edit Labels"),
@@ -117,8 +118,8 @@ LabelDialog::LabelDialog(wxWindow *parent,
   , mIndex(index)
   , mViewInfo(&viewinfo),
   mRate(rate),
-  mFormat(format)
-  , mFreqFormat(freqFormat)
+  mFormat(std::move(format))
+  , mFreqFormat(std::move(freqFormat))
 {
    SetName();
    Populate();
@@ -156,9 +157,9 @@ void LabelDialog::PopulateLabels()
    // do it for us.  (The DecRef() that is needed after GetDefaultEditorForType
    // becomes the duty of the wxGridCellAttr objects after we set them in the grid.)
    mChoiceEditor = (ChoiceEditor *) mGrid->GetDefaultEditorForType(GRID_VALUE_CHOICE);
-   mTimeEditor = static_cast<NumericEditor*>
+   mTimeEditor = dynamic_cast<NumericEditor*>
       (mGrid->GetDefaultEditorForType(GRID_VALUE_TIME));
-   mFrequencyEditor = static_cast<NumericEditor *>
+   mFrequencyEditor = dynamic_cast<NumericEditor *>
       (mGrid->GetDefaultEditorForType(GRID_VALUE_FREQUENCY));
 
    // Initialize and set the track name column attributes
@@ -466,7 +467,7 @@ void LabelDialog::FindAllLabels()
 
    FindInitialRow();
 
-   if (mData.size() == 0) {
+   if (mData.empty()) {
       wxCommandEvent e;
       OnInsert(e);
    }
@@ -622,7 +623,7 @@ void LabelDialog::OnRemove(wxCommandEvent & WXUNUSED(event))
    mGrid->SetGridCursor(row, col);
 
    // Make sure focus isn't lost
-   if (mData.size() == 0 && wxWindow::FindFocus() == mGrid->GetGridWindow()) {
+   if (mData.empty() && wxWindow::FindFocus() == mGrid->GetGridWindow()) {
       wxWindow *ok = wxWindow::FindWindowById( wxID_OK, this);
       if (ok) {
          ok->SetFocus();
@@ -808,8 +809,6 @@ void LabelDialog::OnCellChange(wxGridEvent &event)
 
    // Done...no need for protection anymore
    guard = false;
-
-   return;
 }
 
 void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData *rd)
@@ -842,16 +841,12 @@ void LabelDialog::OnChangeTrack(wxGridEvent & WXUNUSED(event), int row, RowData 
 
    // Repopulate the grid
    TransferDataToWindow();
-
-   return;
 }
 
 void LabelDialog::OnChangeLabel(wxGridEvent & WXUNUSED(event), int row, RowData *rd)
 {
    // Remember the value...no need to repopulate
    rd->title = mGrid->GetCellValue(row, Col_Label);
-
-   return;
 }
 
 void LabelDialog::OnChangeStime(wxGridEvent & WXUNUSED(event), int row, RowData *rd)
@@ -862,8 +857,6 @@ void LabelDialog::OnChangeStime(wxGridEvent & WXUNUSED(event), int row, RowData 
    rd->selectedRegion.setT0(t, false);
    mGrid->SetCellValue(row, Col_Etime, wxString::Format(wxT("%g"),
                        rd->selectedRegion.t1()));
-
-   return;
 }
 
 void LabelDialog::OnChangeEtime(wxGridEvent & WXUNUSED(event), int row, RowData *rd)
@@ -874,8 +867,6 @@ void LabelDialog::OnChangeEtime(wxGridEvent & WXUNUSED(event), int row, RowData 
    rd->selectedRegion.setT1(t, false);
    mGrid->SetCellValue(row, Col_Stime, wxString::Format(wxT("%g"),
                        rd->selectedRegion.t0()));
-
-   return;
 }
 
 void LabelDialog::OnChangeLfreq(wxGridEvent & WXUNUSED(event), int row, RowData *rd)
@@ -886,8 +877,6 @@ void LabelDialog::OnChangeLfreq(wxGridEvent & WXUNUSED(event), int row, RowData 
    rd->selectedRegion.setF0(f, false);
    mGrid->SetCellValue(row, Col_Hfreq, wxString::Format(wxT("%g"),
                                                         rd->selectedRegion.f1()));
-
-   return;
 }
 
 void LabelDialog::OnChangeHfreq(wxGridEvent & WXUNUSED(event), int row, RowData *rd)
@@ -898,8 +887,6 @@ void LabelDialog::OnChangeHfreq(wxGridEvent & WXUNUSED(event), int row, RowData 
    rd->selectedRegion.setF1(f, false);
    mGrid->SetCellValue(row, Col_Lfreq, wxString::Format(wxT("%g"),
                                                         rd->selectedRegion.f0()));
-   
-   return;
 }
 
 void LabelDialog::ReadSize(){
@@ -935,8 +922,7 @@ void LabelDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       EndModal(wxID_OK);
    }
 
-   return;
-}
+   }
 
 void LabelDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 {
@@ -953,6 +939,4 @@ void LabelDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
    WriteSize();
    // Standard handling
    EndModal(wxID_CANCEL);
-
-   return;
 }

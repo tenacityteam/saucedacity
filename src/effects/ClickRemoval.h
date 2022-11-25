@@ -29,7 +29,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectClickRemoval();
-   virtual ~EffectClickRemoval();
+   ~EffectClickRemoval() override;
 
    // ComponentInterface implementation
 

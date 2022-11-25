@@ -37,7 +37,7 @@ class ToolsToolBar final : public ToolBar {
  public:
 
    ToolsToolBar( SaucedacityProject &project );
-   virtual ~ToolsToolBar();
+   ~ToolsToolBar() override;
 
    static ToolsToolBar &Get( SaucedacityProject &project );
    static const ToolsToolBar &Get( const SaucedacityProject &project );
@@ -49,9 +49,9 @@ class ToolsToolBar final : public ToolBar {
    void SetCurrentTool(int tool);
 
    //These interrogate the state of the buttons or controls.
-   int GetCurrentTool() const;
-   bool IsDown(int tool) const;
-   int GetDownTool();
+   [[nodiscard]] int GetCurrentTool() const;
+   [[nodiscard]] bool IsDown(int tool) const;
+   int GetDownTool() const;
 
    void Populate() override;
    void Repaint(wxDC * WXUNUSED(dc)) override {};

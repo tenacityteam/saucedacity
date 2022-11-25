@@ -26,7 +26,7 @@ struct SAUCEDACITY_DLL_API NormalizedKeyString : NormalizedKeyStringBase
    NormalizedKeyString() = default;
    explicit NormalizedKeyString( const wxString &key );
 
-   wxString Display(bool usesSpecialChars = false) const;
+   [[nodiscard]] wxString Display(bool usesSpecialChars = false) const;
 };
 
 namespace std

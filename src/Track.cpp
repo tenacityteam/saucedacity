@@ -129,7 +129,7 @@ Track::~Track()
 
 TrackNodePointer Track::GetNode() const
 {
-   wxASSERT(mList.lock() == NULL || this == mNode.first->get());
+   wxASSERT(mList.lock() == nullptr || this == mNode.first->get());
    return mNode;
 }
 
@@ -818,7 +818,7 @@ void TrackList::Clear(bool sendEvent)
    // the temporary ListOfTracks below.
    for ( auto pTrack: *this )
       pTrack->SetOwner( {}, {} );
-   for ( auto pTrack: mPendingUpdates )
+   for ( const auto& pTrack: mPendingUpdates )
       pTrack->SetOwner( {}, {} );
 
    ListOfTracks tempList;
@@ -891,12 +891,12 @@ Track *TrackList::GetPrev(Track * t, bool linked) const
 
 bool TrackList::CanMoveUp(Track * t) const
 {
-   return GetPrev(t, true) != NULL;
+   return GetPrev(t, true) != nullptr;
 }
 
 bool TrackList::CanMoveDown(Track * t) const
 {
-   return GetNext(t, true) != NULL;
+   return GetNext(t, true) != nullptr;
 }
 
 // This is used when you want to swap the channel group starting

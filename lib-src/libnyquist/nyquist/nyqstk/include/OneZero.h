@@ -31,10 +31,10 @@ class OneZero : protected Filter
   OneZero(StkFloat theZero);
 
   //! Class destructor.
-  ~OneZero();
+  ~OneZero() override;
 
   //! Clears the internal state of the filter.
-  void clear(void);
+  void clear();
 
   //! Set the b[0] coefficient value.
   void setB0(StkFloat b0);
@@ -57,16 +57,16 @@ class OneZero : protected Filter
     The gain is applied at the filter input and does not affect the
     coefficient values.  The default gain value is 1.0.
    */
-  void setGain(StkFloat gain);
+  void setGain(StkFloat gain) override;
 
   //! Return the current filter gain.
-  StkFloat getGain(void) const;
+  StkFloat getGain() const override;
 
   //! Return the last computed output value.
-  StkFloat lastOut(void) const;
+  StkFloat lastOut() const override;
 
   //! Input one sample to the filter and return one output.
-  StkFloat tick(StkFloat sample);
+  StkFloat tick(StkFloat sample) override;
 
   //! Take a channel of the StkFrames object as inputs to the filter and replace with corresponding outputs.
   /*!
@@ -75,7 +75,7 @@ class OneZero : protected Filter
     channel argument is equal to or greater than the number of
     channels in the StkFrames object.
   */
-  StkFrames& tick( StkFrames& frames, unsigned int channel = 0 );
+  StkFrames& tick( StkFrames& frames, unsigned int channel = 0 ) override;
 
 };
 

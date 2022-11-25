@@ -32,7 +32,7 @@ public:
    static UIHandlePtr HitTest
       (std::weak_ptr<ZoomHandle> &holder, const wxMouseState &state);
 
-   virtual ~ZoomHandle();
+   ~ZoomHandle() override;
 
    bool HandlesRightClick() override;
 
@@ -63,7 +63,7 @@ private:
       TrackPanelDrawingContext &,
       const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
 
-   bool IsDragZooming() const;
+   [[nodiscard]] bool IsDragZooming() const;
 
    int mZoomStart{}, mZoomEnd{};
    wxRect mRect{};

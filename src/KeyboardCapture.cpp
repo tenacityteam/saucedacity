@@ -191,7 +191,7 @@ public:
             return Event_Skip;
          }
 
-         wxKeyEvent key = static_cast<wxKeyEvent &>( event );
+         wxKeyEvent key = dynamic_cast<wxKeyEvent &>( event );
 
          if ( !( sPreFilter() && sPreFilter()( key ) ) )
             return Event_Skip;
@@ -311,13 +311,13 @@ private:
       if (keyDown)
       {
          wxString chars = GetUnicodeString(temp);
-         for (size_t i = 0, cnt = chars.length(); i < cnt; i++)
+         for (auto && i : chars)
          {
             temp = event;
             temp.SetEventType(wxEVT_CHAR);
             temp.WasProcessed();
             temp.StopPropagation();
-            temp.m_uniChar = chars[i];
+            temp.m_uniChar = i;
             wxEventProcessInHandlerOnly onlyChar(temp, handler);
             handler->ProcessEvent(temp);
          }
@@ -329,7 +329,7 @@ private:
    }
 
    // Convert the key down event to a unicode string.
-   wxString GetUnicodeString(const wxKeyEvent & event)
+   static wxString GetUnicodeString(const wxKeyEvent & event)
    {
       wxString chars;
 

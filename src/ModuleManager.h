@@ -45,10 +45,10 @@ public:
    void ShowLoadFailureError(const wxString &Error);
    bool Load(wxString &deferredErrorMessage);
    void Unload();
-   bool HasDispatch() { return mDispatch != NULL; };
+   bool HasDispatch() { return mDispatch != nullptr; };
    int Dispatch(ModuleDispatchTypes type);
    void * GetSymbol(const wxString &name);
-   const FilePath &GetName() const { return mName; }
+   [[nodiscard]] const FilePath &GetName() const { return mName; }
 
 private:
    const FilePath mName;
@@ -91,7 +91,7 @@ private:
       const FilePaths &files, FilePaths &decided, DelayedErrors &errors);
 
 public:
-   void Initialize();
+   static void Initialize();
    int Dispatch(ModuleDispatchTypes type);
 
    // PluginManager use
@@ -99,7 +99,7 @@ public:
    bool DiscoverProviders();
 
    // Supports range-for iteration
-   auto Providers() const
+   [[nodiscard]] auto Providers() const
    { return make_iterator_range(mDynModules.cbegin(), mDynModules.cend()); }
 
    bool RegisterEffectPlugin(const PluginID & provider, const PluginPath & path,
@@ -110,7 +110,7 @@ public:
    std::unique_ptr<ComponentInterface>
       CreateInstance(const PluginID & provider, const PluginPath & path);
 
-   bool IsProviderValid(const PluginID & provider, const PluginPath & path);
+   static bool IsProviderValid(const PluginID & provider, const PluginPath & path);
    bool IsPluginValid(const PluginID & provider, const PluginPath & path, bool bFast);
 
 private:

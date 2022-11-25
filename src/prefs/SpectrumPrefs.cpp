@@ -136,8 +136,8 @@ void SpectrumPrefs::PopulatePaddingChoices(size_t windowSize)
    // If it is not NULL, we rebuild the control by hand.
    // I don't yet know an easier way to do this with ShuttleGUI functions.
    // PRL
-   wxChoice *const pPaddingSizeControl =
-      static_cast<wxChoice*>(wxWindow::FindWindowById(ID_PADDING_SIZE, this));
+   auto *const pPaddingSizeControl =
+      dynamic_cast<wxChoice*>(wxWindow::FindWindowById(ID_PADDING_SIZE, this));
 
    if (pPaddingSizeControl) {
       mZeroPaddingChoice = pPaddingSizeControl->GetSelection();
@@ -174,7 +174,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
    // {
 
 
-   mDefaultsCheckbox = 0;
+   mDefaultsCheckbox = nullptr;
    if (mWt) {
       /* i18n-hint: use is a verb */
       mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(XXO("&Use Preferences"), mDefaulted);
@@ -534,8 +534,8 @@ void SpectrumPrefs::OnWindowSize(wxCommandEvent &evt)
 {
    // Restrict choice of zero padding, so that product of window
    // size and padding may not exceed the largest window size.
-   wxChoice *const pWindowSizeControl =
-      static_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
+   auto *const pWindowSizeControl =
+      dynamic_cast<wxChoice*>(wxWindow::FindWindowById(ID_WINDOW_SIZE, this));
    size_t windowSize = 1 <<
       (pWindowSizeControl->GetSelection() + SpectrogramSettings::LogMinWindowSize);
    PopulatePaddingChoices(windowSize);

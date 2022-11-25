@@ -35,7 +35,7 @@ public:
    explicit AVDictionaryWrapper(const FFmpegFunctions& ffmpeg, AVDictionary* rhs) noexcept;
 
    AVDictionary* GetWrappedValue() noexcept;
-   const AVDictionary* GetWrappedValue() const noexcept;
+   [[nodiscard]] const AVDictionary* GetWrappedValue() const noexcept;
 
    virtual ~AVDictionaryWrapper();
 
@@ -49,8 +49,8 @@ public:
       Set(key, std::to_string(value), flags);
    }
 
-   std::string_view Get(const std::string_view& key, const std::string_view& defaultValue, int flags = 0) const;
-   bool HasValue(const std::string_view& key, int flags = 0) const noexcept;
+   [[nodiscard]] std::string_view Get(const std::string_view& key, const std::string_view& defaultValue, int flags = 0) const;
+   [[nodiscard]] bool HasValue(const std::string_view& key, int flags = 0) const noexcept;
 
    AVDictionary* Release() noexcept;
 protected:

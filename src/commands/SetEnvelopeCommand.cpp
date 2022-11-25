@@ -36,8 +36,7 @@ namespace{ BuiltinCommandsModule::Registration< SetEnvelopeCommand > reg; }
 
 
 SetEnvelopeCommand::SetEnvelopeCommand()
-{
-}
+= default;
 
 
 bool SetEnvelopeCommand::DefineParams( ShuttleParams & S ){ 

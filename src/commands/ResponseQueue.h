@@ -67,7 +67,7 @@ class ResponseQueue {
       ResponseQueue();
       ~ResponseQueue();
 
-      void AddResponse(Response response);
+      void AddResponse(const Response& response);
       Response WaitAndGetResponse();
 };
 

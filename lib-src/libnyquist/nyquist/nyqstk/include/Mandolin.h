@@ -43,7 +43,7 @@ class Mandolin : public PluckTwo
   Mandolin(StkFloat lowestFrequency);
 
   //! Class destructor.
-  ~Mandolin();
+  ~Mandolin() override;
 
   //! Pluck the strings with the given amplitude (0.0 - 1.0) using the current frequency.
   void pluck(StkFloat amplitude);
@@ -52,17 +52,17 @@ class Mandolin : public PluckTwo
   void pluck(StkFloat amplitude,StkFloat position);
 
   //! Start a note with the given frequency and amplitude (0.0 - 1.0).
-  void noteOn(StkFloat frequency, StkFloat amplitude);
+  void noteOn(StkFloat frequency, StkFloat amplitude) override;
 
   //! Set the body size (a value of 1.0 produces the "default" size).
   void setBodySize(StkFloat size);
 
   //! Perform the control change specified by \e number and \e value (0.0 - 128.0).
-  void controlChange(int number, StkFloat value);
+  void controlChange(int number, StkFloat value) override;
 
   protected:
 
-  StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
   FileWvIn *soundfile_[12];
   int mic_;

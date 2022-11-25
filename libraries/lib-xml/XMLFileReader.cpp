@@ -20,17 +20,17 @@
 #include <wx/intl.h>
 #include <wx/log.h>
 
-#include <string.h>
+#include <cstring>
 
 #include "expat.h"
 
 XMLFileReader::XMLFileReader()
 {
-   mParser = XML_ParserCreate(NULL);
+   mParser = XML_ParserCreate(nullptr);
    XML_SetUserData(mParser, (void *)this);
    XML_SetElementHandler(mParser, startElement, endElement);
    XML_SetCharacterDataHandler(mParser, charHandler);
-   mBaseHandler = NULL;
+   mBaseHandler = nullptr;
    mHandler.reserve(128);
 }
 
@@ -189,7 +189,7 @@ const TranslatableString &XMLFileReader::GetLibraryErrorStr() const
 void XMLFileReader::startElement(void *userData, const char *name,
                                  const char **atts)
 {
-   XMLFileReader *This = (XMLFileReader *)userData;
+   auto *This = (XMLFileReader *)userData;
    Handlers &handlers = This->mHandler;
 
    if (handlers.empty()) {
@@ -199,7 +199,7 @@ void XMLFileReader::startElement(void *userData, const char *name,
       if (XMLTagHandler *const handler = handlers.back())
          handlers.push_back(handler->ReadXMLChild(name));
       else
-         handlers.push_back(NULL);
+         handlers.push_back(nullptr);
    }
 
    if (XMLTagHandler *& handler = handlers.back()) {
@@ -214,7 +214,7 @@ void XMLFileReader::startElement(void *userData, const char *name,
 // static
 void XMLFileReader::endElement(void *userData, const char *name)
 {
-   XMLFileReader *This = (XMLFileReader *)userData;
+   auto *This = (XMLFileReader *)userData;
    Handlers &handlers = This->mHandler;
 
    if (XMLTagHandler *const handler = handlers.back())
@@ -226,7 +226,7 @@ void XMLFileReader::endElement(void *userData, const char *name)
 // static
 void XMLFileReader::charHandler(void *userData, const char *s, int len)
 {
-   XMLFileReader *This = (XMLFileReader *)userData;
+   auto *This = (XMLFileReader *)userData;
    Handlers &handlers = This->mHandler;
 
    if (XMLTagHandler *const handler = handlers.back())

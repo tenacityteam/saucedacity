@@ -109,8 +109,7 @@ EffectChangeTempo::EffectChangeTempo()
 }
 
 EffectChangeTempo::~EffectChangeTempo()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -326,8 +325,6 @@ void EffectChangeTempo::PopulateOrExchange(ShuttleGui & S)
 
    }
    S.EndVerticalLay();
-
-   return;
 }
 
 bool EffectChangeTempo::TransferDataToWindow()

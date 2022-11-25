@@ -80,7 +80,7 @@ FormatClassifier::FormatClassT FormatClassifier::GetResultFormat()
    return mResultFormat;
 }
 
-int FormatClassifier::GetResultFormatLibSndfile()
+int FormatClassifier::GetResultFormatLibSndfile() const
 {
    int format = SF_FORMAT_RAW;
    
@@ -122,7 +122,7 @@ int FormatClassifier::GetResultFormatLibSndfile()
    return format;
 }
 
-unsigned FormatClassifier::GetResultChannels()
+unsigned FormatClassifier::GetResultChannels() const
 {
    return mResultChannels;
 }
@@ -266,7 +266,7 @@ void FormatClassifier::ConvertSamples(void* in, float* out, FormatClassT format)
    }
 }
 
-void FormatClassifier::Add(float* in1, float* in2, size_t len)
+void FormatClassifier::Add(float* in1, const float* in2, size_t len)
 {
    for (unsigned int n = 0; n < len; n++)
    {
@@ -291,7 +291,7 @@ void FormatClassifier::Div(float* in, float div, size_t len)
 }
 
 
-void FormatClassifier::Abs(float* in, float* out, size_t len)
+void FormatClassifier::Abs(const float* in, float* out, size_t len)
 {
    for (unsigned int n = 0; n < len; n++)
    {
@@ -306,7 +306,7 @@ void FormatClassifier::Abs(float* in, float* out, size_t len)
    }
 }
 
-float FormatClassifier::Mean(float* in, size_t len)
+float FormatClassifier::Mean(const float* in, size_t len)
 {
    float mean = 0.0f;
 
@@ -326,7 +326,7 @@ float FormatClassifier::Max(float* in, size_t len)
    return Max(in, len, &dummyidx);
 }
 
-float FormatClassifier::Max(float* in, size_t len, size_t* maxidx)
+float FormatClassifier::Max(const float* in, size_t len, size_t* maxidx)
 {
    float max = -FLT_MAX;
    *maxidx = 0;

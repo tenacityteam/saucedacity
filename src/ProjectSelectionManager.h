@@ -48,7 +48,7 @@ public:
    void AS_ModifySelection(double &start, double &end, bool done) override;
 
    // SpectralSelectionBarListener callback methods
-   double SSBL_GetRate() const override;
+   [[nodiscard]] double SSBL_GetRate() const override;
    const NumericFormatSymbol & SSBL_GetFrequencySelectionFormatName() override;
    void SSBL_SetFrequencySelectionFormatName(
       const NumericFormatSymbol & formatName) override;

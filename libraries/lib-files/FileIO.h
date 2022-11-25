@@ -33,7 +33,7 @@ class FILES_API FileIO
    // Calls Close()
    ~FileIO();
 
-   bool IsOpened();
+   bool IsOpened() const;
 
    bool Close();
 

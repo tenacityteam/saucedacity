@@ -36,26 +36,26 @@ class Sitar : public Instrmnt
   Sitar( StkFloat lowestFrequency = 20 );
 
   //! Class destructor.
-  ~Sitar();
+  ~Sitar() override;
 
   //! Reset and clear all internal state.
   void clear();
 
   //! Set instrument parameters for a particular frequency.
-  void setFrequency(StkFloat frequency);
+  void setFrequency(StkFloat frequency) override;
 
   //! Pluck the string with the given amplitude using the current frequency.
   void pluck(StkFloat amplitude);
 
   //! Start a note with the given frequency and amplitude.
-  void noteOn(StkFloat frequency, StkFloat amplitude);
+  void noteOn(StkFloat frequency, StkFloat amplitude) override;
 
   //! Stop a note with the given amplitude (speed of decay).
-  void noteOff(StkFloat amplitude);
+  void noteOff(StkFloat amplitude) override;
 
  protected:
 
-  StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
   DelayA  delayLine_;
   OneZero loopFilter_;

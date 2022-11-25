@@ -46,6 +46,7 @@ but little else.
 #define __AUDACITY_IMPORTER__
 
 #include <memory>
+#include <utility>
 
 // Saucedacity libraries
 #include <lib-math/SampleFormat.h>
@@ -151,7 +152,7 @@ public:
 
 protected:
    //! Build a wave track with appropriate format, which will not be narrower than the specified one
-   std::shared_ptr<WaveTrack> NewWaveTrack( WaveTrackFactory &trackFactory,
+   static std::shared_ptr<WaveTrack> NewWaveTrack( WaveTrackFactory &trackFactory,
       sampleFormat effectiveFormat, double rate);
 
    FilePath mFilename;
@@ -164,8 +165,8 @@ class UnusableImportPlugin
 {
 public:
    UnusableImportPlugin(
-      const TranslatableString &formatName, FileExtensions extensions):
-      mFormatName(formatName),
+      TranslatableString formatName, FileExtensions extensions):
+      mFormatName(std::move(formatName)),
       mExtensions( std::move( extensions ) )
    {
    }

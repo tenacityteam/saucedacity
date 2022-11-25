@@ -47,8 +47,7 @@ EffectSoundTouch::EffectSoundTouch()
 #endif
 
 EffectSoundTouch::~EffectSoundTouch()
-{
-}
+= default;
 
 bool EffectSoundTouch::ProcessLabelTrack(
    LabelTrack *lt, const TimeWarper &warper)
@@ -61,7 +60,7 @@ bool EffectSoundTouch::ProcessLabelTrack(
 }
 
 #ifdef USE_MIDI
-bool EffectSoundTouch::ProcessNoteTrack(NoteTrack *nt, const TimeWarper &warper)
+bool EffectSoundTouch::ProcessNoteTrack(NoteTrack *nt, const TimeWarper &warper) const
 {
    nt->WarpAndTransposeNotes(mCurT0, mCurT1, warper, mSemitones);
    return true;
@@ -413,14 +412,14 @@ void EffectSoundTouch::Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarpe
 
       if (st >= mCurT0 || et < mCurT1) {
          if (mCurT0 < st && clip == front) {
-            gaps.push_back(std::make_pair(mCurT0, st));
+            gaps.emplace_back(mCurT0, st);
          }
          else if (last < st && mCurT0 <= last ) {
-            gaps.push_back(std::make_pair(last, st));
+            gaps.emplace_back(last, st);
          }
 
          if (et < mCurT1 && clip == back) {
-            gaps.push_back(std::make_pair(et, mCurT1));
+            gaps.emplace_back(et, mCurT1);
          }
       }
       last = et;

@@ -37,14 +37,14 @@ public:
    CommonTrackPanelCell()
    {}
 
-   virtual ~CommonTrackPanelCell() = 0;
+   ~CommonTrackPanelCell() override = 0;
 
    // Default to the arrow cursor
    HitTestPreview DefaultPreview
       (const TrackPanelMouseState &, const SaucedacityProject *) override;
 
    std::shared_ptr<Track> FindTrack() { return DoFindTrack(); }
-   std::shared_ptr<const Track> FindTrack() const
+   [[nodiscard]] std::shared_ptr<const Track> FindTrack() const
       { return const_cast<CommonTrackPanelCell*>(this)->DoFindTrack(); }
 
    struct MenuItem {
@@ -100,7 +100,7 @@ class SAUCEDACITY_DLL_API CommonTrackCell /* not final */
 public:
    explicit CommonTrackCell( const std::shared_ptr<Track> &pTrack );
 
-  ~CommonTrackCell();
+  ~CommonTrackCell() override;
 
    // Copy state, for undo/redo purposes
    // The default does nothing

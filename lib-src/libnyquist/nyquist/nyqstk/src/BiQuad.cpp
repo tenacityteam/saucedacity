@@ -30,7 +30,7 @@ BiQuad :: ~BiQuad()
 {
 }
 
-void BiQuad :: clear(void)
+void BiQuad :: clear()
 {
   Filter::clear();
 }
@@ -92,12 +92,12 @@ void BiQuad :: setGain(StkFloat gain)
   Filter::setGain(gain);
 }
 
-StkFloat BiQuad :: getGain(void) const
+StkFloat BiQuad :: getGain() const
 {
   return Filter::getGain();
 }
 
-StkFloat BiQuad :: lastOut(void) const
+StkFloat BiQuad :: lastOut() const
 {
   return Filter::lastOut();
 }

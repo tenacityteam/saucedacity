@@ -56,7 +56,7 @@ enum {
 
 bool SelectHandle::IsClicked() const
 {
-   return mSelectionStateChanger.get() != NULL;
+   return mSelectionStateChanger != nullptr;
 }
 
 namespace
@@ -104,7 +104,7 @@ namespace
    template<typename T>
    inline void SetIfNotNull(T * pValue, const T Value)
    {
-      if (pValue == NULL)
+      if (pValue == nullptr)
          return;
       *pValue = Value;
    }
@@ -174,7 +174,7 @@ namespace
       (const ViewInfo &viewInfo,
        wxCoord xx, wxCoord yy, const TrackView *pTrackView, const wxRect &rect,
        bool mayDragWidth, bool onlyWithinSnapDistance,
-       double *pPinValue = NULL)
+       double *pPinValue = nullptr)
    {
       // Choose one of four boundaries to adjust, or the center frequency.
       // May choose frequencies only if in a spectrogram view and
@@ -208,8 +208,8 @@ namespace
          isSpectralSelectionView(pTrackView)) {
          // Spectral selection track is always wave
          auto pTrack = pTrackView->FindTrack();
-         const WaveTrack *const wt =
-           static_cast<const WaveTrack*>(pTrack.get());
+         const auto *const wt =
+           dynamic_cast<const WaveTrack*>(pTrack.get());
          const wxInt64 bottomSel = (f0 >= 0)
             ? FrequencyToPosition(wt, f0, rect.y, rect.height)
             : rect.y + rect.height;
@@ -648,13 +648,13 @@ UIHandle::Result SelectHandle::Click
             // Drag frequency only, not time:
             mSelStartValid = false;
             AdjustFreqSelection(
-               static_cast<WaveTrack*>(pTrack),
+               dynamic_cast<WaveTrack*>(pTrack),
                viewInfo, event.m_y, mRect.y, mRect.height);
             break;
          }
          case SBCenter:
          {
-            const auto wt = static_cast<const WaveTrack*>(pTrack);
+            const auto wt = dynamic_cast<const WaveTrack*>(pTrack);
             HandleCenterFrequencyClick(viewInfo, true, wt, value);
             break;
          }
@@ -699,7 +699,7 @@ UIHandle::Result SelectHandle::Click
             // Do not adjust time boundaries
             mSelStartValid = false;
             AdjustFreqSelection(
-               static_cast<WaveTrack*>(pTrack),
+               dynamic_cast<WaveTrack*>(pTrack),
                viewInfo, event.m_y, mRect.y, mRect.height);
             // For persistence of the selection change:
             ProjectHistory::Get( *pProject ).ModifyState(false);
@@ -746,7 +746,7 @@ UIHandle::Result SelectHandle::Click
                break;
             case SBCenter:
             {
-               const auto wt = static_cast<const WaveTrack*>(pTrack);
+               const auto wt = dynamic_cast<const WaveTrack*>(pTrack);
                HandleCenterFrequencyClick(viewInfo, false, wt, value);
                startNewSelection = false;
                break;
@@ -834,7 +834,7 @@ UIHandle::Result SelectHandle::Drag
 
    if (evt.pCell) {
       if ( auto clickedTrack =
-          static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack() ) {
+          dynamic_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack() ) {
          // Handle which tracks are selected
          Track *sTrack = pTrack.get();
          Track *eTrack = clickedTrack.get();
@@ -854,7 +854,7 @@ UIHandle::Result SelectHandle::Drag
    #endif
             if ( TrackList::Get( *pProject ).Lock(mFreqSelTrack) == pTrack )
                AdjustFreqSelection(
-                  static_cast<WaveTrack*>(pTrack.get()),
+                  dynamic_cast<WaveTrack*>(pTrack.get()),
                   viewInfo, y, mRect.y, mRect.height);
    #endif
          
@@ -1205,7 +1205,7 @@ void SelectHandle::AdjustSelection
 }
 
 void SelectHandle::AssignSelection
-(ViewInfo &viewInfo, double selend, Track *pTrack)
+(ViewInfo &viewInfo, double selend, Track *pTrack) const
 {
    double sel0, sel1;
    if (mSelStart < selend) {
@@ -1399,7 +1399,7 @@ void SelectHandle::MoveSnappingFreqSelection
       pTrack->GetSelected() &&
       isSpectralSelectionView(pTrackView)) {
       // Spectral selection track is always wave
-      WaveTrack *const wt = static_cast<WaveTrack*>(pTrack);
+      auto *const wt = dynamic_cast<WaveTrack*>(pTrack);
       // PRL:
       // What would happen if center snapping selection began in one spectrogram track,
       // then continues inside another?  We do not then recalculate
@@ -1412,7 +1412,7 @@ void SelectHandle::MoveSnappingFreqSelection
          PositionToFrequency(wt, false, mouseYCoordinate,
          trackTopEdge, trackHeight);
       const double snappedFrequency =
-         mFrequencySnapper->FindPeak(frequency, NULL);
+         mFrequencySnapper->FindPeak(frequency, nullptr);
       const double maxRatio = findMaxRatio(snappedFrequency, rate);
       double ratio = 2.0; // An arbitrary octave on each side, at most
       {
@@ -1469,12 +1469,12 @@ void SelectHandle::SnapCenterOnce
    if (up) {
       while (snappedFrequency <= centerFrequency &&
          bin < limitingBin)
-         snappedFrequency = analyst.FindPeak(++bin * binFrequency, NULL);
+         snappedFrequency = analyst.FindPeak(++bin * binFrequency, nullptr);
    }
    else {
       while (snappedFrequency >= centerFrequency &&
          bin > limitingBin)
-         snappedFrequency = analyst.FindPeak(--bin * binFrequency, NULL);
+         snappedFrequency = analyst.FindPeak(--bin * binFrequency, nullptr);
    }
 
    // PRL:  added these two lines with the big TrackPanel refactor

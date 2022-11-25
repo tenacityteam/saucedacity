@@ -38,7 +38,7 @@ public:
    /// Register a type of command with the directory with a statically
    /// constructed instance of this class.
    struct RegisterType{
-     RegisterType( std::unique_ptr<OldStyleCommandType> type )
+     explicit RegisterType( std::unique_ptr<OldStyleCommandType> type )
         { AddCommand( std::move( type ) ); }
    };
 
@@ -47,7 +47,7 @@ public:
    /// If a command with the given name has been registered in the directory,
    /// return a pointer to the factory for commands of that type.
    /// Otherwise return NULL.
-   OldStyleCommandType *LookUp(const wxString &cmdName) const;
+   [[nodiscard]] static OldStyleCommandType *LookUp(const wxString &cmdName) ;
 
    /// Get a pointer to the singleton instance
    static CommandDirectory *Get();

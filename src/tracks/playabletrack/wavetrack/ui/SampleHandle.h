@@ -28,7 +28,7 @@ class SampleHandle final : public UIHandle
       (const wxMouseState &state, const SaucedacityProject *pProject, bool unsafe);
 
 public:
-   explicit SampleHandle( const std::shared_ptr<WaveTrack> &pTrack );
+   explicit SampleHandle( std::shared_ptr<WaveTrack> pTrack );
 
    SampleHandle &operator=(const SampleHandle&) = default;
 
@@ -40,9 +40,9 @@ public:
        const wxMouseState &state, const wxRect &rect,
        const SaucedacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack);
 
-   virtual ~SampleHandle();
+   ~SampleHandle() override;
 
-   std::shared_ptr<WaveTrack> GetTrack() const { return mClickedTrack; }
+   [[nodiscard]] std::shared_ptr<WaveTrack> GetTrack() const { return mClickedTrack; }
 
    void Enter(bool forward, SaucedacityProject *) override;
 

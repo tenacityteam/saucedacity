@@ -178,8 +178,7 @@ EffectScienFilter::EffectScienFilter()
 }
 
 EffectScienFilter::~EffectScienFilter()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -537,8 +536,6 @@ void EffectScienFilter::PopulateOrExchange(ShuttleGui & S)
       S.AddSpace(1, 1);
    }
    S.EndMultiColumn();
-
-   return;
 }
 
 //
@@ -829,7 +826,7 @@ EffectScienFilterPanel::EffectScienFilterPanel(
    mEffect = effect;
    mParent = parent;
 
-   mBitmap = NULL;
+   mBitmap = nullptr;
    mWidth = 0;
    mHeight = 0;
    mLoFreq = 0.0;
@@ -841,8 +838,7 @@ EffectScienFilterPanel::EffectScienFilterPanel(
 }
 
 EffectScienFilterPanel::~EffectScienFilterPanel()
-{
-}
+= default;
 
 void EffectScienFilterPanel::SetFreqRange(double lo, double hi)
 {

@@ -23,9 +23,9 @@
  * make a nested call to rest(), the original rest will be locked out
  * until the nested one returns.  It's better to use cause().
  */
-#define rest(x) l_rest( (long) x )
-#define restuntil(x) l_restuntil( (long) x)
+#define rest(x) l_rest( (long) (x) )
+#define restuntil(x) l_restuntil( (long) (x))
 
-#define repeat(var, count) {int var; for (var=1; var <= count; var++) {
+#define repeat(var, count) {int (var); for ((var)=1; (var) <= (count); (var)++) {
 #define endrep ;}}
 

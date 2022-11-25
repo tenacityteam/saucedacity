@@ -48,9 +48,9 @@ public:
    int NextWindowID();
 
    bool IsActive() override;
-   bool IsIconized() const override;
+   [[nodiscard]] bool IsIconized() const override;
 
-   bool IsBeingDeleted() const { return mIsDeleting; }
+   [[nodiscard]] bool IsBeingDeleted() const { return mIsDeleting; }
    void SetIsBeingDeleted() { mIsDeleting = true; }
 
    wxWindow *GetMainPage() { return mMainPage; }
@@ -71,13 +71,13 @@ public:
          Right,
       };
 
-      Mode GetMode() const { return mMode; }
+      [[nodiscard]] Mode GetMode() const { return mMode; }
       void Activate(Mode mode)
       {
          mMode = mode;
       }
 
-      double GetRecentStreamTime() const { return mRecentStreamTime; }
+      [[nodiscard]] double GetRecentStreamTime() const { return mRecentStreamTime; }
 
    private:
       void OnTimer(wxCommandEvent &event);
@@ -92,16 +92,16 @@ public:
    PlaybackScroller &GetPlaybackScroller() { return *mPlaybackScroller; }
 
    void SetNormalizedWindowState(wxRect pSizeAndLocation) {  mNormalizedWindowState = pSizeAndLocation;   }
-   wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
+   [[nodiscard]] wxRect GetNormalizedWindowState() const { return mNormalizedWindowState;   }
 
-   void RedrawProject(const bool bForceWaveTracks = false);
+   void RedrawProject(bool bForceWaveTracks = false);
 
    void Zoom(double level);
    void ZoomInByFactor( double ZoomFactor );
    void ZoomOutByFactor( double ZoomFactor );
    void ZoomBy(double multiplier);
    void ZoomAfterImport(Track *pTrack);
-   double GetZoomOfToFit() const;
+   [[nodiscard]] double GetZoomOfToFit() const;
    void DoZoomFit();
 
    void ApplyUpdatedTheme();
@@ -126,11 +126,11 @@ public:
    void FinishAutoScroll();
    void FixScrollbars();
 
-   bool MayScrollBeyondZero() const;
-   double ScrollingLowerBoundTime() const;
+   [[nodiscard]] bool MayScrollBeyondZero() const;
+   [[nodiscard]] double ScrollingLowerBoundTime() const;
    // How many pixels are covered by the period from lowermost scrollable time, to the given time:
    // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
-   double PixelWidthBeforeTime(double scrollto) const;
+   [[nodiscard]] double PixelWidthBeforeTime(double scrollto) const;
    void SetHorizontalThumb(double scrollto);
 
    // PRL:  old and incorrect comment below, these functions are used elsewhere than TrackPanel
@@ -158,7 +158,7 @@ public:
    void OnMenu(wxCommandEvent & event);
    void OnUpdateUI(wxUpdateUIEvent & event);
 
-   void MacShowUndockedToolbars(bool show);
+   static void MacShowUndockedToolbars(bool show);
    void OnActivate(wxActivateEvent & event);
 
    void OnMouseEvent(wxMouseEvent & event);

@@ -39,8 +39,8 @@ void LabelDefaultClickHandle::SaveState( SaucedacityProject *pProject )
 
    for (auto lt : tracks.Any<LabelTrack>()) {
       auto &view = LabelTrackView::Get( *lt );
-      pairs.push_back( std::make_pair(
-         lt->SharedPointer<LabelTrack>(), view.SaveFlags() ) );
+      pairs.emplace_back(
+         lt->SharedPointer<LabelTrack>(), view.SaveFlags() );
    }
 }
 

@@ -36,8 +36,7 @@ const ComponentInterfaceSymbol SetProjectCommand::Symbol
 namespace{ BuiltinCommandsModule::Registration< SetProjectCommand > reg; }
 
 SetProjectCommand::SetProjectCommand()
-{
-}
+= default;
 
 
 bool SetProjectCommand::DefineParams( ShuttleParams & S ){ 

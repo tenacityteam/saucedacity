@@ -25,7 +25,7 @@ class Function : public Stk
   Function();
 
   //! Class destructor.
-  virtual ~Function();
+  ~Function() override;
 
   //! Return the last output value.
   virtual StkFloat lastOut() const { return lastOutput_; };

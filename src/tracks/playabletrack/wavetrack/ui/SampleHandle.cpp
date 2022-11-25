@@ -12,6 +12,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "SampleHandle.h"
 
 #include <algorithm>
+#include <utility>
 #include <wx/gdicmn.h>
 
 #include "../../../../Envelope.h"
@@ -34,8 +35,8 @@ static const int SMOOTHING_BRUSH_RADIUS = 5;
 static const double SMOOTHING_PROPORTION_MAX = 0.7;
 static const double SMOOTHING_PROPORTION_MIN = 0.0;
 
-SampleHandle::SampleHandle( const std::shared_ptr<WaveTrack> &pTrack )
-   : mClickedTrack{ pTrack }
+SampleHandle::SampleHandle( std::shared_ptr<WaveTrack> pTrack )
+   : mClickedTrack{std::move( pTrack )}
 {
 }
 

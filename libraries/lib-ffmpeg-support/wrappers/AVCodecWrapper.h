@@ -28,23 +28,23 @@ public:
 
    explicit AVCodecWrapper(const AVCodec* wrapped) noexcept;
 
-   const AVCodec* GetWrappedValue() const noexcept;
+   [[nodiscard]] const AVCodec* GetWrappedValue() const noexcept;
 
    virtual ~AVCodecWrapper() = default;
 
-   virtual const char* GetName() const noexcept = 0;
-   virtual const char* GetLongName() const noexcept = 0;
-   virtual AVMediaTypeFwd GetType() const noexcept = 0;
-   virtual AVCodecIDFwd GetId() const noexcept = 0;
-   virtual int GetCapabilities() const noexcept = 0;
-   virtual const AVRational* GetSupportedFramerates() const noexcept = 0;
-   virtual const AVMediaTypeFwd* GetPixFmts() const noexcept = 0;
-   virtual const int* GetSupportedSamplerates() const noexcept = 0;
-   virtual const AVSampleFormatFwd* GetSampleFmts() const noexcept = 0;
-   virtual const uint64_t* GetChannelLayouts() const noexcept = 0;
-   virtual uint8_t GetMaxLowres() const noexcept = 0;
+   [[nodiscard]] virtual const char* GetName() const noexcept = 0;
+   [[nodiscard]] virtual const char* GetLongName() const noexcept = 0;
+   [[nodiscard]] virtual AVMediaTypeFwd GetType() const noexcept = 0;
+   [[nodiscard]] virtual AVCodecIDFwd GetId() const noexcept = 0;
+   [[nodiscard]] virtual int GetCapabilities() const noexcept = 0;
+   [[nodiscard]] virtual const AVRational* GetSupportedFramerates() const noexcept = 0;
+   [[nodiscard]] virtual const AVMediaTypeFwd* GetPixFmts() const noexcept = 0;
+   [[nodiscard]] virtual const int* GetSupportedSamplerates() const noexcept = 0;
+   [[nodiscard]] virtual const AVSampleFormatFwd* GetSampleFmts() const noexcept = 0;
+   [[nodiscard]] virtual const uint64_t* GetChannelLayouts() const noexcept = 0;
+   [[nodiscard]] virtual uint8_t GetMaxLowres() const noexcept = 0;
 
-   virtual bool IsAudio() const noexcept = 0;
+   [[nodiscard]] virtual bool IsAudio() const noexcept = 0;
 
 protected:
    const AVCodec* mAVCodec { nullptr };

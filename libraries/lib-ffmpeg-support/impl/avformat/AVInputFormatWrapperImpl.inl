@@ -11,11 +11,11 @@
 class AVInputFormatWrapperImpl : public AVInputFormatWrapper
 {
 public:
-   AVInputFormatWrapperImpl(AVInputFormat* wrapped)
+   explicit AVInputFormatWrapperImpl(AVInputFormat* wrapped)
       : AVInputFormatWrapper(wrapped)
    {}
 
-   const char* GetName() const noexcept override
+   [[nodiscard]] const char* GetName() const noexcept override
    {
       if (mAVInputFormat != nullptr)
          return mAVInputFormat->name;
@@ -23,7 +23,7 @@ public:
       return {};
    }
 
-   const char* GetLongName() const noexcept override
+   [[nodiscard]] const char* GetLongName() const noexcept override
    {
       if (mAVInputFormat != nullptr)
          return mAVInputFormat->long_name;
@@ -31,7 +31,7 @@ public:
       return {};
    }
 
-   int GetFlags() const noexcept override
+   [[nodiscard]] int GetFlags() const noexcept override
    {
       if (mAVInputFormat != nullptr)
          return mAVInputFormat->flags;
@@ -39,7 +39,7 @@ public:
       return {};
    }
 
-   const char* GetExtensions() const noexcept override
+   [[nodiscard]] const char* GetExtensions() const noexcept override
    {
       if (mAVInputFormat != nullptr)
          return mAVInputFormat->extensions;
@@ -47,7 +47,7 @@ public:
       return {};
    }
 
-   const struct AVCodecTag* const* GetCodecTag() const noexcept override
+   [[nodiscard]] const struct AVCodecTag* const* GetCodecTag() const noexcept override
    {
       if (mAVInputFormat != nullptr)
          return mAVInputFormat->codec_tag;

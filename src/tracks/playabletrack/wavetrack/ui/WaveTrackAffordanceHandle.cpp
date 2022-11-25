@@ -9,6 +9,8 @@
  **********************************************************************/
 
 #include "WaveTrackAffordanceHandle.h"
+
+#include <utility>
 #include "WaveTrackAffordanceControls.h"
 #include "WaveTrackView.h"
 #include "ViewInfo.h"
@@ -18,8 +20,8 @@
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../ProjectHistory.h"
 
-WaveTrackAffordanceHandle::WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<WaveClip>& target)
-   : AffordanceHandle(track), mTarget(target)
+WaveTrackAffordanceHandle::WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, std::shared_ptr<WaveClip>  target)
+   : AffordanceHandle(track), mTarget(std::move(target))
 { }
 
 UIHandle::Result WaveTrackAffordanceHandle::Click(const TrackPanelMouseEvent& event, SaucedacityProject* project)

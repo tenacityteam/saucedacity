@@ -217,7 +217,7 @@ void TrackInfo::DrawItems
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track &track  )
 {
-   auto &trackControl = static_cast<const CommonTrackControls&>(
+   auto &trackControl = dynamic_cast<const CommonTrackControls&>(
       TrackControls::Get( track ) );
    const auto &topLines = trackControl.GetTCPLines();
    const auto &bottomLines = commonTrackTCPBottomLines;

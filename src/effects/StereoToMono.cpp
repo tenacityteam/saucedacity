@@ -30,12 +30,10 @@ const ComponentInterfaceSymbol EffectStereoToMono::Symbol
 namespace{ BuiltinEffectsModule::Registration< EffectStereoToMono > reg; }
 
 EffectStereoToMono::EffectStereoToMono()
-{
-}
+= default;
 
 EffectStereoToMono::~EffectStereoToMono()
-{
-}
+= default;
 
 // ComponentInterface implementation
 

@@ -24,7 +24,7 @@ static int X11TrapHandler(Display *, XErrorEvent *err)
 VSTControl::VSTControl()
 :  VSTControlBase()
 {
-   mXdisp = 0;
+   mXdisp = nullptr;
    mXwin = 0;
 }
 
@@ -33,7 +33,7 @@ VSTControl::~VSTControl()
    if (mXwin)
    {
       mLink->callDispatcher(effEditClose, 0, (intptr_t)mXdisp, (void *)mXwin, 0.0);
-      mXdisp = 0;
+      mXdisp = nullptr;
       mXwin = 0;
    }
 }

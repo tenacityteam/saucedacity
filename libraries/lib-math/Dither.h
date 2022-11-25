@@ -47,8 +47,8 @@ public:
 
 private:
     // Dither methods
-    float NoDither(float sample);
-    float RectangleDither(float sample);
+    static float NoDither(float sample);
+    static float RectangleDither(float sample);
     float TriangleDither(float sample);
     float ShapedDither(float sample);
 

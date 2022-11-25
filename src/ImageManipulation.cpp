@@ -320,8 +320,8 @@ void PasteSubImage( wxImage * background, wxImage * foreground, int xoff, int yo
 
    unsigned char *bg = background->GetData();
    unsigned char *fg = foreground->GetData();
-   unsigned char *bgAlpha = background->HasAlpha() ? background->GetAlpha() : NULL;
-   unsigned char *fgAlpha = foreground->HasAlpha() ? foreground->GetAlpha() : NULL;
+   unsigned char *bgAlpha = background->HasAlpha() ? background->GetAlpha() : nullptr;
+   unsigned char *fgAlpha = foreground->HasAlpha() ? foreground->GetAlpha() : nullptr;
    // For testing... Set as if no alpha in foreground....
    // fgAlpha = NULL;
 

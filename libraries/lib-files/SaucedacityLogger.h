@@ -27,7 +27,7 @@ class FILES_API SaucedacityLogger final : public wxEvtHandler,
    // Get the singleton instance or null
    static SaucedacityLogger *Get();
 
-   bool SaveLog(const wxString &fileName) const;
+   [[nodiscard]] bool SaveLog(const wxString &fileName) const;
    bool ClearLog();
 
    //! Retrieve all or some of the lines since most recent ClearLog or start of program
@@ -35,7 +35,7 @@ class FILES_API SaucedacityLogger final : public wxEvtHandler,
    wxString GetLog(int count = 0);
 
    //! Get all the accumulated text since program start or last ClearLog()
-   const wxString &GetBuffer() const { return mBuffer; }
+   [[nodiscard]] const wxString &GetBuffer() const { return mBuffer; }
 
    void Flush() override;
 

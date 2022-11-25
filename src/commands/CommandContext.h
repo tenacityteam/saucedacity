@@ -33,12 +33,12 @@ struct TemporarySelection {
 
 class SAUCEDACITY_DLL_API CommandContext {
 public:
-   CommandContext(
-      SaucedacityProject &p
-      , const wxEvent *e = nullptr
-      , int ii = 0
-      , const CommandParameter &param = CommandParameter{}
-   );
+    CommandContext(
+            SaucedacityProject &p
+            , const wxEvent *e = nullptr
+            , int ii = 0
+            , const CommandParameter &param = CommandParameter{}
+    );
 
    CommandContext(
       SaucedacityProject &p,
@@ -58,8 +58,8 @@ public:
    void StartField(const wxString &name) const;
    void EndField() const;
    void AddItem(const wxString &value , const wxString &name = {} ) const;
-   void AddBool(const bool value      , const wxString &name = {} ) const;
-   void AddItem(const double value    , const wxString &name = {} ) const;
+   void AddBool(bool value      , const wxString &name = {} ) const;
+   void AddItem(double value    , const wxString &name = {} ) const;
 
    SaucedacityProject &project;
    std::unique_ptr<CommandOutputTargets> pOutput;

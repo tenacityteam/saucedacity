@@ -24,6 +24,7 @@ messaging from a command back to its invoker.
 #include "CommandContext.h"
 
 #include <map>
+#include <utility>
 #include <wx/log.h>
 #include <wx/string.h>
 #include <wx/variant.h>
@@ -42,7 +43,7 @@ CommandContext::CommandContext(
       , pOutput( std::make_unique<InteractiveOutputTargets>() )
       , pEvt{ e }
       , index{ ii }
-      , parameter{ param }
+      , parameter{std::move( param )}
 {
 }
    

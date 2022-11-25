@@ -33,28 +33,28 @@ public:
   WvIn();
 
   //! Class destructor.
-  virtual ~WvIn();
+  ~WvIn() override;
 
   //! Return the number of audio channels in the data.
-  unsigned int getChannels( void ) const { return data_.channels(); };
+  unsigned int getChannels( ) const { return data_.channels(); };
 
   //! Return the average across the last output sample frame.
   /*!
     If no file data is loaded, the returned value is 0.0.
   */
-  StkFloat lastOut( void ) const;
+  StkFloat lastOut( ) const;
 
   //! Return an StkFrames reference to the last output sample frame.
   /*!
     If no file data is loaded, an empty container is returned.
    */
-  const StkFrames& lastFrame( void ) const { return lastOutputs_; };
+  const StkFrames& lastFrame( ) const { return lastOutputs_; };
 
   //! Read out the average across one sample frame of data.
   /*!
     If no file data is loaded, the returned value is 0.0.
   */
-  StkFloat tick( void );
+  StkFloat tick( );
 
   //! Fill a channel of the StkFrames object with averaged sample frames.
   /*!
@@ -80,7 +80,7 @@ protected:
   // This abstract function must be implemented in all subclasses.
   // It is used to get around a C++ problem with overloaded virtual
   // functions.
-  virtual void computeFrame( void ) = 0;
+  virtual void computeFrame( ) = 0;
 
   StkFrames data_;
   StkFrames lastOutputs_;

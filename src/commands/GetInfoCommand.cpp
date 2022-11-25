@@ -130,7 +130,7 @@ bool GetInfoCommand::Apply(const CommandContext &context)
    {
       CommandContext LispyContext( 
          context.project,
-         std::make_unique<LispifiedCommandOutputTargets>( *context.pOutput.get() )
+         std::make_unique<LispifiedCommandOutputTargets>( *context.pOutput )
          );
       return ApplyInner( LispyContext );
    }
@@ -139,7 +139,7 @@ bool GetInfoCommand::Apply(const CommandContext &context)
    {
       CommandContext BriefContext( 
          context.project,
-         std::make_unique<BriefCommandOutputTargets>( *context.pOutput.get() )
+         std::make_unique<BriefCommandOutputTargets>( *context.pOutput )
          );
       return ApplyInner( BriefContext );
    }
@@ -203,7 +203,7 @@ class ShuttleGuiGetDefinition : public ShuttleGui, public CommandMessageTargetDe
 {
 public:
    ShuttleGuiGetDefinition(wxWindow * pParent,CommandMessageTarget & target );
-   virtual ~ShuttleGuiGetDefinition();
+   ~ShuttleGuiGetDefinition() override;
 
    wxCheckBox * TieCheckBox(
       const TranslatableString &Prompt,
@@ -225,25 +225,25 @@ public:
    wxTextCtrl * TieTextBox(
       const TranslatableString &Prompt,
       const StringSetting &Setting,
-      const int nChars) override;
+      int nChars) override;
    wxTextCtrl * TieIntegerTextBox(
       const TranslatableString & Prompt,
       const IntSetting &Setting,
-      const int nChars) override;
+      int nChars) override;
    wxTextCtrl * TieNumericTextBox(
       const TranslatableString & Prompt,
       const DoubleSetting &Setting,
-      const int nChars) override;
+      int nChars) override;
    wxSlider * TieSlider(
       const TranslatableString & Prompt,
       const IntSetting &Setting,
-      const int max,
-      const int min = 0) override;
+      int max,
+      int min = 0) override;
    wxSpinCtrl * TieSpinCtrl(
       const TranslatableString &Prompt,
       const IntSetting &Setting,
-      const int max,
-      const int min) override;
+      int max,
+      int min) override;
 };
 
 ShuttleGuiGetDefinition::ShuttleGuiGetDefinition(
@@ -253,9 +253,8 @@ ShuttleGuiGetDefinition::ShuttleGuiGetDefinition(
 {
 
 }
-ShuttleGuiGetDefinition::~ShuttleGuiGetDefinition(void)
-{
-}
+ShuttleGuiGetDefinition::~ShuttleGuiGetDefinition()
+= default;
 
 wxCheckBox * ShuttleGuiGetDefinition::TieCheckBox(
    const TranslatableString &Prompt,

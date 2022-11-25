@@ -211,23 +211,23 @@ extern seq_type sequence;
 chunk_type chunk_create(boolean first_flag);
 
 #define seq_cause_noteoff(seq, delay, voice, pitch) \
-        (*(((seq_type) seq)->cause_noteoff_fn))(seq, delay, voice, pitch)
+        (*(((seq_type) (seq))->cause_noteoff_fn))(seq, delay, voice, pitch)
 #define seq_midi_bend(seq, voice, value) \
-        (*(((seq_type) seq)->midi_bend_fn))(seq, voice, value)
+        (*(((seq_type) (seq))->midi_bend_fn))(seq, voice, value)
 #define seq_midi_ctrl(seq, voice, ctrl, value) \
-        (*(((seq_type) seq)->midi_ctrl_fn))(seq, voice, ctrl, value)
+        (*(((seq_type) (seq))->midi_ctrl_fn))(seq, voice, ctrl, value)
 #define seq_midi_program(seq, voice, prog) \
-        (*(((seq_type) seq)->midi_program_fn))(seq, voice, prog)
+        (*(((seq_type) (seq))->midi_program_fn))(seq, voice, prog)
 #define seq_midi_touch(seq, voice, value) \
-        (*(((seq_type) seq)->midi_touch_fn))(seq, voice, value)
+        (*(((seq_type) (seq))->midi_touch_fn))(seq, voice, value)
 #define seq_noteoff(seq, args) \
-        (*(((seq_type) seq)->noteoff_fn))(args)
+        (*(((seq_type) (seq))->noteoff_fn))(args)
 #define seq_noteon(seq, voice, pitch, vel) \
-        (*(((seq_type) seq)->noteon_fn))(seq, voice, pitch, vel)
-#define seq_free(seq) (*(((seq_type) seq)->free_fn))(seq)
+        (*(((seq_type) (seq))->noteon_fn))(seq, voice, pitch, vel)
+#define seq_free(seq) (*(((seq_type) (seq))->free_fn))(seq)
 #define seq_register(seq) \
-    cu_register((cu_fn_type) (((seq_type) seq)->free_fn), seq)
-#define seq_reset(seq) (*(((seq_type) seq)->reset_fn))(seq)
+    cu_register((cu_fn_type) (((seq_type) (seq))->free_fn), seq)
+#define seq_reset(seq) (*(((seq_type) (seq))->reset_fn))(seq)
  /* LISP: void (SEQ-RESET SEQ) */
 
 extern boolean seq_print;       /* debugging switch */
@@ -266,10 +266,10 @@ void seq_cause_noteoff_meth(seq_type seq, time_type delay, int voice, int pitch)
 seq_type seq_copy(seq_type from_seq); /* LISP: (SEQ-COPY SEQ) */
 seq_type seq_create(void); /* LISP: (SEQ-CREATE) */
 void seq_cycle(seq_type seq, boolean flag, time_type dur);
-#define seq_duration(seq) (((seq_type) seq)->chunklist->u.info.duration)
+#define seq_duration(seq) (((seq_type) (seq))->chunklist->u.info.duration)
 void seq_end_event(call_args_type args);
-#define seq_events(seq) (((seq_type) seq)->chunklist ? \
-    (((seq_type) seq)->chunklist->u.info.eventlist) : NULL) 
+#define seq_events(seq) (((seq_type) (seq))->chunklist ? \
+    (((seq_type) (seq))->chunklist->u.info.eventlist) : NULL)
 #define seq_dictionary(seq) (seq)->chunklist->u.info.dictionary
 #define seq_eventlist(seq) (seq)->chunklist->u.info.eventlist
 #define seq_ctrlcount(seq) (seq)->chunklist->u.info.ctrlcount
@@ -277,7 +277,7 @@ void seq_end_event(call_args_type args);
 #define seq_used_mask(seq) (seq)->chunklist->u.info.used_mask
 void seq_free_chunks(seq_type seq);
 seq_type seq_init(seq_type seq, int create_chunk);
-#define seq_loudness(seq) (((seq_type) seq)->loudness)
+#define seq_loudness(seq) (((seq_type) (seq))->loudness)
 void seq_midi_bend_meth(seq_type seq, int voice, int value);
 void seq_midi_ctrl_meth(seq_type seq, int voice, int ctrl, int value);
 void seq_midi_program_meth(seq_type seq, int voice, int prog);
@@ -286,15 +286,15 @@ void seq_noteon_meth(seq_type seq, int voice, int pitch, int vel);
 void seq_noteoff_meth(call_args_type args);
 time_type seq_pause(seq_type seq, boolean flag);
 void seq_play(seq_type seq);
-#define seq_rate(seq) ((seq_type) seq)->rate
+#define seq_rate(seq) ((seq_type) (seq))->rate
 void seq_reset_meth(seq_type seq);
-#define seq_runflag(seq) ((seq_type) seq)->runflag
+#define seq_runflag(seq) ((seq_type) (seq))->runflag
 #define seq_set_channel_mask(seq, cm) ((seq)->channel_mask) = (cm)
 void seq_set_loudness(seq_type seq, int offset);
 void seq_set_rate(seq_type seq, time_type rate);
-#define seq_set_timebase(seq, tb) ((seq_type) seq)->timebase = (tb)
+#define seq_set_timebase(seq, tb) ((seq_type) (seq))->timebase = (tb)
 void seq_set_transpose(seq_type seq, int trans);
 void seq_start_time(seq_type seq, time_type start_time);
 void seq_stop(seq_type seq);
-#define seq_timebase(seq) ((seq_type) seq)->timebase
-#define seq_transpose(seq) ((seq_type) seq)->transpose
+#define seq_timebase(seq) ((seq_type) (seq))->timebase
+#define seq_transpose(seq) ((seq_type) (seq))->transpose

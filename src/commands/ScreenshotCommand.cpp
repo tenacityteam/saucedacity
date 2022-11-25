@@ -105,7 +105,7 @@ kBackgroundStrings[ ScreenshotCommand::nBackgrounds ] =
 ScreenshotCommand::ScreenshotCommand()
 {
    mbBringToTop=true;
-   mIgnore=NULL;
+   mIgnore=nullptr;
    
    static std::once_flag flag;
    std::call_once( flag, []{
@@ -139,18 +139,18 @@ void ScreenshotCommand::PopulateOrExchange(ShuttleGui & S)
 }
 
 // static member variable.
-void (*ScreenshotCommand::mIdleHandler)(wxIdleEvent& event) = NULL;
+void (*ScreenshotCommand::mIdleHandler)(wxIdleEvent& event) = nullptr;
 static SaucedacityProject *pIdleHandlerProject = nullptr;
 // This static variable is used to get from an idle event to the screenshot
 // command that caused the idle event interception to be set up.
-ScreenshotCommand * ScreenshotCommand::mpShooter=NULL;
+ScreenshotCommand * ScreenshotCommand::mpShooter=nullptr;
 
 // IdleHandler is expected to be called from EVT_IDLE when a dialog has been
 // fully created.  Usually the dialog will have been created by invoking
 // an effects gui.
 void IdleHandler(wxIdleEvent& event){
    event.Skip();
-   wxWindow * pWin = dynamic_cast<wxWindow*>(event.GetEventObject());
+   auto * pWin = dynamic_cast<wxWindow*>(event.GetEventObject());
    wxASSERT( pWin );
    pWin->Unbind(wxEVT_IDLE, IdleHandler);
    CommandContext context( *pIdleHandlerProject );
@@ -167,7 +167,7 @@ void ScreenshotCommand::SetIdleHandler( SaucedacityProject &project )
 
 wxTopLevelWindow *ScreenshotCommand::GetFrontWindow(SaucedacityProject *project)
 {
-   wxWindow *front = NULL;
+   wxWindow *front = nullptr;
    wxWindow *proj = wxGetTopLevelParent( ProjectWindow::Find( project ) );
 
    for (auto & win : wxTopLevelWindows)
@@ -345,10 +345,10 @@ bool ScreenshotCommand::CaptureDock(
 // Handed a dialog, which it is given the option to capture.
 bool ScreenshotCommand::MayCapture( wxDialog * pDlg )
 {
-   if( mIdleHandler == NULL )
+   if( mIdleHandler == nullptr )
       return false;
    pDlg->Bind( wxEVT_IDLE, mIdleHandler );
-   mIdleHandler = NULL;
+   mIdleHandler = nullptr;
    pDlg->ShowModal();
    return true;
 }
@@ -357,7 +357,7 @@ void ScreenshotCommand::CaptureWindowOnIdle(
    const CommandContext & context,
    wxWindow * pWin )
 {
-   wxDialog * pDlg = dynamic_cast<wxDialog*>(pWin);
+   auto * pDlg = dynamic_cast<wxDialog*>(pWin);
    if( !pDlg ){
       wxLogDebug("Event from bogus dlg" );
       return;

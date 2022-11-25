@@ -46,15 +46,15 @@ public:
 
    SelectHandle &operator=(const SelectHandle&) = default;
    
-   virtual ~SelectHandle();
+   ~SelectHandle() override;
 
-   bool IsClicked() const;
+   [[nodiscard]] bool IsClicked() const;
 
    void SetUseSnap(bool use, SaucedacityProject *pProject);
    void Enter(bool forward, SaucedacityProject *pProject) override;
 
-   bool HasSnap() const;
-   bool HasEscape() const override;
+   [[nodiscard]] bool HasSnap() const;
+   [[nodiscard]] bool HasEscape() const override;
 
    bool Escape(SaucedacityProject *pProject) override;
 
@@ -88,7 +88,7 @@ private:
       (SaucedacityProject *pProject,
        ViewInfo &viewInfo, int mouseXCoordinate, int trackLeftEdge,
        Track *pTrack);
-   void AssignSelection(ViewInfo &viewInfo, double selend, Track *pTrack);
+   void AssignSelection(ViewInfo &viewInfo, double selend, Track *pTrack) const;
 
    void StartFreqSelection
       (ViewInfo &viewInfo, int mouseYCoordinate, int trackTopEdge,

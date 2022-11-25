@@ -18,7 +18,7 @@ public:
    {
    }
 
-   int GetIndex() const noexcept override
+   [[nodiscard]] int GetIndex() const noexcept override
    {
       if (mAVStream != nullptr)
          return mAVStream->index;
@@ -26,7 +26,7 @@ public:
       return {};
    }
 
-   int GetId() const noexcept override
+   [[nodiscard]] int GetId() const noexcept override
    {
       if (mAVStream != nullptr)
          return mAVStream->id;
@@ -40,7 +40,7 @@ public:
          mAVStream->id = id;
    }
 
-   AudacityAVRational GetTimeBase() const noexcept override
+   [[nodiscard]] AudacityAVRational GetTimeBase() const noexcept override
    {
       if (mAVStream != nullptr)
          return { mAVStream->time_base.num, mAVStream->time_base.den };
@@ -57,7 +57,7 @@ public:
       mAVStream->time_base.den = time_base.den;
    }
 
-   int64_t GetStartTime() const noexcept override
+   [[nodiscard]] int64_t GetStartTime() const noexcept override
    {
       if (mAVStream != nullptr)
          return mAVStream->start_time;
@@ -71,7 +71,7 @@ public:
          mAVStream->start_time = start_time;
    }
 
-   int64_t GetDuration() const noexcept override
+   [[nodiscard]] int64_t GetDuration() const noexcept override
    {
       if (mAVStream != nullptr)
          return mAVStream->duration;
@@ -85,7 +85,7 @@ public:
          mAVStream->duration = duration;
    }
 
-   int64_t GetFramesCount() const noexcept override
+   [[nodiscard]] int64_t GetFramesCount() const noexcept override
    {
       if (mAVStream != nullptr)
          return mAVStream->nb_frames;
@@ -99,7 +99,7 @@ public:
          mAVStream->nb_frames = nb_frames;
    }
 
-   int GetDisposition() const noexcept override
+   [[nodiscard]] int GetDisposition() const noexcept override
    {
       if (mAVStream != nullptr)
          return mAVStream->disposition;
@@ -113,7 +113,7 @@ public:
          mAVStream->disposition = disposition;
    }
 
-   AVSampleFormatFwd GetDiscard() const noexcept override
+   [[nodiscard]] AVSampleFormatFwd GetDiscard() const noexcept override
    {
       if (mAVStream != nullptr)
          return mAVStream->discard;
@@ -127,7 +127,7 @@ public:
          mAVStream->discard = static_cast<AVDiscard>(discard);
    }
 
-   AudacityAVRational GetSampleAspectRatio() const noexcept override
+   [[nodiscard]] AudacityAVRational GetSampleAspectRatio() const noexcept override
    {
       if (mAVStream != nullptr)
          return { mAVStream->sample_aspect_ratio.num,
@@ -146,7 +146,7 @@ public:
       mAVStream->sample_aspect_ratio.den = sample_aspect_ratio.den;
    }
 
-   AVDictionaryWrapper GetMetadata() const noexcept override
+   [[nodiscard]] AVDictionaryWrapper GetMetadata() const noexcept override
    {
       if (mAVStream != nullptr)
          return AVDictionaryWrapper(mFFmpeg, mAVStream->metadata);
@@ -172,7 +172,7 @@ public:
       }
    }
 
-   bool IsAudio() const noexcept override
+   [[nodiscard]] bool IsAudio() const noexcept override
    {
       if (mAVStream != nullptr)
 #if LIBAVFORMAT_VERSION_MAJOR <= 58
@@ -184,7 +184,7 @@ public:
       return {};
    }
 
-   AVCodecIDFwd GetAVCodecID() const noexcept override
+   [[nodiscard]] AVCodecIDFwd GetAVCodecID() const noexcept override
    {
       if (mAVStream != nullptr)
 #if LIBAVFORMAT_VERSION_MAJOR <= 58
@@ -196,7 +196,7 @@ public:
       return AV_CODEC_ID_NONE;
    }
 
-   std::unique_ptr<AVCodecContextWrapper>
+   [[nodiscard]] std::unique_ptr<AVCodecContextWrapper>
    GetAVCodecContext() const noexcept override
    {
       if (mAVStream == nullptr)

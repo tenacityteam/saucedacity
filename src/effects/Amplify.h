@@ -29,7 +29,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectAmplify();
-   virtual ~EffectAmplify();
+   ~EffectAmplify() override;
 
    // ComponentInterface implementation
 

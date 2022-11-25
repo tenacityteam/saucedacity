@@ -124,7 +124,6 @@ void find_full_path(const char *filename, char *fullname)
     return;
   error:
     strcpy(fullname, "//////");
-    return;
 }
 
 

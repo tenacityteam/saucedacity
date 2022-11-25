@@ -23,13 +23,13 @@
 using std::min;
 using std::max;
 
-#define array_length(a) (sizeof(a)/sizeof(a[0]))
+#define array_length(a) (sizeof(a)/sizeof((a)[0]))
 #define dB_to_linear(x) exp((x) * M_LN10 * 0.05)
 #define midi_to_freq(n) (440 * pow(2,((n)-69)/12.))
 #define FIFO_SIZE_T size_t
 #define FIFO_MIN 0x4000
 #define fifo_read_ptr(f) fifo_read(f, (FIFO_SIZE_T)0, NULL)
-#define lsx_zalloc(var, n) var = (float *)calloc(n, sizeof(*var))
+#define lsx_zalloc(var, n) var = (float *)calloc(n, sizeof(*(var)))
 #define filter_advance(p) if (--(p)->ptr < (p)->buffer) (p)->ptr += (p)->size
 #define filter_delete(p) free((p)->buffer)
 
@@ -53,7 +53,7 @@ static void * fifo_reserve(fifo_t * f, FIFO_SIZE_T n)
    if (f->begin == f->end)
       fifo_clear(f);
 
-   while (1) {
+   while (true) {
       if (f->end + n <= f->allocation) {
          void *p = f->data + f->end;
 
@@ -84,7 +84,7 @@ static void * fifo_read(fifo_t * f, FIFO_SIZE_T n, void * data)
    char * ret = f->data + f->begin;
    n *= f->item_size;
    if (n > (FIFO_SIZE_T)(f->end - f->begin))
-      return NULL;
+      return nullptr;
    if (data)
       memcpy(data, ret, (size_t)n);
    f->begin += n;
@@ -243,7 +243,7 @@ static void reverb_create(reverb_t * p, double sample_rate_Hz,
    p->hf_damping = hf_damping / 100 * .3 + .2;
    p->gain = dB_to_linear(wet_gain_dB) * .015;
    fifo_create(&p->input_fifo, sizeof(float));
-   memset(fifo_write(&p->input_fifo, delay, 0), 0, delay * sizeof(float));
+   memset(fifo_write(&p->input_fifo, delay, nullptr), 0, delay * sizeof(float));
    for (i = 0; i <= ceil(depth); ++i) {
       filter_array_create(p->chan + i, sample_rate_Hz, scale, i * depth, fc_highpass, fc_lowpass);
       out[i] = lsx_zalloc(p->out[i], buffer_size);
@@ -255,7 +255,7 @@ static void reverb_process(reverb_t * p, size_t length)
    size_t i;
    for (i = 0; i < 2 && p->out[i]; ++i)
       filter_array_process(p->chan + i, length, (float *) fifo_read_ptr(&p->input_fifo), p->out[i], &p->feedback, &p->hf_damping, &p->gain);
-   fifo_read(&p->input_fifo, length, NULL);
+   fifo_read(&p->input_fifo, length, nullptr);
 }
 
 static void reverb_delete(reverb_t * p)

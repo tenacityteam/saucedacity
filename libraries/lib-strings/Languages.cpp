@@ -61,7 +61,7 @@ static void FindFilesInPathList(const wxString & pattern,
    }
 }
 
-static bool TranslationExists(const FilePaths &pathList, wxString code)
+static bool TranslationExists(const FilePaths &pathList, const wxString& code)
 {
    FilePaths results;
    FindFilesInPathList(code + L"/audacity.mo", pathList, results);
@@ -69,7 +69,7 @@ static bool TranslationExists(const FilePaths &pathList, wxString code)
    FindFilesInPathList(code + L".lproj/audacity.mo", pathList, results);
 #endif
    FindFilesInPathList(code + L"/LC_MESSAGES/audacity.mo", pathList, results);
-   return (results.size() > 0);
+   return (!results.empty());
 }
 
 #ifdef __WXMAC__
@@ -233,7 +233,7 @@ void GetLanguages( FilePaths pathList,
       const wxLanguageInfo *info = wxLocale::FindLanguageInfo(i->first);
 
       if (!info) {
-         wxASSERT(info != NULL);
+         wxASSERT(info != nullptr);
          continue;
       }
 
@@ -337,7 +337,7 @@ wxString SetLang( const FilePaths &pathList, const wxString & lang )
    wxSetEnv(wxT("LANG"), wxT("en_US.UTF-8"));
 #endif
 
-   const wxLanguageInfo *info = NULL;
+   const wxLanguageInfo *info = nullptr;
    if (!lang.empty() && lang != wxT("System")) {
       // Try to find the given language
       info = wxLocale::FindLanguageInfo(lang);
@@ -381,7 +381,7 @@ wxString SetLang( const FilePaths &pathList, const wxString & lang )
       0
    );
 
-   sLocaleName = wxSetlocale(LC_ALL, NULL);
+   sLocaleName = wxSetlocale(LC_ALL, nullptr);
 
    return result;
 }

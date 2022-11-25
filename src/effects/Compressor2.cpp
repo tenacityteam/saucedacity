@@ -16,7 +16,8 @@
 
 #include "Compressor2.h"
 
-#include <math.h>
+#include <cmath>
+#include <memory>
 #include <numeric>
 
 #include <wx/intl.h>
@@ -556,10 +557,10 @@ void PipelineBuffer::free()
 
 EffectCompressor2::EffectCompressor2()
    : mIgnoreGuiEvents(false),
-   mAlgorithmCtrl(0),
-   mPreprocCtrl(0),
-   mAttackTimeCtrl(0),
-   mLookaheadTimeCtrl(0)
+   mAlgorithmCtrl(nullptr),
+   mPreprocCtrl(nullptr),
+   mAttackTimeCtrl(nullptr),
+   mLookaheadTimeCtrl(nullptr)
 {
    mAlgorithm = DEF_Algorithm;
    mCompressBy = DEF_CompressBy;
@@ -578,8 +579,7 @@ EffectCompressor2::EffectCompressor2()
 }
 
 EffectCompressor2::~EffectCompressor2()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -764,8 +764,8 @@ RegistryPaths EffectCompressor2::GetFactoryPresets()
 {
    RegistryPaths names;
 
-   for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
-      names.push_back( FactoryPresets[i].name.Translation() );
+   for (const auto & FactoryPreset : FactoryPresets)
+      names.push_back( FactoryPreset.name.Translation() );
 
    return names;
 }
@@ -893,15 +893,15 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       PlotData* plot;
 
       S.StartVerticalLay();
-      S.AddVariableText(XO("Envelope dependent gain"), 0,
+      S.AddVariableText(XO("Envelope dependent gain"), false,
          wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL);
       mGainPlot = S.MinSize( { 400, 200 } )
          .AddPlot({}, -60, 0, -60, 0, XO("dB"), XO("dB"),
             Ruler::LinearDBFormat, Ruler::LinearDBFormat);
 
       plot = mGainPlot->GetPlotData(0);
-      plot->pen = std::unique_ptr<wxPen>(
-         safenew wxPen(AColor::WideEnvelopePen));
+      plot->pen = std::make_unique<wxPen>(
+         AColor::WideEnvelopePen);
       plot->xdata.resize(61);
       plot->ydata.resize(61);
       std::iota(plot->xdata.begin(), plot->xdata.end(), -60);
@@ -909,7 +909,7 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       S.EndVerticalLay();
       S.StartVerticalLay();
 
-      S.AddVariableText(XO("Compressor step response"), 0,
+      S.AddVariableText(XO("Compressor step response"), false,
          wxALIGN_CENTER | wxALIGN_CENTER_VERTICAL);
       mResponsePlot = S.MinSize( { 400, 200 } )
          .AddPlot({}, 0, 5, -0.2, 1.2, XO("s"), XO(""),
@@ -917,15 +917,15 @@ void EffectCompressor2::PopulateOrExchange(ShuttleGui & S)
       mResponsePlot->SetName(XO("Compressor step response plot"));
 
       plot = mResponsePlot->GetPlotData(0);
-      plot->pen = std::unique_ptr<wxPen>(
-         safenew wxPen(AColor::WideEnvelopePen));
+      plot->pen = std::make_unique<wxPen>(
+         AColor::WideEnvelopePen);
       plot->xdata = {0, RESPONSE_PLOT_STEP_START, RESPONSE_PLOT_STEP_START,
          RESPONSE_PLOT_STEP_STOP, RESPONSE_PLOT_STEP_STOP, 5};
       plot->ydata = {0.1, 0.1, 1, 1, 0.1, 0.1};
 
       plot = mResponsePlot->GetPlotData(1);
-      plot->pen = std::unique_ptr<wxPen>(
-         safenew wxPen(AColor::WideEnvelopePen));
+      plot->pen = std::make_unique<wxPen>(
+         AColor::WideEnvelopePen);
       plot->pen->SetColour(wxColor( 230,80,80 )); // Same color as TrackArtist RMS red.
       plot->pen->SetWidth(2);
       plot->xdata.resize(RESPONSE_PLOT_SAMPLES+1);
@@ -1131,7 +1131,7 @@ bool EffectCompressor2::TransferDataFromWindow()
 
 // EffectCompressor2 implementation
 
-double EffectCompressor2::CompressorGain(double env)
+double EffectCompressor2::CompressorGain(double env) const
 {
    double kneeCond;
    double envDB = LINEAR_TO_DB(env);
@@ -1176,7 +1176,7 @@ std::unique_ptr<SamplePreprocessor> EffectCompressor2::InitPreprocessor(
 }
 
 std::unique_ptr<EnvelopeDetector> EffectCompressor2::InitEnvelope(
-   double rate, size_t blockSize, bool preview)
+   double rate, size_t blockSize, bool preview) const
 {
    if(mAlgorithm == kExpFit)
       return std::unique_ptr<EnvelopeDetector>(safenew
@@ -1198,12 +1198,12 @@ size_t EffectCompressor2::CalcBufferSize(double sampleRate)
    return capacity;
 }
 
-size_t EffectCompressor2::CalcLookaheadLength(double rate)
+size_t EffectCompressor2::CalcLookaheadLength(double rate) const
 {
    return std::max(0, int(round(mLookaheadTime * rate)));
 }
 
-size_t EffectCompressor2::CalcWindowLength(double rate)
+size_t EffectCompressor2::CalcWindowLength(double rate) const
 {
    return std::max(1, int(round((mLookaheadTime + mLookbehindTime) * rate)));
 }
@@ -1231,8 +1231,8 @@ void EffectCompressor2::AllocPipeline()
    // be shorter than the length of the track being processed.
    stereoTrackFound = stereoTrackFound && !mStereoInd;
    capacity = CalcBufferSize(maxSampleRate);
-   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
-      mPipeline[i].init(capacity, stereoTrackFound);
+   for(auto & i : mPipeline)
+      i.init(capacity, stereoTrackFound);
 }
 
 void EffectCompressor2::AllocRealtimePipeline()
@@ -1244,17 +1244,17 @@ void EffectCompressor2::AllocRealtimePipeline()
       size_t riseTime = round(5.0 * (0.1 + mAttackTime)) * mSampleRate;
       blockSize = std::max(blockSize, riseTime);
    }
-   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+   for(auto & i : mPipeline)
    {
-      mPipeline[i].init(blockSize, true);
-      mPipeline[i].size = blockSize;
+      i.init(blockSize, true);
+      i.size = blockSize;
    }
 }
 
 void EffectCompressor2::FreePipeline()
 {
-   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
-      mPipeline[i].free();
+   for(auto & i : mPipeline)
+      i.free();
 }
 
 void EffectCompressor2::SwapPipeline()
@@ -1314,7 +1314,7 @@ void EffectCompressor2::SwapPipeline()
 
 /// ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 /// and executes ProcessData, on it...
-bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
+bool EffectCompressor2::ProcessOne(const TrackIterRange<WaveTrack>& range)
 {
    WaveTrack* track = *range.begin();
 
@@ -1429,7 +1429,7 @@ bool EffectCompressor2::ProcessOne(TrackIterRange<WaveTrack> range)
 }
 
 bool EffectCompressor2::LoadPipeline(
-   TrackIterRange<WaveTrack> range, size_t len)
+   const TrackIterRange<WaveTrack>& range, size_t len)
 {
    sampleCount read_size = -1;
    sampleCount last_read_size = -1;
@@ -1586,9 +1586,9 @@ inline void EffectCompressor2::CompressSample(float env, size_t wp)
 
 bool EffectCompressor2::PipelineHasData()
 {
-   for(size_t i = 0; i < PIPELINE_DEPTH; ++i)
+   for(auto & i : mPipeline)
    {
-      if(mPipeline[i].size != 0)
+      if(i.size != 0)
          return true;
    }
    return false;
@@ -1636,7 +1636,7 @@ void EffectCompressor2::DrainPipeline()
    }
 }
 
-void EffectCompressor2::StorePipeline(TrackIterRange<WaveTrack> range)
+void EffectCompressor2::StorePipeline(const TrackIterRange<WaveTrack>& range)
 {
 #ifdef DEBUG_COMPRESSOR2_TRACE
    std::cerr << "StoreBlock at: " << mPipeline[0].trackPos.as_size_t() <<
@@ -1674,7 +1674,7 @@ void EffectCompressor2::UpdateUI()
 {
    UpdateCompressorPlot();
    UpdateResponsePlot();
-   if(mEnvelope.get() != nullptr)
+   if(mEnvelope != nullptr)
       UpdateRealtimeParams();
 }
 

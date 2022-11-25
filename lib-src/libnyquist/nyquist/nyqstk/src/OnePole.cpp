@@ -43,7 +43,7 @@ OnePole :: ~OnePole()
 {
 }
 
-void OnePole :: clear(void)
+void OnePole :: clear()
 {
   Filter::clear();
 }
@@ -74,12 +74,12 @@ void OnePole :: setGain(StkFloat gain)
   Filter::setGain(gain);
 }
 
-StkFloat OnePole :: getGain(void) const
+StkFloat OnePole :: getGain() const
 {
   return Filter::getGain();
 }
 
-StkFloat OnePole :: lastOut(void) const
+StkFloat OnePole :: lastOut() const
 {
   return Filter::lastOut();
 }

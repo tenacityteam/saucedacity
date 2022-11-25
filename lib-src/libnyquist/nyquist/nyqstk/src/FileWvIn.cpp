@@ -32,6 +32,7 @@
 
 #include "FileWvIn.h"
 #include <cmath>
+#include <utility>
 
 using namespace Nyq;
 
@@ -46,7 +47,7 @@ FileWvIn :: FileWvIn( std::string fileName, bool raw, bool doNormalize,
   : finished_(true), interpolate_(false), time_(0.0),
     chunkThreshold_(chunkThreshold), chunkSize_(chunkSize)
 {
-  openFile( fileName, raw, doNormalize );
+  openFile( std::move(fileName), raw, doNormalize );
 }
 
 FileWvIn :: ~FileWvIn()
@@ -54,7 +55,7 @@ FileWvIn :: ~FileWvIn()
   this->closeFile();
 }
 
-void FileWvIn :: closeFile( void )
+void FileWvIn :: closeFile( )
 {
   if ( file_.isOpen() ) file_.close();
   finished_ = true;
@@ -66,7 +67,7 @@ void FileWvIn :: openFile( std::string fileName, bool raw, bool doNormalize )
   this->closeFile();
 
   // Attempt to open the file ... an error might be thrown here.
-  file_.open( fileName, raw );
+  file_.open( std::move(fileName), raw );
 
   // Determine whether chunking or not.
   if ( file_.fileSize() > chunkThreshold_ ) {
@@ -95,7 +96,7 @@ void FileWvIn :: openFile( std::string fileName, bool raw, bool doNormalize )
   this->reset();
 }
 
-void FileWvIn :: reset(void)
+void FileWvIn :: reset()
 {
   time_ = (StkFloat) 0.0;
   for ( unsigned int i=0; i<lastOutputs_.size(); i++ )
@@ -103,7 +104,7 @@ void FileWvIn :: reset(void)
   finished_ = false;
 }
 
-void FileWvIn :: normalize(void)
+void FileWvIn :: normalize()
 {
   this->normalize( 1.0 );
 }
@@ -156,13 +157,13 @@ void FileWvIn :: addTime( StkFloat time )
   }
 }
 
-StkFloat FileWvIn :: lastOut( void ) const
+StkFloat FileWvIn :: lastOut( ) const
 {
   if ( finished_ ) return 0.0;
   return WvIn :: lastOut();
 }
 
-void FileWvIn :: computeFrame( void )
+void FileWvIn :: computeFrame( )
 {
   if ( finished_ ) return;
 

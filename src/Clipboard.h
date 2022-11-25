@@ -28,13 +28,13 @@ class SAUCEDACITY_DLL_API Clipboard final
 public:
    static Clipboard &Get();
 
-   const TrackList &GetTracks() const;
+   [[nodiscard]] const TrackList &GetTracks() const;
 
-   double T0() const { return mT0; }
-   double T1() const { return mT1; }
-   double Duration() const { return mT1 - mT0; }
+   [[nodiscard]] double T0() const { return mT0; }
+   [[nodiscard]] double T1() const { return mT1; }
+   [[nodiscard]] double Duration() const { return mT1 - mT0; }
 
-   const std::weak_ptr<SaucedacityProject> &Project() const { return mProject; }
+   [[nodiscard]] const std::weak_ptr<SaucedacityProject> &Project() const { return mProject; }
 
    void Clear();
    
@@ -43,7 +43,7 @@ public:
      const std::weak_ptr<SaucedacityProject> &pProject );
 
    Clipboard();
-   ~Clipboard();
+   ~Clipboard() override;
 
    void Swap( Clipboard &other );
 

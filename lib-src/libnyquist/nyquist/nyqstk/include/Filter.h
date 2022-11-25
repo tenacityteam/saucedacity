@@ -40,7 +40,7 @@ class Filter : public Stk
 {
 public:
   //! Default constructor creates a zero-order pass-through "filter".
-  Filter(void);
+  Filter();
 
   //! Overloaded constructor which takes filter coefficients.
   /*!
@@ -50,10 +50,10 @@ public:
   Filter( std::vector<StkFloat> &bCoefficients, std::vector<StkFloat> &aCoefficients );
 
   //! Class destructor.
-  virtual ~Filter(void);
+  ~Filter() override;
 
   //! Sets all internal states of the filter to zero.
-  void clear(void);
+  void clear();
 
   //! Set filter coefficients.
   /*!
@@ -95,10 +95,10 @@ public:
   virtual void setGain(StkFloat gain);
 
   //! Return the current filter gain.
-  virtual StkFloat getGain(void) const;
+  virtual StkFloat getGain() const;
 
   //! Return the last computed output value.
-  virtual StkFloat lastOut(void) const;
+  virtual StkFloat lastOut() const;
 
   //! Input one sample to the filter and return one output.
   virtual StkFloat tick( StkFloat input );

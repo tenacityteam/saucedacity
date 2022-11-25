@@ -49,7 +49,7 @@ private:
    bool GetSelection(const CommandContext &context, SaucedacityProject &proj);
 
 protected:
-   double CompareSample(double value1, double value2) /* not override */;
+   static double CompareSample(double value1, double value2) /* not override */;
 
 };
 

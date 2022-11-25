@@ -23,7 +23,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectSilence();
-   virtual ~EffectSilence();
+   ~EffectSilence() override;
 
    // ComponentInterface implementation
 

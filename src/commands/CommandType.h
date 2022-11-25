@@ -49,7 +49,7 @@ private:
 
 public:
    OldStyleCommandType();
-   virtual ~OldStyleCommandType();
+   ~OldStyleCommandType() override;
    ComponentInterfaceSymbol GetSymbol() override;
    CommandSignature &GetSignature();
    wxString Describe(); // for debugging only ?

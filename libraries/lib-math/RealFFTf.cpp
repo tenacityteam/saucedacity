@@ -39,8 +39,8 @@
 #include "RealFFTf.h"
 
 #include <vector>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <cmath>
 
 #include <wx/thread.h>
@@ -117,7 +117,7 @@ HFFT GetFFT(size_t fftlen)
        h++)
       ;
    if(h < size) {
-      if(hFFTArray[h] == NULL) {
+      if(hFFTArray[h] == nullptr) {
          hFFTArray[h].reset( InitializeFFT(fftlen).release() );
       }
       return HFFT{ hFFTArray[h].get() };

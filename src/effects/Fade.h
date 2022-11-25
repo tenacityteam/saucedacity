@@ -16,8 +16,8 @@
 class EffectFade : public Effect
 {
 public:
-   EffectFade(bool fadeIn = false);
-   virtual ~EffectFade();
+   explicit EffectFade(bool fadeIn = false);
+   ~EffectFade() override;
 
    // ComponentInterface implementation
 
@@ -33,7 +33,7 @@ public:
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
 
 private:

@@ -30,7 +30,7 @@ public:
 
    explicit
    TrackView( const std::shared_ptr<Track> &pTrack );
-   virtual ~TrackView() = 0;
+   ~TrackView() override = 0;
 
    // some static conveniences, useful for summation over track iterator
    // ranges

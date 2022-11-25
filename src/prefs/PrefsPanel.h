@@ -28,6 +28,7 @@ MousePrefs, QualityPrefs, SpectrumPrefs and ThemePrefs.
 #define __AUDACITY_PREFS_PANEL__
 
 #include <functional>
+#include <utility>
 
 // Saucedacity libraries
 #include <lib-components/ComponentInterface.h>
@@ -62,10 +63,10 @@ class SAUCEDACITY_DLL_API PrefsPanel /* not final */
        size_t nChildren{ 0 };
        bool expanded{ false };
 
-       PrefsNode(const Factory &factory_,
+       PrefsNode(Factory factory_,
           unsigned nChildren_ = 0,
           bool expanded_ = true)
-          : factory(factory_), nChildren(nChildren_), expanded(expanded_)
+          : factory(std::move(factory_)), nChildren(nChildren_), expanded(expanded_)
        {}
     };
 
@@ -98,16 +99,16 @@ class SAUCEDACITY_DLL_API PrefsPanel /* not final */
       SetName(title);      // Provide audible label
    }
 
-   virtual ~PrefsPanel();
+   ~PrefsPanel() override;
 
    // NEW virtuals
    virtual void Preview() {} // Make tentative changes
    virtual bool Commit() = 0; // used to be called "Apply"
 
 
-   virtual PluginPath GetPath();
-   virtual VendorSymbol GetVendor();
-   virtual wxString GetVersion();
+   PluginPath GetPath() override;
+   VendorSymbol GetVendor() override;
+   wxString GetVersion() override;
 
    //virtual ComponentInterfaceSymbol GetSymbol();
    //virtual wxString GetDescription();

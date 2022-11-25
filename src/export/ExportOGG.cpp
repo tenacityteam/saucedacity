@@ -49,7 +49,7 @@ class ExportOGGOptions final : public wxPanelWrapper
 public:
 
    ExportOGGOptions(wxWindow *parent, int format);
-   virtual ~ExportOGGOptions();
+   ~ExportOGGOptions() override;
 
    void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
@@ -142,13 +142,13 @@ public:
                bool selectedOnly,
                double t0,
                double t1,
-               MixerSpec *mixerSpec = NULL,
-               const Tags *metadata = NULL,
+               MixerSpec *mixerSpec = nullptr,
+               const Tags *metadata = nullptr,
                int subformat = 0) override;
 
 private:
 
-   bool FillComment(SaucedacityProject *project, vorbis_comment *comment, const Tags *metadata);
+   static bool FillComment(SaucedacityProject *project, vorbis_comment *comment, const Tags *metadata);
 };
 
 ExportOGG::ExportOGG()
@@ -239,7 +239,7 @@ ProgressResult ExportOGG::Export(SaucedacityProject *project,
    // Set up packet->stream encoder.  According to encoder example,
    // a random serial number makes it more likely that you can make
    // chained streams with concatenation.
-   srand(time(NULL));
+   srand(time(nullptr));
    if (ogg_stream_init(&stream, rand())) {
       AudacityMessageBox( XO("Unable to export - problem creating stream") );
       return ProgressResult::Cancelled;
@@ -301,7 +301,7 @@ ProgressResult ExportOGG::Export(SaucedacityProject *project,
          else {
 
             for (size_t i = 0; i < numChannels; i++) {
-               float *temp = (float *)mixer->GetBuffer(i);
+               auto *temp = (float *)mixer->GetBuffer(i);
                memcpy(vorbis_buffer[i], temp, sizeof(float)*SAMPLES_PER_RUN);
             }
 
@@ -318,7 +318,7 @@ ProgressResult ExportOGG::Export(SaucedacityProject *project,
          while (!err && vorbis_analysis_blockout(&dsp, &block) == 1) {
 
             // analysis, assume we want to use bitrate management
-            err = vorbis_analysis(&block, NULL);
+            err = vorbis_analysis(&block, nullptr);
             if (!err)
                err = vorbis_bitrate_addblock(&block);
 
@@ -379,7 +379,7 @@ void ExportOGG::OptionsCreate(ShuttleGui &S, int format)
 bool ExportOGG::FillComment(SaucedacityProject *project, vorbis_comment *comment, const Tags *metadata)
 {
    // Retrieve tags from project if not over-ridden
-   if (metadata == NULL)
+   if (metadata == nullptr)
       metadata = &Tags::Get( *project );
 
    vorbis_comment_init(comment);

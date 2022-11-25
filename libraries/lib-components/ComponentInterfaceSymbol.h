@@ -52,14 +52,14 @@ public:
       , mMsgid{ internal.empty() ? TranslatableString{} : msgid }
    {}
 
-   const wxString &Internal() const { return mInternal; }
-   const TranslatableString &Msgid() const { return mMsgid; }
-   const TranslatableString Stripped() const { return mMsgid.Stripped(); }
-   const wxString Translation() const { return mMsgid.Translation(); }
-   const wxString StrippedTranslation() const
+   [[nodiscard]] const wxString &Internal() const { return mInternal; }
+   [[nodiscard]] const TranslatableString &Msgid() const { return mMsgid; }
+   [[nodiscard]] const TranslatableString Stripped() const { return mMsgid.Stripped(); }
+   [[nodiscard]] const wxString Translation() const { return mMsgid.Translation(); }
+   [[nodiscard]] const wxString StrippedTranslation() const
       { return Stripped().Translation(); }
 
-   bool empty() const { return mInternal.empty(); }
+   [[nodiscard]] bool empty() const { return mInternal.empty(); }
 
    friend inline bool operator == (
       const ComponentInterfaceSymbol &a, const ComponentInterfaceSymbol &b )

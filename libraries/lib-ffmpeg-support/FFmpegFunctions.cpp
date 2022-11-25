@@ -432,7 +432,7 @@ void FFmpegFunctions::FillCodecsList()
    if (av_codec_iterate != nullptr)
    {
       const AVCodec* currentCodec = nullptr;
-      void* i = 0;
+      void* i = nullptr;
       
       while ((currentCodec = av_codec_iterate(&i)))
       {
@@ -465,7 +465,7 @@ void FFmpegFunctions::FillOuptutFormatsList()
    if (av_muxer_iterate != nullptr)
    {
       const AVOutputFormat* currentFormat = nullptr;
-      void* i = 0;
+      void* i = nullptr;
 
       while ((currentFormat = av_muxer_iterate(&i)))
       {

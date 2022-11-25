@@ -51,18 +51,18 @@ class ExpandingToolBar final : public wxPanelWrapper
                     const wxPoint& pos = wxDefaultPosition,
                     const wxSize& size = wxDefaultSize);
 
-   virtual ~ExpandingToolBar();
+   ~ExpandingToolBar() override;
 
    wxPanel *GetMainPanel() { return mMainPanel; }
    wxPanel *GetExtraPanel() { return mExtraPanel; }
 
    void SetAutoExpand(bool enabled) { mAutoExpand = enabled; }
-   bool GetAutoExpand() { return mAutoExpand; }
+   bool GetAutoExpand() const { return mAutoExpand; }
 
    void Expand();
    void Collapse(bool now = false);
 
-   bool IsExpanded() { return mIsExpanded; }
+   bool IsExpanded() const { return mIsExpanded; }
 
    void OnSize(wxSizeEvent &evt);
    void OnToggle(wxCommandEvent &evt);
@@ -154,7 +154,7 @@ class ToolBarDialog final : public wxDialogWrapper
                  const TranslatableString& name = {},
                  const wxPoint& pos = wxDefaultPosition);
 
-   ~ToolBarDialog();
+   ~ToolBarDialog() override;
 
    void Fit() override;
 
@@ -176,7 +176,7 @@ class ToolBarFrame final : public wxMiniFrame
                 const wxString& name = {},
                 const wxPoint& pos = wxDefaultPosition);
 
-   ~ToolBarFrame();
+   ~ToolBarFrame() override;
 
    void Fit() override;
 
@@ -202,7 +202,7 @@ class ToolBarArea final : public wxPanelWrapper
                wxWindowID id,
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize);
-   ~ToolBarArea();
+   ~ToolBarArea() override;
 
    bool Layout() override;
    void Fit() override;

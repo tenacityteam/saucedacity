@@ -131,7 +131,7 @@ public:
                 SaucedacityProject &project,
                 AudacityCommand *command,
                 EffectUIClientInterface *client);
-   virtual ~EffectUIHost();
+   ~EffectUIHost() override;
 
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
@@ -169,7 +169,7 @@ private:
    void OnDefaults(wxCommandEvent & evt);
 
    void UpdateControls();
-   wxBitmap CreateBitmap(const char * const xpm[], bool up, bool pusher);
+   static wxBitmap CreateBitmap(const char * const xpm[], bool up, bool pusher);
    void LoadUserPresets();
 
    void InitializeRealtime();

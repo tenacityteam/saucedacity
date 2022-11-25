@@ -28,7 +28,7 @@ class LibraryPrefs final : public PrefsPanel
 {
  public:
    LibraryPrefs(wxWindow * parent, wxWindowID winid);
-   ~LibraryPrefs();
+   ~LibraryPrefs() override;
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
 

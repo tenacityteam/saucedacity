@@ -80,17 +80,17 @@ void FlowPacker::GetNextPosition( int xSize, int ySize )
    mComponentHeight = ySize;
 }
 
-wxRect FlowPacker::Rect()
+wxRect FlowPacker::Rect() const
 {
    return wxRect( mxPos, myPos, mComponentWidth, mComponentHeight);
 }
 
-wxRect FlowPacker::RectInner()
+wxRect FlowPacker::RectInner() const
 {
    return Rect().Deflate( mBorderWidth, mBorderWidth );
 }
 
-void FlowPacker::RectMid( int &x, int &y )
+void FlowPacker::RectMid( int &x, int &y ) const
 {
    x = mxPos + mComponentWidth/2;
    y = myPos + mComponentHeight/2;

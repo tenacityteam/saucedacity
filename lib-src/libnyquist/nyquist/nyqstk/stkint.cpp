@@ -1,6 +1,6 @@
 // interface for STK Effects
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "stkint.h"
 
@@ -17,7 +17,7 @@ struct stkEffect {
 };
 
 struct stkEffect *initStkEffect(int eff_type, ::StkFloat trev, int sample_rate) {
-  struct stkEffect * eff = (struct stkEffect *) malloc(sizeof(struct stkEffect));
+  auto * eff = (struct stkEffect *) malloc(sizeof(struct stkEffect));
   Stk::setSampleRate(sample_rate);
   switch(eff_type) {
   case NREV:
@@ -30,7 +30,7 @@ struct stkEffect *initStkEffect(int eff_type, ::StkFloat trev, int sample_rate) 
     eff->effectPtr = new PRCRev(trev);
     break;
   default:
-    return NULL;
+    return nullptr;
   }
   return eff;
 }
@@ -57,7 +57,7 @@ struct stkEffect *initStkPitShift(::StkFloat shift, int sample_rate) {
   PitShift * ps;
   ps = new PitShift();
   ps->setShift(shift);
-  struct stkEffect * eff  = (struct stkEffect *) malloc(sizeof(struct stkEffect));
+  auto * eff  = (struct stkEffect *) malloc(sizeof(struct stkEffect));
   Stk::setSampleRate(sample_rate);
   eff->effectPtr = ps;
   return eff;
@@ -72,7 +72,7 @@ struct stkEffect *initStkChorus(::StkFloat baseDelay, ::StkFloat depth, ::StkFlo
   ch = new Chorus(baseDelay);
   ch->setModDepth(depth);
   ch->setModFrequency(freq);
-  struct stkEffect * eff  = (struct stkEffect *) malloc(sizeof(struct stkEffect));
+  auto * eff  = (struct stkEffect *) malloc(sizeof(struct stkEffect));
   Stk::setSampleRate(sample_rate);
   eff->effectPtr = ch;
   return eff;

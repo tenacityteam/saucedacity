@@ -31,7 +31,7 @@ class VampEffectsModule final : public ModuleInterface
 {
 public:
    VampEffectsModule();
-   virtual ~VampEffectsModule();
+   ~VampEffectsModule() override;
 
    // ComponentInterface implementation
 
@@ -65,7 +65,7 @@ public:
 private:
    // VampEffectModule implementation
 
-   std::unique_ptr<Vamp::Plugin> FindPlugin(const PluginPath & wpath,
+   static std::unique_ptr<Vamp::Plugin> FindPlugin(const PluginPath & wpath,
                             int & output,
                             bool & hasParameters);
 };

@@ -93,33 +93,33 @@ struct FFMPEG_SUPPORT_API FFmpegFunctions :
 
    static std::vector<wxString> GetSearchPaths();
 
-   std::unique_ptr<AVIOContextWrapper> CreateAVIOContext() const;
-   std::unique_ptr<AVFormatContextWrapper> CreateAVFormatContext() const;
+   [[nodiscard]] std::unique_ptr<AVIOContextWrapper> CreateAVIOContext() const;
+   [[nodiscard]] std::unique_ptr<AVFormatContextWrapper> CreateAVFormatContext() const;
 
    std::unique_ptr<AVStreamWrapper> CreateAVStreamWrapper(AVStream* stream, bool forEncoding) const;
 
    //! @post return value is not null
-   std::unique_ptr<AVPacketWrapper> CreateAVPacketWrapper() const;
+   [[nodiscard]] std::unique_ptr<AVPacketWrapper> CreateAVPacketWrapper() const;
 
    //! @post return value is not null
-   std::unique_ptr<AVFrameWrapper> CreateAVFrameWrapper() const;
+   [[nodiscard]] std::unique_ptr<AVFrameWrapper> CreateAVFrameWrapper() const;
 
    std::unique_ptr<AVInputFormatWrapper> CreateAVInputFormatWrapper(AVInputFormat* inputFormat) const;
    std::unique_ptr<AVOutputFormatWrapper> CreateAVOutputFormatWrapper(const AVOutputFormat* outputFormat) const;
 
-   std::unique_ptr<AVCodecWrapper> CreateDecoder(AVCodecIDFwd codecID) const;
-   std::unique_ptr<AVCodecWrapper> CreateEncoder(AVCodecIDFwd codecID) const;
+   [[nodiscard]] std::unique_ptr<AVCodecWrapper> CreateDecoder(AVCodecIDFwd codecID) const;
+   [[nodiscard]] std::unique_ptr<AVCodecWrapper> CreateEncoder(AVCodecIDFwd codecID) const;
    std::unique_ptr<AVCodecWrapper> CreateEncoder(const char* codecName) const;
 
    std::unique_ptr<AVCodecContextWrapper> CreateAVCodecContextWrapper(AVCodecContext* context) const;
-   std::unique_ptr<AVCodecContextWrapper> CreateAVCodecContextWrapperFromCodec(std::unique_ptr<AVCodecWrapper> codec) const;
+   [[nodiscard]] std::unique_ptr<AVCodecContextWrapper> CreateAVCodecContextWrapperFromCodec(std::unique_ptr<AVCodecWrapper> codec) const;
 
    std::unique_ptr<AVOutputFormatWrapper> GuessOutputFormat(const char* short_name, const char* filename, const char* mime_type);
    
-   const std::vector<const AVOutputFormatWrapper*>& GetOutputFormats() const;
-   const std::vector<const AVCodecWrapper*>& GetCodecs() const;
+   [[nodiscard]] const std::vector<const AVOutputFormatWrapper*>& GetOutputFormats() const;
+   [[nodiscard]] const std::vector<const AVCodecWrapper*>& GetCodecs() const;
 
-   std::unique_ptr<AVFifoBufferWrapper> CreateFifoBuffer(int size) const;
+   [[nodiscard]] std::unique_ptr<AVFifoBufferWrapper> CreateFifoBuffer(int size) const;
 
    template<typename T>
    AVDataBuffer<T> CreateMemoryBuffer(int preallocatedSize) const

@@ -18,6 +18,7 @@
 
 #include "WaveLoop.h"
 #include <cmath>
+#include <utility>
 
 using namespace Nyq;
 
@@ -30,7 +31,7 @@ WaveLoop :: WaveLoop( std::string fileName, bool raw, bool doNormalize,
                       unsigned long chunkThreshold, unsigned long chunkSize )
   : FileWvIn( chunkThreshold, chunkSize ), phaseOffset_(0.0)
 {
-  this->openFile( fileName, raw, doNormalize );
+  this->openFile( std::move(fileName), raw, doNormalize );
 }
 
 WaveLoop :: ~WaveLoop()
@@ -43,7 +44,7 @@ void WaveLoop :: openFile( std::string fileName, bool raw, bool doNormalize )
   this->closeFile();
 
   // Attempt to open the file ... an error might be thrown here.
-  file_.open( fileName, raw );
+  file_.open( std::move(fileName), raw );
 
   // Determine whether chunking or not.
   if ( file_.fileSize() > chunkThreshold_ ) {
@@ -126,7 +127,7 @@ void WaveLoop :: addPhaseOffset( StkFloat angle )
   phaseOffset_ = file_.fileSize() * angle;
 }
 
-void WaveLoop :: computeFrame( void )
+void WaveLoop :: computeFrame( )
 {
   // Check limits of time address ... if necessary, recalculate modulo
   // fileSize.

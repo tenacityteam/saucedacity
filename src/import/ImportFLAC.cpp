@@ -100,7 +100,7 @@ class MyFLACFile final : public FLAC::Decoder::File
       set_metadata_respond(FLAC__METADATA_TYPE_STREAMINFO);
    }
 
-   bool get_was_error() const
+   [[nodiscard]] bool get_was_error() const
    {
       return mWasError;
    }
@@ -125,7 +125,7 @@ class FLACImportPlugin final : public ImportPlugin
    {
    }
 
-   ~FLACImportPlugin() { }
+   ~FLACImportPlugin() override { }
 
    wxString GetPluginStringID() override { return wxT("libflac"); }
    TranslatableString GetPluginFormatDescription() override;
@@ -139,7 +139,7 @@ class FLACImportFileHandle final : public ImportFileHandle
    friend class MyFLACFile;
 public:
    FLACImportFileHandle(const FilePath & name);
-   ~FLACImportFileHandle();
+   ~FLACImportFileHandle() override;
 
    bool Init();
 

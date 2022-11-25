@@ -77,7 +77,7 @@ DECLARE_BUILTIN_MODULE(LV2sEffectBuiltin);
 ///////////////////////////////////////////////////////////////////////////////
 using UriHash = std::unordered_map<wxString, LilvNode*>;
 
-LilvWorld *gWorld = NULL;
+LilvWorld *gWorld = nullptr;
 
 LV2EffectsModule::LV2EffectsModule()
 {
@@ -212,9 +212,7 @@ void LV2EffectsModule::Terminate()
    NODELIST
 
    lilv_world_free(gWorld);
-   gWorld = NULL;
-
-   return;
+   gWorld = nullptr;
 }
 
 EffectFamilySymbol LV2EffectsModule::GetOptionalFamilySymbol()
@@ -284,7 +282,7 @@ unsigned LV2EffectsModule::DiscoverPluginsAtPath(
    if (plug)
    {
       LV2Effect effect(plug);
-      if (effect.SetHost(NULL))
+      if (effect.SetHost(nullptr))
       {
          if (callback)
             callback( this, &effect );
@@ -300,7 +298,7 @@ bool LV2EffectsModule::IsPluginValid(const PluginPath & path, bool bFast)
 {
    if( bFast )
       return true;
-   return GetPlugin(path) != NULL;
+   return GetPlugin(path) != nullptr;
 }
 
 std::unique_ptr<ComponentInterface>
@@ -321,7 +319,7 @@ const LilvPlugin *LV2EffectsModule::GetPlugin(const PluginPath & path)
    LilvNode *uri = lilv_new_uri(gWorld, path.ToUTF8());
    if (!uri)
    {
-      return NULL;
+      return nullptr;
    }
 
    const LilvPlugin *plug = lilv_plugins_get_by_uri(lilv_world_get_all_plugins(gWorld), uri);

@@ -317,7 +317,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
 {
    t0 += GetTrimLeft();
 
-   const bool allocated = (display.where != 0);
+   const bool allocated = (display.where != nullptr);
 
    const size_t numPixels = (int)display.width;
 
@@ -385,7 +385,7 @@ bool WaveClip::GetWaveDisplay(WaveDisplay &display, double t0,
          ));
       }
       if (!(copyEnd > copyBegin))
-         oldCache.reset(0);
+         oldCache.reset(nullptr);
 
       mWaveCache = std::make_unique<WaveCache>(numPixels, pixelsPerSecond, mRate, t0, mDirty);
       min = &mWaveCache->min[0];
@@ -614,7 +614,7 @@ bool SpecCache::CalculateOneSpectrum
 
       // We can avoid copying memory when ComputeSpectrum is used below
       bool copy = !autocorrelation || (padding > 0) || reassignment;
-      float *useBuffer = 0;
+      float *useBuffer = nullptr;
       float *adj = scratch + padding;
 
       {
@@ -1294,7 +1294,7 @@ XMLTagHandler *WaveClip::HandleXMLChild(const wxChar *tag)
       return mCutLines.back().get();
    }
    else
-      return NULL;
+      return nullptr;
 }
 
 void WaveClip::WriteXML(XMLWriter &xmlFile) const
@@ -1353,7 +1353,7 @@ void WaveClip::Paste(double t0, const WaveClip* other)
 
    if (clipNeedsResampling || clipNeedsNewFormat)
    {
-      auto copy = std::make_unique<WaveClip>(*newClip.get(), mSequence->GetFactory(), true);
+      auto copy = std::make_unique<WaveClip>(*newClip, mSequence->GetFactory(), true);
       if (clipNeedsResampling)
          // The other clip's rate is different from ours, so resample
           copy->Resample(mRate);
@@ -1392,7 +1392,7 @@ void WaveClip::Paste(double t0, const WaveClip* other)
 }
 
 /*! @excsafety{Strong} */
-void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
+void WaveClip::InsertSilence( double t, double len, const double *pEnvelopeValue )
 {
    if (t == GetPlayStartTime() && t > GetSequenceStartTime())
       ClearSequence(GetSequenceStartTime(), t);

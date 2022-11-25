@@ -33,8 +33,8 @@ public:
 
    void InitialState();
    void SetStateTo(unsigned int n, bool doAutosave = true);
-   bool UndoAvailable() const;
-   bool RedoAvailable() const;
+   [[nodiscard]] bool UndoAvailable() const;
+   [[nodiscard]] bool RedoAvailable() const;
    void PushState(
       const TranslatableString &desc,
       const TranslatableString &shortDesc); // use UndoPush::AUTOSAVE
@@ -48,7 +48,7 @@ public:
       // projects
    void PopState(const UndoState &state, bool doAutosave = true);
 
-   bool GetDirty() const { return mDirty; }
+   [[nodiscard]] bool GetDirty() const { return mDirty; }
    void SetDirty( bool value ) { mDirty = value; }
 
 private:

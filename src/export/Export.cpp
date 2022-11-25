@@ -57,6 +57,8 @@
 #include <lib-files/wxFileNameWrapper.h>
 #include <lib-preferences/Prefs.h>
 
+#include <utility>
+
 #include "../theme/AllThemeResources.h"
 #include "../Mix.h"
 #include "../prefs/ImportExportPrefs.h"
@@ -284,7 +286,7 @@ END_EVENT_TABLE()
 namespace {
 const auto PathStart = wxT("Exporters");
 
-static Registry::GroupItem &sRegistry()
+Registry::GroupItem &sRegistry()
 {
    static Registry::TransparentGroupItem<> registry{ PathStart };
    return registry;
@@ -292,9 +294,9 @@ static Registry::GroupItem &sRegistry()
 
 struct ExporterItem final : Registry::SingleItem {
    ExporterItem(
-      const Identifier &id, const Exporter::ExportPluginFactory &factory )
+      const Identifier &id, Exporter::ExportPluginFactory factory )
       : SingleItem{ id }
-      , mFactory{ factory }
+      , mFactory{std::move( factory )}
    {}
 
    Exporter::ExportPluginFactory mFactory;
@@ -327,8 +329,8 @@ Exporter::Exporter( SaucedacityProject &project )
       { {wxT(""), wxT("PCM,MP3,OGG,FLAC,MP2,CommandLine,FFmpeg") } },
    };
 
-   mMixerSpec = NULL;
-   mBook = NULL;
+   mMixerSpec = nullptr;
+   mBook = nullptr;
 
    // build the list of export plugins.
    for ( const auto &factory : sFactories() )
@@ -346,7 +348,7 @@ Exporter::Exporter( SaucedacityProject &project )
       void Visit( SingleItem &item, const Path &path ) override
       {
          mPlugins.emplace_back(
-            static_cast<ExporterItem&>( item ).mFactory() );
+            dynamic_cast<ExporterItem&>( item ).mFactory() );
       }
 
       ExportPluginArray mPlugins;
@@ -646,7 +648,7 @@ bool Exporter::GetFilename()
       mFilename.SetName(_("untitled"));
    while (true) {
       // Must reset each iteration
-      mBook = NULL;
+      mBook = nullptr;
 
       {
          auto useFileName = mFilename;
@@ -893,7 +895,7 @@ bool Exporter::CheckMix(bool prompt /*= true*/ )
       ExportMixerDialog md(&TrackList::Get( *mProject ),
                            mSelectedOnly,
                            exportedChannels,
-                           NULL,
+                           nullptr,
                            1,
                            XO("Advanced Mixing Options"));
       if (prompt) {
@@ -947,7 +949,7 @@ bool Exporter::ExportTracks()
                                        mT0,
                                        mT1,
                                        mMixerSpec.get(),
-                                       NULL,
+                                       nullptr,
                                        mSubFormat);
 
    success =
@@ -958,7 +960,7 @@ bool Exporter::ExportTracks()
 
 void Exporter::CreateUserPaneCallback(wxWindow *parent, wxUIntPtr userdata)
 {
-   Exporter *self = (Exporter *) userdata;
+   auto *self = (Exporter *) userdata;
    if (self)
    {
       self->CreateUserPane(parent);
@@ -998,8 +1000,6 @@ void Exporter::CreateUserPane(wxWindow *parent)
       S.EndHorizontalLay();
    }
    S.EndStatic();
-
-   return;
 }
 
 void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
@@ -1007,7 +1007,7 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
    int index = evt.GetFilterIndex();
 
    // On GTK, this event can fire before the userpane is created
-   if (mBook == NULL || index < 0 || index >= (int) mBook->GetPageCount())
+   if (mBook == nullptr || index < 0 || index >= (int) mBook->GetPageCount())
    {
       return;
    }
@@ -1043,7 +1043,7 @@ void Exporter::OnFilterChanged(wxFileCtrlEvent & evt)
 bool Exporter::ProcessFromTimerRecording(bool selectedOnly,
                                          double t0,
                                          double t1,
-                                         wxFileName fnFile,
+                                         const wxFileName& fnFile,
                                          int iFormat,
                                          int iSubFormat,
                                          int iFilterIndex)
@@ -1083,15 +1083,15 @@ bool Exporter::ProcessFromTimerRecording(bool selectedOnly,
    return success;
 }
 
-int Exporter::GetAutoExportFormat() {
+int Exporter::GetAutoExportFormat() const {
    return mFormat;
 }
 
-int Exporter::GetAutoExportSubFormat() {
+int Exporter::GetAutoExportSubFormat() const {
    return mSubFormat;
 }
 
-int Exporter::GetAutoExportFilterIndex() {
+int Exporter::GetAutoExportFilterIndex() const {
    return mFormat;
 }
 
@@ -1129,14 +1129,14 @@ END_EVENT_TABLE()
 
 ExportMixerPanel::ExportMixerPanel( wxWindow *parent, wxWindowID id,
       MixerSpec *mixerSpec,
-      wxArrayString trackNames,
+      const wxArrayString& trackNames,
       const wxPoint& pos, const wxSize& size):
    wxPanelWrapper(parent, id, pos, size)
    , mMixerSpec{mixerSpec}
    , mChannelRects{ mMixerSpec->GetMaxNumChannels() }
    , mTrackRects{ mMixerSpec->GetNumTracks() }
 {
-   mBitmap = NULL;
+   mBitmap = nullptr;
    mWidth = 0;
    mHeight = 0;
    mSelectedTrack = mSelectedChannel = -1;
@@ -1474,7 +1474,7 @@ void ExportMixerDialog::OnSize(wxSizeEvent &event)
 
 void ExportMixerDialog::OnSlider( wxCommandEvent & WXUNUSED(event))
 {
-   wxSlider *channels = ( wxSlider* )FindWindow( ID_SLIDER_CHANNEL );
+   auto *channels = ( wxSlider* )FindWindow( ID_SLIDER_CHANNEL );
    ExportMixerPanel *pnl = ( ( ExportMixerPanel* ) FindWindow( ID_MIXERPANEL ) );
    mMixerSpec->SetNumChannels( channels->GetValue() );
    pnl->Refresh( false );
@@ -1517,7 +1517,7 @@ TranslatableString AudacityExportMessageStr()
 // page as we learn more about when (if ever) these errors actually happen.
 // The number happens to at one time have been a line number, but all
 // we need from them is that they be distinct.
-void ShowExportErrorDialog(wxString ErrorCode,
+void ShowExportErrorDialog(const wxString& ErrorCode,
    TranslatableString message,
    const TranslatableString& caption)
 {

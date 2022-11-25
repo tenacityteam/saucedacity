@@ -38,7 +38,7 @@ public:
    {}
 
    InconsistencyException(InconsistencyException&& that)
-      : MessageBoxException(std::move(that))
+      : MessageBoxException(that)
       , func{ that.func }
       , file{ that.file }
       , line{ that.line }

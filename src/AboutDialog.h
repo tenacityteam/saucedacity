@@ -33,8 +33,8 @@ class SAUCEDACITY_DLL_API AboutDialog final : public wxDialogWrapper {
    DECLARE_DYNAMIC_CLASS(AboutDialog)
 
  public:
-   AboutDialog(wxWindow * parent);
-   virtual ~ AboutDialog();
+   explicit AboutDialog(wxWindow * parent);
+   ~ AboutDialog() override;
 
    static AboutDialog *ActiveInstance();
 
@@ -70,17 +70,17 @@ class SAUCEDACITY_DLL_API AboutDialog final : public wxDialogWrapper {
 
    AboutDialogCreditItemsList creditItems;
    void PopulateAudacityPage( ShuttleGui & S );
-   void PopulateLicensePage( ShuttleGui & S );
+   static void PopulateLicensePage( ShuttleGui & S );
    void PopulateInformationPage (ShuttleGui & S );
 
    void CreateCreditsList();
    void AddCredit( const wxString &name, Role role );
-   void AddCredit( const wxString &name, TranslatableString format, Role role );
+   void AddCredit( const wxString &name, const TranslatableString& format, Role role );
    wxString GetCreditsByRole(AboutDialog::Role role);
 
-   void AddBuildinfoRow( wxTextOutputStream *str, const wxChar * libname,
+   static void AddBuildinfoRow( wxTextOutputStream *str, const wxChar * libname,
       const TranslatableString &libdesc, const TranslatableString &status);
-   void AddBuildinfoRow( wxTextOutputStream *str,
+   static void AddBuildinfoRow( wxTextOutputStream *str,
       const TranslatableString &description, const wxChar *spec);
 };
 #endif

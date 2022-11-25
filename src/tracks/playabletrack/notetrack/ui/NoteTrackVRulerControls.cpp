@@ -72,7 +72,7 @@ unsigned NoteTrackVRulerControls::HandleWheelRotation
       return RefreshNone;
 
    auto steps = evt.steps;
-   const auto nt = static_cast<NoteTrack*>(pTrack.get());
+   const auto nt = dynamic_cast<NoteTrack*>(pTrack.get());
 
    if (event.CmdDown() && !event.ShiftDown()) {
       if (steps > 0)

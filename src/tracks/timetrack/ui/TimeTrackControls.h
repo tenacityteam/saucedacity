@@ -11,6 +11,8 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_TIME_TRACK_CONTROLS__
 #define __AUDACITY_TIME_TRACK_CONTROLS__
 
+#include <utility>
+
 #include "../../ui/CommonTrackControls.h" // to inherit
 
 class TimeTrackControls final : public CommonTrackControls
@@ -21,8 +23,8 @@ class TimeTrackControls final : public CommonTrackControls
 public:
    explicit
    TimeTrackControls( std::shared_ptr<Track> pTrack )
-      : CommonTrackControls( pTrack ) {}
-   ~TimeTrackControls();
+      : CommonTrackControls( std::move(pTrack) ) {}
+   ~TimeTrackControls() override;
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,

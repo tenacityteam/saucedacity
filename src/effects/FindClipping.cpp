@@ -54,8 +54,7 @@ EffectFindClipping::EffectFindClipping()
 }
 
 EffectFindClipping::~EffectFindClipping()
-{
-}
+= default;
 
 // ComponentInterface implementation
 

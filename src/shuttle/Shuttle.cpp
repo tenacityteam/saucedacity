@@ -326,7 +326,7 @@ bool ShuttleParams::ShouldSet(){
    if( !pOptionalFlag )
       return true;
    bool result = *pOptionalFlag;
-   pOptionalFlag = NULL;
+   pOptionalFlag = nullptr;
    return result;
 }
 // These are functions to override.  They do nothing.
@@ -421,7 +421,7 @@ bool ShuttleSetAutomation::CouldGet( const wxString &key ){
       return true;
    bool result = mpEap->HasEntry( key );
    *pOptionalFlag = result;
-   pOptionalFlag = NULL;
+   pOptionalFlag = nullptr;
    return result;
 }
 

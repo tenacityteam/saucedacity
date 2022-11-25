@@ -35,7 +35,7 @@ public:
       : mpProject(pProject)
    {}
 
-   virtual ~BackgroundCell();
+   ~BackgroundCell() override;
 
 protected:
    std::vector<UIHandlePtr> HitTest

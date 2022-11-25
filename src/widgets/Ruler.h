@@ -75,7 +75,7 @@ class SAUCEDACITY_DLL_API Ruler {
    // Specify the name of the units (like "dB") if you
    // want numbers like "1.6" formatted as "1.6 dB".
    void SetUnits(const TranslatableString &units);
-   void SetDbMirrorValue( const double d );
+   void SetDbMirrorValue( double d );
 
    // Logarithmic
    void SetLog(bool log);
@@ -253,7 +253,7 @@ class SAUCEDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
       Options &TicksAtExtremes( bool t )
       { ticksAtExtremes = t; return *this; }
 
-      Options &TickColour( const wxColour c )
+      Options &TickColour( const wxColour& c )
       { tickColour = c; hasTickColour = true; return *this; }
    };
 
@@ -267,7 +267,7 @@ class SAUCEDACITY_DLL_API RulerPanel final : public wxPanelWrapper {
               const wxPoint& pos = wxDefaultPosition,
               const wxSize& size = wxDefaultSize);
 
-   ~RulerPanel();
+   ~RulerPanel() override;
 
    void DoSetSize(int x, int y,
                   int width, int height,

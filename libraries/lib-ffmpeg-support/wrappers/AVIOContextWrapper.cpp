@@ -51,7 +51,7 @@ AVIOContextWrapper::Open(const wxString& fileName, bool forWriting)
    if (!pFile->Open(fileName, forWriting ? wxFile::write : wxFile::read))
       return OpenResult::FileOpenFailed;
 
-   unsigned char* buffer =
+   auto* buffer =
       static_cast<unsigned char*>(mFFmpeg.av_malloc(BufferSize));
 
    if (buffer == nullptr)
@@ -83,7 +83,7 @@ AVIOContextWrapper::Open(const wxString& fileName, bool forWriting)
 
 int AVIOContextWrapper::FileRead(void* opaque, uint8_t* buf, int size)
 {
-   AVIOContextWrapper* wrapper = static_cast<AVIOContextWrapper*>(opaque);
+   auto* wrapper = static_cast<AVIOContextWrapper*>(opaque);
    
    if (wrapper == nullptr)
       return AUDACITY_AVERROR(EINVAL);
@@ -93,7 +93,7 @@ int AVIOContextWrapper::FileRead(void* opaque, uint8_t* buf, int size)
 
 int AVIOContextWrapper::FileWrite(void* opaque, const uint8_t* buf, int size)
 {
-   AVIOContextWrapper* wrapper = static_cast<AVIOContextWrapper*>(opaque);
+   auto* wrapper = static_cast<AVIOContextWrapper*>(opaque);
    if (!(wrapper && wrapper->mpFile))
       return {};
    return wrapper->mpFile->Write(buf, size);
@@ -101,7 +101,7 @@ int AVIOContextWrapper::FileWrite(void* opaque, const uint8_t* buf, int size)
 
 int64_t AVIOContextWrapper::FileSeek(void* opaque, int64_t pos, int whence)
 {
-   AVIOContextWrapper* wrapper = static_cast<AVIOContextWrapper*>(opaque);
+   auto* wrapper = static_cast<AVIOContextWrapper*>(opaque);
    if (!(wrapper && wrapper->mpFile))
       return {};
 

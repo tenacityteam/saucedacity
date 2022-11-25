@@ -36,18 +36,18 @@ public:
    };
    using Entries = std::vector<Entry>;
 
-   MacroCommandsCatalog( const SaucedacityProject *project );
+   explicit MacroCommandsCatalog( const SaucedacityProject *project );
 
    // binary search
-   Entries::const_iterator ByFriendlyName( const TranslatableString &friendlyName ) const;
+   [[nodiscard]] Entries::const_iterator ByFriendlyName( const TranslatableString &friendlyName ) const;
    // linear search
-   Entries::const_iterator ByCommandId( const CommandID &commandId ) const;
+   [[nodiscard]] Entries::const_iterator ByCommandId( const CommandID &commandId ) const;
 
    // Lookup by position as sorted by friendly name
    const Entry &operator[] ( size_t index ) const { return mCommands[index]; }
 
-   Entries::const_iterator begin() const { return mCommands.begin(); }
-   Entries::const_iterator end() const { return mCommands.end(); }
+   [[nodiscard]] Entries::const_iterator begin() const { return mCommands.begin(); }
+   [[nodiscard]] Entries::const_iterator end() const { return mCommands.end(); }
 
 private:
    // Sorted by friendly name
@@ -61,7 +61,7 @@ class MacroCommands final {
       const PluginID & ID, const CommandContext & context, unsigned flags );
 
    // constructors and destructors
-   MacroCommands( SaucedacityProject &project );
+   explicit MacroCommands( SaucedacityProject &project );
  public:
    bool ApplyMacro( const MacroCommandsCatalog &catalog,
       const wxString & filename = {});
@@ -70,15 +70,15 @@ class MacroCommands final {
       const CommandContext & context, CommandFlag flags, bool alwaysEnabled);
    bool ApplyCommand( const TranslatableString &friendlyCommand,
       const CommandID & command, const wxString & params,
-      CommandContext const * pContext=NULL );
+      CommandContext const * pContext=nullptr );
    bool ApplyCommandInBatchMode( const TranslatableString &friendlyCommand,
       const CommandID & command, const wxString &params,
-      CommandContext const * pContext = NULL);
+      CommandContext const * pContext = nullptr);
    bool ApplyEffectCommand(
       const PluginID & ID, const TranslatableString &friendlyCommand,
       const CommandID & command,
       const wxString & params, const CommandContext & Context);
-   bool ReportAndSkip( const TranslatableString & friendlyCommand, const wxString & params );
+   static bool ReportAndSkip( const TranslatableString & friendlyCommand, const wxString & params );
    void AbortBatch();
 
    // These commands do not depend on the command list.
@@ -97,9 +97,9 @@ class MacroCommands final {
    void RestoreMacro(const wxString & name);
    wxString ReadMacro(const wxString & macro, wxWindow *parent = nullptr);
    wxString WriteMacro(const wxString & macro, wxWindow *parent = nullptr);
-   bool AddMacro(const wxString & macro);
-   bool DeleteMacro(const wxString & name);
-   bool RenameMacro(const wxString & oldmacro, const wxString & newmacro);
+   static bool AddMacro(const wxString & macro);
+   static bool DeleteMacro(const wxString & name);
+   static bool RenameMacro(const wxString & oldmacro, const wxString & newmacro);
 
    void AddToMacro(const CommandID & command, int before = -1);
    void AddToMacro(const CommandID & command, const wxString & params, int before = -1);
@@ -111,10 +111,10 @@ class MacroCommands final {
    wxString GetMessage(){ return mMessage;};
    void AddToMessage(const wxString & msgIn ){ mMessage += msgIn;};
 
-   bool IsFixed(const wxString & name);
+   static bool IsFixed(const wxString & name);
 
-   void Split(const wxString & str, wxString & command, wxString & param);
-   wxString Join(const wxString & command, const wxString & param);
+   static void Split(const wxString & str, wxString & command, wxString & param);
+   static wxString Join(const wxString & command, const wxString & param);
 
 private:
    SaucedacityProject &mProject;

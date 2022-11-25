@@ -16,7 +16,7 @@ public:
    {
    }
 
-   const char* GetName() const noexcept override
+   [[nodiscard]] const char* GetName() const noexcept override
    {
       if (mAVCodec != nullptr)
          return mAVCodec->name;
@@ -24,7 +24,7 @@ public:
       return {};
    }
 
-   const char* GetLongName() const noexcept override
+   [[nodiscard]] const char* GetLongName() const noexcept override
    {
       if (mAVCodec != nullptr)
          return mAVCodec->long_name;
@@ -32,7 +32,7 @@ public:
       return {};
    }
 
-   AVMediaTypeFwd GetType() const noexcept override
+   [[nodiscard]] AVMediaTypeFwd GetType() const noexcept override
    {
       if (mAVCodec != nullptr)
          return mAVCodec->type;
@@ -40,7 +40,7 @@ public:
       return {};
    }
 
-   AVCodecIDFwd GetId() const noexcept override
+   [[nodiscard]] AVCodecIDFwd GetId() const noexcept override
    {
       if (mAVCodec != nullptr)
          return mAVCodec->id;
@@ -48,7 +48,7 @@ public:
       return {};
    }
 
-   int GetCapabilities() const noexcept override
+   [[nodiscard]] int GetCapabilities() const noexcept override
    {
       if (mAVCodec != nullptr)
          return mAVCodec->capabilities;
@@ -56,7 +56,7 @@ public:
       return {};
    }
 
-   const AVRational* GetSupportedFramerates() const noexcept override
+   [[nodiscard]] const AVRational* GetSupportedFramerates() const noexcept override
    {
       if (mAVCodec != nullptr)
          return mAVCodec->supported_framerates;
@@ -64,7 +64,7 @@ public:
       return {};
    }
 
-   const AVPixelFormatFwd* GetPixFmts() const noexcept override
+   [[nodiscard]] const AVPixelFormatFwd* GetPixFmts() const noexcept override
    {
       static_assert(sizeof(AVPixelFormat) == sizeof(AVPixelFormatFwd));
       if (mAVCodec != nullptr)
@@ -73,7 +73,7 @@ public:
       return {};
    }
 
-   const int* GetSupportedSamplerates() const noexcept override
+   [[nodiscard]] const int* GetSupportedSamplerates() const noexcept override
    {
       if (mAVCodec != nullptr)
          return mAVCodec->supported_samplerates;
@@ -81,7 +81,7 @@ public:
       return {};
    }
 
-   const AVSampleFormatFwd* GetSampleFmts() const noexcept override
+   [[nodiscard]] const AVSampleFormatFwd* GetSampleFmts() const noexcept override
    {
       static_assert(sizeof(AVSampleFormat) == sizeof(AVSampleFormatFwd));
 
@@ -91,7 +91,7 @@ public:
       return {};
    }
 
-   const uint64_t* GetChannelLayouts() const noexcept override
+   [[nodiscard]] const uint64_t* GetChannelLayouts() const noexcept override
    {
       if (mAVCodec != nullptr)
          return mAVCodec->channel_layouts;
@@ -99,7 +99,7 @@ public:
       return {};
    }
 
-   uint8_t GetMaxLowres() const noexcept override
+   [[nodiscard]] uint8_t GetMaxLowres() const noexcept override
    {
       if (mAVCodec != nullptr)
          return mAVCodec->max_lowres;
@@ -107,7 +107,7 @@ public:
       return {};
    }
 
-   bool IsAudio() const noexcept override
+   [[nodiscard]] bool IsAudio() const noexcept override
    {
       if (mAVCodec != nullptr)
          return mAVCodec->type == AVMEDIA_TYPE_AUDIO;

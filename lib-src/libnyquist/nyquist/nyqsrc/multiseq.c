@@ -142,11 +142,11 @@ sample_block_type multiseq_get_next(sound_type snd, long * cnt);
 void multiseq_print_tree(snd_susp_type a_susp, int n);
 
 
-#define susp_cnt_time(ssp, ms, cnt) (ssp->susp.t0 - ms->t0 + (cnt)/ssp->s1->sr)
+#define susp_cnt_time(ssp, ms, cnt) ((ssp)->susp.t0 - (ms)->t0 + (cnt)/(ssp)->s1->sr)
 #define susp_time(ssp, ms) susp_cnt_time(ssp, ms, \
-                                         (ssp->susp.current + ssp->s1_cnt))
-#define susp_low_water(ssp, ms) susp_cnt_time(ssp, ms, ssp->susp.current)
-#define susp_log_stop_time(ssp, ms) susp_cnt_time(ssp, ms, ssp->susp.log_stop_cnt)
+                                         ((ssp)->susp.current + (ssp)->s1_cnt))
+#define susp_low_water(ssp, ms) susp_cnt_time(ssp, ms, (ssp)->susp.current)
+#define susp_log_stop_time(ssp, ms) susp_cnt_time(ssp, ms, (ssp)->susp.log_stop_cnt)
 
 
 /* multiseq_advance fetches from each channel to advance to target time */

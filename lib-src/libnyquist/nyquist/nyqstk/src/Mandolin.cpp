@@ -36,18 +36,18 @@ Mandolin :: Mandolin(StkFloat lowestFrequency)
   : PluckTwo(lowestFrequency)
 {
   // Concatenate the STK rawwave path to the rawwave files
-  soundfile_[0] = new FileWvIn( (Stk::rawwavePath() + "mand1.raw").c_str(), true );
-  soundfile_[1] = new FileWvIn( (Stk::rawwavePath() + "mand2.raw").c_str(), true );
-  soundfile_[2] = new FileWvIn( (Stk::rawwavePath() + "mand3.raw").c_str(), true );
-  soundfile_[3] = new FileWvIn( (Stk::rawwavePath() + "mand4.raw").c_str(), true );
-  soundfile_[4] = new FileWvIn( (Stk::rawwavePath() + "mand5.raw").c_str(), true );
-  soundfile_[5] = new FileWvIn( (Stk::rawwavePath() + "mand6.raw").c_str(), true );
-  soundfile_[6] = new FileWvIn( (Stk::rawwavePath() + "mand7.raw").c_str(), true );
-  soundfile_[7] = new FileWvIn( (Stk::rawwavePath() + "mand8.raw").c_str(), true );
-  soundfile_[8] = new FileWvIn( (Stk::rawwavePath() + "mand9.raw").c_str(), true );
-  soundfile_[9] = new FileWvIn( (Stk::rawwavePath() + "mand10.raw").c_str(), true );
-  soundfile_[10] = new FileWvIn( (Stk::rawwavePath() + "mand11.raw").c_str(), true );
-  soundfile_[11] = new FileWvIn( (Stk::rawwavePath() + "mand12.raw").c_str(), true );
+  soundfile_[0] = new FileWvIn( Stk::rawwavePath() + "mand1.raw", true );
+  soundfile_[1] = new FileWvIn( Stk::rawwavePath() + "mand2.raw", true );
+  soundfile_[2] = new FileWvIn( Stk::rawwavePath() + "mand3.raw", true );
+  soundfile_[3] = new FileWvIn( Stk::rawwavePath() + "mand4.raw", true );
+  soundfile_[4] = new FileWvIn( Stk::rawwavePath() + "mand5.raw", true );
+  soundfile_[5] = new FileWvIn( Stk::rawwavePath() + "mand6.raw", true );
+  soundfile_[6] = new FileWvIn( Stk::rawwavePath() + "mand7.raw", true );
+  soundfile_[7] = new FileWvIn( Stk::rawwavePath() + "mand8.raw", true );
+  soundfile_[8] = new FileWvIn( Stk::rawwavePath() + "mand9.raw", true );
+  soundfile_[9] = new FileWvIn( Stk::rawwavePath() + "mand10.raw", true );
+  soundfile_[10] = new FileWvIn( Stk::rawwavePath() + "mand11.raw", true );
+  soundfile_[11] = new FileWvIn( Stk::rawwavePath() + "mand12.raw", true );
 
   mic_ = 0;
   dampTime_ = 0;
@@ -56,8 +56,8 @@ Mandolin :: Mandolin(StkFloat lowestFrequency)
 
 Mandolin :: ~Mandolin()
 {
-  for ( int i=0; i<12; i++ )
-    delete soundfile_[i];
+  for (auto & i : soundfile_)
+    delete i;
 }
 
 void Mandolin :: pluck(StkFloat amplitude)
@@ -118,8 +118,8 @@ void Mandolin :: setBodySize(StkFloat size)
 {
   // Scale the commuted body response by its sample rate (22050).
   StkFloat rate = size * 22050.0 / Stk::sampleRate();
-  for ( int i=0; i<12; i++ )
-    soundfile_[i]->setRate( rate );
+  for (auto & i : soundfile_)
+    i->setRate( rate );
 }
 
 StkFloat Mandolin :: computeSample()

@@ -120,8 +120,7 @@ EffectToneGen::EffectToneGen(bool isChirp)
 }
 
 EffectToneGen::~EffectToneGen()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -466,8 +465,6 @@ void EffectToneGen::PopulateOrExchange(ShuttleGui & S)
          .AddWindow(mToneDurationT);
    }
    S.EndMultiColumn();
-
-   return;
 }
 
 bool EffectToneGen::TransferDataToWindow()

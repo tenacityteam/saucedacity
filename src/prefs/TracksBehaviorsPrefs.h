@@ -25,7 +25,7 @@ class SAUCEDACITY_DLL_API TracksBehaviorsPrefs final : public PrefsPanel
 {
  public:
    TracksBehaviorsPrefs(wxWindow * parent, wxWindowID winid);
-   ~TracksBehaviorsPrefs();
+   ~TracksBehaviorsPrefs() override;
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
 

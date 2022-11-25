@@ -126,10 +126,10 @@ public:
    void OptionsCreate(ShuttleGui &S, int format) override;
 
    /// Check whether or not current project sample rate is compatible with the export codec
-   bool CheckSampleRate(int rate, int lowrate, int highrate, const int *sampRates);
+   static bool CheckSampleRate(int rate, int lowrate, int highrate, const int *sampRates);
 
    /// Asks user to resample the project or cancel the export procedure
-   int  AskResample(int bitrate, int rate, int lowrate, int highrate, const int *sampRates);
+   static int  AskResample(int bitrate, int rate, int lowrate, int highrate, const int *sampRates);
 
    /// Exports audio
    ///\param project Audacity project
@@ -148,8 +148,8 @@ public:
       bool selectedOnly,
       double t0,
       double t1,
-      MixerSpec *mixerSpec = NULL,
-      const Tags *metadata = NULL,
+      MixerSpec *mixerSpec = nullptr,
+      const Tags *metadata = nullptr,
       int subformat = 0) override;
 
 private:
@@ -158,7 +158,7 @@ private:
 
    bool WritePacket(AVPacketWrapper& packet);
 
-   int EncodeAudio(AVPacketWrapper& pkt, int16_t* audio_samples, int nb_samples);
+   int EncodeAudio(AVPacketWrapper& pkt, const int16_t* audio_samples, int nb_samples);
 
    std::shared_ptr<FFmpegFunctions> mFFmpeg;
 
@@ -185,8 +185,8 @@ private:
 ExportFFmpeg::ExportFFmpeg()
 :  ExportPlugin()
 {
-   mEncFormatDesc = NULL;      // describes our output file to libavformat
-   mEncAudioStream = NULL;     // the output audio stream (may remain NULL)
+   mEncFormatDesc = nullptr;      // describes our output file to libavformat
+   mEncAudioStream = nullptr;     // the output audio stream (may remain NULL)
    #define MAX_AUDIO_PACKET_SIZE (128 * 1024)
    mEncAudioFifoOutBufSize = 0;
 
@@ -209,7 +209,7 @@ ExportFFmpeg::ExportFFmpeg()
          auto avoformat = mFFmpeg->GuessOutputFormat(shortname.mb_str(), nullptr, nullptr);
          auto avcodec = mFFmpeg->CreateEncoder(mFFmpeg->GetAVCodecID(ExportFFmpegOptions::fmts[newfmt].codecid));
 
-         if (avoformat == NULL || avcodec == NULL)
+         if (avoformat == nullptr || avcodec == nullptr)
          {
             ExportFFmpegOptions::fmts[newfmt].compiledIn = false;
             continue;
@@ -364,7 +364,7 @@ bool ExportFFmpeg::Init(const char *shortname, SaucedacityProject *project, cons
    if (mEncAudioStream->SetParametersFromContext(*mEncAudioCodecCtx) < 0)
       return false;
 
-   if (metadata == NULL)
+   if (metadata == nullptr)
       metadata = &Tags::Get( *project );
 
    // Add metadata BEFORE writing the header.
@@ -613,7 +613,7 @@ bool ExportFFmpeg::InitCodecs(SaucedacityProject *project)
    }
 
    // Is the required audio codec compiled into libavcodec?
-   if (codec == NULL)
+   if (codec == nullptr)
    {
       AudacityMessageBox(
          XO(
@@ -786,7 +786,7 @@ bool ExportFFmpeg::WritePacket(AVPacketWrapper& pkt)
 }
 
 // Returns 0 if no more output, 1 if more output, negative if error
-int ExportFFmpeg::EncodeAudio(AVPacketWrapper& pkt, int16_t* audio_samples, int nb_samples)
+int ExportFFmpeg::EncodeAudio(AVPacketWrapper& pkt, const int16_t* audio_samples, int nb_samples)
 {
    int i, ch, buffer_size, ret, got_output = 0;
    AVDataBuffer<uint8_t> samples;
@@ -807,7 +807,7 @@ int ExportFFmpeg::EncodeAudio(AVPacketWrapper& pkt, int16_t* audio_samples, int 
       frame->SetChannelLayout(mEncAudioCodecCtx->GetChannelLayout());
 
       buffer_size = mFFmpeg->av_samples_get_buffer_size(
-         NULL, mEncAudioCodecCtx->GetChannels(), nb_samples,
+         nullptr, mEncAudioCodecCtx->GetChannels(), nb_samples,
          mEncAudioCodecCtx->GetSampleFmt(), 0);
 
       if (buffer_size < 0)
@@ -1015,7 +1015,7 @@ bool ExportFFmpeg::Finalize()
       {
          // Fifo is empty, flush encoder. May be called multiple times.
          encodeResult =
-            EncodeAudio(*pkt.get(), nullptr, 0);
+            EncodeAudio(*pkt, nullptr, 0);
       }
 
       if (encodeResult < 0) {
@@ -1171,7 +1171,7 @@ ProgressResult ExportFFmpeg::Export(SaucedacityProject *project,
          if (pcmNumSamples == 0)
             break;
 
-         short *pcmBuffer = (short *)mixer->GetBuffer();
+         auto *pcmBuffer = (short *)mixer->GetBuffer();
 
          if (!EncodeAudioFrame(
             pcmBuffer, (pcmNumSamples)*sizeof(int16_t)*mChannels)) {
@@ -1195,13 +1195,13 @@ ProgressResult ExportFFmpeg::Export(SaucedacityProject *project,
    return updateResult;
 }
 
-void AddStringTagUTF8(char field[], int size, wxString value)
+void AddStringTagUTF8(char field[], int size, const wxString& value)
 {
       memset(field,0,size);
       memcpy(field,value.ToUTF8(),(int)strlen(value.ToUTF8()) > size -1 ? size -1 : strlen(value.ToUTF8()));
 }
 
-void AddStringTagANSI(char field[], int size, wxString value)
+void AddStringTagANSI(char field[], int size, const wxString& value)
 {
       memset(field,0,size);
       memcpy(field,value.mb_str(),(int)strlen(value.mb_str()) > size -1 ? size -1 : strlen(value.mb_str()));
@@ -1209,7 +1209,7 @@ void AddStringTagANSI(char field[], int size, wxString value)
 
 bool ExportFFmpeg::AddTags(const Tags *tags)
 {
-   if (tags == NULL)
+   if (tags == nullptr)
    {
       return false;
    }

@@ -42,7 +42,7 @@ class RingBuffer final : public NonInterferingBase {
    size_t Discard(size_t samples);
 
  private:
-   size_t Filled( size_t start, size_t end );
+   size_t Filled( size_t start, size_t end ) const;
    size_t Free( size_t start, size_t end );
 
    // Align the two atomics to avoid false sharing

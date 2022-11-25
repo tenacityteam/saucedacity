@@ -131,7 +131,7 @@ TrackShifter::TrackShifter() = default;
 TrackShifter::~TrackShifter() = default;
 
 void TrackShifter::UnfixIntervals(
-   std::function< bool( const TrackInterval& ) > pred )
+   const std::function< bool( const TrackInterval& ) >& pred )
 {
    for ( auto iter = mFixed.begin(); iter != mFixed.end(); ) {
       if ( pred( *iter) ) {
@@ -184,7 +184,7 @@ bool TrackShifter::MayMigrateTo(Track &)
    return false;
 }
 
-bool TrackShifter::CommonMayMigrateTo(Track &otherTrack)
+bool TrackShifter::CommonMayMigrateTo(Track &otherTrack) const
 {
    auto &track = GetTrack();
 
@@ -378,7 +378,7 @@ void ClipMoveState::Init(
          // Iterate over all unfixed intervals in all tracks
          // that do propagation and are in sync lock groups ...
          for ( auto &pair : state.shifters ) {
-            auto &shifter = *pair.second.get();
+            auto &shifter = *pair.second;
             if (!shifter.SyncLocks())
                continue;
             auto &track = shifter.GetTrack();
@@ -865,7 +865,7 @@ UIHandle::Result TimeShiftHandle::Drag
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   TrackView *trackView = dynamic_cast<TrackView*>(evt.pCell.get());
+   auto *trackView = dynamic_cast<TrackView*>(evt.pCell.get());
    Track *track = trackView ? trackView->FindTrack().get() : nullptr;
 
    // Uncommenting this permits drag to continue to work even over the controls area

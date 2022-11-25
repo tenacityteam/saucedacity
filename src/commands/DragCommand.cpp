@@ -34,8 +34,7 @@ const ComponentInterfaceSymbol DragCommand::Symbol
 namespace{ BuiltinCommandsModule::Registration< DragCommand > reg; }
 
 DragCommand::DragCommand()
-{
-}
+= default;
 
 enum kCoordTypes
 {

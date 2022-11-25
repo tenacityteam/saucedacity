@@ -26,7 +26,7 @@ public:
    EditCursorOverlay(SaucedacityProject *project, bool isMaster = true);
 
 private:
-   unsigned SequenceNumber() const override;
+   [[nodiscard]] unsigned SequenceNumber() const override;
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 

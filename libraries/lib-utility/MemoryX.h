@@ -363,9 +363,9 @@ struct IteratorRange : public std::pair<Iterator, Iterator> {
    reverse_iterator rbegin() const { return reverse_iterator{ this->second }; }
    reverse_iterator rend() const { return reverse_iterator{ this->first }; }
 
-   bool empty() const { return this->begin() == this->end(); }
+   [[nodiscard]] bool empty() const { return this->begin() == this->end(); }
    explicit operator bool () const { return !this->empty(); }
-   size_t size() const { return std::distance(this->begin(), this->end()); }
+   [[nodiscard]] size_t size() const { return std::distance(this->begin(), this->end()); }
 
    template <typename T> iterator find(const T &t) const
    { return std::find(this->begin(), this->end(), t); }

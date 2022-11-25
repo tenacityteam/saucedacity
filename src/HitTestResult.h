@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_HIT_TEST_RESULT__
 
 #include <memory>
+#include <utility>
 
 // Saucedacity libraries
 #include <lib-strings/Internat.h> // for TranslatableString
@@ -23,9 +24,9 @@ struct HitTestPreview
    HitTestPreview()
    {}
 
-   HitTestPreview(const TranslatableString &message_, wxCursor *cursor_,
-      const TranslatableString &tooltip_ = {})
-      : message{ message_ }, cursor{ cursor_ }, tooltip{ tooltip_ }
+   HitTestPreview(TranslatableString message_, wxCursor *cursor_,
+      TranslatableString tooltip_ = {})
+      : message{std::move( message_ )}, cursor{ cursor_ }, tooltip{std::move( tooltip_ )}
    {}
 
    TranslatableString message {};

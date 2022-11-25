@@ -112,7 +112,7 @@ TranscriptionToolBar::~TranscriptionToolBar()
 TranscriptionToolBar &TranscriptionToolBar::Get( SaucedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<TranscriptionToolBar*>( toolManager.GetToolBar(TranscriptionBarID) );
+   return *dynamic_cast<TranscriptionToolBar*>( toolManager.GetToolBar(TranscriptionBarID) );
 }
 
 const TranscriptionToolBar &TranscriptionToolBar::Get( const SaucedacityProject &project )
@@ -380,7 +380,7 @@ void TranscriptionToolBar::OnFocus(wxFocusEvent &event)
 
 void TranscriptionToolBar::OnCaptureKey(wxCommandEvent &event)
 {
-   wxKeyEvent *kevent = (wxKeyEvent *)event.GetEventObject();
+   auto *kevent = (wxKeyEvent *)event.GetEventObject();
    int keyCode = kevent->GetKeyCode();
 
    // Pass LEFT/RIGHT/UP/DOWN/PAGEUP/PAGEDOWN through for input/output sliders
@@ -391,8 +391,6 @@ void TranscriptionToolBar::OnCaptureKey(wxCommandEvent &event)
    }
 
    event.Skip();
-
-   return;
 }
 
 //This handles key-stroke events????

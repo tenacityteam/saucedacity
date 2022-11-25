@@ -99,7 +99,7 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
 
    // S.StartStatic(XO("Track Settings"));
    {
-      mDefaultsCheckbox = 0;
+      mDefaultsCheckbox = nullptr;
       if (mWt) {
          /* i18n-hint: use is a verb */
          mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(XXO("&Use Preferences"), mDefaulted);

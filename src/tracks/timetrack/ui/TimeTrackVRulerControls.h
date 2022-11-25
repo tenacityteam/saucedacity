@@ -26,7 +26,7 @@ public:
    explicit
    TimeTrackVRulerControls( const std::shared_ptr<TrackView> &pTrackView )
       : TrackVRulerControls( pTrackView ) {}
-   ~TimeTrackVRulerControls();
+   ~TimeTrackVRulerControls() override;
 
    std::vector<UIHandlePtr> HitTest(
       const TrackPanelMouseState &state,

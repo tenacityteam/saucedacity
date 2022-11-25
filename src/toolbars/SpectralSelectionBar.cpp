@@ -98,10 +98,10 @@ static const wxString preferencePath
 SpectralSelectionBar::SpectralSelectionBar( SaucedacityProject &project )
 : ToolBar( project,
    SpectralSelectionBarID, XO("Spectral Selection"), wxT("SpectralSelection") )
-, mListener(NULL), mbCenterAndWidth(true)
+, mListener(nullptr), mbCenterAndWidth(true)
 , mCenter(0.0), mWidth(0.0), mLow(0.0), mHigh(0.0)
-, mCenterCtrl(NULL), mWidthCtrl(NULL), mLowCtrl(NULL), mHighCtrl(NULL)
-, mChoice(NULL)
+, mCenterCtrl(nullptr), mWidthCtrl(nullptr), mLowCtrl(nullptr), mHighCtrl(nullptr)
+, mChoice(nullptr)
 {
 }
 
@@ -113,7 +113,7 @@ SpectralSelectionBar::~SpectralSelectionBar()
 SpectralSelectionBar &SpectralSelectionBar::Get( SaucedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<SpectralSelectionBar*>(
+   return *dynamic_cast<SpectralSelectionBar*>(
       toolManager.GetToolBar(SpectralSelectionBarID) );
 }
 
@@ -141,7 +141,7 @@ void SpectralSelectionBar::Populate()
       ? mListener->SSBL_GetBandwidthSelectionFormatName()
       : NumericFormatSymbol{};
 
-   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(1, 1, 1);
+   auto *mainSizer = safenew wxFlexGridSizer(1, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
    //
@@ -389,8 +389,8 @@ void SpectralSelectionBar::OnUpdate(wxCommandEvent &evt)
 
    // ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.
-   mCenterCtrl = mWidthCtrl = NULL;
-   mLowCtrl = mHighCtrl = NULL;
+   mCenterCtrl = mWidthCtrl = nullptr;
+   mLowCtrl = mHighCtrl = nullptr;
 
    ReCreateButtons();
    ValuesToControls();

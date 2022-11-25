@@ -25,7 +25,7 @@ public:
    explicit
    LabelTrackVRulerControls( const std::shared_ptr<TrackView> &pTrackView )
       : TrackVRulerControls( pTrackView ) {}
-   ~LabelTrackVRulerControls();
+   ~LabelTrackVRulerControls() override;
 
 private:
 

@@ -74,7 +74,7 @@ protected:
                   const TranslatableString & sRemainingLabelText = {});
 
 public:
-   virtual ~ProgressDialog();
+   ~ProgressDialog() override;
 
    bool Create(const TranslatableString & title,
                const TranslatableString & message = {},

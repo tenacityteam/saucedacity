@@ -34,7 +34,7 @@ public:
 
    ~SpectrumVZoomHandle() override;
 
-   std::shared_ptr<WaveTrack> GetTrack() const { return mpTrack.lock(); }
+   [[nodiscard]] std::shared_ptr<WaveTrack> GetTrack() const { return mpTrack.lock(); }
 
    void Enter(bool forward, SaucedacityProject*) override;
 
@@ -80,7 +80,7 @@ class SpectrumVRulerMenuTable : public WaveTrackVRulerMenuTable
    SpectrumVRulerMenuTable()
       : WaveTrackVRulerMenuTable{ "SpectrumVRuler" }
    {}
-   virtual ~SpectrumVRulerMenuTable() {}
+   ~SpectrumVRulerMenuTable() override {}
    DECLARE_POPUP_MENU(SpectrumVRulerMenuTable);
 
 public:

@@ -682,7 +682,7 @@ void ToolDock::LayoutToolBars()
          return false;
       }
 
-      virtual void FinalRect
+      void FinalRect
          (const wxRect &rect, ToolBarConfiguration::Position)
          override
       {

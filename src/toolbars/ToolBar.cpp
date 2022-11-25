@@ -73,12 +73,12 @@ class ToolBarResizer final : public wxWindow
 {
 public:
    ToolBarResizer(ToolBar *mBar);
-   virtual ~ToolBarResizer();
+   ~ToolBarResizer() override;
 
    // We don't need or want to accept focus.
    // Note that AcceptsFocusFromKeyboard() is overridden rather than
    // AcceptsFocus(), so that resize can be cancelled by ESC
-   bool AcceptsFocusFromKeyboard() const override {return false;}
+   [[nodiscard]] bool AcceptsFocusFromKeyboard() const override {return false;}
 
 private:
    void OnErase(wxEraseEvent & event);
@@ -343,13 +343,13 @@ ToolBar::ToolBar( SaucedacityProject &project,
    mResizable = resizable;
 
    // Initialize everything
-   mParent = NULL;
-   mHSizer = NULL;
+   mParent = nullptr;
+   mHSizer = nullptr;
    mVisible = false;
    mPositioned = false;
 
-   mGrabber = NULL;
-   mResizer = NULL;
+   mGrabber = nullptr;
+   mResizer = nullptr;
    SetId(mType);
 }
 
@@ -388,7 +388,7 @@ wxString ToolBar::GetSection()
 //
 // Returns the toolbar type
 //
-int ToolBar::GetType()
+int ToolBar::GetType() const
 {
    return mType;
 }
@@ -521,12 +521,12 @@ void ToolBar::ReCreateButtons()
 
    // SetSizer(NULL) detaches mHSizer and deletes it.
    // Do not use Detach() here, as that attempts to detach mHSizer from itself!
-   SetSizer( NULL );
+   SetSizer( nullptr );
 
    // Get rid of any children we may have
    DestroyChildren();
-   mGrabber = NULL;
-   mResizer = NULL;
+   mGrabber = nullptr;
+   mResizer = nullptr;
    SetLayoutDirection(wxLayout_LeftToRight);
 
    // Refresh the background before populating
@@ -622,8 +622,7 @@ void ToolBar::UpdatePrefs()
    }
 #endif
 
-   return;
-}
+   }
 
 //
 // Return the pointer to the ToolBock where this bar lives
@@ -651,7 +650,7 @@ void ToolBar::SetDocked( ToolDock *dock, bool pushed )
 
    if (mResizer)
    {
-      mResizer->Show(dock != NULL);
+      mResizer->Show(dock != nullptr);
       Layout();
    }
 }
@@ -863,7 +862,7 @@ AButton * ToolBar::MakeButton(wxWindow *parent,
    wxImagePtr disable2   (OverlayImage(eUp,     eDisabled, xoff, yoff));
 
    wxASSERT(parent); // to justify safenew
-   AButton * button =
+   auto * button =
       safenew AButton(parent, id, placement, size, *up2, *hilite2, *down2, *downHi2,
             *disable2, processdownevents);
 

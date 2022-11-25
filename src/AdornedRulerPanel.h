@@ -38,12 +38,12 @@ public:
                      wxWindowID id,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize,
-                     ViewInfo *viewinfo = NULL);
+                     ViewInfo *viewinfo = nullptr);
 
-   ~AdornedRulerPanel();
+   ~AdornedRulerPanel() override;
 
    void Refresh
-      (bool eraseBackground = true, const wxRect *rect = (const wxRect *) NULL)
+      (bool eraseBackground = true, const wxRect *rect = (const wxRect *) nullptr)
       override;
 
    bool AcceptsFocus() const override { return s_AcceptsFocus; }
@@ -51,7 +51,7 @@ public:
    void SetFocusFromKbd() override;
 
 public:
-   int GetRulerHeight() { return GetRulerHeight( ShowingScrubRuler() ); }
+   int GetRulerHeight() const { return GetRulerHeight( ShowingScrubRuler() ); }
    static int GetRulerHeight(bool showScrubBar);
    wxRect GetInnerRect() const { return mInner; }
 
@@ -154,7 +154,7 @@ private:
    //
    void ShowMenu(const wxPoint & pos);
    void ShowScrubMenu(const wxPoint & pos);
-   void DragSelection();
+   void DragSelection() const;
    void HandleSnapping();
    void OnToggleQuickPlay(wxCommandEvent &evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);

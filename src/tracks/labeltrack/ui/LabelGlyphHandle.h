@@ -50,8 +50,8 @@ class LabelGlyphHandle final : public LabelDefaultClickHandle
 {
 public:
    explicit LabelGlyphHandle
-      (const std::shared_ptr<LabelTrack> &pLT,
-       const wxRect &rect, const std::shared_ptr<LabelTrackHit> &pHit);
+      (std::shared_ptr<LabelTrack> pLT,
+       const wxRect &rect, std::shared_ptr<LabelTrackHit> pHit);
 
    LabelGlyphHandle &operator=(const LabelGlyphHandle&) = default;
    
@@ -60,7 +60,7 @@ public:
        const wxMouseState &state,
        const std::shared_ptr<LabelTrack> &pLT, const wxRect &rect);
 
-   virtual ~LabelGlyphHandle();
+   ~LabelGlyphHandle() override;
 
    void Enter(bool forward, SaucedacityProject *) override;
 

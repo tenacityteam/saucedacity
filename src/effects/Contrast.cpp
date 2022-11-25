@@ -52,7 +52,7 @@
 
 bool ContrastDialog::GetDB(float &dB)
 {
-   float rms = float(0.0);
+   auto rms = float(0.0);
 
    // For stereo tracks: sqrt((mean(L)+mean(R))/2)
    double meanSq = 0.0;
@@ -189,7 +189,6 @@ void ContrastDialog::OnChar(wxKeyEvent &event)
 
    // ignore any other key
    event.Skip(false);
-   return;
 }
 
 ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
@@ -208,10 +207,10 @@ ContrastDialog::ContrastDialog(wxWindow * parent, wxWindowID id,
    mBackgroundIsDefined = false;
 
    // NULL out the control members until the controls are created.
-   mForegroundStartT = NULL;
-   mForegroundEndT = NULL;
-   mBackgroundStartT = NULL;
-   mBackgroundEndT = NULL;
+   mForegroundStartT = nullptr;
+   mForegroundEndT = nullptr;
+   mBackgroundStartT = nullptr;
+   mBackgroundEndT = nullptr;
    wxString number;
 
    auto p = FindProjectFromWindow( this );

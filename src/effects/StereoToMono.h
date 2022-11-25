@@ -19,7 +19,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectStereoToMono();
-   virtual ~EffectStereoToMono();
+   ~EffectStereoToMono() override;
 
    // ComponentInterface implementation
 

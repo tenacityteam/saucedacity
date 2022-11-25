@@ -40,7 +40,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectChangePitch();
-   virtual ~EffectChangePitch();
+   ~EffectChangePitch() override;
 
    // ComponentInterface implementation
 

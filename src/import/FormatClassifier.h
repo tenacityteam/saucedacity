@@ -96,20 +96,20 @@ public:
    ~FormatClassifier();
 
    FormatClassT GetResultFormat();
-   int GetResultFormatLibSndfile();
-   unsigned GetResultChannels();
+   int GetResultFormatLibSndfile() const;
+   unsigned GetResultChannels() const;
 private:
    void Run();
    void ReadSignal(FormatClassT format, size_t stride);
    void ConvertSamples(void* in, float* out, FormatClassT format);
 
-   void Add(float* in1, float* in2, size_t len);
-   void Sub(float* in, float subt, size_t len);
-   void Div(float* in, float div, size_t len);
-   void Abs(float* in, float* out, size_t len);
-   float Mean(float* in, size_t len);
+   static void Add(float* in1, const float* in2, size_t len);
+   static void Sub(float* in, float subt, size_t len);
+   static void Div(float* in, float div, size_t len);
+   static void Abs(const float* in, float* out, size_t len);
+   static float Mean(const float* in, size_t len);
    float Max(float* in, size_t len);
-   float Max(float* in, size_t len, size_t* maxidx);
+   static float Max(const float* in, size_t len, size_t* maxidx);
 
    template<class T> void ToFloat(T* in, float* out, size_t len);
 };

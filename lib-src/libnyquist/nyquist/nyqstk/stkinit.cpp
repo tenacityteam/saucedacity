@@ -1,7 +1,7 @@
 /* stk path initialization */
 
-#include "stdlib.h"
-#include "string.h"
+#include <cstdlib>
+#include <cstring>
 // #include "instr.h"
 #include "Stk.h"
 #include "stkinit.h"
@@ -18,7 +18,7 @@ extern "C" {
 
 using namespace Nyq;
 
-const char *rawwave_path = NULL;
+const char *rawwave_path = nullptr;
 
 extern "C" void stk_init()
 {

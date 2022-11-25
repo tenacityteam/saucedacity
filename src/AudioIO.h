@@ -132,7 +132,7 @@ class SAUCEDACITY_DLL_API AudioIoCallback /* not final */
 {
 public:
    AudioIoCallback();
-   ~AudioIoCallback();
+   ~AudioIoCallback() override;
 
 public:
    // This function executes in a thread spawned by the PortAudio library
@@ -140,7 +140,7 @@ public:
       const void *inputBuffer, void *outputBuffer,
       unsigned long framesPerBuffer,
       const PaStreamCallbackTimeInfo *timeInfo,
-      const PaStreamCallbackFlags statusFlags, void *userData);
+      PaStreamCallbackFlags statusFlags, void *userData);
 
 #ifdef EXPERIMENTAL_MIDI_OUT
    void PrepareMidiIterator(bool send = true, double offset = 0);
@@ -178,7 +178,7 @@ public:
    bool GetHasSolo() { return mHasSolo; }
 #endif
 
-   std::shared_ptr< AudioIOListener > GetListener() const
+   [[nodiscard]] std::shared_ptr< AudioIOListener > GetListener() const
       { return mListener.lock(); }
    void SetListener( const std::shared_ptr< AudioIOListener > &listener);
    
@@ -220,7 +220,7 @@ public:
    void FillInputBuffers(
       const void *inputBuffer, 
       unsigned long framesPerBuffer,
-      const PaStreamCallbackFlags statusFlags,
+      PaStreamCallbackFlags statusFlags,
       float * tempFloats
    );
    void UpdateTimePosition(
@@ -464,7 +464,7 @@ class SAUCEDACITY_DLL_API AudioIO final
 {
 
    AudioIO();
-   ~AudioIO();
+   ~AudioIO() override;
 
 public:
    // This might return null during application startup or shutdown
@@ -507,7 +507,7 @@ public:
    void CallAfterRecording(PostRecordingAction action);
 
 #ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-   bool IsScrubbing() const { return IsBusy() && mScrubState != 0; }
+   [[nodiscard]] bool IsScrubbing() const { return IsBusy() && mScrubState != nullptr; }
 
    /** \brief Notify scrubbing engine of desired position or speed.
    * If options.adjustStart is true, then when mouse movement exceeds maximum
@@ -520,24 +520,24 @@ public:
 
    /** \brief return the ending time of the last scrub interval.
    */
-   double GetLastScrubTime() const;
+   [[nodiscard]] double GetLastScrubTime() const;
 #endif
 
 public:
    std::string LastPaErrorString();
 
-   wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
-   SaucedacityProject *GetOwningProject() const { return mOwningProject; }
+   [[nodiscard]] wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
+   [[nodiscard]] SaucedacityProject *GetOwningProject() const { return mOwningProject; }
 
    /** \brief Pause and un-pause playback and recording */
    void SetPaused(bool state);
 
    sampleFormat GetCaptureFormat() { return mCaptureFormat; }
-   unsigned GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
-   unsigned GetNumCaptureChannels() const { return mNumCaptureChannels; }
+   [[nodiscard]] unsigned GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
+   [[nodiscard]] unsigned GetNumCaptureChannels() const { return mNumCaptureChannels; }
 
    // Meaning really capturing, not just pre-rolling
-   bool IsCapturing() const;
+   [[nodiscard]] bool IsCapturing() const;
 
    /** \brief Ensure selected device names are valid
     *
@@ -585,7 +585,7 @@ public:
 
 private:
 
-   bool DelayingActions() const;
+   [[nodiscard]] bool DelayingActions() const;
 
    /** \brief Set the current VU meters - this should be done once after
     * each call to StartStream currently */

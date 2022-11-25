@@ -27,7 +27,7 @@ struct SelectedRegionEvent : public wxEvent
    SelectedRegionEvent( wxEventType commandType,
                        NotifyingSelectedRegion *pRegion );
 
-   wxEvent *Clone() const override;
+   [[nodiscard]] wxEvent *Clone() const override;
 
    wxWeakRef< NotifyingSelectedRegion > pRegion;
 };
@@ -42,13 +42,13 @@ class SAUCEDACITY_DLL_API NotifyingSelectedRegion : public wxEvtHandler
 {
 public:
    // Expose SelectedRegion's const accessors
-   double t0 () const { return mRegion.t0(); }
-   double t1 () const { return mRegion.t1(); }
-   double f0 () const { return mRegion.f0(); }
-   double f1 () const { return mRegion.f1(); }
-   double fc () const { return mRegion.fc(); }
-   bool isPoint() const { return mRegion.isPoint(); }
-   double duration() const { return mRegion.duration(); }
+   [[nodiscard]] double t0 () const { return mRegion.t0(); }
+   [[nodiscard]] double t1 () const { return mRegion.t1(); }
+   [[nodiscard]] double f0 () const { return mRegion.f0(); }
+   [[nodiscard]] double f1 () const { return mRegion.f1(); }
+   [[nodiscard]] double fc () const { return mRegion.fc(); }
+   [[nodiscard]] bool isPoint() const { return mRegion.isPoint(); }
+   [[nodiscard]] double duration() const { return mRegion.duration(); }
 
    // Writing and reading of persistent fields -- the read is mutating but
    // does not emit events
@@ -125,18 +125,18 @@ public:
       return *this;
    }
 
-   bool Locked() const { return mLocked; }
+   [[nodiscard]] bool Locked() const { return mLocked; }
    void SetLocked( bool locked ) { mLocked = locked; }
 
-   bool Empty() const { return GetStart() == GetEnd(); }
-   double GetStart() const
+   [[nodiscard]] bool Empty() const { return GetStart() == GetEnd(); }
+   [[nodiscard]] double GetStart() const
    {
       if ( mEnd < 0 )
          return mStart;
       else
          return std::min( mStart, mEnd );
    }
-   double GetEnd() const
+   [[nodiscard]] double GetEnd() const
    {
       if ( mStart < 0 )
          return mEnd;
@@ -173,20 +173,20 @@ public:
    ViewInfo( const ViewInfo & ) = delete;
    ViewInfo &operator=( const ViewInfo & ) = delete;
 
-   int GetHeight() const { return mHeight; }
+   [[nodiscard]] int GetHeight() const { return mHeight; }
    void SetHeight( int height ) { mHeight = height; }
 
    static int UpdateScrollPrefsID();
    void UpdatePrefs() override;
    void UpdateSelectedPrefs( int id ) override;
 
-   double GetBeforeScreenWidth() const
+   [[nodiscard]] double GetBeforeScreenWidth() const
    {
       return h * zoom;
    }
    void SetBeforeScreenWidth(wxInt64 beforeWidth, wxInt64 screenWidth, double lowerBoundTime = 0.0);
 
-   double GetTotalWidth() const
+   [[nodiscard]] double GetTotalWidth() const
    { return total * zoom; }
 
    // Current selection

@@ -81,7 +81,6 @@ void BatchPrefs::PopulateOrExchange( ShuttleGui & S )
    S.EndStatic();
    S.EndHorizontalLay();
    S.EndScroller();
-   return;
 }
 
 /// Send changed values back to Prefs, and update Audacity.

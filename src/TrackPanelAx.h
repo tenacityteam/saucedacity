@@ -130,7 +130,7 @@ public:
    // Modify focus or selection
    wxAccStatus Select(int childId, wxAccSelectionFlags selectFlags) override;
 #else
-   wxWindow *GetWindow() const { return mWindow; }
+   [[nodiscard]] wxWindow *GetWindow() const { return mWindow; }
    void SetWindow( wxWindow *window ) { mWindow = window; }
 #endif
 

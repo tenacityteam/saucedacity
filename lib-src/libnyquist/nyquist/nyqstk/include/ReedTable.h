@@ -32,7 +32,7 @@ public:
   ReedTable();
 
   //! Class destructor.
-  ~ReedTable();
+  ~ReedTable() override;
 
   //! Set the table offset value.
   /*!
@@ -52,7 +52,7 @@ public:
 
 protected:
 
-  StkFloat computeSample( StkFloat input );
+  StkFloat computeSample( StkFloat input ) override;
 
   StkFloat offset_;
   StkFloat slope_;

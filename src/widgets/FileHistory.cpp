@@ -104,7 +104,7 @@ void FileHistory::UseMenu(wxMenu *menu)
    auto found = (iter != end);
 
    if (!found)
-      mMenus.push_back(menu);
+      mMenus.emplace_back(menu);
    else {
       wxASSERT(false);
    }
@@ -154,7 +154,7 @@ void FileHistory::Save(wxConfigBase & config)
 void FileHistory::NotifyMenus()
 {
    Compress();
-   for (auto pMenu : mMenus)
+   for (const auto& pMenu : mMenus)
       if (pMenu)
          NotifyMenu(pMenu);
    Save(*gPrefs);
@@ -172,11 +172,11 @@ void FileHistory::NotifyMenu(wxMenu *menu)
       menu->Append(mIDBase + 1 + i,item);
    }
 
-   if (mHistory.size() > 0) {
+   if (!mHistory.empty()) {
       menu->AppendSeparator();
    }
    menu->Append(mIDBase, _("&Clear"));
-   menu->Enable(mIDBase, mHistory.size() > 0);
+   menu->Enable(mIDBase, !mHistory.empty());
 }
 
 void FileHistory::Compress()

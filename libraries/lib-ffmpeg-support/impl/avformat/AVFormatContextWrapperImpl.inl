@@ -44,13 +44,13 @@ static_assert(
 class AVFormatContextWrapperImpl : public AVFormatContextWrapper
 {
 public:
-   AVFormatContextWrapperImpl(const FFmpegFunctions& ffmpeg)
+   explicit AVFormatContextWrapperImpl(const FFmpegFunctions& ffmpeg)
       : AVFormatContextWrapper(ffmpeg)
    {
       mAVFormatContext = mFFmpeg.avformat_alloc_context();
    }
 
-   AVInputFormat* GetIFormat() const noexcept override
+   [[nodiscard]] AVInputFormat* GetIFormat() const noexcept override
    {
       if (mAVFormatContext != nullptr)
 #if LIBAVFORMAT_VERSION_MAJOR <= 58
@@ -62,7 +62,7 @@ public:
       return {};
    }
 
-   AVOutputFormat* GetOFormat() const noexcept override
+   [[nodiscard]] AVOutputFormat* GetOFormat() const noexcept override
    {
       if (mAVFormatContext != nullptr)
 #if LIBAVFORMAT_VERSION_MAJOR <= 58
@@ -83,7 +83,7 @@ public:
       }
    }
 
-   AVIOContextWrapper* GetAVIOContext() const noexcept override
+   [[nodiscard]] AVIOContextWrapper* GetAVIOContext() const noexcept override
    {
       return mAVIOContext.get();
    }
@@ -97,7 +97,7 @@ public:
       }
    }
 
-   int GetCtxFlags() const noexcept override
+   [[nodiscard]] int GetCtxFlags() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->ctx_flags;
@@ -105,7 +105,7 @@ public:
       return {};
    }
 
-   unsigned int GetStreamsCount() const noexcept override
+   [[nodiscard]] unsigned int GetStreamsCount() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->nb_streams;
@@ -113,12 +113,12 @@ public:
       return {};
    }
 
-   const AVFormatContextWrapper::StreamsList& GetStreams() const noexcept override
+   [[nodiscard]] const AVFormatContextWrapper::StreamsList& GetStreams() const noexcept override
    {
       return mStreams;
    }
 
-   const char* GetFilename() const noexcept override
+   [[nodiscard]] const char* GetFilename() const noexcept override
    {
       if (mAVFormatContext != nullptr)
 #if LIBAVFORMAT_VERSION_MAJOR <= 58
@@ -146,7 +146,7 @@ public:
 #endif
    }
 
-   int64_t GetStartTime() const noexcept override
+   [[nodiscard]] int64_t GetStartTime() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->start_time;
@@ -154,7 +154,7 @@ public:
       return {};
    }
 
-   int64_t GetDuration() const noexcept override
+   [[nodiscard]] int64_t GetDuration() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->duration;
@@ -162,7 +162,7 @@ public:
       return {};
    }
 
-   int GetBitRate() const noexcept override
+   [[nodiscard]] int GetBitRate() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          // May truncate int64_t to int.  But who uses such high rates, really?
@@ -177,7 +177,7 @@ public:
          mAVFormatContext->bit_rate = bit_rate;
    }
 
-   unsigned int GetPacketSize() const noexcept override
+   [[nodiscard]] unsigned int GetPacketSize() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->packet_size;
@@ -191,7 +191,7 @@ public:
          mAVFormatContext->packet_size = packet_size;
    }
 
-   int GetMaxDelay() const noexcept override
+   [[nodiscard]] int GetMaxDelay() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->max_delay;
@@ -205,7 +205,7 @@ public:
          mAVFormatContext->max_delay = max_delay;
    }
 
-   int GetFlags() const noexcept override
+   [[nodiscard]] int GetFlags() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->flags;
@@ -219,7 +219,7 @@ public:
          mAVFormatContext->flags = flags;
    }
 
-   unsigned int GetProbeSize() const noexcept override
+   [[nodiscard]] unsigned int GetProbeSize() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->probesize;
@@ -233,7 +233,7 @@ public:
          mAVFormatContext->probesize = probesize;
    }
 
-   int GetMaxAnalyzeDuration() const noexcept override
+   [[nodiscard]] int GetMaxAnalyzeDuration() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->max_analyze_duration;
@@ -247,7 +247,7 @@ public:
          mAVFormatContext->max_analyze_duration = max_analyze_duration;
    }
 
-   AVCodecIDFwd GetAudioCodecId() const noexcept override
+   [[nodiscard]] AVCodecIDFwd GetAudioCodecId() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->audio_codec_id;
@@ -261,7 +261,7 @@ public:
          mAVFormatContext->audio_codec_id = static_cast<AVCodecID>(audio_codec_id);
    }
 
-   unsigned int GetMaxIndexSize() const noexcept override
+   [[nodiscard]] unsigned int GetMaxIndexSize() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->max_index_size;
@@ -275,7 +275,7 @@ public:
          mAVFormatContext->max_index_size = max_index_size;
    }
 
-   AVDictionaryWrapper GetMetadata() const noexcept override
+   [[nodiscard]] AVDictionaryWrapper GetMetadata() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return AVDictionaryWrapper(mFFmpeg, mAVFormatContext->metadata);
@@ -296,7 +296,7 @@ public:
       mAVFormatContext->metadata = metadata.Release();
    }
 
-   int64_t GetStartTimeRealtime() const noexcept override
+   [[nodiscard]] int64_t GetStartTimeRealtime() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->start_time_realtime;
@@ -310,7 +310,7 @@ public:
          mAVFormatContext->start_time_realtime = start_time_realtime;
    }
 
-   int GetFpsProbeSize() const noexcept override
+   [[nodiscard]] int GetFpsProbeSize() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->fps_probe_size;
@@ -324,7 +324,7 @@ public:
          mAVFormatContext->fps_probe_size = fps_probe_size;
    }
 
-   int GetErrorRecognition() const noexcept override
+   [[nodiscard]] int GetErrorRecognition() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->error_recognition;
@@ -338,7 +338,7 @@ public:
          mAVFormatContext->error_recognition = error_recognition;
    }
 
-   int64_t GetMaxInterleaveDelta() const noexcept override
+   [[nodiscard]] int64_t GetMaxInterleaveDelta() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->max_interleave_delta;
@@ -352,7 +352,7 @@ public:
          mAVFormatContext->max_interleave_delta = max_interleave_delta;
    }
 
-   int GetStrictStdCompliance() const noexcept override
+   [[nodiscard]] int GetStrictStdCompliance() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->strict_std_compliance;
@@ -366,7 +366,7 @@ public:
          mAVFormatContext->strict_std_compliance = strict_std_compliance;
    }
 
-   int GetAudioPreload() const noexcept override
+   [[nodiscard]] int GetAudioPreload() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->audio_preload;
@@ -380,7 +380,7 @@ public:
          mAVFormatContext->audio_preload = audio_preload;
    }
 
-   int GetMaxChunkDuration() const noexcept override
+   [[nodiscard]] int GetMaxChunkDuration() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->max_chunk_duration;
@@ -394,7 +394,7 @@ public:
          mAVFormatContext->max_chunk_duration = max_chunk_duration;
    }
 
-   int GetMaxChunkSize() const noexcept override
+   [[nodiscard]] int GetMaxChunkSize() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->max_chunk_size;
@@ -408,7 +408,7 @@ public:
          mAVFormatContext->max_chunk_size = max_chunk_size;
    }
 
-   int GetUseWallclockAsTimestamps() const noexcept override
+   [[nodiscard]] int GetUseWallclockAsTimestamps() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->use_wallclock_as_timestamps;
@@ -423,7 +423,7 @@ public:
          mAVFormatContext->use_wallclock_as_timestamps = use_wallclock_as_timestamps;
    }
 
-   int GetAvoidNegativeTs() const noexcept override
+   [[nodiscard]] int GetAvoidNegativeTs() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->avoid_negative_ts;
@@ -437,7 +437,7 @@ public:
          mAVFormatContext->avoid_negative_ts = avoid_negative_ts;
    }
 
-   int GetAvioFlags() const noexcept override
+   [[nodiscard]] int GetAvioFlags() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->avio_flags;
@@ -451,7 +451,7 @@ public:
          mAVFormatContext->avio_flags = avio_flags;
    }
 
-   int64_t GetSkipInitialBytes() const noexcept override
+   [[nodiscard]] int64_t GetSkipInitialBytes() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->skip_initial_bytes;
@@ -465,7 +465,7 @@ public:
          mAVFormatContext->skip_initial_bytes = skip_initial_bytes;
    }
 
-   unsigned int GetCorrectTsOverflow() const noexcept override
+   [[nodiscard]] unsigned int GetCorrectTsOverflow() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->correct_ts_overflow;
@@ -479,7 +479,7 @@ public:
          mAVFormatContext->correct_ts_overflow = correct_ts_overflow;
    }
 
-   int GetSeek2any() const noexcept override
+   [[nodiscard]] int GetSeek2any() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->seek2any;
@@ -493,7 +493,7 @@ public:
          mAVFormatContext->seek2any = seek2any;
    }
 
-   int GetFlushPackets() const noexcept override
+   [[nodiscard]] int GetFlushPackets() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->flush_packets;
@@ -507,7 +507,7 @@ public:
          mAVFormatContext->flush_packets = flush_packets;
    }
 
-   int GetProbeScore() const noexcept override
+   [[nodiscard]] int GetProbeScore() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->probe_score;
@@ -515,7 +515,7 @@ public:
       return {};
    }
 
-   int GetFormatProbeSize() const noexcept override
+   [[nodiscard]] int GetFormatProbeSize() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->format_probesize;
@@ -529,7 +529,7 @@ public:
          mAVFormatContext->format_probesize = format_probesize;
    }
 
-   AVCodecWrapper* GetAudioCodec() const noexcept override
+   [[nodiscard]] AVCodecWrapper* GetAudioCodec() const noexcept override
    {
       return mForcedAudioCodec.get();
    }
@@ -543,7 +543,7 @@ public:
       mForcedAudioCodec = move(audio_codec);
    }
 
-   void* GetOpaque() const noexcept override
+   [[nodiscard]] void* GetOpaque() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->opaque;
@@ -557,7 +557,7 @@ public:
          mAVFormatContext->opaque = opaque;
    }
 
-   int64_t GetOutputTsOffset() const noexcept override
+   [[nodiscard]] int64_t GetOutputTsOffset() const noexcept override
    {
       if (mAVFormatContext != nullptr)
          return mAVFormatContext->output_ts_offset;

@@ -24,7 +24,7 @@
 class Generator /* not final */ : public Effect
 {
 public:
-   Generator() { }
+   Generator() = default;
 
 protected:
    // [ GenerateTrack() must be overridden by the actual generator class ]
@@ -58,7 +58,7 @@ protected:
 // showing a progress bar
 class BlockGenerator /* not final */ : public Generator {
 public:
-   BlockGenerator() { }
+   BlockGenerator() = default;
 protected:
    // Number of samples to generate
    sampleCount numSamples;

@@ -54,7 +54,7 @@ Module::Module(const FilePath & name)
    : mName{ name }
 {
    mLib = std::make_unique<wxDynamicLibrary>();
-   mDispatch = NULL;
+   mDispatch = nullptr;
 }
 
 Module::~Module()
@@ -94,7 +94,7 @@ bool Module::Load(wxString &deferredErrorMessage)
 
    // Check version string matches.  (For now, they must match exactly)
    tVersionFn versionFn = (tVersionFn)(mLib->GetSymbol(wxT(versionFnName)));
-   if (versionFn == NULL){
+   if (versionFn == nullptr){
       AudacityMessageBox(
          XO("The module \"%s\" does not provide a version string.\n\nIt will not be loaded.")
             .Format( ShortName),
@@ -128,7 +128,7 @@ bool Module::Load(wxString &deferredErrorMessage)
       return true;
    }
 
-   mDispatch = NULL;
+   mDispatch = nullptr;
 
    AudacityMessageBox(
       XO("The module \"%s\" failed to initialize.\n\nIt will not be loaded.").Format(ShortName),
@@ -153,7 +153,7 @@ void Module::Unload()
 int Module::Dispatch(ModuleDispatchTypes type)
 {
    if (mLib->IsLoaded())
-      if( mDispatch != NULL )
+      if( mDispatch != nullptr )
          return mDispatch(type);
 
    return 0;
@@ -188,8 +188,6 @@ void RegisterProvider(ModuleMain moduleMain)
    auto &list = builtinModuleList();
    if ( moduleMain )
       list.push_back(moduleMain);
-
-   return;
 }
 
 void UnregisterProvider(ModuleMain moduleMain)
@@ -230,7 +228,7 @@ void ModuleManager::FindModules(FilePaths &files)
       wxString prefix = path + wxFILE_SEP_PATH;
       FileNames::AddUniquePathToPathList(prefix + wxT("modules"),
                                          pathList);
-      if (files.size()) {
+      if (!files.empty()) {
          break;
       }
    }
@@ -368,7 +366,7 @@ void ModuleManager::Initialize()
       errors.clear();
       TryLoadModules(files, decided, errors);
    }
-   while ( errors.size() && numDecided < decided.size() );
+   while ( !errors.empty() && numDecided < decided.size() );
 
    // Only now show accumulated errors of modules that failed to load
    for ( const auto &pair : errors ) {

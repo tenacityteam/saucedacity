@@ -32,7 +32,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectTruncSilence();
-   virtual ~EffectTruncSilence();
+   ~EffectTruncSilence() override;
 
    // ComponentInterface implementation
 
@@ -64,8 +64,8 @@ public:
                         sampleCount* silentFrame,
                         sampleCount* index,
                         int whichTrack,
-                        double* inputLength = NULL,
-                        double* minInputLength = NULL);
+                        double* inputLength = nullptr,
+                        double* minInputLength = nullptr);
 
    bool Process() override;
    void PopulateOrExchange(ShuttleGui & S) override;
@@ -77,7 +77,7 @@ private:
 
    //ToDo ... put BlendFrames in Effects, Project, or other class
    // void BlendFrames(float* buffer, int leftIndex, int rightIndex, int blendFrameCount);
-   void Intersect(RegionList &dest, const RegionList & src);
+   static void Intersect(RegionList &dest, const RegionList & src);
 
    void OnControlChange(wxCommandEvent & evt);
    void UpdateUI();

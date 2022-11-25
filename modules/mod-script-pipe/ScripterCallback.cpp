@@ -26,7 +26,7 @@ See the example in this file.  It has several cases/options in it.
 
 extern void PipeServer();
 typedef DLL_IMPORT int (*tpExecScriptServerFunc)( wxString * pIn, wxString * pOut);
-static tpExecScriptServerFunc pScriptServerFn=NULL;
+static tpExecScriptServerFunc pScriptServerFn=nullptr;
 
 
 extern "C" {

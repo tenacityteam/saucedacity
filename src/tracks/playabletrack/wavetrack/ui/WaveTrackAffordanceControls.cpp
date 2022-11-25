@@ -13,6 +13,8 @@
 #include <wx/dc.h>
 #include <wx/frame.h>
 
+#include <utility>
+
 #include "../../../../theme/AllThemeResources.h"
 #include "../../../../commands/CommandContext.h"
 #include "../../../../commands/CommandFlag.h"
@@ -81,11 +83,11 @@ class WaveClipTitleEditHandle final : public UIHandle
     std::shared_ptr<TextEditHelper> mHelper;
 public:
 
-    WaveClipTitleEditHandle(const std::shared_ptr<TextEditHelper>& helper)
-        : mHelper(helper)
+    WaveClipTitleEditHandle(std::shared_ptr<TextEditHelper>  helper)
+        : mHelper(std::move(helper))
     { }
    
-   ~WaveClipTitleEditHandle()
+   ~WaveClipTitleEditHandle() override
    {
    }
 
@@ -238,7 +240,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             for (const auto& clip : waveTrack->GetClips())
             {
                 auto affordanceRect
-                   = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
+                   = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
 
                 if(!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
                 {
@@ -513,7 +515,7 @@ unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEve
     {
         if (auto lock = mEditedClip.lock())
         {
-            auto affordanceRect = ClipParameters::GetClipRect(*lock.get(), viewInfo, event.rect);
+            auto affordanceRect = ClipParameters::GetClipRect(*lock, viewInfo, event.rect);
             if (!affordanceRect.Contains(event.event.GetPosition()))
                return ExitTextEditing();
         }
@@ -522,7 +524,7 @@ unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEve
     {
         if (event.event.LeftDClick())
         {
-            auto affordanceRect = ClipParameters::GetClipRect(*lock.get(), viewInfo, event.rect);
+            auto affordanceRect = ClipParameters::GetClipRect(*lock, viewInfo, event.rect);
             if (affordanceRect.Contains(event.event.GetPosition()) &&
                 StartEditClipName(project))
             {

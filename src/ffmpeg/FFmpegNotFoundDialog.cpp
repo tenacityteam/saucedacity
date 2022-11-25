@@ -44,8 +44,6 @@ void FFmpegNotFoundDialog::PopulateOrExchange(ShuttleGui & S)
    Fit();
    SetMinSize(GetSize());
    Center();
-
-   return;
 }
 
 void FFmpegNotFoundDialog::OnOk(wxCommandEvent & WXUNUSED(event))

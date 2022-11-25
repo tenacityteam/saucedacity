@@ -229,7 +229,7 @@ class ExportMP3Options final : public wxPanelWrapper
 public:
 
    ExportMP3Options(wxWindow *parent, int format);
-   virtual ~ExportMP3Options();
+   ~ExportMP3Options() override;
 
    void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
@@ -331,7 +331,7 @@ static EnumSetting< MP3ChannelMode > MP3ChannelModeSetting{
 void ExportMP3Options::PopulateOrExchange(ShuttleGui & S)
 {
    bool mono = false;
-   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
+   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, false);
 
    const TranslatableStrings *choices = nullptr;
    const std::vector< int > *codes = nullptr;
@@ -588,7 +588,7 @@ public:
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
 
-   FindDialog(wxWindow *parent, wxString path, wxString name,
+   FindDialog(wxWindow *parent, const wxString& path, const wxString& name,
       FileNames::FileTypes types)
    :  wxDialogWrapper(parent, wxID_ANY,
    /* i18n-hint: LAME is the name of an MP3 converter and should not be translated*/
@@ -650,9 +650,7 @@ public:
       Fit();
       SetMinSize(GetSize());
       Center();
-
-      return;
-   }
+  }
 
    void OnBrowse(wxCommandEvent & WXUNUSED(event))
    {
@@ -715,9 +713,9 @@ END_EVENT_TABLE()
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
 
-typedef lame_global_flags *lame_init_t(void);
+typedef lame_global_flags *lame_init_t();
 typedef int lame_init_params_t(lame_global_flags*);
-typedef const char* get_lame_version_t(void);
+typedef const char* get_lame_version_t();
 
 typedef int CDECL lame_encode_buffer_ieee_float_t(
       lame_t          gfp,
@@ -814,7 +812,7 @@ public:
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    bool FindLibrary(wxWindow *parent);
    bool LoadLibrary(wxWindow *parent, AskUser askuser);
-   bool ValidLibraryLoaded();
+   bool ValidLibraryLoaded() const;
 #endif // DISABLE_DYNAMIC_LOADING_LAME
 
    /* These global settings keep state over the life of the object */
@@ -826,22 +824,22 @@ public:
    /* Virtual methods that must be supplied by library interfaces */
 
    /* initialize the library interface */
-   bool InitLibrary(wxString libpath);
-   bool InitLibraryInternal();
-   bool InitLibraryExternal(wxString libpath);
+   bool InitLibrary(const wxString& libpath);
+   static bool InitLibraryInternal();
+   bool InitLibraryExternal(const wxString& libpath);
    void FreeLibrary();
 
    /* get library info */
    wxString GetLibraryVersion();
-   wxString GetLibraryName();
-   wxString GetLibraryPath();
-   FileNames::FileTypes GetLibraryTypes();
+   static wxString GetLibraryName();
+   static wxString GetLibraryPath();
+   static FileNames::FileTypes GetLibraryTypes();
 
    /* returns the number of samples PER CHANNEL to send for each call to EncodeBuffer */
    int InitializeStream(unsigned channels, int sampleRate);
 
    /* In bytes. must be called AFTER InitializeStream */
-   int GetOutBufferSize();
+   int GetOutBufferSize() const;
 
    /* returns the number of bytes written. input is interleaved if stereo*/
    int EncodeBuffer(float inbuffer[], unsigned char outbuffer[]);
@@ -938,7 +936,7 @@ MP3Exporter::MP3Exporter()
    mLibraryLoaded = false;
 #endif // DISABLE_DYNAMIC_LOADING_LAME
    mEncoding = false;
-   mGF = NULL;
+   mGF = nullptr;
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    if (gPrefs) {
@@ -1058,7 +1056,7 @@ bool MP3Exporter::LoadLibrary(wxWindow *parent, AskUser askuser)
    return true;
 }
 
-bool MP3Exporter::ValidLibraryLoaded()
+bool MP3Exporter::ValidLibraryLoaded() const
 {
    return mLibraryLoaded;
 }
@@ -1086,7 +1084,7 @@ void MP3Exporter::SetChannel(int mode)
    mChannel = mode;
 }
 
-bool MP3Exporter::InitLibrary(wxString libpath)
+bool MP3Exporter::InitLibrary(const wxString& libpath)
 {
    return mLibIsExternal ? InitLibraryExternal(libpath) : InitLibraryInternal();
 }
@@ -1143,7 +1141,7 @@ bool MP3Exporter::InitLibraryInternal()
 }
 
 
-bool MP3Exporter::InitLibraryExternal(wxString libpath)
+bool MP3Exporter::InitLibraryExternal(const wxString& libpath)
 {
    wxLogMessage(wxT("Loading LAME from %s"), libpath);
 
@@ -1253,7 +1251,7 @@ bool MP3Exporter::InitLibraryExternal(wxString libpath)
 #endif // DISABLE_DYNAMIC_LOADING_LAME
 
    mGF = lame_init();
-   if (mGF == NULL) {
+   if (mGF == nullptr) {
       return false;
    }
 
@@ -1264,14 +1262,12 @@ void MP3Exporter::FreeLibrary()
 {
    if (mGF) {
       lame_close(mGF);
-      mGF = NULL;
+      mGF = nullptr;
    }
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    lame_lib.Unload();
 #endif // DISABLE_DYNAMIC_LOADING_LAME
-
-   return;
 }
 
 wxString MP3Exporter::GetLibraryVersion()
@@ -1387,7 +1383,7 @@ int MP3Exporter::InitializeStream(unsigned channels, int sampleRate)
    return mSamplesPerChunk;
 }
 
-int MP3Exporter::GetOutBufferSize()
+int MP3Exporter::GetOutBufferSize() const
 {
    if (!mEncoding)
       return -1;
@@ -1482,7 +1478,7 @@ bool MP3Exporter::PutInfoTag(wxFFile & f, wxFileOffset off)
          mGF = NULL;
       }
 #endif
-      else if (lame_mp3_tags_fid != NULL) {
+      else if (lame_mp3_tags_fid != nullptr) {
          lame_mp3_tags_fid(mGF, f.fp());
       }
    }
@@ -1708,16 +1704,16 @@ public:
                bool selectedOnly,
                double t0,
                double t1,
-               MixerSpec *mixerSpec = NULL,
-               const Tags *metadata = NULL,
+               MixerSpec *mixerSpec = nullptr,
+               const Tags *metadata = nullptr,
                int subformat = 0) override;
 
 private:
 
-   int AskResample(int bitrate, int rate, int lowrate, int highrate);
+   static int AskResample(int bitrate, int rate, int lowrate, int highrate);
    unsigned long AddTags(SaucedacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
-   void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
+   static void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
    int SetNumExportChannels() override;
 };
@@ -1753,7 +1749,7 @@ bool ExportMP3::CheckFileName(wxFileName & WXUNUSED(filename), int WXUNUSED(form
 int ExportMP3::SetNumExportChannels()
 {
    bool mono;
-   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, 0);
+   gPrefs->Read(wxT("/FileFormats/MP3ForceMono"), &mono, false);
 
    return (mono)? 1 : -1;
 }
@@ -1884,7 +1880,7 @@ ProgressResult ExportMP3::Export(SaucedacityProject *project,
    }
 
    // Put ID3 tags at beginning of file
-   if (metadata == NULL)
+   if (metadata == nullptr)
       metadata = &Tags::Get( *project );
 
    // Open file for writing
@@ -1955,7 +1951,7 @@ ProgressResult ExportMP3::Export(SaucedacityProject *project,
             break;
          }
 
-         float *mixed = (float *)mixer->GetBuffer();
+         auto *mixed = (float *)mixer->GetBuffer();
 
          if ((int)blockLen < inSamples) {
             if (channels > 1) {
@@ -2169,7 +2165,7 @@ unsigned long ExportMP3::AddTags(SaucedacityProject *WXUNUSED(project), ArrayOf<
 
    unsigned long len;
 
-   len = id3_tag_render(tp.get(), 0);
+   len = id3_tag_render(tp.get(), nullptr);
    buffer.reinit(len);
    len = id3_tag_render(tp.get(), (id3_byte_t *)buffer.get());
 

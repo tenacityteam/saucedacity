@@ -33,17 +33,17 @@ StkFloat Instrmnt :: lastOut() const
 }
 
 // Support for stereo output:
-StkFloat Instrmnt :: lastOutLeft(void) const
+StkFloat Instrmnt :: lastOutLeft() const
 {
   return 0.5 * lastOutput_;
 }
                                                                                 
-StkFloat Instrmnt :: lastOutRight(void) const
+StkFloat Instrmnt :: lastOutRight() const
 {
   return 0.5 * lastOutput_;
 }
 
-StkFloat Instrmnt :: tick( void )
+StkFloat Instrmnt :: tick( )
 {
   return computeSample();
 }

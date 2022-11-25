@@ -62,7 +62,7 @@ using teBmps = int; /// The index of a bitmap resource in Theme Resources.
 
 #ifdef THEME_EXTERNS
 #define DEFINE_IMAGE( name, initialiser, textual_name )  extern SAUCEDACITY_DLL_API teBmps name;
-#define DEFINE_COLOUR( name, initialiser, textual_name ) extern SAUCEDACITY_DLL_API int name;
-#define DEFINE_FONT( name, initialiser, textual_name ) extern SAUCEDACITY_DLL_API int name;
+#define DEFINE_COLOUR( name, initialiser, textual_name ) extern SAUCEDACITY_DLL_API int (name);
+#define DEFINE_FONT( name, initialiser, textual_name ) extern SAUCEDACITY_DLL_API int (name);
 #define SET_THEME_FLAGS( flags )
 #endif

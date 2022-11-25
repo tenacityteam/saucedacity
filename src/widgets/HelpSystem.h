@@ -43,7 +43,7 @@ public:
                      const TranslatableString &dlogTitle,
                      const TranslatableString &shortMsg,
                      const wxString &message, 
-                     const int xSize, const int ySize);
+                     int xSize, int ySize);
 
    /// Displays a NEW window with wxHTML help.
    /// @param HtmlText Either the literal HTML code to go into the window,

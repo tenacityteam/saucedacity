@@ -37,9 +37,9 @@ public:
    using ProgressResult = GenericUI::ProgressResult;
 
    ExportMultipleDialog(SaucedacityProject *parent);
-   virtual ~ExportMultipleDialog();
+   ~ExportMultipleDialog() override;
 
-   int ShowModal();
+   int ShowModal() override;
 
 private:
 
@@ -184,7 +184,7 @@ private:
 class MouseEvtHandler final : public wxEvtHandler
 {
 public:
-   void OnMouse(wxMouseEvent& event);
+    void OnMouse(wxMouseEvent& event);
 private:
    DECLARE_EVENT_TABLE()
 };

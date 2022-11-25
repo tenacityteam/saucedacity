@@ -20,7 +20,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectPaulstretch();
-   virtual ~EffectPaulstretch();
+   ~EffectPaulstretch() override;
 
    // ComponentInterface implementation
 
@@ -50,7 +50,7 @@ private:
    // EffectPaulstretch implementation
    
    void OnText(wxCommandEvent & evt);
-   size_t GetBufferSize(double rate);
+   [[nodiscard]] size_t GetBufferSize(double rate) const;
 
    bool ProcessOne(WaveTrack *track, double t0, double t1, int count);
 

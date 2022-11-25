@@ -77,8 +77,8 @@ public:
            wxWindowID id = wxID_ANY,
            const wxPoint & pos = wxDefaultPosition,
            const wxSize & size = wxDefaultSize);
-   virtual ~KeyView();
-   wxString GetName() const override; // Gets the control name from the base class
+   ~KeyView() override;
+   [[nodiscard]] wxString GetName() const override; // Gets the control name from the base class
 
    void RefreshBindings(const CommandIDs & names,
                         const TranslatableStrings & categories,
@@ -87,18 +87,18 @@ public:
                         const std::vector<NormalizedKeyString> & keys,
                         bool bSort);
 
-   int GetSelected() const;
+   [[nodiscard]] int GetSelected() const;
 
-   wxString GetLabel(int index) const;
-   wxString GetFullLabel(int index) const;
+   [[nodiscard]] wxString GetLabel(int index) const;
+   [[nodiscard]] wxString GetFullLabel(int index) const;
 
-   int GetIndexByName(const CommandID & name) const;
-   CommandID GetName(int index) const;
-   CommandID GetNameByKey(const NormalizedKeyString & key) const;
+   [[nodiscard]] int GetIndexByName(const CommandID & name) const;
+   [[nodiscard]] CommandID GetName(int index) const;
+   [[nodiscard]] CommandID GetNameByKey(const NormalizedKeyString & key) const;
 
-   int GetIndexByKey(const NormalizedKeyString & key) const;
-   NormalizedKeyString GetKey(int index) const;
-   bool CanSetKey(int index) const;
+   [[nodiscard]] int GetIndexByKey(const NormalizedKeyString & key) const;
+   [[nodiscard]] NormalizedKeyString GetKey(int index) const;
+   [[nodiscard]] bool CanSetKey(int index) const;
    bool SetKey(int index, const NormalizedKeyString & key);
    bool SetKeyByName(const CommandID & name, const NormalizedKeyString & key);
 
@@ -116,12 +116,12 @@ private:
    void UpdateHScroll();
    void RefreshLines(bool bSort = true);
 
-   int LineToIndex(int line) const;
-   int IndexToLine(int index) const;
+   [[nodiscard]] int LineToIndex(int line) const;
+   [[nodiscard]] int IndexToLine(int index) const;
 
    void OnDrawBackground(wxDC & dc, const wxRect & rect, size_t line) const override;
    void OnDrawItem(wxDC & dc, const wxRect & rect, size_t line) const override;
-   wxCoord OnMeasureItem(size_t line) const override;
+   [[nodiscard]] wxCoord OnMeasureItem(size_t line) const override;
 
    void OnSelected(wxCommandEvent & event);
    void OnSetFocus(wxFocusEvent & event);

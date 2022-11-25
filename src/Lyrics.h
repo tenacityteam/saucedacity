@@ -55,7 +55,7 @@ public:
                      const wxString& value = {},
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize);
-   virtual ~HighlightTextCtrl() {};
+   ~HighlightTextCtrl() override {};
 
    void OnMouseEvent(wxMouseEvent &evt);
 
@@ -88,15 +88,15 @@ class LyricsPanel final
           SaucedacityProject *project,
           const wxPoint& pos = wxDefaultPosition,
           const wxSize& size = wxDefaultSize);
-   virtual ~LyricsPanel();
+   ~LyricsPanel() override;
 
    int FindSyllable(long startChar); // Find the syllable whose char0 <= startChar <= char1.
-   int GetCurrentSyllableIndex() { return mCurrentSyllable; };
+   int GetCurrentSyllableIndex() const { return mCurrentSyllable; };
    Syllable* GetSyllable(int nSyl) { return &(mSyllables[nSyl]); };
    void SetCurrentSyllableIndex(int nSyl) { mCurrentSyllable = nSyl; };
 
    LyricsStyle GetLyricsStyle() { return mLyricsStyle; };
-   void SetLyricsStyle(const LyricsStyle newLyricsStyle);
+   void SetLyricsStyle(LyricsStyle newLyricsStyle);
 
    void Update(double t);
    void UpdateLyrics(wxEvent &e);
@@ -127,9 +127,9 @@ private:
 
    void Add(double t, const wxString &syllable, wxString &highlightText);
 
-   unsigned int GetDefaultFontSize() const; // Depends on mLyricsStyle. Call only after mLyricsStyle is set.
+   [[nodiscard]] unsigned int GetDefaultFontSize() const; // Depends on mLyricsStyle. Call only after mLyricsStyle is set.
 
-   void SetDrawnFont(wxDC *dc); // for kBouncingBallLyrics
+   void SetDrawnFont(wxDC *dc) const; // for kBouncingBallLyrics
    void SetHighlightFont(); // for kHighlightLyrics
 
    void Measure(wxDC *dc);

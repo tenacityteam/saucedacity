@@ -161,7 +161,7 @@ SelectionStateChanger::~SelectionStateChanger()
    if ( mpState ) {
       // roll back changes
       mpState->mLastPickedTrack = mInitialLastPickedTrack;
-      std::vector<bool>::const_iterator
+      auto
          it = mInitialTrackSelection.begin(),
          end = mInitialTrackSelection.end();
 

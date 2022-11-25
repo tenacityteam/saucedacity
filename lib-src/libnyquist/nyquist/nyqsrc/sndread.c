@@ -108,7 +108,7 @@ LVAL snd_make_read(
   long *channels,	/* number of channels */
   long *mode, 		/* sample format: PCM, ALAW, etc. */
   long *bits,		/* BPS: bits per sample */
-  long *swap,           /* swap bytes */
+  const long *swap,           /* swap bytes */
   double *srate,	/* srate: sample rate */
   double *dur,		/* duration (in seconds) to read */
   long *flags)		/* which parameters have been set */

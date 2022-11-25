@@ -93,9 +93,9 @@ public:
                          bool shouldPrompt  = true );
 
    // Renamed from 'Effect' to 'Command' prior to moving out of this class.
-   ComponentInterfaceSymbol GetCommandSymbol(const PluginID & ID);
+   static ComponentInterfaceSymbol GetCommandSymbol(const PluginID & ID);
    TranslatableString GetCommandName(const PluginID & ID);
-   CommandID GetCommandIdentifier(const PluginID & ID);
+   static CommandID GetCommandIdentifier(const PluginID & ID);
    TranslatableString GetCommandDescription(const PluginID & ID);
    ManualPageID GetCommandUrl(const PluginID & ID);
    TranslatableString GetCommandTip(const PluginID & ID);
@@ -104,7 +104,7 @@ public:
    bool IsHidden(const PluginID & ID);
 
    /** Support for batch commands */
-   bool SupportsAutomation(const PluginID & ID);
+   static bool SupportsAutomation(const PluginID & ID);
    wxString GetEffectParameters(const PluginID & ID);
    bool SetEffectParameters(const PluginID & ID, const wxString & params);
    bool PromptUser( const PluginID & ID,
@@ -132,7 +132,7 @@ public:
 
    /** Allow effects to disable saving the state at run time */
    void SetSkipStateFlag(bool flag);
-   bool GetSkipStateFlag();
+   bool GetSkipStateFlag() const;
 
    const PluginID & GetEffectByIdentifier(const CommandID & strTarget);
 

@@ -47,8 +47,8 @@
 
 #include <wx/wxcrtvararg.h>
 #include <wx/intl.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <cmath>
 
 #include "RealFFTf.h"
@@ -157,7 +157,7 @@ void FFT(size_t NumSamples,
    for (size_t i = 0; i < NumSamples; i++) {
       auto j = FastReverseBits(i, NumBits);
       RealOut[j] = RealIn[i];
-      ImagOut[j] = (ImagIn == NULL) ? 0.0 : ImagIn[i];
+      ImagOut[j] = (ImagIn == nullptr) ? 0.0 : ImagIn[i];
    }
 
    /*
@@ -212,7 +212,7 @@ void FFT(size_t NumSamples,
     */
 
    if (InverseTransform) {
-      float denom = (float) NumSamples;
+      auto denom = (float) NumSamples;
 
       for (size_t i = 0; i < NumSamples; i++) {
          RealOut[i] /= denom;
@@ -273,7 +273,7 @@ void InverseRealFFT(size_t NumSamples, const float *RealIn, const float *ImagIn,
    // Copy the data into the processing buffer
    for (size_t i = 0; i < (NumSamples / 2); i++)
       pFFT[2*i  ] = RealIn[i];
-   if(ImagIn == NULL) {
+   if(ImagIn == nullptr) {
       for (size_t i = 0; i < (NumSamples / 2); i++)
          pFFT[2*i+1] = 0;
    } else {

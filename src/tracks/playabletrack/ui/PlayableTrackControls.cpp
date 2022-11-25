@@ -164,7 +164,7 @@ void PlayableTrackControls::GetMuteSoloRect
 (const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton,
  const Track *pTrack)
 {
-   auto &trackControl = static_cast<const CommonTrackControls&>(
+   auto &trackControl = dynamic_cast<const CommonTrackControls&>(
       TrackControls::Get( *pTrack ) );
    auto resultsM = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemMute );
    auto resultsS = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemSolo );

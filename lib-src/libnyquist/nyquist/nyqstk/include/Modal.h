@@ -34,13 +34,13 @@ public:
   Modal( unsigned int modes = 4 );
 
   //! Class destructor.
-  virtual ~Modal();
+  ~Modal() override;
 
   //! Reset and clear all internal state.
   void clear();
 
   //! Set instrument parameters for a particular frequency.
-  virtual void setFrequency(StkFloat frequency);
+  void setFrequency(StkFloat frequency) override;
 
   //! Set the ratio and radius for a specified mode filter.
   void setRatioAndRadius(unsigned int modeIndex, StkFloat ratio, StkFloat radius);
@@ -61,17 +61,17 @@ public:
   void damp(StkFloat amplitude);
 
   //! Start a note with the given frequency and amplitude.
-  void noteOn(StkFloat frequency, StkFloat amplitude);
+  void noteOn(StkFloat frequency, StkFloat amplitude) override;
 
   //! Stop a note with the given amplitude (speed of decay).
-  void noteOff(StkFloat amplitude);
+  void noteOff(StkFloat amplitude) override;
 
   //! Perform the control change specified by \e number and \e value (0.0 - 128.0).
-  virtual void controlChange(int number, StkFloat value) = 0;
+  void controlChange(int number, StkFloat value) override = 0;
 
 protected:
 
-  StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
   Envelope envelope_; 
   FileWvIn *wave_;

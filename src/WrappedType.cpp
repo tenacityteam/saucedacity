@@ -34,14 +34,14 @@
 #include <lib-strings/Internat.h>
 
 /// @return true iff the wrapped type is a string.
-bool WrappedType::IsString()
+bool WrappedType::IsString() const
 {
    return eWrappedType == eWrappedString;
 }
 
 
 
-wxString WrappedType::ReadAsString()
+wxString WrappedType::ReadAsString() const
 {
    switch( eWrappedType )
    {
@@ -67,7 +67,7 @@ wxString WrappedType::ReadAsString()
    return wxT("ERROR"); //Compiler pacifier
 }
 
-int WrappedType::ReadAsInt()
+int WrappedType::ReadAsInt() const
 {
    switch( eWrappedType )
    {
@@ -97,7 +97,7 @@ int WrappedType::ReadAsInt()
    return -1;//Compiler pacifier
 }
 
-double WrappedType::ReadAsDouble()
+double WrappedType::ReadAsDouble() const
 {
    switch( eWrappedType )
    {
@@ -123,7 +123,7 @@ double WrappedType::ReadAsDouble()
    return -1.0f;//Compiler pacifier
 }
 
-bool WrappedType::ReadAsBool()
+bool WrappedType::ReadAsBool() const
 {
    switch( eWrappedType )
    {
@@ -151,7 +151,7 @@ bool WrappedType::ReadAsBool()
 }
 
 
-void WrappedType::WriteToAsString( const wxString & InStr)
+void WrappedType::WriteToAsString( const wxString & InStr) const
 {
    switch( eWrappedType )
    {
@@ -180,7 +180,7 @@ void WrappedType::WriteToAsString( const wxString & InStr)
    }
 }
 
-void WrappedType::WriteToAsInt( const int InInt)
+void WrappedType::WriteToAsInt( const int InInt) const
 {
    switch( eWrappedType )
    {
@@ -205,7 +205,7 @@ void WrappedType::WriteToAsInt( const int InInt)
    }
 }
 
-void WrappedType::WriteToAsDouble( const double InDouble)
+void WrappedType::WriteToAsDouble( const double InDouble) const
 {
    switch( eWrappedType )
    {
@@ -232,7 +232,7 @@ void WrappedType::WriteToAsDouble( const double InDouble)
 }
 
 
-void WrappedType::WriteToAsBool( const bool InBool)
+void WrappedType::WriteToAsBool( const bool InBool) const
 {
    switch( eWrappedType )
    {

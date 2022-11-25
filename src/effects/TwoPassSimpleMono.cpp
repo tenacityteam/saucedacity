@@ -134,9 +134,9 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track, WaveTrack * outTrack
 
    // Process the first buffer with a NULL previous buffer
    if (mPass == 0)
-      ret = TwoBufferProcessPass1(NULL, 0, buffer1.get(), samples1);
+      ret = TwoBufferProcessPass1(nullptr, 0, buffer1.get(), samples1);
    else
-      ret = TwoBufferProcessPass2(NULL, 0, buffer1.get(), samples1);
+      ret = TwoBufferProcessPass2(nullptr, 0, buffer1.get(), samples1);
    if (!ret)
       //Return false because the effect failed.
       return false;
@@ -196,9 +196,9 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveTrack * track, WaveTrack * outTrack
 
    // Send the last buffer with a NULL pointer for the current buffer
    if (mPass == 0)
-      ret = TwoBufferProcessPass1(buffer1.get(), samples1, NULL, 0);
+      ret = TwoBufferProcessPass1(buffer1.get(), samples1, nullptr, 0);
    else
-      ret = TwoBufferProcessPass2(buffer1.get(), samples1, NULL, 0);
+      ret = TwoBufferProcessPass2(buffer1.get(), samples1, nullptr, 0);
 
    if (!ret)
       //Return false because the effect failed.

@@ -27,7 +27,7 @@ public:
    explicit
    TrackVRulerControls( const std::shared_ptr<TrackView> &pTrackView );
 
-   virtual ~TrackVRulerControls() = 0;
+   ~TrackVRulerControls() override = 0;
 
    static TrackVRulerControls &Get( TrackView& );
    static const TrackVRulerControls &Get( const TrackView& );

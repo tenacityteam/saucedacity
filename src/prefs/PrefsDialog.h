@@ -35,10 +35,10 @@ class SAUCEDACITY_DLL_API PrefsDialog /* not final */ : public wxDialogWrapper
  public:
    PrefsDialog(wxWindow * parent,
       SaucedacityProject *pProject, // may be null
-      const TranslatableString &titlePrefix = XO("Preferences:"),
+      TranslatableString titlePrefix = XO("Preferences:"),
       PrefsPanel::Factories &factories =
          PrefsPanel::DefaultFactories());
-   virtual ~PrefsDialog();
+   ~PrefsDialog() override;
 
    // Defined this so a protected virtual can be invoked after the constructor
    int ShowModal() override;
@@ -55,7 +55,7 @@ class SAUCEDACITY_DLL_API PrefsDialog /* not final */ : public wxDialogWrapper
 
    // Accessor to help implementations of SavePreferredPage(),
    // such as by saving a preference after DoModal() returns
-   int GetSelectedPage() const;
+   [[nodiscard]] int GetSelectedPage() const;
 
  protected:
     // Decide which page to open first; return -1 for undecided
@@ -84,7 +84,7 @@ public:
       wxWindow * parent, SaucedacityProject *pProject,
       PrefsPanel::Factories &factories =
          PrefsPanel::DefaultFactories());
-   virtual ~GlobalPrefsDialog();
+   ~GlobalPrefsDialog() override;
    long GetPreferredPage() override;
    void SavePreferredPage() override;
 };

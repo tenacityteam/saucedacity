@@ -23,6 +23,8 @@ Paul Licameli -- split from ProjectFileIO.cpp
 #include <lib-files/wxFileNameWrapper.h>
 #include <lib-strings/Internat.h>
 
+#include <utility>
+
 #include "Project.h"
 
 // Configuration to provide "safe" connections
@@ -41,11 +43,11 @@ static const char *FastConfig =
    "PRAGMA <schema>.journal_mode = OFF;";
 
 DBConnection::DBConnection(
-   const std::weak_ptr<SaucedacityProject> &pProject,
-   const std::shared_ptr<DBConnectionErrors> &pErrors,
+   std::weak_ptr<SaucedacityProject> pProject,
+   std::shared_ptr<DBConnectionErrors> pErrors,
    CheckpointFailureCallback callback)
-: mpProject{ pProject }
-, mpErrors{ pErrors }
+: mpProject{std::move( pProject )}
+, mpErrors{std::move( pErrors )}
 , mCallback{ std::move(callback) }
 {
    mDB = nullptr;
@@ -68,7 +70,7 @@ void DBConnection::SetBypass( bool bypass )
    mBypass = bypass;
 }
 
-bool DBConnection::ShouldBypass()
+bool DBConnection::ShouldBypass() const
 {
    return mBypass;
 }
@@ -131,7 +133,7 @@ void DBConnection::SetDBError(
    }
 }
 
-int DBConnection::Open(const FilePath fileName)
+int DBConnection::Open(const FilePath& fileName)
 {
    wxASSERT(mDB == nullptr);
    int rc;
@@ -158,7 +160,7 @@ int DBConnection::Open(const FilePath fileName)
    return rc;
 }
 
-int DBConnection::OpenStepByStep(const FilePath fileName)
+int DBConnection::OpenStepByStep(const FilePath& fileName)
 {
    const char *name = fileName.ToUTF8();
 
@@ -393,7 +395,7 @@ sqlite3_stmt *DBConnection::Prepare(enum StatementID id, const char *sql)
 
    // Prepare the statement
    sqlite3_stmt *stmt = nullptr;
-   rc = sqlite3_prepare_v3(mDB, sql, -1, SQLITE_PREPARE_PERSISTENT, &stmt, 0);
+   rc = sqlite3_prepare_v3(mDB, sql, -1, SQLITE_PREPARE_PERSISTENT, &stmt, nullptr);
    if (rc != SQLITE_OK)
    {
       wxLogMessage("Failed to prepare statement for %s\n"
@@ -513,13 +515,12 @@ void DBConnection::CheckpointThread(sqlite3 *db, const FilePath &fileName)
       }
    }
 
-   return;
-}
+   }
 
 int DBConnection::CheckpointHook(void *data, sqlite3 *db, const char *schema, int pages)
 {
    // Get access to our object
-   DBConnection *that = static_cast<DBConnection *>(data);
+   auto *that = static_cast<DBConnection *>(data);
 
    // Queue the database pointer for our checkpoint thread to process
    std::lock_guard<std::mutex> guard(that->mCheckpointMutex);

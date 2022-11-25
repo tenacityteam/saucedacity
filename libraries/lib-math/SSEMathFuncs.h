@@ -159,12 +159,12 @@ typedef union xmm_mm_union {
 
 #define COPY_XMM_TO_MM(xmm_, mm0_, mm1_) {          \
     xmm_mm_union u; u.xmm = xmm_;                   \
-    mm0_ = u.mm[0];                                 \
-    mm1_ = u.mm[1];                                 \
+    (mm0_) = u.mm[0];                                 \
+    (mm1_) = u.mm[1];                                 \
 }
 
 #define COPY_MM_TO_XMM(mm0_, mm1_, xmm_) {                         \
-    xmm_mm_union u; u.mm[0]=mm0_; u.mm[1]=mm1_; xmm_ = u.xmm;      \
+    xmm_mm_union u; u.mm[0]=mm0_; u.mm[1]=mm1_; (xmm_) = u.xmm;      \
   }
 
 #endif // USE_SSE2

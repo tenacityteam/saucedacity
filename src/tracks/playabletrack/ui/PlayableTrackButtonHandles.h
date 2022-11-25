@@ -24,7 +24,7 @@ public:
 
    MuteButtonHandle &operator=(const MuteButtonHandle&) = default;
 
-   virtual ~MuteButtonHandle();
+   ~MuteButtonHandle() override;
 
 protected:
    Result CommitChanges
@@ -55,7 +55,7 @@ public:
 
    SoloButtonHandle &operator=(const SoloButtonHandle&) = default;
 
-   virtual ~SoloButtonHandle();
+   ~SoloButtonHandle() override;
 
 protected:
    Result CommitChanges

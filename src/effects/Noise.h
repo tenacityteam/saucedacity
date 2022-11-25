@@ -24,7 +24,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectNoise();
-   virtual ~EffectNoise();
+   ~EffectNoise() override;
 
    // ComponentInterface implementation
 

@@ -49,7 +49,7 @@ public:
 
    virtual void CloseLock() = 0;
    
-   virtual SampleBlockID GetBlockID() const = 0;
+   [[nodiscard]] virtual SampleBlockID GetBlockID() const = 0;
 
    // If !mayThrow and there is an error, ignores it and returns zero.
    // That may be appropriate when only attempting to display samples, not edit.
@@ -58,7 +58,7 @@ public:
                      size_t sampleoffset,
                      size_t numsamples, bool mayThrow = true);
 
-   virtual size_t GetSampleCount() const = 0;
+   [[nodiscard]] virtual size_t GetSampleCount() const = 0;
 
    //! Non-throwing, should fill with zeroes on failure
    virtual bool
@@ -76,9 +76,9 @@ public:
    /// Gets extreme values for the entire block
    // If !mayThrow and there is an error, ignores it and returns zeroes.
    // That may be appropriate when only attempting to display samples, not edit.
-   MinMaxRMS GetMinMaxRMS(bool mayThrow = true) const;
+   [[nodiscard]] MinMaxRMS GetMinMaxRMS(bool mayThrow = true) const;
 
-   virtual size_t GetSpaceUsage() const = 0;
+   [[nodiscard]] virtual size_t GetSpaceUsage() const = 0;
 
    virtual void SaveXML(XMLWriter &xmlFile) = 0;
 
@@ -90,7 +90,7 @@ protected:
 
    virtual MinMaxRMS DoGetMinMaxRMS(size_t start, size_t len) = 0;
 
-   virtual MinMaxRMS DoGetMinMaxRMS() const = 0;
+   [[nodiscard]] virtual MinMaxRMS DoGetMinMaxRMS() const = 0;
 };
 
 // Makes a useful function object

@@ -50,7 +50,7 @@ public:
                const TranslatableStrings &buttons,
                const wxString &helpPage,
                const TranslatableString &boxMsg, bool log);
-   ~MultiDialog() {};
+   ~MultiDialog() override {};
 
 private:
    void OnOK( wxCommandEvent &event );
@@ -188,12 +188,12 @@ int ShowMultiDialog(const TranslatableString &message,
    // window is a STAY_ON_TOP.
    if (pParent) {
       if ((pParent->GetWindowStyle() & wxSTAY_ON_TOP) == wxSTAY_ON_TOP)
-         pParent = NULL;
+         pParent = nullptr;
    }
    MultiDialog dlog(pParent,
       message, title, buttons, helpPage, boxMsg, log);
    // If dialog does not have a parent, cannot be centred on it.
-   if (pParent != NULL)
+   if (pParent != nullptr)
       dlog.CentreOnParent();
    else {
       dlog.CenterOnScreen();

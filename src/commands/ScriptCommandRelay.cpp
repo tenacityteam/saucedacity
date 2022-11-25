@@ -76,7 +76,7 @@ static int ExecFromMain(wxString *pIn, wxString *pOut)
 /// Starts the script server
 void ScriptCommandRelay::StartScriptServer(tpRegScriptServerFunc scriptFn)
 {
-   wxASSERT(scriptFn != NULL);
+   wxASSERT(scriptFn != nullptr);
 
    auto server = [](tpRegScriptServerFunc function)
    {

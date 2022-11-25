@@ -27,11 +27,11 @@ class VSTControlBase /* not final */ : public wxControl
 public:
    VSTControlBase()
    {
-      mParent = NULL;
-      mLink = NULL;
+      mParent = nullptr;
+      mLink = nullptr;
    }
 
-   virtual ~VSTControlBase()
+   ~VSTControlBase() override
    {
    }
 

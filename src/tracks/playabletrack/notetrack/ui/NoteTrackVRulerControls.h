@@ -24,7 +24,7 @@ public:
    explicit
    NoteTrackVRulerControls( const std::shared_ptr<TrackView> &pTrackView )
       : TrackVRulerControls( pTrackView ) {}
-   ~NoteTrackVRulerControls();
+   ~NoteTrackVRulerControls() override;
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,

@@ -61,10 +61,10 @@ Delay :: ~Delay()
 {
 }
 
-void Delay :: clear(void)
+void Delay :: clear()
 {
-  for (unsigned int i=0; i<inputs_.size(); i++)
-    inputs_[i] = 0.0;
+  for (double & input : inputs_)
+    input = 0.0;
   outputs_[0] = 0.0;
 }
 
@@ -116,12 +116,12 @@ void Delay :: setDelay(unsigned long delay)
   }
 }
 
-unsigned long Delay :: getDelay(void) const
+unsigned long Delay :: getDelay() const
 {
   return (unsigned long) delay_;
 }
 
-StkFloat Delay :: energy(void) const
+StkFloat Delay :: energy() const
 {
   unsigned long i;
   StkFloat e = 0;
@@ -164,12 +164,12 @@ StkFloat Delay :: contentsAt(unsigned long tapDelay)
   return inputs_[tap];
 }
 
-StkFloat Delay :: lastOut(void) const
+StkFloat Delay :: lastOut() const
 {
   return Filter::lastOut();
 }
 
-StkFloat Delay :: nextOut(void)
+StkFloat Delay :: nextOut()
 {
   return inputs_[outPoint_];
 }

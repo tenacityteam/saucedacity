@@ -166,38 +166,38 @@ namespace {
    }
 
    // Choose between implementations!
-   static const auto WriteUShort =   IsLittleEndian()
+   const auto WriteUShort =   IsLittleEndian()
       ? &WriteLittleEndian<UShort>   : &WriteBigEndian<UShort>;
-   static const auto WriteInt =      IsLittleEndian()
+   const auto WriteInt =      IsLittleEndian()
       ? &WriteLittleEndian<Int>      : &WriteBigEndian<Int>;
-   static const auto WriteLong =     IsLittleEndian()
+   const auto WriteLong =     IsLittleEndian()
       ? &WriteLittleEndian<Long>     : &WriteBigEndian<Long>;
-   static const auto WriteULong =    IsLittleEndian()
+   const auto WriteULong =    IsLittleEndian()
       ? &WriteLittleEndian<ULong>    : &WriteBigEndian<ULong>;
-   static const auto WriteLongLong = IsLittleEndian()
+   const auto WriteLongLong = IsLittleEndian()
       ? &WriteLittleEndian<LongLong> : &WriteBigEndian<LongLong>;
 
-   static const auto ReadUShort =   IsLittleEndian()
+   const auto ReadUShort =   IsLittleEndian()
       ? &ReadLittleEndian<UShort>   : &ReadBigEndian<UShort>;
-   static const auto ReadInt =      IsLittleEndian()
+   const auto ReadInt =      IsLittleEndian()
       ? &ReadLittleEndian<Int>      : &ReadBigEndian<Int>;
-   static const auto ReadLong =     IsLittleEndian()
+   const auto ReadLong =     IsLittleEndian()
       ? &ReadLittleEndian<Long>     : &ReadBigEndian<Long>;
-   static const auto ReadULong =    IsLittleEndian()
+   const auto ReadULong =    IsLittleEndian()
       ? &ReadLittleEndian<ULong>    : &ReadBigEndian<ULong>;
-   static const auto ReadLongLong = IsLittleEndian()
+   const auto ReadLongLong = IsLittleEndian()
       ? &ReadLittleEndian<LongLong> : &ReadBigEndian<LongLong>;
 
    // Functions to read and write certain lengths -- maybe we will change
    // our choices for widths or signedness?
 
    using Length = Int;  // Instead, as wide as size_t?
-   static const auto WriteLength = WriteInt;
-   static const auto ReadLength = ReadInt;
+   const auto WriteLength = WriteInt;
+   const auto ReadLength = ReadInt;
 
    using Digits = Int;  // Instead, just an unsigned char?
-   static const auto WriteDigits = WriteInt;
-   static const auto ReadDigits = ReadInt;
+   const auto WriteDigits = WriteInt;
+   const auto ReadDigits = ReadInt;
 }
 
 ProjectSerializer::ProjectSerializer(size_t allocSize)
@@ -362,7 +362,7 @@ void ProjectSerializer::WriteName(const wxString & name)
    WriteUShort( mBuffer, id );
 }
 
-const MemoryStream &ProjectSerializer::GetDict() const
+const MemoryStream &ProjectSerializer::GetDict()
 {
    return mDict;
 }

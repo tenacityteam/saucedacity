@@ -11,6 +11,8 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_WAVE_TRACK_CONTROLS__
 #define __AUDACITY_WAVE_TRACK_CONTROLS__
 
+#include <utility>
+
 #include "../../ui/PlayableTrackControls.h" // to inherit
 
 class CellularPanel;
@@ -31,8 +33,8 @@ class SAUCEDACITY_DLL_API WaveTrackControls final : public PlayableTrackControls
 public:
    explicit
    WaveTrackControls( std::shared_ptr<Track> pTrack )
-      : PlayableTrackControls( pTrack ) {}
-   ~WaveTrackControls();
+      : PlayableTrackControls( std::move(pTrack) ) {}
+   ~WaveTrackControls() override;
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
@@ -74,7 +76,7 @@ struct SAUCEDACITY_DLL_API WaveTrackPopupMenuTable : public PopupMenuTable
 {
    using PopupMenuTable::PopupMenuTable;
    PlayableTrackControls::InitMenuData *mpData{};
-   WaveTrack &FindWaveTrack () const;
+   [[nodiscard]] WaveTrack &FindWaveTrack () const;
    int ReserveId() { return mNextId++; }
 protected:
    int mNextId = 0;

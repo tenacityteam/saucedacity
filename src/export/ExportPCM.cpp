@@ -115,7 +115,7 @@ class ExportPCMOptions final : public wxPanelWrapper
 public:
 
    ExportPCMOptions(wxWindow *parent, int format);
-   virtual ~ExportPCMOptions();
+   ~ExportPCMOptions() override;
 
    void PopulateOrExchange(ShuttleGui & S);
 
@@ -247,9 +247,9 @@ void ExportPCMOptions::OnHeaderChoice(wxCommandEvent & evt)
 
    // Repopulate the encoding choices
    mEncodingChoice->Clear();
-   for (int i = 0, num = mEncodingNames.size(); i < num; ++i)
+   for (auto & mEncodingName : mEncodingNames)
    {
-      mEncodingChoice->AppendString(mEncodingNames[i].StrippedTranslation());
+      mEncodingChoice->AppendString(mEncodingName.StrippedTranslation());
    }
 
    // Select the desired encoding
@@ -395,8 +395,8 @@ public:
                          bool selectedOnly,
                          double t0,
                          double t1,
-                         MixerSpec *mixerSpec = NULL,
-                         const Tags *metadata = NULL,
+                         MixerSpec *mixerSpec = nullptr,
+                         const Tags *metadata = nullptr,
                          int subformat = 0) override;
    // optional
    wxString GetFormat(int index) override;
@@ -404,10 +404,10 @@ public:
    unsigned GetMaxChannels(int index) override;
 
 private:
-   void ReportTooBigError(wxWindow * pParent);
-   ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
+   static void ReportTooBigError(wxWindow * pParent);
+   static ArrayOf<char> AdjustString(const wxString & wxStr, int sf_format);
    bool AddStrings(SaucedacityProject *project, SNDFILE *sf, const Tags *tags, int sf_format);
-   bool AddID3Chunk(
+   static bool AddID3Chunk(
       const wxFileNameWrapper &fName, const Tags *tags, int sf_format);
 
 };
@@ -418,12 +418,12 @@ ExportPCM::ExportPCM()
    int selformat; // the index of the format we are setting up at the moment
 
    // Add the "special" formats first
-   for (size_t i = 0; i < WXSIZEOF(kFormats); ++i)
+   for (const auto & kFormat : kFormats)
    {
       selformat = AddFormat() - 1;
-      AddExtension(sf_header_extension(kFormats[i].format), selformat);
-      SetFormat(kFormats[i].name, selformat);
-      SetDescription(kFormats[i].desc, selformat);
+      AddExtension(sf_header_extension(kFormat.format), selformat);
+      SetFormat(kFormat.name, selformat);
+      SetDescription(kFormat.desc, selformat);
       SetCanMetaData(true, selformat);
       SetMaxChannels(255, selformat);
    }
@@ -569,7 +569,7 @@ ProgressResult ExportPCM::Export(SaucedacityProject *project,
          // libsndfile can't (under Windows).
          sf.reset(SFCall<SNDFILE*>(sf_open_fd, f.fd(), SFM_WRITE, &info, FALSE));
          //add clipping for integer formats.  We allow floats to clip.
-         sf_command(sf.get(), SFC_SET_CLIPPING, NULL, sf_subtype_is_integer(sf_format)?SF_TRUE:SF_FALSE) ;
+         sf_command(sf.get(), SFC_SET_CLIPPING, nullptr, sf_subtype_is_integer(sf_format)?SF_TRUE:SF_FALSE) ;
       }
 
       if (!sf) {
@@ -577,7 +577,7 @@ ProgressResult ExportPCM::Export(SaucedacityProject *project,
          return ProgressResult::Cancelled;
       }
       // Retrieve tags if not given a set
-      if (metadata == NULL)
+      if (metadata == nullptr)
          metadata = &Tags::Get( *project );
 
       // Install the meta data at the beginning of the file (except for
@@ -970,13 +970,13 @@ bool ExportPCM::AddID3Chunk(
 
    id3_length_t len;
 
-   len = id3_tag_render(tp.get(), 0);
+   len = id3_tag_render(tp.get(), nullptr);
    if (len == 0)
       return true;
 
    if ((len % 2) != 0) len++;   // Length must be even.
    ArrayOf<id3_byte_t> buffer { len, true };
-   if (buffer == NULL)
+   if (buffer == nullptr)
       return false;
 
    // Zero all locations, for ending odd UTF16 content

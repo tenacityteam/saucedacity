@@ -383,11 +383,11 @@ class wxTreebookExt final : public wxTreebook
 {
 public:
    wxTreebookExt( wxWindow *parent,
-      wxWindowID id, const TranslatableString &titlePrefix)
+      wxWindowID id, TranslatableString titlePrefix)
       : wxTreebook( parent, id )
-      , mTitlePrefix(titlePrefix)
+      , mTitlePrefix(std::move(titlePrefix))
    {;};
-   ~wxTreebookExt(){;};
+   ~wxTreebookExt() override{;};
    int ChangeSelection(size_t n) override;
    int SetSelection(size_t n) override;
    const TranslatableString mTitlePrefix;
@@ -397,8 +397,8 @@ public:
 int wxTreebookExt::ChangeSelection(size_t n) {
    int i = wxTreebook::ChangeSelection(n);
    wxString Temp = GetPageText( n );
-   static_cast<wxDialog*>(GetParent())->SetTitle( Temp );
-   static_cast<wxDialog*>(GetParent())->SetName( Temp );
+   dynamic_cast<wxDialog*>(GetParent())->SetTitle( Temp );
+   dynamic_cast<wxDialog*>(GetParent())->SetName( Temp );
    return i;
 };
 
@@ -406,10 +406,10 @@ int wxTreebookExt::SetSelection(size_t n)
 {
    int i = wxTreebook::SetSelection(n);
    auto Temp = mTitlePrefix.Translation() + wxT(" ") + GetPageText( n );
-   static_cast<wxDialog*>(GetParent())->SetTitle( Temp );
-   static_cast<wxDialog*>(GetParent())->SetName( Temp );
+   dynamic_cast<wxDialog*>(GetParent())->SetTitle( Temp );
+   dynamic_cast<wxDialog*>(GetParent())->SetName( Temp );
 
-   PrefsPanel *const panel = static_cast<PrefsPanel *>(GetPage(n));
+   auto *const panel = dynamic_cast<PrefsPanel *>(GetPage(n));
    const bool showHelp = (!panel->HelpPageName().empty());
    const bool showPreview = panel->ShowsPreviewButton();
    wxWindow *const helpButton = wxWindow::FindWindowById(wxID_HELP, GetParent());
@@ -446,16 +446,16 @@ int wxTreebookExt::SetSelection(size_t n)
 
 PrefsDialog::PrefsDialog(
    wxWindow * parent, SaucedacityProject *pProject,
-   const TranslatableString &titlePrefix,
+   TranslatableString titlePrefix,
    PrefsPanel::Factories &factories)
 :  wxDialogWrapper(parent, wxID_ANY, XO("Saucedacity Preferences"),
             wxDefaultPosition,
             wxDefaultSize,
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 , mFactories(factories)
-, mTitlePrefix(titlePrefix)
+, mTitlePrefix(std::move(titlePrefix))
 {
-   wxASSERT(factories.size() > 0);
+   wxASSERT(!factories.empty());
    const bool uniquePage = (factories.size() == 1);
    SetLayoutDirection(wxLayout_LeftToRight);
 
@@ -463,7 +463,7 @@ PrefsDialog::PrefsDialog(
 
    S.StartVerticalLay(true);
    {
-      wxASSERT(factories.size() > 0);
+      wxASSERT(!factories.empty());
       if (!uniquePage) {
          mCategories = safenew wxTreebookExt(S.GetParent(), wxID_ANY, mTitlePrefix);
 #if wxUSE_ACCESSIBILITY
@@ -502,7 +502,7 @@ PrefsDialog::PrefsDialog(
                      }
                   }
                   if (node.nChildren > 0)
-                     stack.push_back(IntPair(iPage, node.nChildren));
+                     stack.emplace_back(iPage, node.nChildren);
                }
             }
          }
@@ -643,7 +643,7 @@ void PrefsDialog::OnCancel(wxCommandEvent & WXUNUSED(event))
 PrefsPanel * PrefsDialog::GetCurrentPanel()
 {
    if( mCategories) 
-      return static_cast<PrefsPanel*>(mCategories->GetCurrentPage());
+      return dynamic_cast<PrefsPanel*>(mCategories->GetCurrentPage());
    else
    {
       wxASSERT( mUniquePage );
@@ -668,7 +668,7 @@ void PrefsDialog::ShuttleAll( ShuttleGui & S)
    if (mCategories) {
       for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
          S.ResetId();
-         PrefsPanel *panel = (PrefsPanel *)mCategories->GetPage(i);
+         auto *panel = (PrefsPanel *)mCategories->GetPage(i);
          panel->PopulateOrExchange( S );
       }
    }
@@ -694,7 +694,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
    // Validate all pages first
    if (mCategories) {
       for (size_t i = 0; i < mCategories->GetPageCount(); i++) {
-         PrefsPanel *panel = (PrefsPanel *)mCategories->GetPage(i);
+         auto *panel = (PrefsPanel *)mCategories->GetPage(i);
 
          // The dialog doesn't end until all the input is valid
          if (!panel->Validate()) {
@@ -715,7 +715,7 @@ void PrefsDialog::OnOK(wxCommandEvent & WXUNUSED(event))
       // Reverse order - so Track Name is updated before language change
       // A workaround for Bug 1661
       for (int i = (int)mCategories->GetPageCount()-1; i>= 0; i--) {
-         PrefsPanel *panel = (PrefsPanel *)mCategories->GetPage(i);
+         auto *panel = (PrefsPanel *)mCategories->GetPage(i);
 
          panel->Preview();
          panel->Commit();
@@ -815,6 +815,8 @@ void PrefsDialog::RecordExpansionState()
 }
 
 #include <wx/frame.h>
+
+#include <utility>
 #include "../Menus.h"
 #include "../Project.h"
 
@@ -833,7 +835,7 @@ void DoReloadPreferences( SaucedacityProject &project )
    // LL:  Moved from PrefsDialog since wxWidgets on OSX can't deal with
    //      rebuilding the menus while the PrefsDialog is still in the modal
    //      state.
-   for (auto p : AllProjects{}) {
+   for (const auto& p : AllProjects{}) {
       MenuManager::Get(*p).RebuildMenuBar(*p);
    }
 }

@@ -25,7 +25,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectCompressor();
-   virtual ~EffectCompressor();
+   ~EffectCompressor() override;
 
    // ComponentInterface implementation
 

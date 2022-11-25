@@ -63,16 +63,16 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
          // If Tools toolbar were eliminated, we would keep these
          // The priority of these, in case more than one might apply at one
          // point, seems arbitrary
-         if (NULL != (result = EnvelopeHandle::WaveTrackHitTest(
+         if (nullptr != (result = EnvelopeHandle::WaveTrackHitTest(
             view.mEnvelopeHandle, st.state, st.rect,
             pProject, pTrack )))
             results.push_back(result);
-         if (NULL != (result = TimeShiftHandle::HitTest(
+         if (nullptr != (result = TimeShiftHandle::HitTest(
             view.mTimeShiftHandle, st.state, st.rect, pTrack )))
             // This is the hit test on the "grips" drawn left and
             // right in Multi only
             results.push_back(result);
-         if (NULL != (result = SampleHandle::HitTest(
+         if (nullptr != (result = SampleHandle::HitTest(
             view.mSampleHandle, st.state, st.rect,
             pProject, pTrack )))
             results.push_back(result);
@@ -108,7 +108,7 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
 
 void WaveformView::DoSetMinimized( bool minimized )
 {
-   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   auto wt = dynamic_cast<WaveTrack*>( FindTrack().get() );
 
 #ifdef EXPERIMENTAL_HALF_WAVE
    bool bHalfWave;
@@ -313,9 +313,8 @@ void FindWavePortions
       const int right = std::max(left, (int)(it->position));
       const int width = right - left;
       if (width > 0)
-         portions.push_back(
-            WavePortion(left, rect.y, width, rect.height,
-                        prev->averageZoom, prev->inFisheye)
+         portions.emplace_back(left, rect.y, width, rect.height,
+                        prev->averageZoom, prev->inFisheye
          );
       left = right;
    }
@@ -809,8 +808,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
       rectPortion.Intersect(mid);
       wxASSERT(rectPortion.width >= 0);
 
-      float *useMin = 0, *useMax = 0, *useRms = 0;
-      int *useBl = 0;
+      float *useMin = nullptr, *useMax = nullptr, *useRms = nullptr;
+      int *useBl = nullptr;
       WaveDisplay fisheyeDisplay(rectPortion.width);
       int skipped = 0, skippedLeft = 0, skippedRight = 0;
       if (portion.inFisheye) {
@@ -1027,7 +1026,7 @@ void WaveformView::Draw(
       // If both channels are visible, we will duplicate this effort, but that
       // matters little.
       for( auto channel:
-          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) )
+          TrackList::Channels(dynamic_cast<WaveTrack*>(FindTrack().get())) )
          channel->UpdateLocationsCache();
 
       const auto wt = std::static_pointer_cast<const WaveTrack>(
@@ -1086,13 +1085,13 @@ struct WaveColorMenuTable : PopupMenuTable
 
    void DestroyMenu() override
    {
-      mpData = NULL;
+      mpData = nullptr;
    }
 
    PlayableTrackControls::InitMenuData *mpData{};
 
-   int IdOfWaveColor(int WaveColor);
-   void OnWaveColorChange(wxCommandEvent & event);
+   int IdOfWaveColor(int WaveColor) const;
+   void OnWaveColorChange(wxCommandEvent & event) const;
 
    int OnInstrument1ID, OnInstrument2ID, OnInstrument3ID, OnInstrument4ID;
 };
@@ -1119,9 +1118,9 @@ const TranslatableString GetWaveColorStr(int colorIndex)
 
 BEGIN_POPUP_MENU(WaveColorMenuTable)
    static const auto fn = []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-      auto &me = static_cast<WaveColorMenuTable&>( handler );
+      auto &me = dynamic_cast<WaveColorMenuTable&>( handler );
       auto pData = me.mpData;
-      const auto &track = *static_cast<WaveTrack*>(pData->pTrack);
+      const auto &track = *dynamic_cast<WaveTrack*>(pData->pTrack);
       auto &project = pData->project;
       bool unsafe = ProjectAudioIO::Get( project ).IsAudioActive();
       
@@ -1150,16 +1149,16 @@ BEGIN_POPUP_MENU(WaveColorMenuTable)
 END_POPUP_MENU()
 
 /// Converts a WaveColor enumeration to a wxWidgets menu item Id.
-int WaveColorMenuTable::IdOfWaveColor(int WaveColor)
+int WaveColorMenuTable::IdOfWaveColor(int WaveColor) const
 {  return OnInstrument1ID + WaveColor;}
 
 /// Handles the selection from the WaveColor submenu of the
 /// track menu.
-void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
+void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event) const
 {
    int id = event.GetId();
    wxASSERT(id >= OnInstrument1ID && id <= OnInstrument4ID);
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   const auto pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
 
    int newWaveColor = id - OnInstrument1ID;
 

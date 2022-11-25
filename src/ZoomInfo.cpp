@@ -18,8 +18,8 @@
 #include <cmath>
 
 namespace {
-static const double gMaxZoom = 6000000;
-static const double gMinZoom = 0.001;
+const double gMaxZoom = 6000000;
+const double gMinZoom = 0.001;
 }
 
 ZoomInfo::ZoomInfo(double start, double pixelsPerSecond)

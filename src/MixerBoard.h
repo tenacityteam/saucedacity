@@ -42,7 +42,7 @@ public:
                      const wxPoint & pos,
                      const wxSize & size,
                      const ASlider::Options &options = ASlider::Options{});
-   virtual ~MixerTrackSlider() {}
+   ~MixerTrackSlider() override {}
 
    void OnMouseEvent(wxMouseEvent & event);
 
@@ -78,10 +78,10 @@ public:
                      const std::shared_ptr<PlayableTrack> &pTrack,
                      const wxPoint& pos = wxDefaultPosition,
                      const wxSize& size = wxDefaultSize);
-   virtual ~MixerTrackCluster() {}
+   ~MixerTrackCluster() override {}
 
-   WaveTrack *GetWave() const;
-   WaveTrack *GetRight() const;
+   [[nodiscard]] WaveTrack *GetWave() const;
+   [[nodiscard]] WaveTrack *GetRight() const;
 #ifdef EXPERIMENTAL_MIDI_OUT
    NoteTrack *GetNote() const;
 #endif
@@ -90,19 +90,19 @@ public:
 
    void HandleResize(); // For wxSizeEvents, update gain slider and meter.
 
-   void HandleSliderGain(const bool bWantPushState = false);
+   void HandleSliderGain(bool bWantPushState = false);
 #ifdef EXPERIMENTAL_MIDI_OUT
    void HandleSliderVelocity(const bool bWantPushState = false);
 #endif
-   void HandleSliderPan(const bool bWantPushState = false);
+   void HandleSliderPan(bool bWantPushState = false);
 
-   void ResetMeter(const bool bResetClipping);
+   void ResetMeter(bool bResetClipping);
 
    void UpdateForStateChange();
-   void UpdateMeter(const double t0, const double t1);
+   void UpdateMeter(double t0, double t1);
 
 private:
-   wxColour GetTrackColor();
+   static wxColour GetTrackColor();
 
    // event handlers
    void HandleSelect(bool bShiftDown, bool bControlDown);
@@ -171,7 +171,7 @@ public:
                               const wxPoint& pos = wxDefaultPosition,
                               const wxSize& size = wxDefaultSize,
                               long style = wxHSCROLL | wxVSCROLL);
-   virtual ~MixerBoardScrolledWindow();
+   ~MixerBoardScrolledWindow() override;
 
 private:
    void OnMouseEvent(wxMouseEvent& event);
@@ -214,12 +214,12 @@ public:
    void RefreshTrackClusters(bool bEraseBackground = true);
    void ResizeTrackClusters();
 
-   void UpdateMeters(const double t1, const bool bLoopedPlay);
+   void UpdateMeters(double t1, bool bLoopedPlay);
 
    void UpdateWidth();
 
 private:
-   void ResetMeters(const bool bResetClipping);   
+   void ResetMeters(bool bResetClipping);
    void RemoveTrackCluster(size_t nIndex);
    void MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & bitmap,
       wxRect & bev, const TranslatableString & str, bool up );
@@ -266,7 +266,7 @@ class MixerBoardFrame final
 {
 public:
    MixerBoardFrame(SaucedacityProject* parent);
-   virtual ~MixerBoardFrame();
+   ~MixerBoardFrame() override;
 
    void Recreate(SaucedacityProject *pProject);
 

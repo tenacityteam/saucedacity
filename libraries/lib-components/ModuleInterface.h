@@ -69,7 +69,7 @@ class COMPONENTS_API ModuleInterface  /* not final */
    : public ComponentInterface
 {
 public:
-   virtual ~ModuleInterface();
+   ~ModuleInterface() override;
 
    // Called immediately after creation to give the instance a chance to
    // initialize.  Return "true" if initialziation was successful.

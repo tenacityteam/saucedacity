@@ -154,9 +154,9 @@ class TipWindow final : public wxFrame
 {
  public:
    TipWindow(wxWindow *parent, const TranslatableStrings & labels);
-   virtual ~TipWindow() {}
+   ~TipWindow() override = default;
 
-   wxSize GetSize() const;
+   [[nodiscard]] wxSize GetSize() const;
    void SetPos(const wxPoint & pos);
    void SetLabel(const TranslatableString & label);
 
@@ -191,7 +191,7 @@ TipWindow::TipWindow(wxWindow *parent, const TranslatableStrings & labels)
    mWidth = mHeight = 0;
    for ( const auto &label : labels ) {
       int width, height;
-      GetTextExtent(label.Translation(), &width, &height, NULL, NULL, &mFont);
+      GetTextExtent(label.Translation(), &width, &height, nullptr, nullptr, &mFont);
       mWidth =  std::max( mWidth,  width );
       mHeight = std::max( mHeight, height );
    }
@@ -329,8 +329,7 @@ SliderDialog::SliderDialog(wxWindow * parent, wxWindowID id,
 }
 
 SliderDialog::~SliderDialog()
-{
-}
+= default;
 
 bool SliderDialog::TransferDataToWindow()
 {
@@ -585,7 +584,7 @@ void LWSlider::Init(wxWindow * parent,
    mThumbBitmapHilited = nullptr;
    mScrollLine = 1.0f;
    mScrollPage = 5.0f;
-   mTipPanel = NULL;
+   mTipPanel = nullptr;
 
    AdjustSize(size);
 
@@ -593,8 +592,7 @@ void LWSlider::Init(wxWindow * parent,
 }
 
 LWSlider::~LWSlider()
-{
-}
+= default;
 
 wxWindowID LWSlider::GetId()
 {
@@ -1080,7 +1078,7 @@ bool LWSlider::DoShowDialog(wxPoint pos)
    float value = mCurrentValue;
    bool changed = false;
 
-   SliderDialog dlg( NULL,
+   SliderDialog dlg( nullptr,
                      wxID_ANY,
                      mName,
                      pos,

@@ -33,18 +33,18 @@ public:
   Noise( unsigned int seed );
 
   //! Class destructor.
-  virtual ~Noise();
+  ~Noise() override;
 
   //! Seed the random number generator with a specific seed value.
   /*!
     If no seed is provided or the seed value is zero, the random
     number generator is seeded with the current system time.
   */
-  void setSeed( unsigned int seed = 0 );
+  static void setSeed( unsigned int seed = 0 );
 
 protected:
 
-  virtual StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
 };
 

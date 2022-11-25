@@ -32,7 +32,7 @@ public:
    const wxSize& size = wxDefaultSize,
    long style = wxSB_HORIZONTAL);
 public:
-   ~AttachableScrollBar(void);
+   ~AttachableScrollBar() override;
    void OnScroll(wxScrollEvent & event);
    void SetViewInfo( ViewInfo * view );
 

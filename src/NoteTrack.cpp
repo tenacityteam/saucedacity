@@ -123,7 +123,7 @@ NoteTrack::NoteTrack()
    SetDefaultName(_("Note Track"));
    SetName(GetDefaultName());
 
-   mSeq = NULL;
+   mSeq = nullptr;
    mSerializationLength = 0;
 
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -149,7 +149,7 @@ Alg_seq &NoteTrack::GetSeq() const
          { Alg_seq::unserialize
             ( mSerializationBuffer.get(), mSerializationLength ) };
          wxASSERT(alg_track->get_type() == 's');
-         mSeq.reset( static_cast<Alg_seq*>(alg_track.release()) );
+         mSeq.reset( dynamic_cast<Alg_seq*>(alg_track.release()) );
 
          // Preserve the invariant that at most one of the representations is
          // valid
@@ -233,7 +233,7 @@ void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
    Alg_iterator iter(mSeq.get(), false);
    iter.begin();
    Alg_event_ptr event;
-   while (0 != (event = iter.next()) && event->time < t1) {
+   while (nullptr != (event = iter.next()) && event->time < t1) {
       if (event->is_note() && event->time >= t0) {
          event->set_pitch(event->get_pitch() + semitones);
       }
@@ -933,7 +933,7 @@ bool NoteTrack::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 
 XMLTagHandler *NoteTrack::HandleXMLChild(const wxChar * WXUNUSED(tag))
 {
-   return NULL;
+   return nullptr;
 }
 
 void NoteTrack::WriteXML(XMLWriter &xmlFile) const
@@ -946,7 +946,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
       // replace saveme with an (unserialized) duplicate, which is
       // destroyed at end of function.
       holder = Clone();
-      saveme = static_cast<NoteTrack*>(holder.get());
+      saveme = dynamic_cast<NoteTrack*>(holder.get());
    }
    saveme->GetSeq().write(data, true);
    xmlFile.StartTag(wxT("notetrack"));
@@ -1074,7 +1074,7 @@ void NoteTrack::ZoomAllNotes()
    int minPitch = MaxPitch;
    int maxPitch = MinPitch;
 
-   while (NULL != (evt = iterator.next())) {
+   while (nullptr != (evt = iterator.next())) {
       if (evt->is_note()) {
          int pitch = (int) evt->get_pitch();
          hasNotes = true;

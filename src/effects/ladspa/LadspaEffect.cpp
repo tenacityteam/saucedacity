@@ -29,7 +29,7 @@ effects from this one class.
 #include <lib-files/FileNames.h>
 #include <lib-math/SampleCount.h>
 
-#include <float.h>
+#include <cfloat>
 
 #if !defined(__WXMSW__)
 #include <dlfcn.h>
@@ -156,8 +156,7 @@ bool LadspaEffectsModule::Initialize()
 void LadspaEffectsModule::Terminate()
 {
    // Nothing to do here
-   return;
-}
+   }
 
 EffectFamilySymbol LadspaEffectsModule::GetOptionalFamilySymbol()
 {
@@ -205,10 +204,10 @@ bool LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
    FilePaths files;
    TranslatableString ignoredErrMsg;
 
-   for (int i = 0; i < (int)WXSIZEOF(kShippedEffects); i++)
+   for (auto & kShippedEffect : kShippedEffects)
    {
       files.clear();
-      pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
+      pm.FindFilesInPathList(kShippedEffect, pathList, files);
       for (size_t j = 0, cnt = files.size(); j < cnt; j++)
       {
          if (!pm.IsPluginRegistered(files[j]))
@@ -273,7 +272,7 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
 
    int index = 0;
    int nLoaded = 0;
-   LADSPA_Descriptor_Function mainFn = NULL;
+   LADSPA_Descriptor_Function mainFn = nullptr;
 #if defined(__WXMSW__)
    wxDynamicLibrary lib;
    if (lib.Load(path, wxDL_NOW)) {
@@ -291,7 +290,7 @@ unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
 
          for (data = mainFn(index); data; data = mainFn(++index)) {
             LadspaEffect effect(path, index);
-            if (effect.SetHost(NULL)) {
+            if (effect.SetHost(nullptr)) {
                ++nLoaded;
                if (callback)
                   callback( this, &effect );
@@ -399,7 +398,7 @@ class LadspaEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
    LadspaEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
-   virtual ~LadspaEffectOptionsDialog();
+   ~LadspaEffectOptionsDialog() override;
 
    void PopulateOrExchange(ShuttleGui & S);
 
@@ -501,7 +500,7 @@ class LadspaEffectMeter final : public wxWindow
 {
 public:
    LadspaEffectMeter(wxWindow *parent, const float & val, float min, float max);
-   virtual ~LadspaEffectMeter();
+   ~LadspaEffectMeter() override;
 
 private:
    void OnErase(wxEraseEvent & evt);
@@ -608,10 +607,10 @@ LadspaEffect::LadspaEffect(const wxString & path, int index)
 {
    mPath = path;
    mIndex = index;
-   mData = NULL;
+   mData = nullptr;
 
-   mHost = NULL;
-   mMaster = NULL;
+   mHost = nullptr;
+   mMaster = nullptr;
    mReady = false;
 
    mInteractive = false;
@@ -625,8 +624,8 @@ LadspaEffect::LadspaEffect(const wxString & path, int index)
 
    mLatencyPort = -1;
 
-   mDialog = NULL;
-   mParent = NULL;
+   mDialog = nullptr;
+   mParent = nullptr;
 }
 
 LadspaEffect::~LadspaEffect()
@@ -756,7 +755,7 @@ bool LadspaEffect::SetHost(EffectHostInterface *host)
          mInteractive = true;
 
          LADSPA_PortRangeHint hint = mData->PortRangeHints[p];
-         float val = float(1.0);
+         auto val = float(1.0);
          float lower = hint.LowerBound;
          float upper = hint.UpperBound;
 
@@ -965,7 +964,7 @@ bool LadspaEffect::ProcessFinalize()
       mReady = false;
 
       FreeInstance(mMaster);
-      mMaster = NULL;
+      mMaster = nullptr;
    }
 
    return true;
@@ -1010,9 +1009,9 @@ bool LadspaEffect::RealtimeAddProcessor(unsigned WXUNUSED(numChannels), float sa
 
 bool LadspaEffect::RealtimeFinalize()
 {
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
+   for (auto & mSlave : mSlaves)
    {
-      FreeInstance(mSlaves[i]);
+      FreeInstance(mSlave);
    }
    mSlaves.clear();
 
@@ -1199,7 +1198,7 @@ bool LadspaEffect::PopulateUI(ShuttleGui &S)
    mMeters.reinit( mData->PortCount );
 
    wxASSERT(mParent); // To justify safenew
-   wxScrolledWindow *const w = safenew wxScrolledWindow(mParent,
+   auto *const w = safenew wxScrolledWindow(mParent,
       wxID_ANY,
       wxDefaultPosition,
       wxDefaultSize,
@@ -1536,9 +1535,9 @@ bool LadspaEffect::CloseUI()
    mFields.reset();
    mLabels.reset();
 
-   mUIHost = NULL;
-   mParent = NULL;
-   mDialog = NULL;
+   mUIHost = nullptr;
+   mParent = nullptr;
+   mDialog = nullptr;
 
    return true;
 }
@@ -1589,7 +1588,7 @@ bool LadspaEffect::Load()
    wxString saveOldCWD = ff.GetCwd();
    ff.SetCwd();
 
-   LADSPA_Descriptor_Function mainFn = NULL;
+   LADSPA_Descriptor_Function mainFn = nullptr;
 
    if (mLib.Load(mPath, wxDL_NOW))
    {
@@ -1662,7 +1661,7 @@ LADSPA_Handle LadspaEffect::InitInstance(float sampleRate)
    LADSPA_Handle handle = mData->instantiate(mData, sampleRate);
    if (!handle)
    {
-      return NULL;
+      return nullptr;
    }
 
    for (unsigned long p = 0; p < mData->PortCount; p++)
@@ -1711,8 +1710,8 @@ void LadspaEffect::OnSlider(wxCommandEvent & evt)
    int p = evt.GetId() - ID_Sliders;
 
    float val;
-   float lower = float(0.0);
-   float upper = float(10.0);
+   auto lower = float(0.0);
+   auto upper = float(10.0);
    float range;
    bool forceint = false;
 
@@ -1748,8 +1747,8 @@ void LadspaEffect::OnTextCtrl(wxCommandEvent & evt)
    int p = evt.GetId() - ID_Texts;
 
    float val;
-   float lower = float(0.0);
-   float upper = float(10.0);
+   auto lower = float(0.0);
+   auto upper = float(10.0);
    float range;
 
    val = Internat::CompatibleToDouble(that->mFields[p]->GetValue());

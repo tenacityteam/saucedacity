@@ -34,7 +34,7 @@
 
 #include <wx/intl.h>
 
-#include <locale.h> // for setlocale and LC_ALL
+#include <clocale> // for setlocale and LC_ALL
 #include <cmath>
 #include <limits>
 #include <wx/log.h>

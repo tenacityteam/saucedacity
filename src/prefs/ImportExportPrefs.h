@@ -31,7 +31,7 @@ class SAUCEDACITY_DLL_API ImportExportPrefs final : public PrefsPanel
    static EnumSetting< bool > AllegroStyleSetting;
 
    ImportExportPrefs(wxWindow * parent, wxWindowID winid);
-   ~ImportExportPrefs();
+   ~ImportExportPrefs() override;
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
 

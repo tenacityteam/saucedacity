@@ -22,7 +22,7 @@ extern SAUCEDACITY_DLL_API TranslatableString AudacityMessageBoxCaptionStr();
 inline int AudacityMessageBox(const TranslatableString& message,
    const TranslatableString& caption = XO("Message"),
    long style = wxOK | wxCENTRE,
-   wxWindow *parent = NULL,
+   wxWindow *parent = nullptr,
    int x = wxDefaultCoord, int y = wxDefaultCoord)
 {
    return ::wxMessageBox(message.Translation(), caption.Translation(),

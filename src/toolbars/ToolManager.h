@@ -64,7 +64,7 @@ class SAUCEDACITY_DLL_API ToolManager final
    ToolManager( SaucedacityProject *parent );
    ToolManager( const ToolManager & ) = delete;
    ToolManager &operator=( const ToolManager & ) = delete;
-   ~ToolManager();
+   ~ToolManager() override;
 
    void CreateWindows();
 
@@ -78,12 +78,12 @@ class SAUCEDACITY_DLL_API ToolManager final
 
    void Expose( int type, bool show );
 
-   ToolBar *GetToolBar( int type ) const;
+   [[nodiscard]] ToolBar *GetToolBar( int type ) const;
 
    ToolDock *GetTopDock();
-   const ToolDock *GetTopDock() const;
+   [[nodiscard]] const ToolDock *GetTopDock() const;
    ToolDock *GetBotDock();
-   const ToolDock *GetBotDock() const;
+   [[nodiscard]] const ToolDock *GetBotDock() const;
 
    void Reset();
    static void OnResetToolBars(const CommandContext &context);
@@ -168,7 +168,7 @@ public:
 
    ToolFrame( SaucedacityProject *parent, ToolManager *manager, ToolBar *bar, wxPoint pos );
 
-   ~ToolFrame();
+   ~ToolFrame() override;
 
    ToolBar *GetBar() { return mBar; }
    void ClearBar() { mBar = nullptr; }

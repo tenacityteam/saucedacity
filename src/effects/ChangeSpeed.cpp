@@ -110,8 +110,7 @@ EffectChangeSpeed::EffectChangeSpeed()
 }
 
 EffectChangeSpeed::~EffectChangeSpeed()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -483,7 +482,7 @@ bool EffectChangeSpeed::ProcessLabelTrack(LabelTrack *lt)
 bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
                            sampleCount start, sampleCount end)
 {
-   if (track == NULL)
+   if (track == nullptr)
       return false;
 
    // initialization, per examples of Mixer::Mixer and
@@ -567,14 +566,14 @@ bool EffectChangeSpeed::ProcessOne(WaveTrack * track,
 
          if (st >= mCurT0 || et < mCurT1) {
             if (mCurT0 < st && clip == front) {
-               gaps.push_back(std::make_pair(mCurT0, st));
+               gaps.emplace_back(mCurT0, st);
             }
             else if (last < st && mCurT0 <= last ) {
-               gaps.push_back(std::make_pair(last, st));
+               gaps.emplace_back(last, st);
             }
 
             if (et < mCurT1 && clip == back) {
-               gaps.push_back(std::make_pair(et, mCurT1));
+               gaps.emplace_back(et, mCurT1);
             }
          }
          last = et;

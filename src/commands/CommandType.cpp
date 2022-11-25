@@ -27,8 +27,7 @@ OldStyleCommandType::OldStyleCommandType()
 { }
 
 OldStyleCommandType::~OldStyleCommandType()
-{
-}
+= default;
 
 ComponentInterfaceSymbol OldStyleCommandType::GetSymbol()
 {

@@ -132,7 +132,7 @@ SaucedacityProject::SaucedacityProject()
    wxLongLong freeSpace = 0;
 
    auto path = TempDirectory::TempDir();
-   if (wxGetDiskSpace(path, NULL, &freeSpace)) {
+   if (wxGetDiskSpace(path, nullptr, &freeSpace)) {
       if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
          auto volume = FileNames::AbbreviatePath( path );
          /* i18n-hint: %s will be replaced by the drive letter (on Windows) */

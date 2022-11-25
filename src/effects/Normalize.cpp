@@ -65,8 +65,7 @@ EffectNormalize::EffectNormalize()
 }
 
 EffectNormalize::~EffectNormalize()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -522,13 +521,13 @@ bool EffectNormalize::ProcessOne(
 }
 
 /// @see AnalyseDataLoudnessDC
-void EffectNormalize::AnalyseDataDC(float *buffer, size_t len)
+void EffectNormalize::AnalyseDataDC(const float *buffer, size_t len)
 {
    for(decltype(len) i = 0; i < len; i++)
       mSum += (double)buffer[i];
 }
 
-void EffectNormalize::ProcessData(float *buffer, size_t len, float offset)
+void EffectNormalize::ProcessData(float *buffer, size_t len, float offset) const
 {
    for(decltype(len) i = 0; i < len; i++) {
       float adjFrame = (buffer[i] + offset) * mMult;

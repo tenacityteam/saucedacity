@@ -120,9 +120,9 @@ void Envelope::RescaleValues(double minValue, double maxValue)
    mDefaultValue = ClampValue(mMinValue + (mMaxValue - mMinValue) * factor);
 
    // rescale all points
-   for( unsigned int i = 0; i < mEnv.size(); i++ ) {
-      factor = (mEnv[i].GetVal() - oldMinValue) / (oldMaxValue - oldMinValue);
-      mEnv[i].SetVal( this, mMinValue + (mMaxValue - mMinValue) * factor );
+   for(auto & i : mEnv) {
+      factor = (i.GetVal() - oldMinValue) / (oldMaxValue - oldMinValue);
+      i.SetVal( this, mMinValue + (mMaxValue - mMinValue) * factor );
    }
 
 }
@@ -218,8 +218,8 @@ void Envelope::SetRange(double minValue, double maxValue) {
    mMinValue = minValue;
    mMaxValue = maxValue;
    mDefaultValue = ClampValue(mDefaultValue);
-   for( unsigned int i = 0; i < mEnv.size(); i++ )
-      mEnv[i].SetVal( this, mEnv[i].GetVal() ); // this clamps the value to the NEW range
+   for(auto & i : mEnv)
+      i.SetVal( this, i.GetVal() ); // this clamps the value to the NEW range
 }
 
 // This is used only during construction of an Envelope by complete or partial
@@ -331,7 +331,7 @@ bool Envelope::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
 XMLTagHandler *Envelope::HandleXMLChild(const wxChar *tag)
 {
    if (wxStrcmp(tag, wxT("controlpoint")))
-      return NULL;
+      return nullptr;
 
    mEnv.push_back( EnvPoint{} );
    return &mEnv.back();
@@ -462,7 +462,7 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
 /*! @excsafety{No-fail} */
 void Envelope::PasteEnvelope( double t0, const Envelope *e, double sampleDur )
 {
-   const bool wasEmpty = (this->mEnv.size() == 0);
+   const bool wasEmpty = (this->mEnv.empty());
    auto otherSize = e->mEnv.size();
    const double otherDur = e->mTrackLen;
    const auto otherOffset = e->mOffset;
@@ -1208,7 +1208,7 @@ double Envelope::Integral( double t0, double t1 ) const
    }
 
    // loop through the rest of the envelope points until we get to t1
-   while (1)
+   while (true)
    {
       if(i >= count) // the requested range extends beyond the last point
       {
@@ -1271,7 +1271,7 @@ double Envelope::IntegralOfInverse( double t0, double t1 ) const
    }
 
    // loop through the rest of the envelope points until we get to t1
-   while (1)
+   while (true)
    {
       if(i >= count) // the requested range extends beyond the last point
       {
@@ -1353,7 +1353,7 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
       if (area < 0) {
          // loop BACKWARDS through the rest of the envelope points until we get to t1
          // (which is less than t0)
-         while (1)
+         while (true)
          {
             if(i < 0) // the requested range extends beyond the leftmost point
             {
@@ -1374,7 +1374,7 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
       }
       else {
          // loop through the rest of the envelope points until we get to t1
-         while (1)
+         while (true)
          {
             if(i >= (int)count) // the requested range extends beyond the last point
             {
@@ -1397,8 +1397,8 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
 
 void Envelope::print() const
 {
-   for( unsigned int i = 0; i < mEnv.size(); i++ )
-      wxPrintf( "(%.2f, %.2f)\n", mEnv[i].GetT(), mEnv[i].GetVal() );
+   for(const auto & i : mEnv)
+      wxPrintf( "(%.2f, %.2f)\n", i.GetT(), i.GetVal() );
 }
 
 static void checkResult( int n, double a, double b )

@@ -35,7 +35,7 @@ public:
             unsigned long chunkThreshold = 1000000, unsigned long chunkSize = 1024 );
 
   //! Class destructor.
-  virtual ~WaveLoop();
+  ~WaveLoop() override;
 
   //! Open the specified file and load its data.
   /*!
@@ -65,7 +65,7 @@ public:
   void setFrequency( StkFloat frequency );
 
   //! Increment the read pointer by \e time samples, modulo file size.
-  void addTime( StkFloat time );
+  void addTime( StkFloat time ) override;
 
   //! Increment current read pointer by \e angle, relative to a looping frequency.
   /*!
@@ -85,7 +85,7 @@ public:
 
 protected:
 
-  virtual void computeFrame( void );
+  void computeFrame( ) override;
 
   StkFrames firstFrame_;
   StkFloat phaseOffset_;

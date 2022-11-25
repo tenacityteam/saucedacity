@@ -260,8 +260,8 @@ void NumericRenderer::Draw(wxGrid &grid,
    wxGridCellRenderer::Draw(grid, attr, dc, rect, row, col, isSelected);
 
    wxGridTableBase *table = grid.GetTable();
-   NumericEditor *ne =
-      static_cast<NumericEditor *>(grid.GetCellEditor(row, col));
+   auto *ne =
+      dynamic_cast<NumericEditor *>(grid.GetCellEditor(row, col));
    wxString tstr;
 
    if (ne) {
@@ -318,8 +318,8 @@ wxSize NumericRenderer::GetBestSize(wxGrid &grid,
                                  int col)
 {
    wxGridTableBase *table = grid.GetTable();
-   NumericEditor *ne =
-      static_cast<NumericEditor *>(grid.GetCellEditor(row, col));
+   auto *ne =
+      dynamic_cast<NumericEditor *>(grid.GetCellEditor(row, col));
    wxSize sz;
 
    if (ne) {
@@ -565,7 +565,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
       {
          case 'C': // Copy
          {
-            wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
+            auto *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
             wxClipboard::Get()->SetData(data);
             return;
          }
@@ -573,7 +573,7 @@ void Grid::OnKeyDown(wxKeyEvent &event)
 
          case 'X': // Cut
          {
-            wxTextDataObject *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
+            auto *data = safenew wxTextDataObject(GetCellValue(crow, ccol));
             wxClipboard::Get()->SetData(data);
             SetCellValue(crow, ccol, "" );
             return;

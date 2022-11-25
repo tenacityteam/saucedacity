@@ -165,7 +165,7 @@ class LV2EffectsModule final : public ModuleInterface
 {
 public:
    LV2EffectsModule();
-   virtual ~LV2EffectsModule();
+   ~LV2EffectsModule() override;
 
    // ComponentInterface implementation
 
@@ -199,7 +199,7 @@ public:
    // LV2EffectModule implementation
 
 private:
-   const LilvPlugin *GetPlugin(const PluginPath & path);
+   static const LilvPlugin *GetPlugin(const PluginPath & path);
 };
 
 extern LilvWorld *gWorld;

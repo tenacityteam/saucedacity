@@ -31,7 +31,7 @@ class ApplyMacroDialog : public wxDialogWrapper {
    // constructors and destructors
    ApplyMacroDialog(
       wxWindow * parent, SaucedacityProject &project, bool bInherited=false);
-   virtual ~ApplyMacroDialog();
+   ~ApplyMacroDialog() override;
  public:
    // Populate methods NOT virtual.
    void Populate();
@@ -75,11 +75,11 @@ class MacrosWindow final : public ApplyMacroDialog,
 public:
    MacrosWindow(
       wxWindow * parent, SaucedacityProject &project, bool bExpanded=true);
-   ~MacrosWindow();
+   ~MacrosWindow() override;
    void UpdateDisplay( bool bExpanded );
 
 private:
-   TranslatableString WindowTitle() const;
+   [[nodiscard]] TranslatableString WindowTitle() const;
 
    void Populate();
    void PopulateOrExchange(ShuttleGui &S);
@@ -87,7 +87,7 @@ private:
    void OnApplyToFiles(wxCommandEvent & event) override;
    void OnCancel(wxCommandEvent &event) override;
 
-   virtual ManualPageID GetHelpPageName() override {return 
+   ManualPageID GetHelpPageName() override {return
       mbExpanded ? "Manage_Macros"
          : "Apply_Macro";}
 

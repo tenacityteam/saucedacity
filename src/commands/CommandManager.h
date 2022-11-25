@@ -25,6 +25,8 @@
 
 #include "Keyboard.h"
 
+#include <utility>
+#include <utility>
 #include <vector>
 #include <unordered_map>
 
@@ -73,7 +75,7 @@ class SAUCEDACITY_DLL_API CommandManager final
    //
 
    CommandManager();
-   virtual ~CommandManager();
+   ~CommandManager() override;
 
    CommandManager(const CommandManager&) = delete;
    CommandManager &operator= (const CommandManager&) = delete;
@@ -103,8 +105,8 @@ class SAUCEDACITY_DLL_API CommandManager final
       // A two-argument constructor for another common case
       Options(
          const wxChar *accel_,
-         const TranslatableString &longName_ )
-      : accel{ accel_ }, longName{ longName_ } {}
+         TranslatableString longName_ )
+      : accel{ accel_ }, longName{std::move( longName_ )} {}
 
       Options &&Accel (const wxChar *value) &&
          { accel = value; return std::move(*this); }
@@ -159,7 +161,7 @@ class SAUCEDACITY_DLL_API CommandManager final
 
    private:
       static CheckFn
-         MakeCheckFn( const wxString key, bool defaultValue );
+       MakeCheckFn( const wxString& key, bool defaultValue );
       static CheckFn
          MakeCheckFn( const BoolSetting &setting );
    };
@@ -167,7 +169,7 @@ class SAUCEDACITY_DLL_API CommandManager final
    void AddItemList(const CommandID & name,
                     const ComponentInterfaceSymbol items[],
                     size_t nItems,
-                    CommandHandlerFinder finder,
+                    const CommandHandlerFinder& finder,
                     CommandFunctorPointer callback,
                     CommandFlag flags,
                     bool bIsEffect = false);
@@ -289,7 +291,7 @@ private:
    // Creating menus and adding commands
    //
 
-   int NextIdentifier(int ID);
+   static int NextIdentifier(int ID);
    CommandListEntry *NewIdentifier(const CommandID & name,
                                    const TranslatableString & label,
                                    wxMenu *menu,
@@ -347,10 +349,10 @@ public:
 
 private:
    wxString FormatLabelForMenu(const CommandListEntry *entry) const;
-   wxString FormatLabelForMenu(
+   static wxString FormatLabelForMenu(
       const TranslatableString &translatableLabel,
-      const NormalizedKeyString &keyStr) const;
-   wxString FormatLabelWithDisabledAccel(const CommandListEntry *entry) const;
+      const NormalizedKeyString &keyStr) ;
+   static wxString FormatLabelWithDisabledAccel(const CommandListEntry *entry) ;
 
    //
    // Loading/Saving
@@ -407,9 +409,9 @@ private:
 
 struct ToolbarMenuVisitor : MenuVisitor
 {
-   explicit ToolbarMenuVisitor( SaucedacityProject &p ) : project{ p } {}
-   operator SaucedacityProject & () const { return project; }
-   SaucedacityProject &project;
+    ToolbarMenuVisitor( SaucedacityProject &p ) : project{ p } {}
+    operator SaucedacityProject & () const { return project; }
+    SaucedacityProject &project;
 };
 
 // Define items that populate tables that specifically describe menu trees
@@ -421,7 +423,7 @@ namespace MenuTable {
       virtual ~MenuSection();
    };
    struct SAUCEDACITY_DLL_API WholeMenu {
-      WholeMenu( bool extend = false ) : extension{ extend }  {}
+      explicit WholeMenu( bool extend = false ) : extension{ extend }  {}
       virtual ~WholeMenu();
       bool extension;
    };
@@ -433,14 +435,14 @@ namespace MenuTable {
       // Construction from an internal name and a previously built-up
       // vector of pointers
       MenuItem( const Identifier &internalName,
-         const TranslatableString &title_, BaseItemPtrs &&items_ );
+         TranslatableString title_, BaseItemPtrs &&items_ );
       // In-line, variadic constructor that doesn't require building a vector
       template< typename... Args >
          MenuItem( const Identifier &internalName,
-            const TranslatableString &title_, Args&&... args )
+            TranslatableString title_, Args&&... args )
             : ConcreteGroupItem< false, ToolbarMenuVisitor >{
                internalName, std::forward<Args>(args)... }
-            , title{ title_ }
+            , title{std::move( title_ )}
          {}
       ~MenuItem() override;
 
@@ -463,7 +465,7 @@ namespace MenuTable {
             Condition condition_, Args&&... args )
             : ConcreteGroupItem< false, ToolbarMenuVisitor >{
                internalName, std::forward<Args>(args)... }
-            , condition{ condition_ }
+            , condition{std::move( std::move(condition_) )}
          {}
       ~ConditionalGroupItem() override;
 
@@ -489,7 +491,7 @@ namespace MenuTable {
       static CommandHandlerFinder DefaultFinder() { return sFinder; }
 
       explicit
-      FinderScope( CommandHandlerFinder finder )
+      FinderScope( const CommandHandlerFinder& finder )
          : ValueRestorer( sFinder, finder )
       {}
    };
@@ -497,10 +499,10 @@ namespace MenuTable {
    // Describes one command in a menu
    struct SAUCEDACITY_DLL_API CommandItem final : SingleItem {
       CommandItem(const CommandID &name_,
-               const TranslatableString &label_in_,
+               TranslatableString label_in_,
                CommandFunctorPointer callback_,
                CommandFlag flags_,
-               const CommandManager::Options &options_,
+               CommandManager::Options options_,
                CommandHandlerFinder finder_);
 
       // Takes a pointer to member function directly, and delegates to the
@@ -566,9 +568,9 @@ namespace MenuTable {
    {
       using Appender = std::function< void( SaucedacityProject&, wxMenu& ) >;
 
-      explicit SpecialItem( const Identifier &internalName, const Appender &fn_ )
+      explicit SpecialItem( const Identifier &internalName, Appender fn_ )
       : SingleItem{ internalName }
-      , fn{ fn_ }
+      , fn{std::move( fn_ )}
       {}
       ~SpecialItem() override;
 
@@ -642,7 +644,7 @@ namespace MenuTable {
          { return std::make_unique<ConditionalGroupItem>(
             internalName, condition, std::forward<Args>(args)... ); }
    inline std::unique_ptr<ConditionalGroupItem> ConditionalItems(
-      const Identifier &internalName, ConditionalGroupItem::Condition condition,
+      const Identifier &internalName, const ConditionalGroupItem::Condition& condition,
       BaseItemPtrs &&items )
          { return std::make_unique<ConditionalGroupItem>(
             internalName, condition, std::move( items ) ); }

@@ -35,9 +35,9 @@ public:
    WaveformSettings();
    WaveformSettings(const WaveformSettings &other);
    WaveformSettings& operator= (const WaveformSettings &other);
-   ~WaveformSettings();
+   ~WaveformSettings() override;
 
-   bool IsDefault() const
+   [[nodiscard]] bool IsDefault() const
    {
       return this == &defaults();
    }
@@ -68,6 +68,6 @@ public:
    int dBRange;
 
    // Convenience
-   bool isLinear() const { return stLinear == scaleType; }
+   [[nodiscard]] bool isLinear() const { return stLinear == scaleType; }
 };
 #endif

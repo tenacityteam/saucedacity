@@ -42,7 +42,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectWahwah();
-   virtual ~EffectWahwah();
+   ~EffectWahwah() override;
 
    // ComponentInterface implementation
 
@@ -59,7 +59,7 @@ public:
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
@@ -81,8 +81,8 @@ public:
 private:
    // EffectWahwah implementation
 
-   void InstanceInit(EffectWahwahState & data, float sampleRate);
-   size_t InstanceProcess(EffectWahwahState & data, float **inBlock, float **outBlock, size_t blockLen);
+   void InstanceInit(EffectWahwahState & data, float sampleRate) const;
+   size_t InstanceProcess(EffectWahwahState & data, float **inBlock, float **outBlock, size_t blockLen) const;
 
    void OnFreqSlider(wxCommandEvent & evt);
    void OnPhaseSlider(wxCommandEvent & evt);

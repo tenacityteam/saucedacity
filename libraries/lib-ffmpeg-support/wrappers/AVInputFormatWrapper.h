@@ -25,15 +25,15 @@ public:
    explicit AVInputFormatWrapper(AVInputFormat* wrapped) noexcept;
 
    AVInputFormat* GetWrappedValue() noexcept;
-   const AVInputFormat* GetWrappedValue() const noexcept;
+   [[nodiscard]] const AVInputFormat* GetWrappedValue() const noexcept;
 
    virtual ~AVInputFormatWrapper() = default;
 
-   virtual const char* GetName() const noexcept = 0;
-   virtual const char* GetLongName() const noexcept = 0;
-   virtual int GetFlags() const noexcept = 0;
-   virtual const char* GetExtensions() const noexcept = 0;
-   virtual const struct AVCodecTag* const* GetCodecTag() const noexcept = 0;
+   [[nodiscard]] virtual const char* GetName() const noexcept = 0;
+   [[nodiscard]] virtual const char* GetLongName() const noexcept = 0;
+   [[nodiscard]] virtual int GetFlags() const noexcept = 0;
+   [[nodiscard]] virtual const char* GetExtensions() const noexcept = 0;
+   [[nodiscard]] virtual const struct AVCodecTag* const* GetCodecTag() const noexcept = 0;
 protected:
    AVInputFormat* mAVInputFormat { nullptr };
 };

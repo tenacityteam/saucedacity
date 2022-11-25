@@ -25,5 +25,5 @@ public:
 
     void Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override;
 
-    bool IsSelected() const;
+    [[nodiscard]] bool IsSelected() const;
 };

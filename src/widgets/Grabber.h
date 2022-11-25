@@ -60,7 +60,7 @@ class GrabberEvent final : public wxCommandEvent
    GrabberEvent(const GrabberEvent & event) = default;
 
    // Position of event (in screen coordinates)
-   const wxPoint & GetPosition() const
+   [[nodiscard]] const wxPoint & GetPosition() const
    {
       return mPos;
    }
@@ -70,10 +70,10 @@ class GrabberEvent final : public wxCommandEvent
       mPos = pos;
    }
 
-   bool IsEscaping() const { return mEscaping; }
+   [[nodiscard]] bool IsEscaping() const { return mEscaping; }
 
    // Clone is required by wxwidgets; implemented via copy constructor
-   wxEvent *Clone() const override
+   [[nodiscard]] wxEvent *Clone() const override
    {
       return safenew GrabberEvent(*this);
    }
@@ -104,7 +104,7 @@ class SAUCEDACITY_DLL_API Grabber final : public wxWindow
  public:
 
    Grabber(wxWindow *parent, wxWindowID id);
-   virtual ~Grabber();
+   ~Grabber() override;
 
    // We don't need or want to accept focus since there's really
    // not a need to dock/float a toolbar from the keyboard.  If this
@@ -112,7 +112,7 @@ class SAUCEDACITY_DLL_API Grabber final : public wxWindow
    // handling.
    // Note that AcceptsFocusFromKeyboard() rather than AcceptsFocus()
    // is overridden so that ESC can cancel toolbar drag.
-   bool AcceptsFocusFromKeyboard() const override {return false;}
+   [[nodiscard]] bool AcceptsFocusFromKeyboard() const override {return false;}
 
    void PushButton(bool state);
    void SetAsSpacer( bool bIsSpacer );

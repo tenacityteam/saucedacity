@@ -58,14 +58,14 @@ public:
    explicit
    Identifier(std::initializer_list<Identifier> components, wxChar separator);
 
-   bool empty() const { return value.empty(); }
-   size_t size() const { return value.size(); }
-   size_t length() const { return value.length(); }
+   [[nodiscard]] bool empty() const { return value.empty(); }
+   [[nodiscard]] size_t size() const { return value.size(); }
+   [[nodiscard]] size_t length() const { return value.length(); }
 
    //! Explicit conversion to wxString, meant to be ugly-looking and demanding of a comment why it's correct
-   const wxString &GET() const { return value; }
+   [[nodiscard]] const wxString &GET() const { return value; }
 
-   std::vector< Identifier > split( wxChar separator ) const;
+   [[nodiscard]] std::vector< Identifier > split( wxChar separator ) const;
 
 private:
    wxString value;

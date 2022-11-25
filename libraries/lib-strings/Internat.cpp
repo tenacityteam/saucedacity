@@ -26,8 +26,8 @@ and on Mac OS X for the filesystem.
 #include <wx/intl.h>
 #include <wx/filename.h>
 
-#include <locale.h>
-#include <math.h> // for pow()
+#include <clocale>
+#include <cmath> // for pow()
 
 // in order for the static member variables to exist, they must appear here
 // (_outside_) the class definition, in order to be allocated some storage.

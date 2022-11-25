@@ -42,7 +42,7 @@ public:
   Delay(unsigned long delay, unsigned long maxDelay);
 
   //! Class destructor.
-  virtual ~Delay();
+  ~Delay() override;
 
   //! Clears the internal state of the delay line.
   void clear();
@@ -64,10 +64,10 @@ public:
   void setDelay(unsigned long delay);
 
   //! Return the current delay-line length.
-  unsigned long getDelay(void) const;
+  unsigned long getDelay() const;
 
   //! Calculate and return the signal energy in the delay-line.
-  StkFloat energy(void) const;
+  StkFloat energy() const;
 
   //! Return the value at \e tapDelay samples from the delay-line input.
   /*!
@@ -78,16 +78,16 @@ public:
   StkFloat contentsAt(unsigned long tapDelay);
 
   //! Return the last computed output value.
-  StkFloat lastOut(void) const;
+  StkFloat lastOut() const override;
 
   //! Return the value which will be output by the next call to tick().
   /*!
     This method is valid only for delay settings greater than zero!
    */
-  virtual StkFloat nextOut(void);
+  virtual StkFloat nextOut();
 
   //! Input one sample to the filter and return one output.
-  virtual StkFloat tick(StkFloat sample);
+  StkFloat tick(StkFloat sample) override;
 
   //! Take a channel of the StkFrames object as inputs to the filter and replace with corresponding outputs.
   /*!
@@ -96,7 +96,7 @@ public:
     channel argument is equal to or greater than the number of
     channels in the StkFrames object.
   */
-  virtual StkFrames& tick( StkFrames& frames, unsigned int channel = 0 );
+  StkFrames& tick( StkFrames& frames, unsigned int channel = 0 ) override;
 
 protected:
 

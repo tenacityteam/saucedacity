@@ -229,7 +229,7 @@ bool DoStopPlaying(const CommandContext &context)
 
       //stop playing the other project
       if (iter != finish) {
-         auto otherProject = *iter;
+         const auto& otherProject = *iter;
          auto &otherToolbar = ControlToolBar::Get(*otherProject);
          auto &otherProjectAudioManager =
             ProjectAudioManager::Get(*otherProject);

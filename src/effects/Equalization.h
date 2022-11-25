@@ -97,9 +97,9 @@ class EffectEqualization : public Effect,
 public:
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectEqualization(int Options = kEqLegacy);
+   explicit EffectEqualization(int Options = kEqLegacy);
    
-   virtual ~EffectEqualization();
+   ~EffectEqualization() override;
 
    // ComponentInterface implementation
 
@@ -138,7 +138,7 @@ public:
 
 private:
    // EffectEqualization implementation
-   wxString GetPrefsPrefix();
+   [[nodiscard]] wxString GetPrefsPrefix() const;
 
    // Number of samples in an FFT window
    static const size_t windowSize = 16384u; //MJS - work out the optimum for this at run time?  Have a dialog box for it?
@@ -156,7 +156,7 @@ private:
    void ForceRecalc();
    void EnvelopeUpdated();
    void EnvelopeUpdated(Envelope *env, bool lin);
-   bool IsLinear();
+   [[nodiscard]] bool IsLinear() const;
 
    void LoadCurves(const wxString &fileName = {}, bool append = false);
    void SaveCurves(const wxString &fileName = {});
@@ -165,8 +165,8 @@ private:
    void Select(int sel);
    void setCurve(int currentCurve);
    void setCurve(const wxString &curveName);
-   void setCurve(void);
-   bool GetDefaultFileName(wxFileName &fileName);
+   void setCurve();
+   static bool GetDefaultFileName(wxFileName &fileName);
    
    // XMLTagHandler callback methods for loading and saving
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
@@ -177,13 +177,13 @@ private:
    void UpdateDraw();
 
    //void LayoutEQSliders();
-   void UpdateGraphic(void);
-   void EnvLogToLin(void);
-   void EnvLinToLog(void);
-   void ErrMin(void);
+   void UpdateGraphic();
+   void EnvLogToLin();
+   void EnvLinToLog();
+   void ErrMin();
    void GraphicEQ(Envelope *env);
-   void spline(double x[], double y[], size_t n, double y2[]);
-   double splint(double x[], double y[], size_t n, double y2[], double xr);
+   static void spline(const double x[], const double y[], size_t n, double y2[]);
+   static double splint(const double x[], const double y[], size_t n, const double y2[], double xr);
 
    void OnErase( wxEvent &event );
    void OnSize( wxSizeEvent & event );
@@ -304,12 +304,12 @@ class EqualizationPanel final : public wxPanelWrapper
 public:
    EqualizationPanel(
       wxWindow *parent, wxWindowID winid, EffectEqualization *effect);
-   ~EqualizationPanel();
+   ~EqualizationPanel() override;
 
    // We don't need or want to accept focus.
-   bool AcceptsFocus() const { return false; }
+   [[nodiscard]] bool AcceptsFocus() const override { return false; }
    // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
-   bool AcceptsFocusFromKeyboard() const { return false; }
+   [[nodiscard]] bool AcceptsFocusFromKeyboard() const override { return false; }
 
    void ForceRecalc();
 
@@ -355,7 +355,7 @@ class EditCurvesDialog final : public wxDialogWrapper
 {
 public:
    EditCurvesDialog(wxWindow * parent, EffectEqualization * effect, int position);
-   ~EditCurvesDialog();
+   ~EditCurvesDialog() override;
 
 private:
 

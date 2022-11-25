@@ -88,6 +88,7 @@ is time to refresh some aspect of the screen.
 #include "../images/Cursors.h"
 
 #include <algorithm>
+#include <utility>
 
 #include <wx/dc.h>
 #include <wx/dcclient.h>
@@ -249,14 +250,14 @@ void TrackPanel::Destroy( SaucedacityProject &project )
 TrackPanel::TrackPanel(wxWindow * parent, wxWindowID id,
                        const wxPoint & pos,
                        const wxSize & size,
-                       const std::shared_ptr<TrackList> &tracks,
+                       std::shared_ptr<TrackList> tracks,
                        ViewInfo * viewInfo,
                        SaucedacityProject * project,
                        AdornedRulerPanel * ruler)
    : CellularPanel(parent, id, pos, size, viewInfo,
                    wxWANTS_CHARS | wxNO_BORDER),
      mListener( &ProjectWindow::Get( *project ) ),
-     mTracks(tracks),
+     mTracks(std::move(tracks)),
      mRuler(ruler),
      mTrackArtist(nullptr),
      mRefreshBacking(false)
@@ -351,12 +352,12 @@ SaucedacityProject * TrackPanel::GetProject() const
    //Do it in two stages in case 'this' is not a wxWindow.
    //when the compiler will flag the error.
    wxWindow const * const pConstWind = this;
-   wxWindow * pWind=(wxWindow*)pConstWind;
+   auto * pWind=(wxWindow*)pConstWind;
    pWind = pWind->GetParent(); //MainPanel
    wxASSERT( pWind );
    pWind = pWind->GetParent(); //ProjectWindow
    wxASSERT( pWind );
-   return &static_cast<ProjectWindow*>( pWind )->GetProject();
+   return &dynamic_cast<ProjectWindow*>( pWind )->GetProject();
 }
 
 void TrackPanel::OnSize( wxSizeEvent &evt )
@@ -523,7 +524,7 @@ namespace {
    std::shared_ptr<Track> FindTrack(TrackPanelCell *pCell )
    {
       if (pCell)
-         return static_cast<CommonTrackPanelCell*>( pCell )->FindTrack();
+         return dynamic_cast<CommonTrackPanelCell*>( pCell )->FindTrack();
       return {};
    }
 }
@@ -554,8 +555,8 @@ void TrackPanel::ProcessUIHandleResult
       panel->UpdateViewIfNoTracks();
       // Beware stale pointer!
       if (pLatestTrack == pClickedTrack)
-         pLatestTrack = NULL;
-      pClickedTrack = NULL;
+         pLatestTrack = nullptr;
+      pClickedTrack = nullptr;
    }
 
    if (pClickedTrack && (refreshResult & RefreshCode::UpdateVRuler))
@@ -604,7 +605,7 @@ void TrackPanel::HandlePageDownKey()
    mListener->TP_ScrollWindow(mViewInfo->GetScreenEndTime());
 }
 
-bool TrackPanel::IsAudioActive()
+bool TrackPanel::IsAudioActive() const
 {
    SaucedacityProject *p = GetProject();
    return ProjectAudioIO::Get( *p ).IsAudioActive();
@@ -842,7 +843,7 @@ void TrackPanel::DrawTracks(wxDC * dc)
 
    const bool hasSolo = GetTracks()->Any< PlayableTrack >()
       .any_of( []( const PlayableTrack *pt ) {
-         pt = static_cast< const PlayableTrack * >(
+         pt = dynamic_cast< const PlayableTrack * >(
             pt->SubstitutePendingChangedTrack().get() );
          return (pt && pt->GetSolo());
       } );
@@ -1222,7 +1223,7 @@ struct EmptyCell final : CommonTrackPanelCell {
    std::vector< UIHandlePtr > HitTest(
       const TrackPanelMouseState &, const SaucedacityProject *) override
    { return {}; }
-   virtual std::shared_ptr< Track > DoFindTrack() override { return {}; }
+   std::shared_ptr< Track > DoFindTrack() override { return {}; }
    static std::shared_ptr<EmptyCell> Instance()
    {
       static auto instance = std::make_shared< EmptyCell >();
@@ -1248,8 +1249,8 @@ struct EmptyCell final : CommonTrackPanelCell {
 // A vertical ruler left of a channel
 struct VRulerAndChannel final : TrackPanelGroup {
    VRulerAndChannel(
-      const std::shared_ptr< TrackView > &pView, wxCoord leftOffset )
-         : mpView{ pView }, mLeftOffset{ leftOffset } {}
+      std::shared_ptr< TrackView > pView, wxCoord leftOffset )
+         : mpView{std::move( pView )}, mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect ) override
    {
       return { Axis::X, Refinement{
@@ -1266,9 +1267,9 @@ struct VRulerAndChannel final : TrackPanelGroup {
 // a vertical ruler and a channel
 struct VRulersAndChannels final : TrackPanelGroup {
    VRulersAndChannels(
-      const std::shared_ptr<Track> &pTrack,
+      std::shared_ptr<Track> pTrack,
       TrackView::Refinement refinement, wxCoord leftOffset )
-         : mpTrack{ pTrack }
+         : mpTrack{std::move( pTrack )}
          , mRefinement{ std::move( refinement ) }
          , mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect ) override
@@ -1338,14 +1339,14 @@ class EmptyPanelRect final : public CommonTrackPanelCell
    std::shared_ptr<Track> mTrack;
    int mFillBrushName;
 public:
-   explicit EmptyPanelRect(const std::shared_ptr<Track>& track, int fillBrushName)
-      : mTrack(track), mFillBrushName(fillBrushName)
+   explicit EmptyPanelRect(std::shared_ptr<Track>  track, int fillBrushName)
+      : mTrack(std::move(track)), mFillBrushName(fillBrushName)
    {
    }
 
-   ~EmptyPanelRect() { }
+   ~EmptyPanelRect() override { }
 
-   void Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass)
+   void Draw(TrackPanelDrawingContext& context, const wxRect& rect, unsigned iPass) override
    {
       if (iPass == TrackArtist::PassBackground)
       {
@@ -1362,7 +1363,7 @@ public:
        return mTrack;
    }
 
-   std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state, const SaucedacityProject* pProject)
+   std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state, const SaucedacityProject* pProject) override
    {
       return {};
    }
@@ -1390,8 +1391,8 @@ struct HorizontalGroup final : TrackPanelGroup {
 // alternating with n - 1 resizers;
 // each channel-ruler pair might be divided into multiple views
 struct ChannelGroup final : TrackPanelGroup {
-   ChannelGroup( const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
-      : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
+   ChannelGroup( std::shared_ptr< Track > pTrack, wxCoord leftOffset )
+      : mpTrack{std::move( pTrack )}, mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect_ ) override
    {
       auto rect = rect_;
@@ -1474,8 +1475,8 @@ struct ChannelGroup final : TrackPanelGroup {
 // alternating with n - 1 resizers
 struct LabeledChannelGroup final : TrackPanelGroup {
    LabeledChannelGroup(
-      const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
-         : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
+      std::shared_ptr< Track > pTrack, wxCoord leftOffset )
+         : mpTrack{std::move( pTrack )}, mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect ) override
    { return { Axis::X, Refinement{
       { rect.GetLeft(),
@@ -1551,8 +1552,8 @@ struct LabeledChannelGroup final : TrackPanelGroup {
 // which is associated with the last channel
 struct ResizingChannelGroup final : TrackPanelGroup {
    ResizingChannelGroup(
-      const std::shared_ptr< Track > &pTrack, wxCoord leftOffset )
-         : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
+      std::shared_ptr< Track > pTrack, wxCoord leftOffset )
+         : mpTrack{std::move( pTrack )}, mLeftOffset{ leftOffset } {}
    Subdivision Children( const wxRect &rect ) override
    { return { Axis::Y, Refinement{
       { rect.GetTop(),

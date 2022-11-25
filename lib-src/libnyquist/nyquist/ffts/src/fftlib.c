@@ -66,7 +66,7 @@ parts of ffts1
 *************************************************/
 
 //inline void bitrevR2(float *ioptr, long M, short *BRLow);
-static inline void bitrevR2(float *ioptr, long M, short *BRLow){
+static inline void bitrevR2(float *ioptr, long M, const short *BRLow){
 /*** bit reverse and first radix 2 stage of forward or inverse fft ***/
 float	f0r;
 float	f0i;
@@ -1130,7 +1130,7 @@ parts of iffts1
 *************************************************/
 
 // inline void scbitrevR2(float *ioptr, long M, short *BRLow, float scale);
-static inline void scbitrevR2(float *ioptr, long M, short *BRLow, float scale){
+static inline void scbitrevR2(float *ioptr, long M, const short *BRLow, float scale){
 /*** scaled bit reverse and first radix 2 stage forward or inverse fft ***/
 float	f0r;
 float	f0i;

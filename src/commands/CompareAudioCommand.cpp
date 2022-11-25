@@ -80,13 +80,13 @@ bool CompareAudioCommand::GetSelection(const CommandContext &context, Saucedacit
    // compare
    auto trackRange = TrackList::Get( proj ).Selected< const WaveTrack >();
    mTrack0 = *trackRange.first;
-   if (mTrack0 == NULL)
+   if (mTrack0 == nullptr)
    {
       context.Error(wxT("No tracks selected! Select two tracks to compare."));
       return false;
    }
    mTrack1 = * ++ trackRange.first;
-   if (mTrack1 == NULL)
+   if (mTrack1 == nullptr)
    {
       context.Error(wxT("Only one track selected! Select two tracks to compare."));
       return false;

@@ -101,8 +101,7 @@ bool OldStyleCommand::SetParameter(const wxString & WXUNUSED(paramName),
 }
 
 DecoratedCommand::~DecoratedCommand()
-{
-}
+= default;
 
 ComponentInterfaceSymbol DecoratedCommand::GetSymbol()
 {
@@ -145,7 +144,7 @@ bool ApplyAndSendResponse::Apply()
    // the command it holds.
    auto result = GuardedCall<bool>(
       [&] { 
-      bool bResult = mCommand->Apply(*( mCtx.get()));
+      bool bResult = mCommand->Apply(*( mCtx));
       return bResult; }
    );
    wxString response = wxT( "\n" );
@@ -179,8 +178,7 @@ CommandImplementation::CommandImplementation(
 }
 
 CommandImplementation::~CommandImplementation()
-{
-}
+= default;
 
 void CommandImplementation::TypeCheck(const wxString &typeName,
                                       const wxString &paramName,
@@ -262,7 +260,7 @@ bool CommandImplementation::SetParameter(const wxString &paramName, const wxVari
 {
    wxASSERT(!paramValue.IsType(wxT("null")));
    CommandContext context( mProject );
-   ParamValueMap::iterator iter = mParams.find(paramName);
+   auto iter = mParams.find(paramName);
    if (iter == mParams.end())
    {
       // Translated format, but untranslated command name substituted into it?

@@ -86,9 +86,9 @@ ImportPluginList &Importer::sImportPluginList()
 }
 
 namespace {
-static const auto PathStart = wxT("Importers");
+const auto PathStart = wxT("Importers");
 
-static Registry::GroupItem &sRegistry()
+Registry::GroupItem &sRegistry()
 {
    static Registry::TransparentGroupItem<> registry{ PathStart };
    return registry;
@@ -153,7 +153,7 @@ bool Importer::Initialize()
       void Visit( SingleItem &item, const Path &path ) override
       {
          sImportPluginList().push_back(
-            static_cast<ImporterItem&>( item ).mpPlugin.get() );
+            dynamic_cast<ImporterItem&>( item ).mpPlugin.get() );
       }
    } visitor;
 
@@ -348,9 +348,9 @@ void Importer::ReadImportItems()
       for (const auto &importPlugin : sImportPluginList())
       {
          bool found = false;
-         for (size_t i = 0; i < new_item->filter_objects.size(); i++)
+         for (auto & filter_object : new_item->filter_objects)
          {
-            if (importPlugin == new_item->filter_objects[i])
+            if (importPlugin == filter_object)
             {
                found = true;
                break;
@@ -526,17 +526,17 @@ bool Importer::Import( SaucedacityProject &project,
       ExtImportItem *item = uItem.get();
       bool matches_ext = false, matches_mime = false;
       wxLogDebug(wxT("Testing extensions"));
-      for (size_t j = 0; j < item->extensions.size(); j++)
+      for (const auto & extension : item->extensions)
       {
-         wxLogDebug(wxT("%s"), item->extensions[j].Lower());
-         if (wxMatchWild (item->extensions[j].Lower(),fName.Lower(), false))
+         wxLogDebug(wxT("%s"), extension.Lower());
+         if (wxMatchWild (extension.Lower(),fName.Lower(), false))
          {
             wxLogDebug(wxT("Match!"));
             matches_ext = true;
             break;
          }
       }
-      if (item->extensions.size() == 0)
+      if (item->extensions.empty())
       {
          wxLogDebug(wxT("Match! (empty list)"));
          matches_ext = true;
@@ -554,7 +554,7 @@ bool Importer::Import( SaucedacityProject &project,
             break;
          }
       }
-      if (item->mime_types.size() == 0)
+      if (item->mime_types.empty())
       {
          wxLogDebug(wxT("Match! (empty list)"));
          matches_mime = true;
@@ -608,13 +608,13 @@ bool Importer::Import( SaucedacityProject &project,
       // Try to open the file with this plugin (probe it)
       wxLogMessage(wxT("Opening with %s"),plugin->GetPluginStringID());
       auto inFile = plugin->Open(fName, pProj);
-      if ( (inFile != NULL) && (inFile->GetStreamCount() > 0) )
+      if ( (inFile != nullptr) && (inFile->GetStreamCount() > 0) )
       {
          wxLogMessage(wxT("Open(%s) succeeded"), fName);
          // File has more than one stream - display stream selector
          if (inFile->GetStreamCount() > 1)
          {
-            ImportStreamDialog ImportDlg(inFile.get(), NULL, -1, XO("Select stream(s) to import"));
+            ImportStreamDialog ImportDlg(inFile.get(), nullptr, -1, XO("Select stream(s) to import"));
 
             if (ImportDlg.ShowModal() == wxID_CANCEL)
             {
@@ -650,7 +650,7 @@ bool Importer::Import( SaucedacityProject &project,
                // But correct that and proceed anyway
                tracks.erase( iter, end );
             }
-            if (tracks.size() > 0)
+            if (!tracks.empty())
             {
                // success!
                return true;

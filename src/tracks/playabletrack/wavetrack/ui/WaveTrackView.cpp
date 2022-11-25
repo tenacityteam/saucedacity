@@ -104,7 +104,7 @@ struct SubViewAdjuster
       mFirstSubView = first - begin;
    }
 
-   size_t NVisible() const
+   [[nodiscard]] size_t NVisible() const
    { return mPermutation.size() - mFirstSubView; }
 
    bool ModifyPermutation( bool top )
@@ -156,7 +156,7 @@ struct SubViewAdjuster
 
    std::pair< size_t, bool >
    HitTest( WaveTrackSubView &subView,
-      wxCoord yy, wxCoord top, wxCoord height )
+      wxCoord yy, wxCoord top, wxCoord height ) const
    {
       const auto index = FindIndex( subView );
       auto size = mPermutation.size();
@@ -201,7 +201,7 @@ struct SubViewAdjuster
    {
       auto pView = mwView.lock();
       if ( pView ) {
-         auto pTrack = static_cast< WaveTrack* >( pView->FindTrack().get() );
+         auto pTrack = dynamic_cast< WaveTrack* >( pView->FindTrack().get() );
          for ( auto pChannel : TrackList::Channels<WaveTrack>( pTrack ) )
             WaveTrackView::Get( *pChannel ).RestorePlacements(
                rollback ? mOrigPlacements : mNewPlacements );
@@ -505,11 +505,11 @@ public:
       return RefreshNone;
    }
 
-   bool Clicked() const { return !mHeights.empty(); }
+   [[nodiscard]] bool Clicked() const { return !mHeights.empty(); }
 
    enum DragChoice_t{ Upward, Downward, Neutral };
 
-   DragChoice_t DragChoice( const TrackPanelMouseEvent &event ) const
+   [[nodiscard]] DragChoice_t DragChoice( const TrackPanelMouseEvent &event ) const
    {
       // Disregard x coordinate -- so the mouse need not be in any sub-view,
       // just in the correct range of y coordinates
@@ -827,7 +827,7 @@ auto WaveTrackSubView::GetMenuItems(
       -> std::vector<MenuItem>
 {
    const WaveClip *pClip = nullptr;
-   auto pTrack = static_cast<WaveTrack*>( FindTrack().get() );
+   auto pTrack = dynamic_cast<WaveTrack*>( FindTrack().get() );
    double time = 0.0;
    if ( pTrack && pPosition ) {
       auto &viewInfo = ViewInfo::Get(*pProject);
@@ -852,7 +852,7 @@ auto WaveTrackSubView::GetMenuItems(
 
 WaveTrackView &WaveTrackView::Get( WaveTrack &track )
 {
-   return static_cast< WaveTrackView& >( TrackView::Get( track ) );
+   return dynamic_cast< WaveTrackView& >( TrackView::Get( track ) );
 }
 
 const WaveTrackView &WaveTrackView::Get( const WaveTrack &track )
@@ -1039,7 +1039,7 @@ void WaveTrackView::DoSetDisplay(Display display, bool exclusive)
    size_t ii = 0;
    std::vector< std::pair< WaveTrackViewConstants::Display, size_t > > pairs;
    WaveTrackSubViews::ForEach( [&pairs, &ii]( WaveTrackSubView &subView ){
-      pairs.push_back( { subView.SubViewType().id, ii++ } );
+      pairs.emplace_back( subView.SubViewType().id, ii++ );
    } );
    std::sort( pairs.begin(), pairs.end() );
 
@@ -1195,7 +1195,7 @@ auto WaveTrackView::GetSubViews(const wxRect* rect) -> Refinement
 unsigned WaveTrackView::CaptureKey(wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent, SaucedacityProject* project)
 {
    unsigned result{ RefreshCode::RefreshNone };
-   auto pTrack = static_cast<WaveTrack*>(FindTrack().get());
+   auto pTrack = dynamic_cast<WaveTrack*>(FindTrack().get());
    for (auto pChannel : TrackList::Channels(pTrack)) {
       event.Skip(false);
       auto &waveTrackView = WaveTrackView::Get(*pChannel);

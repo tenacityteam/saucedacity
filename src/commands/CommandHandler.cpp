@@ -29,12 +29,10 @@
 #include "../commands/Command.h"
 
 CommandHandler::CommandHandler()
-{
-}
+= default;
 
 CommandHandler::~CommandHandler()
-{
-}
+= default;
 
 void CommandHandler::OnReceiveCommand(AppCommandEvent &event)
 {

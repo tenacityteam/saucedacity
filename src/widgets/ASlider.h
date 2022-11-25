@@ -36,13 +36,13 @@ class TipWindow;
 
 #define VEL_SLIDER 5    // -50..50
 
-#define DB_MIN -36.0f
+#define DB_MIN (-36.0f)
 #define DB_MAX 36.0f
 #define FRAC_MIN 0.0f
 #define FRAC_MAX 1.0f
 #define SPEED_MIN 0.01f
 #define SPEED_MAX 3.0f
-#define VEL_MIN -50.0f
+#define VEL_MIN (-50.0f)
 #define VEL_MAX 50.0f
 
 // Customizable slider only: If stepValue is STEP_CONTINUOUS,
@@ -142,18 +142,18 @@ class SAUCEDACITY_DLL_API LWSlider
    bool ShowDialog(wxPoint pos);
 
    void SetEnabled(bool enabled);
-   bool GetEnabled() const;
+   [[nodiscard]] bool GetEnabled() const;
 
-   float GetMinValue() const;
-   float GetMaxValue() const;
+   [[nodiscard]] float GetMinValue() const;
+   [[nodiscard]] float GetMaxValue() const;
 
    void SetParent(wxWindow *parent) { mParent = parent; }
    void SendUpdate(float newValue);
 
  private:
 
-   TranslatableString GetTip(float value) const;
-   TranslatableStrings GetWidestTips() const;
+   [[nodiscard]] TranslatableString GetTip(float value) const;
+   [[nodiscard]] TranslatableStrings GetWidestTips() const;
    void FormatPopWin();
    void SetPopWinPosition();
    void CreatePopWin();
@@ -236,7 +236,7 @@ class SAUCEDACITY_DLL_API ASlider /* not final */ : public wxPanel
 
  public:
    struct Options {
-      Options() {}
+      Options() { };
 
       int style{ FRAC_SLIDER };
       wxOrientation orientation{ wxHORIZONTAL };
@@ -264,10 +264,10 @@ class SAUCEDACITY_DLL_API ASlider /* not final */ : public wxPanel
             const wxPoint & pos,
             const wxSize & size,
             const Options &options = Options{});
-   virtual ~ASlider();
+   ~ASlider() override;
 
-   bool AcceptsFocus() const override { return s_AcceptsFocus; }
-   bool AcceptsFocusFromKeyboard() const override { return true; }
+   [[nodiscard]] bool AcceptsFocus() const override { return s_AcceptsFocus; }
+   [[nodiscard]] bool AcceptsFocusFromKeyboard() const override { return true; }
 
    void SetFocusFromKbd() override;
 
@@ -300,7 +300,7 @@ class SAUCEDACITY_DLL_API ASlider /* not final */ : public wxPanel
 
    // Overrides of the wxWindow functions with the same semantics
    bool Enable(bool enable = true) override;
-   bool IsEnabled() const;
+   [[nodiscard]] bool IsEnabled() const;
 
 private:
    static bool s_AcceptsFocus;
@@ -342,7 +342,7 @@ class SliderDialog final : public wxDialogWrapper
                 float line,
                 float page,
                 LWSlider * pSlider=nullptr);
-   ~SliderDialog();
+   ~SliderDialog() override;
 
    float Get();
 

@@ -40,18 +40,18 @@ class SliderTextCtrl : public wxPanelWrapper
          double scale = 0, double offset = 0,
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize, long style = HORIZONTAL,
-         double* varValue = NULL);
+         double* varValue = nullptr);
 
       void SetMinTextboxWidth(int width);
 
-      double GetValue() const;
+      [[nodiscard]] double GetValue() const;
       void SetValue(double value);
 
    private:
       void OnTextChange(wxCommandEvent& event);
       void OnSlider(wxCommandEvent& event);
       void OnKillFocus(wxFocusEvent& event);
-      wxString FormatValue() const;
+      [[nodiscard]] wxString FormatValue() const;
 
       enum
       {

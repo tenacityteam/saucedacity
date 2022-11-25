@@ -31,16 +31,16 @@ class ADSR : public Envelope
   enum { ATTACK, DECAY, SUSTAIN, RELEASE, DONE };
 
   //! Default constructor.
-  ADSR(void);
+  ADSR();
 
   //! Class destructor.
-  ~ADSR(void);
+  ~ADSR() override;
 
   //! Set target = 1, state = \e ADSR::ATTACK.
-  void keyOn(void);
+  void keyOn() override;
 
   //! Set target = 0, state = \e ADSR::RELEASE.
-  void keyOff(void);
+  void keyOff() override;
 
   //! Set the attack rate.
   void setAttackRate(StkFloat rate);
@@ -67,17 +67,17 @@ class ADSR : public Envelope
   void setAllTimes(StkFloat aTime, StkFloat dTime, StkFloat sLevel, StkFloat rTime);
 
   //! Set the target value.
-  void setTarget(StkFloat target);
+  void setTarget(StkFloat target) override;
 
   //! Return the current envelope \e state (ATTACK, DECAY, SUSTAIN, RELEASE, DONE).
-  int getState(void) const;
+  int getState() const override;
 
   //! Set to state = ADSR::SUSTAIN with current and target values of \e aValue.
-  void setValue(StkFloat value);
+  void setValue(StkFloat value) override;
 
  protected:  
 
-  StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
   StkFloat attackRate_;
   StkFloat decayRate_;

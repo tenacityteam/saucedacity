@@ -23,7 +23,7 @@ class TimeToolBar final : public ToolBar
 {
 public:
    TimeToolBar(SaucedacityProject &project);
-   virtual ~TimeToolBar();
+   ~TimeToolBar() override;
    
    static TimeToolBar &Get(SaucedacityProject &project);
    static const TimeToolBar &Get(const SaucedacityProject &project);

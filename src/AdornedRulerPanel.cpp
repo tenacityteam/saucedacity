@@ -125,7 +125,7 @@ class QuickPlayIndicatorOverlay;
 class AdornedRulerPanel::QuickPlayRulerOverlay final : public Overlay
 {
 public:
-   QuickPlayRulerOverlay(QuickPlayIndicatorOverlay &partner);
+   explicit QuickPlayRulerOverlay(QuickPlayIndicatorOverlay &partner);
 
    // Available to this and to partner
 
@@ -139,9 +139,9 @@ public:
    void Update();
 
 private:
-   AdornedRulerPanel *GetRuler() const;
+   [[nodiscard]] AdornedRulerPanel *GetRuler() const;
 
-   unsigned SequenceNumber() const override;
+   [[nodiscard]] unsigned SequenceNumber() const override;
 
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
@@ -169,10 +169,10 @@ class AdornedRulerPanel::QuickPlayIndicatorOverlay final : public Overlay
    friend AdornedRulerPanel;
 
 public:
-   QuickPlayIndicatorOverlay(SaucedacityProject *project);
+   explicit QuickPlayIndicatorOverlay(SaucedacityProject *project);
 
 private:
-   unsigned SequenceNumber() const override;
+   [[nodiscard]] unsigned SequenceNumber() const override;
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 
@@ -451,7 +451,7 @@ public:
       , mChoice( menuChoice )
    {}
 
-   bool Clicked() const { return mClicked != Button::None; }
+   [[nodiscard]] bool Clicked() const { return mClicked != Button::None; }
 
    static UIHandle::Result NeedChangeHighlight
    (const CommonRulerHandle &oldState, const CommonRulerHandle &newState)
@@ -681,8 +681,8 @@ public:
    std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override
       { return mParent->mQPCell; }
 
-   bool Hit() const { return !mHolder.expired(); }
-   bool Clicked() const {
+   [[nodiscard]] bool Hit() const { return !mHolder.expired(); }
+   [[nodiscard]] bool Clicked() const {
       if (auto ptr = mHolder.lock())
          return ptr->Clicked();
       return false;
@@ -822,8 +822,8 @@ public:
    std::shared_ptr<TrackPanelCell> ContextMenuDelegate() override
       { return mParent->mScrubbingCell; }
    
-   bool Hit() const { return !mHolder.expired(); }
-   bool Clicked() const {
+   [[nodiscard]] bool Hit() const { return !mHolder.expired(); }
+   [[nodiscard]] bool Clicked() const {
       if (auto ptr = mHolder.lock())
          return ptr->Clicked();
       return false;
@@ -961,8 +961,7 @@ AdornedRulerPanel::AdornedRulerPanel(SaucedacityProject* project,
 }
 
 AdornedRulerPanel::~AdornedRulerPanel()
-{
-}
+= default;
 
 void AdornedRulerPanel::Refresh( bool eraseBackground, const wxRect *rect )
 {
@@ -1020,7 +1019,7 @@ void AdornedRulerPanel::ReCreateButtons()
 
    wxPoint position( 1, 0 );
 
-   Grabber * pGrabber = safenew Grabber(this, this->GetId());
+   auto * pGrabber = safenew Grabber(this, this->GetId());
    pGrabber->SetAsSpacer( true );
    //pGrabber->SetSize( 10, 27 ); // default is 10,27
    pGrabber->SetPosition( position );
@@ -1794,7 +1793,7 @@ void AdornedRulerPanel::UpdateButtonStates()
       // The button always reflects the pinned head preference, even though
       // there is also a Playback preference that may overrule it for scrubbing
       bool state = TracksPrefs::GetPinnedHeadPreference();
-      auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
+      auto pinButton = dynamic_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
       if( !state )
          pinButton->PopUp();
       else
@@ -1811,7 +1810,7 @@ void AdornedRulerPanel::UpdateButtonStates()
 
 void AdornedRulerPanel::OnPinnedButton(wxCommandEvent & /*event*/)
 {
-   ShowContextMenu(MenuChoice::QuickPlay, NULL);
+   ShowContextMenu(MenuChoice::QuickPlay, nullptr);
 }
 
 void AdornedRulerPanel::OnTogglePinnedState(wxCommandEvent & /*event*/)
@@ -1894,7 +1893,7 @@ void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
    gPrefs->Flush();
 }
 
-void AdornedRulerPanel::DragSelection()
+void AdornedRulerPanel::DragSelection() const
 {
    auto &viewInfo = ViewInfo::Get( *GetProject() );
    const auto &playRegion = viewInfo.playRegion;
@@ -1912,7 +1911,7 @@ void AdornedRulerPanel::HandleSnapping()
          pSnapManager =
             std::make_unique<SnapManager>(*mProject, *mTracks, *mViewInfo);
       
-      auto results = pSnapManager->Snap(NULL, mQuickPlayPos, false);
+      auto results = pSnapManager->Snap(nullptr, mQuickPlayPos, false);
       mQuickPlayPos = results.outTime;
       mIsSnapped = results.Snapped();
    }

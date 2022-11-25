@@ -48,7 +48,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectDistortion();
-   virtual ~EffectDistortion();
+   ~EffectDistortion() override;
 
    struct Params
    {
@@ -76,7 +76,7 @@ public:
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
@@ -133,11 +133,11 @@ private:
    void OnRepeatsSlider(wxCommandEvent & evt);
    void UpdateUI();
    void UpdateControl(control id, bool enable, TranslatableString name);
-   void UpdateControlText(wxTextCtrl *textCtrl, wxString &string, bool enabled);
+   static void UpdateControlText(wxTextCtrl *textCtrl, wxString &string, bool enabled);
 
    void MakeTable();
    float WaveShaper(float sample);
-   float DCFilter(EffectDistortionState & data, float sample);
+   static float DCFilter(EffectDistortionState & data, float sample);
 
    // Preset tables for gain lookup
 
@@ -160,11 +160,11 @@ private:
    // Used by Soft Clipping but could be used for other tables.
    // Log curve formula: y = T + (((e^(RT - Rx)) - 1) / -R)
    // where R is the ratio, T is the threshold, and x is from T to 1. 
-   inline float LogCurve(double threshold, float value, double ratio);
+   static inline float LogCurve(double threshold, float value, double ratio);
 
    // Used by Cubic curve but could be used for other tables
    // Cubic formula: y = x - (x^3 / 3.0)
-   inline double Cubic(double x);
+   [[nodiscard]] inline double Cubic(double x) const;
 
 
 private:

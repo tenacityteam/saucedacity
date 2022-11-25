@@ -29,7 +29,7 @@ class SAUCEDACITY_DLL_API QualityPrefs final : public PrefsPanel
 {
  public:
    QualityPrefs(wxWindow * parent, wxWindowID winid);
-   virtual ~QualityPrefs();
+   ~QualityPrefs() override;
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
 

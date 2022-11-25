@@ -330,7 +330,7 @@ void FrequencyPlotDialog::Populate()
 
          S.StartVerticalLay();
          {
-            wxStaticBitmap *zi = safenew wxStaticBitmap(S.GetParent(), wxID_ANY, wxBitmap(ZoomIn));
+            auto *zi = safenew wxStaticBitmap(S.GetParent(), wxID_ANY, wxBitmap(ZoomIn));
             S.Position(wxALIGN_CENTER)
                .AddWindow(zi);
 
@@ -350,7 +350,7 @@ void FrequencyPlotDialog::Populate()
 
             S.AddSpace(5);
 
-            wxStaticBitmap *zo = safenew wxStaticBitmap(S.GetParent(), wxID_ANY, wxBitmap(ZoomOut));
+            auto *zo = safenew wxStaticBitmap(S.GetParent(), wxID_ANY, wxBitmap(ZoomOut));
             S.Position(wxALIGN_CENTER)
                .AddWindow(zo);
          }
@@ -514,7 +514,7 @@ void FrequencyPlotDialog::Populate()
    }
    mLogAxis = mAxis != 0;
 
-   mCloseButton = static_cast<wxButton*>(FindWindowById( wxID_CANCEL ));
+   mCloseButton = dynamic_cast<wxButton*>(FindWindowById( wxID_CANCEL ));
    mCloseButton->SetDefault();
 
    Layout();
@@ -1008,7 +1008,7 @@ void FrequencyPlotDialog::Recalc()
       return;
    }
 
-   SpectrumAnalyst::Algorithm alg =
+   auto alg =
       SpectrumAnalyst::Algorithm(mAlgChoice->GetSelection());
    int windowFunc = mFuncChoice->GetSelection();
 

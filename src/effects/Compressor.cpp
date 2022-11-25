@@ -102,8 +102,7 @@ EffectCompressor::EffectCompressor()
 }
 
 EffectCompressor::~EffectCompressor()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -463,7 +462,7 @@ bool EffectCompressor::TwoBufferProcessPass1
 
    // This makes sure that the initial value is well-chosen
    // buffer1 == NULL on the first and only the first call
-   if (buffer1 == NULL) {
+   if (buffer1 == nullptr) {
       // Initialize the mLastLevel to the peak level in the first buffer
       // This avoids problems with large spike events near the beginning of the track
       mLastLevel = mThreshold;
@@ -474,11 +473,11 @@ bool EffectCompressor::TwoBufferProcessPass1
    }
 
    // buffer2 is NULL on the last and only the last call
-   if(buffer2 != NULL) {
+   if(buffer2 != nullptr) {
       Follow(buffer2, mFollow2.get(), len2, mFollow1.get(), len1);
    }
 
-   if(buffer1 != NULL) {
+   if(buffer1 != nullptr) {
       for (size_t i = 0; i < len1; i++) {
          buffer1[i] = DoCompression(buffer1[i], mFollow1[i]);
       }
@@ -610,7 +609,7 @@ void EffectCompressor::Follow(float *buffer, float *env, size_t len, float *prev
          last = env[i];
    }
 
-   if((previous != NULL) && (previous_len > 0)) {
+   if((previous != nullptr) && (previous_len > 0)) {
       // If the previous envelope was passed, propagate the rise back until we intersect
       for(size_t i = previous_len; i--;) {
          last *= mAttackInverseFactor;
@@ -693,8 +692,6 @@ void EffectCompressor::UpdateUI()
    mDecayText->SetName(mDecayText->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)
 
    mPanel->Refresh(false);
-
-   return;
 }
 
 //----------------------------------------------------------------------------
@@ -736,7 +733,7 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    vRuler.SetRange(0, -rangeDB);
    vRuler.SetFormat(Ruler::LinearDBFormat);
    vRuler.SetUnits(XO("dB"));
-   vRuler.GetMaxSize(&w, NULL);
+   vRuler.GetMaxSize(&w, nullptr);
 
    Ruler hRuler;
    hRuler.SetBounds(0, 0, width, height);
@@ -745,7 +742,7 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    hRuler.SetFormat(Ruler::LinearDBFormat);
    hRuler.SetUnits(XO("dB"));
    hRuler.SetFlip(true);
-   hRuler.GetMaxSize(NULL, &h);
+   hRuler.GetMaxSize(nullptr, &h);
 
    vRuler.SetBounds(0, 0, w, height - h);
    hRuler.SetBounds(w, height - h, width, height);

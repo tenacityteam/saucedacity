@@ -108,12 +108,12 @@ void DelayA :: setDelay(StkFloat delay)
     ((StkFloat) 1.0 + alpha_);         // coefficient for all pass
 }
 
-StkFloat DelayA :: getDelay(void) const
+StkFloat DelayA :: getDelay() const
 {
   return delay_;
 }
 
-StkFloat DelayA :: nextOut(void)
+StkFloat DelayA :: nextOut()
 {
   if ( doNextOut_ ) {
     // Do allpass interpolation delay.

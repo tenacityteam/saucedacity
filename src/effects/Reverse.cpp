@@ -36,12 +36,10 @@ const ComponentInterfaceSymbol EffectReverse::Symbol
 namespace{ BuiltinEffectsModule::Registration< EffectReverse > reg; }
 
 EffectReverse::EffectReverse()
-{
-}
+= default;
 
 EffectReverse::~EffectReverse()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -111,8 +109,8 @@ bool EffectReverse::ProcessOneWave(int count, WaveTrack * track, sampleCount sta
    // perform a split at the start and/or end of the reverse selection
    const auto &clips = track->GetClips();
    // Beware, the array grows as we loop over it.  Use integer subscripts, not iterators.
-   for (size_t ii = 0; ii < clips.size(); ++ii) {
-      const auto &clip = clips[ii].get();
+   for (const auto & ii : clips) {
+      const auto &clip = ii.get();
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();
       if (clipStart < start && clipEnd > start && clipEnd <= end) { // the reverse selection begins at the inside of a clip

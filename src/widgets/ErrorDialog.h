@@ -30,9 +30,9 @@ public:
       const TranslatableString & message,
       const ManualPageID & helpPage,
       const std::wstring & log,
-      const bool Close = true, const bool modal = true);
+      bool Close = true, bool modal = true);
 
-   virtual ~ErrorDialog(){}
+   ~ErrorDialog() override{}
 
 private:
    ManualPageID dhelpPage;

@@ -41,7 +41,7 @@ public:
    NumericEditor
       (NumericConverter::Type type, const NumericFormatSymbol &format, double rate);
 
-   ~NumericEditor();
+   ~NumericEditor() override;
 
    // Precondition: parent != NULL
    void Create(wxWindow *parent, wxWindowID id, wxEvtHandler *handler) override;
@@ -58,16 +58,16 @@ public:
 
    void Reset() override;
 
-   NumericFormatSymbol GetFormat() const;
-   double GetRate() const;
+   [[nodiscard]] NumericFormatSymbol GetFormat() const;
+   [[nodiscard]] double GetRate() const;
    void SetFormat(const NumericFormatSymbol &format);
    void SetRate(double rate);
 
-   wxGridCellEditor *Clone() const override;
-   wxString GetValue() const override;
+   [[nodiscard]] wxGridCellEditor *Clone() const override;
+   [[nodiscard]] wxString GetValue() const override;
 
-   NumericTextCtrl *GetNumericTextControl() const
-      { return static_cast<NumericTextCtrl *>(m_control); }
+   [[nodiscard]] NumericTextCtrl *GetNumericTextControl() const
+      { return dynamic_cast<NumericTextCtrl *>(m_control); }
 
  private:
 
@@ -103,7 +103,7 @@ class NumericRenderer final : public wxGridCellRenderer
                       int row,
                       int col) override;
 
-   wxGridCellRenderer *Clone() const override;
+   [[nodiscard]] wxGridCellRenderer *Clone() const override;
 
 private:
    NumericConverter::Type mType;
@@ -122,11 +122,11 @@ class SAUCEDACITY_DLL_API ChoiceEditor final
 public:
 
    ChoiceEditor(size_t count = 0,
-                const wxString choices[] = NULL);
+                const wxString choices[] = nullptr);
 
    ChoiceEditor(const wxArrayString &choices);
 
-   ~ChoiceEditor();
+   ~ChoiceEditor() override;
 
    void Create(wxWindow *parent,
                        wxWindowID id,
@@ -140,14 +140,14 @@ public:
    void ApplyEdit(int row, int col, wxGrid *grid) override;
    void Reset() override;
 
-   wxGridCellEditor *Clone() const override;
+   [[nodiscard]] wxGridCellEditor *Clone() const override;
 
    void SetChoices(const wxArrayString &choices);
-   wxString GetValue() const override;
+   [[nodiscard]] wxString GetValue() const override;
 
  protected:
 
-   wxChoice *Choice() const { return (wxChoice *)m_control; }
+   [[nodiscard]] wxChoice *Choice() const { return (wxChoice *)m_control; }
 
  private:
 
@@ -155,20 +155,19 @@ public:
    class FocusHandler:wxEvtHandler
    {
    public:
-      void ConnectEvent(wxWindow *w)
+      static void ConnectEvent(wxWindow *w)
       {
          // Need to use a named function pointer, not a lambda, so that we
          // can unbind the same later
          w->GetEventHandler()->Bind(wxEVT_KILL_FOCUS, OnKillFocus);
       };
-      void DisconnectEvent(wxWindow *w)
+      static void DisconnectEvent(wxWindow *w)
       {
          w->GetEventHandler()->Unbind(wxEVT_KILL_FOCUS, OnKillFocus);
       };
       static void OnKillFocus(wxFocusEvent & WXUNUSED(event))
       {
-         return;
-      };
+              };
    } mHandler;
 
    wxArrayString mChoices;
@@ -193,7 +192,7 @@ class SAUCEDACITY_DLL_API Grid final : public wxGrid
         long style = wxWANTS_CHARS | wxBORDER,
         const wxString& name = wxPanelNameStr);
 
-   ~Grid();
+   ~Grid() override;
 
 #if wxUSE_ACCESSIBILITY
    void ClearGrid();

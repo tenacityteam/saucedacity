@@ -14,9 +14,9 @@
   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
 
 #ifdef HAVE_MLOCK
 #    include <sys/mman.h>
@@ -73,7 +73,7 @@ next_power_of_two(uint32_t size)
 ZixRing*
 zix_ring_new(uint32_t size)
 {
-	ZixRing* ring = (ZixRing*)malloc(sizeof(ZixRing));
+	auto* ring = (ZixRing*)malloc(sizeof(ZixRing));
 	ring->write_head = 0;
 	ring->read_head  = 0;
 	ring->size       = next_power_of_two(size);

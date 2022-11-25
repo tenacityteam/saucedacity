@@ -52,7 +52,7 @@ unsigned SpectrumVRulerControls::HandleWheelRotation(
    const auto pTrack = FindTrack();
    if (!pTrack)
       return RefreshNone;
-   const auto wt = static_cast<WaveTrack*>(pTrack.get());
+   const auto wt = dynamic_cast<WaveTrack*>(pTrack.get());
    return DoHandleWheelRotation( evt, pProject, wt );
 }
 

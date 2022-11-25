@@ -64,7 +64,7 @@ class TextEditHelper
 public:
     static bool IsGoodEditKeyCode(int keyCode);
 
-    TextEditHelper(const std::weak_ptr<TextEditDelegate>& delegate, const wxString& text, const wxFont& font);
+    TextEditHelper(std::weak_ptr<TextEditDelegate>  delegate, const wxString& text, const wxFont& font);
    
    ~TextEditHelper()
    {
@@ -76,12 +76,12 @@ public:
     void Cancel(SaucedacityProject* project);
     void Finish(SaucedacityProject* project);
 
-    std::pair<int, int> GetSelection() const;
+    [[nodiscard]] std::pair<int, int> GetSelection() const;
     void SetSelection(int from, int to);
     void SelectAll();
-    bool IsSelectionEmpty();
+    bool IsSelectionEmpty() const;
 
-    bool CaptureKey(int keyCode, int mods);
+    static bool CaptureKey(int keyCode, int mods);
     bool OnKeyDown(int keyCode, int mods, SaucedacityProject* project);
     bool OnChar(int charCode, SaucedacityProject* project);
 
@@ -97,7 +97,7 @@ public:
 
     bool GetCharPositionX(int index, int* outX);
 
-    const wxRect& GetBBox() const;
+    [[nodiscard]] const wxRect& GetBBox() const;
 
 protected:
 

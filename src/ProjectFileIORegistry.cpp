@@ -21,7 +21,7 @@ namespace ProjectFileIORegistry {
 
 namespace {
    using TagTable = std::unordered_map< wxString, TagHandlerFactory >;
-   static TagTable &sTagTable()
+   TagTable &sTagTable()
    {
       static TagTable theTable;
       return theTable;

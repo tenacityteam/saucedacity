@@ -100,8 +100,7 @@ EffectPhaser::EffectPhaser()
 }
 
 EffectPhaser::~EffectPhaser()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -379,7 +378,7 @@ bool EffectPhaser::TransferDataFromWindow()
 
 // EffectPhaser implementation
 
-void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
+void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate) const
 {
    data.samplerate = sampleRate;
 
@@ -393,11 +392,9 @@ void EffectPhaser::InstanceInit(EffectPhaserState & data, float sampleRate)
    data.fbout = 0;
    data.laststages = 0;
    data.outgain = 0;
-
-   return;
 }
 
-size_t EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectPhaser::InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, size_t blockLen) const
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

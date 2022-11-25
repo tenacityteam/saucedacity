@@ -46,12 +46,12 @@ public:
    using CheckpointFailureCallback = std::function<void()>;
 
    DBConnection(
-      const std::weak_ptr<SaucedacityProject> &pProject,
-      const std::shared_ptr<DBConnectionErrors> &pErrors,
+      std::weak_ptr<SaucedacityProject> pProject,
+      std::shared_ptr<DBConnectionErrors> pErrors,
       CheckpointFailureCallback callback);
    ~DBConnection();
 
-   int Open(const FilePath fileName);
+   int Open(const FilePath& fileName);
    bool Close();
 
    //! throw and show appropriate message box
@@ -67,8 +67,8 @@ public:
 
    sqlite3 *DB();
 
-   int GetLastRC() const ;
-   const wxString GetLastMessage() const;
+   [[nodiscard]] int GetLastRC() const ;
+   [[nodiscard]] const wxString GetLastMessage() const;
 
    enum StatementID
    {
@@ -84,7 +84,7 @@ public:
    sqlite3_stmt *Prepare(enum StatementID id, const char *sql);
 
    void SetBypass( bool bypass );
-   bool ShouldBypass();
+   bool ShouldBypass() const;
 
    //! Just set stored errors
    void SetError(
@@ -99,7 +99,7 @@ public:
       int errorCode = -1);
 
 private:
-   int OpenStepByStep(const FilePath fileName);
+   int OpenStepByStep(const FilePath& fileName);
    int ModeConfig(sqlite3 *db, const char *schema, const char *config);
 
    void CheckpointThread(sqlite3 *db, const FilePath &fileName);

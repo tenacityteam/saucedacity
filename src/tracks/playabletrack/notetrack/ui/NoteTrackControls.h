@@ -11,6 +11,8 @@ Paul Licameli split from TrackPanel.cpp
 #ifndef __AUDACITY_NOTE_TRACK_CONTROLS__
 #define __AUDACITY_NOTE_TRACK_CONTROLS__
 
+#include <utility>
+
 #include "../../ui/PlayableTrackControls.h" // to inherit
 class wxEvent;
 class LWSlider;
@@ -44,8 +46,8 @@ class NoteTrackControls : public NoteTrackControlsBase
 public:
    explicit
    NoteTrackControls( std::shared_ptr<Track> pTrack )
-      : NoteTrackControlsBase( pTrack ) {}
-   ~NoteTrackControls();
+      : NoteTrackControlsBase( std::move(pTrack) ) {}
+   ~NoteTrackControls() override;
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,

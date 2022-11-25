@@ -54,7 +54,7 @@ private void smfw_noteoff(call_args_type args);
 private void smfw_noteon(seq_type seq, int voice, int pitch, int vel);
 private void smfw_process_event(call_args_type args);
 private void smfw_ramp_event(call_args_type args);
-private void smfw_send_macro(unsigned char *ptr, int voice, short parameter[],
+private void smfw_send_macro(unsigned char *ptr, int voice, const short parameter[],
                              int parm_num, int value);
 private void smfw_touch(seq_type seq, int voice, int value);
 private void writevarlen(long value);
@@ -520,7 +520,7 @@ private void smfw_ramp_event(call_args_type args)
 
 /* smfw_send_macro -- write msg to midi file from a seq "macro" event */
 /**/
-private void smfw_send_macro(unsigned char *ptr, int voice, short parameter[],
+private void smfw_send_macro(unsigned char *ptr, int voice, const short parameter[],
                              int parm_num, int value)
 {
     unsigned char code, *loc;

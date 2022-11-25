@@ -932,9 +932,9 @@ void MeterPanel::Reset(double sampleRate, bool resetClipping)
 {
    mT = 0;
    mRate = sampleRate;
-   for (int j = 0; j < kMaxMeterBars; j++)
+   for (auto & j : mBar)
    {
-      ResetBar(&mBar[j], resetClipping);
+      ResetBar(&j, resetClipping);
    }
 
    // wxTimers seem to be a little unreliable - sometimes they stop for
@@ -1156,7 +1156,7 @@ float MeterPanel::GetMaxPeak() const
    return(maxPeak);
 }
 
-wxFont MeterPanel::GetFont() const
+wxFont MeterPanel::GetFont()
 {
    int fontSize = 10;
 #if defined __WXMSW__
@@ -1183,8 +1183,8 @@ void MeterPanel::ResetBar(MeterBar *b, bool resetClipping)
 
 bool MeterPanel::IsClipping() const
 {
-   for (int c = 0; c < kMaxMeterBars; c++)
-      if (mBar[c].isclipping)
+   for (const auto & c : mBar)
+      if (c.isclipping)
          return true;
    return false;
 }
@@ -1893,7 +1893,7 @@ void MeterPanel::StopMonitoring(){
 void MeterPanel::OnAudioIOStatus(wxCommandEvent &evt)
 {
    evt.Skip();
-   SaucedacityProject *p = (SaucedacityProject *) evt.GetEventObject();
+   auto *p = (SaucedacityProject *) evt.GetEventObject();
 
    mActive = (evt.GetInt() != 0) && (p == mProject);
 

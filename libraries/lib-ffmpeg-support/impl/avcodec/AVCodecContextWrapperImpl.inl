@@ -101,7 +101,7 @@ std::vector<OutputType> Convert(const void* rawData, const size_t dataSize)
    std::vector<OutputType> output;
    output.reserve(samplesCount);
 
-   const InputType* currentSample = static_cast<const InputType*>(rawData);
+   const auto* currentSample = static_cast<const InputType*>(rawData);
 
    for (int sample = 0; sample < samplesCount; ++sample)
    {
@@ -132,7 +132,7 @@ public:
          mAVCodec = mFFmpeg.CreateDecoder(mAVCodecContext->codec_id);
    }
 
-   int GetBitRate() const noexcept override
+   [[nodiscard]] int GetBitRate() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          // May truncate int64_t to int.  But who uses such high rates, really?
@@ -147,7 +147,7 @@ public:
          mAVCodecContext->bit_rate = value;
    }
 
-   uint64_t GetChannelLayout() const noexcept override
+   [[nodiscard]] uint64_t GetChannelLayout() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->channel_layout;
@@ -161,7 +161,7 @@ public:
          mAVCodecContext->channel_layout = value;
    }
 
-   int GetChannels() const noexcept override
+   [[nodiscard]] int GetChannels() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->channels;
@@ -175,7 +175,7 @@ public:
          mAVCodecContext->channels = value;
    }
 
-   const AVCodecWrapper* GetCodec() const noexcept override
+   [[nodiscard]] const AVCodecWrapper* GetCodec() const noexcept override
    {
       if (!mAVCodec && mAVCodecContext && mAVCodecContext->codec)
       {
@@ -188,7 +188,7 @@ public:
       return mAVCodec.get();
    }
 
-   AVCodecIDFwd GetCodecId() const noexcept override
+   [[nodiscard]] AVCodecIDFwd GetCodecId() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->codec_id;
@@ -202,7 +202,7 @@ public:
          mAVCodecContext->codec_tag = tag;
    }
 
-   unsigned int GetCodecTag() const noexcept override
+   [[nodiscard]] unsigned int GetCodecTag() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->codec_tag;
@@ -210,7 +210,7 @@ public:
       return {};
    }
 
-   AVMediaTypeFwd GetCodecType() const noexcept override
+   [[nodiscard]] AVMediaTypeFwd GetCodecType() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->codec_type;
@@ -218,7 +218,7 @@ public:
       return {};
    }
 
-   int GetCompressionLevel() const noexcept override
+   [[nodiscard]] int GetCompressionLevel() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->compression_level;
@@ -232,7 +232,7 @@ public:
          mAVCodecContext->compression_level = value;
    }
 
-   int GetCutoff() const noexcept override
+   [[nodiscard]] int GetCutoff() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->cutoff;
@@ -246,7 +246,7 @@ public:
          mAVCodecContext->cutoff = value;
    }
 
-   int GetFlags() const noexcept override
+   [[nodiscard]] int GetFlags() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->flags;
@@ -260,7 +260,7 @@ public:
          mAVCodecContext->flags = value;
    }
 
-   int GetFlags2() const noexcept override
+   [[nodiscard]] int GetFlags2() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->flags2;
@@ -274,7 +274,7 @@ public:
          mAVCodecContext->flags2 = value;
    }
 
-   int GetFrameNumber() const noexcept override
+   [[nodiscard]] int GetFrameNumber() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->frame_number;
@@ -288,7 +288,7 @@ public:
          mAVCodecContext->frame_number = value;
    }
 
-   int GetFrameSize() const noexcept override
+   [[nodiscard]] int GetFrameSize() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->frame_size;
@@ -302,7 +302,7 @@ public:
          mAVCodecContext->frame_size = value;
    }
 
-   int GetGlobalQuality() const noexcept override
+   [[nodiscard]] int GetGlobalQuality() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->global_quality;
@@ -316,7 +316,7 @@ public:
          mAVCodecContext->global_quality = value;
    }
 
-   int GetProfile() const noexcept override
+   [[nodiscard]] int GetProfile() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->profile;
@@ -330,7 +330,7 @@ public:
          mAVCodecContext->profile = value;
    }
 
-   AVSampleFormatFwd GetSampleFmt() const noexcept override
+   [[nodiscard]] AVSampleFormatFwd GetSampleFmt() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->sample_fmt;
@@ -344,7 +344,7 @@ public:
          mAVCodecContext->sample_fmt = static_cast<AVSampleFormat>(value);
    }
 
-   int GetSampleRate() const noexcept override
+   [[nodiscard]] int GetSampleRate() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->sample_rate;
@@ -358,7 +358,7 @@ public:
          mAVCodecContext->sample_rate = value;
    }
 
-   int GetStrictStdCompliance() const noexcept override
+   [[nodiscard]] int GetStrictStdCompliance() const noexcept override
    {
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->strict_std_compliance;
@@ -372,7 +372,7 @@ public:
          mAVCodecContext->strict_std_compliance = value;
    }
 
-   struct AudacityAVRational GetTimeBase() const noexcept override
+   [[nodiscard]] struct AudacityAVRational GetTimeBase() const noexcept override
    {
       if (mAVCodecContext != nullptr)
       {
@@ -392,7 +392,7 @@ public:
       };
    }
 
-   sampleFormat GetPreferredAudacitySampleFormat() const noexcept override
+   [[nodiscard]] sampleFormat GetPreferredAudacitySampleFormat() const noexcept override
    {
       if (mAVCodecContext == nullptr)
          return int16Sample;

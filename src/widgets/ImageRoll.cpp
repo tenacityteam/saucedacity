@@ -107,7 +107,7 @@ ImageRoll &ImageRoll::operator =(const ImageRoll&) = default;
 ImageRoll::~ImageRoll() = default;
 
 // static
-ImageArray ImageRoll::SplitH(const wxImage &src, wxColour magicColor)
+ImageArray ImageRoll::SplitH(const wxImage &src, const wxColour& magicColor)
 {
    ImageArray result;
 
@@ -122,7 +122,7 @@ ImageArray ImageRoll::SplitH(const wxImage &src, wxColour magicColor)
    int i, j, start;
 
    // Sanity check...
-   if (width<=0 || height<=0 || data==NULL)
+   if (width<=0 || height<=0 || data==nullptr)
       return result;
 
    prev = false;
@@ -163,7 +163,7 @@ ImageArray ImageRoll::SplitH(const wxImage &src, wxColour magicColor)
 }
 
 // static
-ImageArray ImageRoll::SplitV(const wxImage &src, wxColour magicColor)
+ImageArray ImageRoll::SplitV(const wxImage &src, const wxColour& magicColor)
 {
    ImageArray result;
    int width = src.GetWidth();
@@ -177,7 +177,7 @@ ImageArray ImageRoll::SplitV(const wxImage &src, wxColour magicColor)
    int i, j, start;
 
    // Sanity check...
-   if (width<=0 || height<=0 || data==NULL)
+   if (width<=0 || height<=0 || data==nullptr)
       return result;
 
    prev = false;
@@ -217,7 +217,7 @@ ImageArray ImageRoll::SplitV(const wxImage &src, wxColour magicColor)
    return result;
 }
 
-void ImageRoll::Init(RollType type, const wxImage &src, wxColour magicColor)
+void ImageRoll::Init(RollType type, const wxImage &src, const wxColour& magicColor)
 {
    ImageArray images;
    int i;
@@ -235,11 +235,11 @@ void ImageRoll::Init(RollType type, const wxImage &src, wxColour magicColor)
 
       for(i = 0; i < (int)images.size(); i++) {
          if (images[i].Ok()) {
-            mPieces.push_back(wxBitmap(images[i]));
+            mPieces.emplace_back(images[i]);
             mMinSize.x += mPieces[i].GetWidth();
          }
          else
-            mPieces.push_back(wxBitmap());
+            mPieces.emplace_back();
       }
       break;
 
@@ -253,16 +253,16 @@ void ImageRoll::Init(RollType type, const wxImage &src, wxColour magicColor)
 
       for(i = 0; i < (int)images.size(); i++) {
          if (images[i].Ok()) {
-            mPieces.push_back(wxBitmap(images[i]));
+            mPieces.emplace_back(images[i]);
             mMinSize.y += mPieces[i].GetHeight();
          }
          else
-            mPieces.push_back(wxBitmap());
+            mPieces.emplace_back();
       }
       break;
 
    case FixedImage:
-      mPieces.push_back(wxBitmap(src));
+      mPieces.emplace_back(src);
       mMinSize.x = src.GetWidth();
       mMinSize.y = src.GetHeight();
       mMaxSize.x = src.GetWidth();
@@ -285,7 +285,7 @@ ImageRoll::ImageRoll()
    mType = Uninitialized;
 }
 
-ImageRoll::ImageRoll(RollType type, const wxImage &src, wxColour magicColor)
+ImageRoll::ImageRoll(RollType type, const wxImage &src, const wxColour& magicColor)
 {
    Init(type, src, magicColor);
 }

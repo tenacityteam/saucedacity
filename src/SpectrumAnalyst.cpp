@@ -210,7 +210,7 @@ bool SpectrumAnalyst::Calculate(Algorithm alg, int windowFunc,
                      in[i] = log(power);
                }
                // Take IFFT
-               InverseRealFFT(mWindowSize, in.get(), NULL, out.get());
+               InverseRealFFT(mWindowSize, in.get(), nullptr, out.get());
 
                // Take real part of result
                for (size_t i = 0; i < half; i++)
@@ -360,7 +360,7 @@ float SpectrumAnalyst::GetProcessedValue(float freq0, float freq1) const
    }
    binwidth = bin1 - bin0;
 
-   float value = float(0.0);
+   auto value = float(0.0);
 
    if (binwidth < 1.0) {
       float binmid = (bin0 + bin1) / 2.0;
@@ -448,7 +448,7 @@ float SpectrumAnalyst::FindPeak(float xPos, float *pY) const
 // returns the value of this polynomial at a value x.  Usually
 // 0 < x < 3
 
-float SpectrumAnalyst::CubicInterpolate(float y0, float y1, float y2, float y3, float x) const
+float SpectrumAnalyst::CubicInterpolate(float y0, float y1, float y2, float y3, float x)
 {
    float a, b, c, d;
 
@@ -463,7 +463,7 @@ float SpectrumAnalyst::CubicInterpolate(float y0, float y1, float y2, float y3, 
    return (a * xxx + b * xx + c * x + d);
 }
 
-float SpectrumAnalyst::CubicMaximize(float y0, float y1, float y2, float y3, float * max) const
+float SpectrumAnalyst::CubicMaximize(float y0, float y1, float y2, float y3, float * max)
 {
    // Find coefficients of cubic
 

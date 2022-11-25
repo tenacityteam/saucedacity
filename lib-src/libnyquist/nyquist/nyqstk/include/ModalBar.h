@@ -43,7 +43,7 @@ public:
   ModalBar();
 
   //! Class destructor.
-  ~ModalBar();
+  ~ModalBar() override;
 
   //! Set stick hardness (0.0 - 1.0).
   void setStickHardness(StkFloat hardness);
@@ -58,7 +58,7 @@ public:
   void setModulationDepth(StkFloat mDepth);
 
   //! Perform the control change specified by \e number and \e value (0.0 - 128.0).
-  void controlChange(int number, StkFloat value);
+  void controlChange(int number, StkFloat value) override;
 };
 
 } // namespace Nyq

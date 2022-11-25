@@ -33,9 +33,9 @@ public:
    EnvPoint() {}
    inline EnvPoint( double t, double val ) : mT{ t }, mVal{ val } {}
 
-   double GetT() const { return mT; }
+   [[nodiscard]] double GetT() const { return mT; }
    void SetT(double t) { mT = t; }
-   double GetVal() const { return mVal; }
+   [[nodiscard]] double GetVal() const { return mVal; }
    inline void SetVal( Envelope *pEnvelope, double val );
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override
@@ -57,7 +57,7 @@ public:
 
    XMLTagHandler *HandleXMLChild(const wxChar * WXUNUSED(tag)) override
    {
-      return NULL;
+      return nullptr;
    }
 
 private:
@@ -81,7 +81,7 @@ public:
 
    void Initialize(int numPoints);
 
-   virtual ~Envelope();
+   ~Envelope() override;
 
    /** \brief Get many envelope points for pixel columns at once,
     * but don't assume uniform time per pixel.
@@ -108,7 +108,7 @@ public:
    double GetMaxValue() const { return mMaxValue; }
    void SetRange(double minValue, double maxValue);
 
-   double ClampValue(double value) { return std::max(mMinValue, std::min(mMaxValue, value)); }
+   double ClampValue(double value) const { return std::max(mMinValue, std::min(mMaxValue, value)); }
 
    // Newfangled XML file I/O
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;

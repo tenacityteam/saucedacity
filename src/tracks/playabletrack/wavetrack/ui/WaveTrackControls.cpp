@@ -60,19 +60,19 @@ std::vector<UIHandlePtr> WaveTrackControls::HitTest
       std::vector<UIHandlePtr> results;
       auto result = [&]{
          UIHandlePtr result;
-         if (NULL != (result = MuteButtonHandle::HitTest(
+         if (nullptr != (result = MuteButtonHandle::HitTest(
             mMuteHandle, state, rect, pProject, track)))
             return result;
 
-         if (NULL != (result = SoloButtonHandle::HitTest(
+         if (nullptr != (result = SoloButtonHandle::HitTest(
             mSoloHandle, state, rect, pProject, track)))
             return result;
 
-         if (NULL != (result = GainSliderHandle::HitTest(
+         if (nullptr != (result = GainSliderHandle::HitTest(
             mGainHandle, state, rect, track)))
             return result;
 
-         if (NULL != (result = PanSliderHandle::HitTest(
+         if (nullptr != (result = PanSliderHandle::HitTest(
             mPanHandle, state, rect, track)))
             return result;
 
@@ -89,7 +89,7 @@ std::vector<UIHandlePtr> WaveTrackControls::HitTest
 
 WaveTrack &WaveTrackPopupMenuTable::FindWaveTrack() const
 {
-   return *static_cast< WaveTrack* >( mpData->pTrack );
+   return *dynamic_cast< WaveTrack* >( mpData->pTrack );
 };
 
 enum {
@@ -170,14 +170,14 @@ struct FormatMenuTable :  PopupMenuTable
 
    void DestroyMenu() override
    {
-      mpData = NULL;
+      mpData = nullptr;
    }
 
    PlayableTrackControls::InitMenuData *mpData{};
 
    static int IdOfFormat(int format);
 
-   void OnFormatChange(wxCommandEvent & event);
+   void OnFormatChange(wxCommandEvent & event) const;
 };
 
 FormatMenuTable &FormatMenuTable::Instance()
@@ -228,11 +228,11 @@ int FormatMenuTable::IdOfFormat(int format)
 
 /// Handles the selection from the Format submenu of the
 /// track menu.
-void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
+void FormatMenuTable::OnFormatChange(wxCommandEvent & event) const
 {
    int id = event.GetId();
    wxASSERT(id >= On16BitID && id <= OnFloatID);
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   const auto pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
 
    sampleFormat newFormat = int16Sample;
 
@@ -314,13 +314,13 @@ struct RateMenuTable : PopupMenuTable
 
    void DestroyMenu() override
    {
-      mpData = NULL;
+      mpData = nullptr;
    }
 
    PlayableTrackControls::InitMenuData *mpData{};
 
    static int IdOfRate(int rate);
-   void SetRate(WaveTrack * pTrack, double rate);
+   void SetRate(WaveTrack * pTrack, double rate) const;
 
    void OnRateChange(wxCommandEvent & event);
    void OnRateOther(wxCommandEvent & event);
@@ -382,7 +382,7 @@ int RateMenuTable::IdOfRate(int rate)
 
 /// Sets the sample rate for a track, and if it is linked to
 /// another track, that one as well.
-void RateMenuTable::SetRate(WaveTrack * pTrack, double rate)
+void RateMenuTable::SetRate(WaveTrack * pTrack, double rate) const
 {
    SaucedacityProject *const project = &mpData->project;
    for (auto channel : TrackList::Channels(pTrack))
@@ -403,7 +403,7 @@ void RateMenuTable::OnRateChange(wxCommandEvent & event)
 {
    int id = event.GetId();
    wxASSERT(id >= OnRate8ID && id <= OnRate384ID);
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   const auto pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
 
    SetRate(pTrack, gRates[id - OnRate8ID]);
 
@@ -413,7 +413,7 @@ void RateMenuTable::OnRateChange(wxCommandEvent & event)
 
 void RateMenuTable::OnRateOther(wxCommandEvent &)
 {
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   const auto pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
 
    int newRate;
 
@@ -557,14 +557,14 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    static const auto isMono =
    []( PopupMenuHandler &handler ) -> bool {
       auto &track =
-         static_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
+         dynamic_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
       return 1 == TrackList::Channels( &track ).size();
    };
 
    static const auto isUnsafe =
    []( PopupMenuHandler &handler ) -> bool {
       auto &project =
-         static_cast< WaveTrackMenuTable& >( handler ).mpData->project;
+         dynamic_cast< WaveTrackMenuTable& >( handler ).mpData->project;
       return RealtimeEffectManager::Get().RealtimeIsActive() &&
          ProjectAudioIO::Get( project ).IsAudioActive();
    };
@@ -579,7 +579,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                POPUP_MENU_FN( OnMultiView ),
                table,
                []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-                  auto &table = static_cast< WaveTrackMenuTable& >( handler );
+                  auto &table = dynamic_cast< WaveTrackMenuTable& >( handler );
                   auto &track = table.FindWaveTrack();
                   const auto &view = WaveTrackView::Get( track );
                   menu.Check( id, view.GetMultiView() );
@@ -605,7 +605,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                      (std::find( begin, allTypes.end(), type ) - begin);
                };
 
-               auto &table = static_cast< WaveTrackMenuTable& >( handler );
+               auto &table = dynamic_cast< WaveTrackMenuTable& >( handler );
                auto &track = table.FindWaveTrack();
 
                const auto &view = WaveTrackView::Get( track );
@@ -670,9 +670,9 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
             bool canMakeStereo = !isUnsafe( handler ) && isMono( handler );
             if ( canMakeStereo ) {
                SaucedacityProject &project =
-                  static_cast< WaveTrackMenuTable& >( handler ).mpData->project;
+                  dynamic_cast< WaveTrackMenuTable& >( handler ).mpData->project;
                auto &tracks = TrackList::Get( project );
-               auto &table = static_cast< WaveTrackMenuTable& >( handler );
+               auto &table = dynamic_cast< WaveTrackMenuTable& >( handler );
                auto &track = table.FindWaveTrack();
                auto next = * ++ tracks.Find(&track);
                canMakeStereo =
@@ -688,7 +688,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
          POPUP_MENU_FN( OnSwapChannels ),
          []( PopupMenuHandler &handler, wxMenu &menu, int id ){
             auto &track =
-               static_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
+               dynamic_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
             bool isStereo =
                2 == TrackList::Channels( &track ).size();
             menu.Enable( id, isStereo && !isUnsafe( handler ) );
@@ -722,7 +722,7 @@ END_POPUP_MENU()
 
 void WaveTrackMenuTable::OnMultiView(wxCommandEvent & event)
 {
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   const auto pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
    const auto &view = WaveTrackView::Get( *pTrack );
    bool multi = !view.GetMultiView();
    const auto &displays = view.GetDisplays();
@@ -745,7 +745,7 @@ void WaveTrackMenuTable::OnSetDisplay(wxCommandEvent & event)
    int idInt = event.GetId();
    wxASSERT(idInt >= OnSetDisplayId &&
             idInt <= lastDisplayId);
-   const auto pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   const auto pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
 
    auto id = AllTypes()[ idInt - OnSetDisplayId ].id;
 
@@ -822,10 +822,10 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    SaucedacityProject *const project = &mpData->project;
    auto &tracks = TrackList::Get( *project );
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
 
-   auto partner = static_cast< WaveTrack * >
+   auto partner = dynamic_cast< WaveTrack * >
       ( *tracks.Find( pTrack ).advance( 1 ) );
 
    bool bBothMinimizedp =
@@ -867,7 +867,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
 /// Split a stereo track (or more-than-stereo?) into two (or more) tracks...
 void WaveTrackMenuTable::SplitStereo(bool stereo)
 {
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
    wxASSERT(pTrack);
    SaucedacityProject *const project = &mpData->project;
    auto channels = TrackList::Channels( pTrack );
@@ -901,7 +901,7 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 {
    SaucedacityProject *const project = &mpData->project;
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
    const auto linkType = pTrack->GetLinkType();
    auto channels = TrackList::Channels( pTrack );
    if (channels.size() != 2)
@@ -933,7 +933,7 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
 {
    SplitStereo(true);
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
    SaucedacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project ).PushState(
    /* i18n-hint: The string names a track  */
@@ -948,7 +948,7 @@ void WaveTrackMenuTable::OnSplitStereo(wxCommandEvent &)
 void WaveTrackMenuTable::OnSplitStereoMono(wxCommandEvent &)
 {
    SplitStereo(false);
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
    SaucedacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project ).PushState(
    /* i18n-hint: The string names a track  */
@@ -995,7 +995,7 @@ void SliderDrawFunction
 {
    wxRect sliderRect = rect;
    TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
-   auto wt = static_cast<const WaveTrack*>( pTrack );
+   auto wt = dynamic_cast<const WaveTrack*>( pTrack );
    Selector( sliderRect, wt, captured, pParent )->OnPaint(*dc, highlight);
 }
 
@@ -1047,7 +1047,7 @@ void Status1DrawFunction
   const wxRect &rect, const Track *pTrack )
 {
    auto dc = &context.dc;
-   auto wt = static_cast<const WaveTrack*>(pTrack);
+   auto wt = dynamic_cast<const WaveTrack*>(pTrack);
 
    /// Returns the string to be displayed in the track label
    /// indicating whether the track is mono, left, right, or
@@ -1076,7 +1076,7 @@ void Status2DrawFunction
   const wxRect &rect, const Track *pTrack )
 {
    auto dc = &context.dc;
-   auto wt = static_cast<const WaveTrack*>(pTrack);
+   auto wt = dynamic_cast<const WaveTrack*>(pTrack);
    auto format = wt ? wt->GetSampleFormat() : floatSample;
    auto s = GetSampleFormatStr(format);
    StatusDrawFunction( s, dc, rect );

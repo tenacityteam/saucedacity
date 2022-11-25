@@ -29,10 +29,10 @@ class XML_API XMLFileWriter final : private wxFFile, public XMLWriter
         /// The caption is for message boxes to show in case of errors.
         /// Might throw.
         XMLFileWriter(
-            const FilePath &outputPath, const TranslatableString &caption,
+            const FilePath &outputPath, TranslatableString caption,
             bool keepBackup = false );
 
-        virtual ~XMLFileWriter();
+        ~XMLFileWriter() override;
 
         /// Close all tags and then close the file.
         /// Might throw.  If not, then create
@@ -50,10 +50,10 @@ class XML_API XMLFileWriter final : private wxFFile, public XMLWriter
         /// Write to file. Might throw.
         void Write(const wxString &data) override;
 
-        FilePath GetBackupName() const { return mBackupName; }
+        [[nodiscard]] FilePath GetBackupName() const { return mBackupName; }
 
     private:
-        void ThrowException(
+        static void ThrowException(
             const wxFileName &fileName, const TranslatableString &caption)
         {
             throw FileException{ FileException::Cause::Write, fileName, caption };

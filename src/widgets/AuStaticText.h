@@ -19,10 +19,10 @@
 class SAUCEDACITY_DLL_API AuStaticText : public wxWindow
 {
     public:
-        AuStaticText(wxWindow* parent, wxString text);
+        AuStaticText(wxWindow* parent, const wxString& text);
 
         void OnPaint(wxPaintEvent & evt);
-        bool AcceptsFocus() const override { return false; }
+        [[nodiscard]] bool AcceptsFocus() const override { return false; }
 
         void OnErase(wxEraseEvent& event)
         {

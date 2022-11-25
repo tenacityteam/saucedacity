@@ -155,8 +155,7 @@ EffectTruncSilence::EffectTruncSilence()
 }
 
 EffectTruncSilence::~EffectTruncSilence()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -620,7 +619,7 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
    const sampleCount previewLen( previewLength * wt->GetRate() );
 
    // Keep position in overall silences list for optimization
-   RegionList::iterator rit(silenceList.begin());
+   auto rit(silenceList.begin());
 
    // Allocate buffer
    Floats buffer{ blockLen };
@@ -866,14 +865,14 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
    // Any time we reach the end of the dest list we're finished
    if (destIter == dest.end())
       return;
-   RegionList::iterator curDest = destIter;
+   auto curDest = destIter;
 
    // Operation: find non-silent regions in src, remove them from dest.
    double nsStart = curDest->start;
    double nsEnd;
    bool lastRun = false; // must run the loop one extra time
 
-   RegionList::const_iterator srcIter = src.begin();
+   auto srcIter = src.begin();
 
    // This logic, causing the loop to run once after end of src, must occur
    // each time srcIter is updated
@@ -921,7 +920,7 @@ void EffectTruncSilence::Intersect(RegionList &dest, const RegionList &src)
             curDest->end = nsStart;
 
             // Insert second region after first
-            RegionList::iterator nextIt(destIter);
+            auto nextIt(destIter);
             ++nextIt;
 
             // This should just read: destIter = dest.insert(nextIt, r); but we

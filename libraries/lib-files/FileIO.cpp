@@ -25,14 +25,14 @@ FileIO::FileIO(const wxFileNameWrapper & name, FileIOMode mode)
       auto path = name.GetFullPath();
       if (mMode == FileIO::Input) {
          mInputStream = std::make_unique<wxFFileInputStream>(path);
-         if (mInputStream == NULL || !mInputStream->IsOk()) {
+         if (mInputStream == nullptr || !mInputStream->IsOk()) {
             wxPrintf(wxT("Couldn't get input stream: %s\n"), path);
             return;
          }
       }
       else {
          mOutputStream = std::make_unique<wxFFileOutputStream>(path);
-         if (mOutputStream == NULL || !mOutputStream->IsOk()) {
+         if (mOutputStream == nullptr || !mOutputStream->IsOk()) {
             wxPrintf(wxT("Couldn't get output stream: %s\n"), path);
             return;
          }
@@ -46,7 +46,7 @@ FileIO::~FileIO()
    Close();
 }
 
-bool FileIO::IsOpened()
+bool FileIO::IsOpened() const
 {
    return mOpen;
 }
@@ -67,7 +67,7 @@ bool FileIO::Close()
 
 wxInputStream & FileIO::Read(void *buf, size_t size)
 {
-   if (mInputStream == NULL) {
+   if (mInputStream == nullptr) {
       return *mInputStream;
    }
 
@@ -76,7 +76,7 @@ wxInputStream & FileIO::Read(void *buf, size_t size)
 
 wxOutputStream & FileIO::Write(const void *buf, size_t size)
 {
-   if (mOutputStream == NULL) {
+   if (mOutputStream == nullptr) {
       return *mOutputStream;
    }
 

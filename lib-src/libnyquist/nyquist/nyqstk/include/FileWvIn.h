@@ -55,7 +55,7 @@ public:
             unsigned long chunkThreshold = 1000000, unsigned long chunkSize = 1024 );
 
   //! Class destructor.
-  virtual ~FileWvIn();
+  ~FileWvIn() override;
 
   //! Open the specified file and load its data.
   /*!
@@ -70,17 +70,17 @@ public:
   void openFile( std::string fileName, bool raw = false, bool doNormalize = true );
 
   //! Close a file if one is open.
-  void closeFile( void );
+  void closeFile( );
 
   //! Clear outputs and reset time (file) pointer to zero.
-  void reset( void );
+  void reset( );
 
   //! Normalize data to a maximum of +-1.0.
   /*!
     This function has no effect when data is incrementally loaded
     from disk.
   */
-  void normalize( void );
+  void normalize( );
 
   //! Normalize data to a maximum of \e +-peak.
   /*!
@@ -90,7 +90,7 @@ public:
   void normalize( StkFloat peak );
 
   //! Return the file size in sample frames.
-  unsigned long getSize( void ) const { return data_.frames(); };
+  unsigned long getSize( ) const { return data_.frames(); };
 
   //! Return the input file sample rate in Hz (not the data read rate).
   /*!
@@ -98,10 +98,10 @@ public:
     their headers.  STK RAW files have a sample rate of 22050 Hz
     by definition.  MAT-files are assumed to have a rate of 44100 Hz.
   */
-  StkFloat getFileRate( void ) const { return data_.dataRate(); };
+  StkFloat getFileRate( ) const { return data_.dataRate(); };
 
   //! Query whether reading is complete.
-  bool isFinished( void ) const { return finished_; };
+  bool isFinished( ) const { return finished_; };
 
   //! Set the data read rate in samples.  The rate can be negative.
   /*!
@@ -124,11 +124,11 @@ public:
   */
   void setInterpolate( bool doInterpolate ) { interpolate_ = doInterpolate; };
 
-  StkFloat lastOut( void ) const;
+  StkFloat lastOut( ) const;
 
 protected:
 
-  virtual void computeFrame( void );
+  void computeFrame( ) override;
 
   FileRead file_;
   bool finished_;

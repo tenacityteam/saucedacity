@@ -135,8 +135,8 @@ class AButton::Listener final
    : public wxEventFilter
 {
 public:
-   Listener (AButton *button);
-   ~Listener();
+   explicit Listener (AButton *button);
+   ~Listener() override;
 
    int FilterEvent(wxEvent &event) override;
 
@@ -195,11 +195,11 @@ AButton::AButton(wxWindow * parent,
                  wxWindowID id,
                  const wxPoint & pos,
                  const wxSize & size,
-                 ImageRoll up,
-                 ImageRoll over,
-                 ImageRoll down,
-                 ImageRoll overDown,
-                 ImageRoll dis,
+                 const ImageRoll& up,
+                 const ImageRoll& over,
+                 const ImageRoll& down,
+                 const ImageRoll& overDown,
+                 const ImageRoll& dis,
                  bool toggle):
    wxWindow()
 {
@@ -218,11 +218,11 @@ void AButton::Init(wxWindow * parent,
                    wxWindowID id,
                    const wxPoint & pos,
                    const wxSize & size,
-                   ImageRoll up,
-                   ImageRoll over,
-                   ImageRoll down,
-                   ImageRoll overDown,
-                   ImageRoll dis,
+                   const ImageRoll& up,
+                   const ImageRoll& over,
+                   const ImageRoll& down,
+                   const ImageRoll& overDown,
+                   const ImageRoll& dis,
                    bool toggle)
 {
    // Bug in wxWidgets 2.8.12: by default pressing Enter on an AButton is interpreted as
@@ -286,11 +286,11 @@ void AButton::SetFocusFromKbd()
 }
 
 void AButton::SetAlternateImages(unsigned idx,
-                                 wxImage up,
-                                 wxImage over,
-                                 wxImage down,
-                                 wxImage overDown,
-                                 wxImage dis)
+                                 const wxImage& up,
+                                 const wxImage& over,
+                                 const wxImage& down,
+                                 const wxImage& overDown,
+                                 const wxImage& dis)
 {
    if (1 + idx > mImages.size())
       mImages.resize(1 + idx);
@@ -302,11 +302,11 @@ void AButton::SetAlternateImages(unsigned idx,
 }
 
 void AButton::SetAlternateImages(unsigned idx,
-                                 ImageRoll up,
-                                 ImageRoll over,
-                                 ImageRoll down,
-                                 ImageRoll overDown,
-                                 ImageRoll dis)
+                                 const ImageRoll& up,
+                                 const ImageRoll& over,
+                                 const ImageRoll& down,
+                                 const ImageRoll& overDown,
+                                 const ImageRoll& dis)
 {
    if (1 + idx > mImages.size())
       mImages.resize(1 + idx);
@@ -339,7 +339,7 @@ void AButton::SetFocusRect(wxRect & r)
    mForceFocusRect = true;
 }
 
-AButton::AButtonState AButton::GetState()
+AButton::AButtonState AButton::GetState() const
 {
    AButtonState state;
 
@@ -558,12 +558,12 @@ void AButton::OnKillFocus(wxFocusEvent & WXUNUSED(event))
    Refresh( false );
 }
 
-bool AButton::WasShiftDown()
+bool AButton::WasShiftDown() const
 {
    return mWasShiftDown;
 }
 
-bool AButton::WasControlDown()
+bool AButton::WasControlDown() const
 {
    return mWasControlDown;
 }

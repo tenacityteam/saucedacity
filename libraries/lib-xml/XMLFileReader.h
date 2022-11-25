@@ -27,8 +27,8 @@ class XML_API XMLFileReader final {
    bool ParseString(XMLTagHandler *baseHandler,
                     const wxString &xmldata);
 
-   const TranslatableString &GetErrorStr() const;
-   const TranslatableString &GetLibraryErrorStr() const;
+   [[nodiscard]] const TranslatableString &GetErrorStr() const;
+   [[nodiscard]] const TranslatableString &GetLibraryErrorStr() const;
 
    // Callback functions for expat
 

@@ -24,7 +24,7 @@ class Effect : public Stk
   Effect();
 
   //! Class destructor.
-  virtual ~Effect();
+  ~Effect() override;
 
   //! Reset and clear all internal state.
   virtual void clear() = 0;
@@ -61,7 +61,7 @@ class Effect : public Stk
   virtual StkFloat computeSample( StkFloat input ) = 0;
 
   // Returns true if argument value is prime.
-  bool isPrime( int number );
+  static bool isPrime( int number );
 
   StkFloat lastOutput_[2];
   StkFloat effectMix_;

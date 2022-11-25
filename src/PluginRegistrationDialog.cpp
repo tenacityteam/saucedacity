@@ -390,7 +390,7 @@ PluginRegistrationDialog::PluginRegistrationDialog(wxWindow *parent, EffectType 
             wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    mType = type;
-   mEffects = NULL;
+   mEffects = nullptr;
    SetName();
 
    mStates.resize(STATE_COUNT);
@@ -526,10 +526,10 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       colWidths.push_back(0);
    }
 
-   for (int i = 0, cnt = mStates.size(); i < cnt; i++)
+   for (const auto & mState : mStates)
    {
       int x;
-      mEffects->GetTextExtent(mStates[i], &x, NULL);
+      mEffects->GetTextExtent(mState, &x, nullptr);
       colWidths[COL_State] = wxMax(colWidths[COL_State], x + 4);  // 2 pixel margin on each side
    }
 
@@ -564,10 +564,10 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
       }
 
       int x;
-      mEffects->GetTextExtent(item.name, &x, NULL);
+      mEffects->GetTextExtent(item.name, &x, nullptr);
       colWidths[COL_Name] = wxMax(colWidths[COL_Name], x);
 
-      mEffects->GetTextExtent(item.path, &x, NULL);
+      mEffects->GetTextExtent(item.path, &x, nullptr);
       if (x > colWidths[COL_Path])
       {
          mLongestPath = item.path;
@@ -622,9 +622,9 @@ void PluginRegistrationDialog::RegenerateEffectsList(int filter)
    mEffects->DeleteAllItems();
 
    int i = 0;
-   for (ItemDataMap::iterator iter = mItems.begin(); iter != mItems.end(); ++iter)
+   for (auto & mItem : mItems)
    {
-      ItemData & item = iter->second;
+      ItemData & item = mItem.second;
       bool add = false;
 
       switch (mFilter)
@@ -685,7 +685,7 @@ void PluginRegistrationDialog::SetState(int i, bool toggle, bool state)
 
    mEffects->GetItem(li);
 
-   ItemData *item = (ItemData *) li.m_data;
+   auto *item = (ItemData *) li.m_data;
 
    // If changing the state of a "New" (stub) entry, then we mark it as valid
    // since it will either be registered if "Enabled" or ignored if "Disabled".
@@ -726,9 +726,9 @@ void PluginRegistrationDialog::SetState(int i, bool toggle, bool state)
 
 int wxCALLBACK PluginRegistrationDialog::SortCompare(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData)
 {
-   PluginRegistrationDialog *dlg = (PluginRegistrationDialog *) sortData;
-   ItemData *i1 = (ItemData *) item1;
-   ItemData *i2 = (ItemData *) item2;
+   auto *dlg = (PluginRegistrationDialog *) sortData;
+   auto *i1 = (ItemData *) item1;
+   auto *i2 = (ItemData *) item2;
 
    return dlg->SortCompare(i1, i2);
 }
@@ -846,9 +846,9 @@ void PluginRegistrationDialog::OnEnable(wxCommandEvent & WXUNUSED(evt))
       }
    }
 
-   for (size_t i = 0, cnt = items.size(); i < cnt; i++)
+   for (long item : items)
    {
-      SetState(items[i], false, STATE_Enabled);
+      SetState(item, false, STATE_Enabled);
    }
 }
 
@@ -865,9 +865,9 @@ void PluginRegistrationDialog::OnDisable(wxCommandEvent & WXUNUSED(evt))
       }
    }
 
-   for (size_t i = 0, cnt = items.size(); i < cnt; i++)
+   for (long item : items)
    {
-      SetState(items[i], false, STATE_Disabled);
+      SetState(item, false, STATE_Disabled);
    }
 }
 
@@ -877,9 +877,9 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
    ModuleManager & mm = ModuleManager::Get();
 
    int enableCount = 0;
-   for (ItemDataMap::iterator iter = mItems.begin(); iter != mItems.end(); ++iter)
+   for (auto & mItem : mItems)
    {
-      ItemData & item = iter->second;
+      ItemData & item = mItem.second;
       wxString path = item.path;
 
       if (item.state == STATE_Enabled && item.plugs[0]->GetPluginType() == PluginTypeStub)
@@ -903,9 +903,9 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       progress.CenterOnParent();
 
       int i = 0;
-      for (ItemDataMap::iterator iter = mItems.begin(); iter != mItems.end(); ++iter)
+      for (auto & mItem : mItems)
       {
-         ItemData & item = iter->second;
+         ItemData & item = mItem.second;
          wxString path = item.path;
 
          if (item.state == STATE_Enabled && item.plugs[0]->GetPluginType() == PluginTypeStub)

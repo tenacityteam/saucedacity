@@ -20,7 +20,7 @@ Paul Licameli
 #ifndef __WXMAC__
 #define RTL_WORKAROUND( pWnd ) \
    if ( gPrefs->Read( "/GUI/RtlWorkaround", true) ) \
-       pWnd->SetLayoutDirection(wxLayout_LeftToRight);
+       (pWnd)->SetLayoutDirection(wxLayout_LeftToRight);
 #else
    #define RTL_WORKAROUND( pWnd )
 #endif

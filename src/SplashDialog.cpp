@@ -46,7 +46,7 @@ most commonly asked questions about Audacity.
 
 #include "../images/SaucedacityLogoWithName.xpm"
 
-SplashDialog * SplashDialog::pSelf=NULL;
+SplashDialog * SplashDialog::pSelf=nullptr;
 
 enum
 {
@@ -71,7 +71,7 @@ SplashDialog::SplashDialog(wxWindow * parent)
       wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER)
 {
    SetName();
-   m_pLogo = NULL; //v
+   m_pLogo = nullptr; //v
    ShuttleGui S( this, eIsCreating );
    Populate( S );
    Fit();
@@ -125,7 +125,7 @@ void SplashDialog::Populate( ShuttleGui & S )
 
    RescaledImage.Rescale( (int)(LOGOWITHNAME_WIDTH * fScale), (int)(LOGOWITHNAME_HEIGHT *fScale), wxIMAGE_QUALITY_HIGH );
    wxBitmap RescaledBitmap( RescaledImage );
-   wxStaticBitmap *const icon =
+   auto *const icon =
        safenew wxStaticBitmap(S.GetParent(), -1,
                           //*m_pLogo, //v theTheme.Bitmap(bmpAudacityLogoWithName),
                           RescaledBitmap,
@@ -178,7 +178,7 @@ void SplashDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 
 void SplashDialog::Show2( wxWindow * pParent )
 {
-   if( pSelf == NULL )
+   if( pSelf == nullptr )
    {
       // pParent owns it
       wxASSERT(pParent);

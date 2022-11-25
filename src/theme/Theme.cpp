@@ -86,12 +86,12 @@ static const unsigned char HiContrastImageCacheAsData[] = {
 // theTheme is a global variable.
 SAUCEDACITY_DLL_API Theme theTheme;
 
-Theme::Theme(void)
+Theme::Theme()
 {
    mbInitialised=false;
 }
 
-Theme::~Theme(void)
+Theme::~Theme()
 {
 }
 
@@ -135,13 +135,13 @@ void Theme::RegisterColours()
 {
 }
 
-ThemeBase::ThemeBase(void)
+ThemeBase::ThemeBase()
 {
    bRecolourOnLoad = false;
    bIsUsingSystemTextColour = false;
 }
 
-ThemeBase::~ThemeBase(void)
+ThemeBase::~ThemeBase()
 {
 }
 
@@ -309,7 +309,7 @@ void ThemeBase::RegisterImage( int &iIndex, const wxImage &Image, const wxString
    TempImage.ConvertAlphaToMask();
    mBitmaps.push_back( wxBitmap( TempImage ) );
 #else
-   mBitmaps.push_back( wxBitmap( Image ) );
+   mBitmaps.emplace_back( Image );
 #endif
 
    mBitmapNames.push_back( Name );
@@ -558,7 +558,7 @@ void ThemeBase::WriteImageDefs( )
    wxFFile File( FileNames::ThemeImageDefsAsCee(), wxT("wb") );
    if( !File.IsOpened() )
       return;
-   teResourceFlags PrevFlags = (teResourceFlags)-1;
+   auto PrevFlags = (teResourceFlags)-1;
    for(i = 0; i < (int)mImages.size(); i++)
    {
       wxImage &SrcImage = mImages[i];

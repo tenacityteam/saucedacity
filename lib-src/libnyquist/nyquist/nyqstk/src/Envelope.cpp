@@ -17,7 +17,7 @@
 
 using namespace Nyq;
 
-Envelope :: Envelope(void) : Generator()
+Envelope :: Envelope() : Generator()
 {    
   target_ = 0.0;
   value_ = 0.0;
@@ -33,7 +33,7 @@ Envelope :: Envelope ( const Envelope& e )
   state_ = 0;
 }
 
-Envelope :: ~Envelope(void)
+Envelope :: ~Envelope()
 {
 }
 
@@ -49,13 +49,13 @@ Envelope& Envelope :: operator= ( const Envelope& e )
   return *this;
 }
 
-void Envelope :: keyOn(void)
+void Envelope :: keyOn()
 {
   target_ = 1.0;
   if (value_ != target_) state_ = 1;
 }
 
-void Envelope :: keyOff(void)
+void Envelope :: keyOff()
 {
   target_ = 0.0;
   if (value_ != target_) state_ = 1;
@@ -96,12 +96,12 @@ void Envelope :: setValue(StkFloat value)
   value_ = value;
 }
 
-int Envelope :: getState(void) const
+int Envelope :: getState() const
 {
   return state_;
 }
 
-StkFloat Envelope :: computeSample(void )
+StkFloat Envelope :: computeSample( )
 {
   if (state_) {
     if (target_ > value_) {

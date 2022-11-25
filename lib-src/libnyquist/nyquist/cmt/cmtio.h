@@ -1,4 +1,4 @@
-#define NOCHAR -2
+#define NOCHAR (-2)
 
 extern int IOinputfd;
 extern int IOnochar;

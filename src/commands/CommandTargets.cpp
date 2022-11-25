@@ -70,7 +70,7 @@ void CommandMessageTarget::AddItem(const wxString &value, const wxString &name){
    if( name.empty() )
       Update( wxString::Format( "%s%s\"%s\"", (mCounts.back()>0)?", ":"", Padding, Escaped(value)));
    else
-      Update( wxString::Format( "%s%s\"%s\":\"%s\"", (mCounts.back()>0)?", ":"", Padding, name, Escaped(value)));
+      Update( wxString::Format( R"(%s%s"%s":"%s")", (mCounts.back()>0)?", ":"", Padding, name, Escaped(value)));
    mCounts.back() += 1;
 }
 
@@ -78,7 +78,7 @@ void CommandMessageTarget::AddBool(const bool value,      const wxString &name){
    if( name.empty() )
       Update( wxString::Format( "%s\"%s\"", (mCounts.back()>0)?", ":"", value?"true":"false"));
    else
-      Update( wxString::Format( "%s\"%s\":\"%s\"", (mCounts.back()>0)?", ":"", name,value?"true":"false"));
+      Update( wxString::Format( R"(%s"%s":"%s")", (mCounts.back()>0)?", ":"", name,value?"true":"false"));
    mCounts.back() += 1;
 }
 
@@ -264,7 +264,7 @@ LispifiedCommandOutputTargets::LispifiedCommandOutputTargets( CommandOutputTarge
    pToRestore( &target )
 {
    mProgressTarget = std::move(target.mProgressTarget), 
-   mStatusTarget = std::make_shared<LispyCommandMessageTarget>( *target.mStatusTarget.get() ), 
+   mStatusTarget = std::make_shared<LispyCommandMessageTarget>( *target.mStatusTarget ),
    mErrorTarget = std::move( target.mErrorTarget );
 }
 
@@ -281,7 +281,7 @@ BriefCommandOutputTargets::BriefCommandOutputTargets( CommandOutputTargets & tar
    pToRestore( &target )
 {
    mProgressTarget = std::move(target.mProgressTarget), 
-   mStatusTarget = std::make_shared<BriefCommandMessageTarget>( *target.mStatusTarget.get() ), 
+   mStatusTarget = std::make_shared<BriefCommandMessageTarget>( *target.mStatusTarget ),
    mErrorTarget = std::move( target.mErrorTarget );
 }
 
@@ -312,7 +312,7 @@ public:
                 int type = 0,
                 int flags = wxDEFAULT_DIALOG_STYLE,
                 int additionalButtons = 0);
-   ~LongMessageDialog();
+   ~LongMessageDialog() override;
 
    bool Init();
    virtual void OnOk(wxCommandEvent & evt);
@@ -333,7 +333,7 @@ private:
 };
 
 
-LongMessageDialog * LongMessageDialog::pDlg = NULL;
+LongMessageDialog * LongMessageDialog::pDlg = nullptr;
 
 
 BEGIN_EVENT_TABLE(LongMessageDialog, wxDialogWrapper)
@@ -357,7 +357,7 @@ LongMessageDialog::LongMessageDialog(wxWindow * parent,
 }
 
 LongMessageDialog::~LongMessageDialog(){
-   pDlg = NULL;
+   pDlg = nullptr;
 }
 
 
@@ -393,7 +393,7 @@ void LongMessageDialog::OnCancel(wxCommandEvent & WXUNUSED(evt)){
 
 void LongMessageDialog::AcceptText( const wxString & Text )
 {
-   if( pDlg == NULL ){
+   if( pDlg == nullptr ){
       pDlg = new LongMessageDialog(
          wxTheApp->GetTopWindow(), XO( "Long Message" ) );
       pDlg->Init();
@@ -426,7 +426,7 @@ LongMessageDialog
 class MessageDialogTarget final : public CommandMessageTarget
 {
 public:
-   virtual ~MessageDialogTarget() {Flush();}
+   ~MessageDialogTarget() override {Flush();}
    void Update(const wxString &message) override
    {
       LongMessageDialog::AcceptText(message);

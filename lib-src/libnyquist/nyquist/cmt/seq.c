@@ -42,7 +42,7 @@ private char *chunk_alloc(seq_type seq, int size);
 private void clock_tick(call_args_type args);
 private void ramp_event(call_args_type args);
 /*private*/ void send_macro(register unsigned char *ptr, int voice,
-    short parameter[], int parm_num, int value, int nline);
+    const short parameter[], int parm_num, int value, int nline);
 
 /* chunk_alloc -- allocate data for a sequence */
 /*
@@ -776,7 +776,7 @@ void report_enabled_channels(seq)
 void send_macro(ptr, voice, parameter, parm_num, value, nline)
   register unsigned char *ptr;
   int voice;
-  short parameter[];
+  const short parameter[];
   int parm_num;
   int value;    
   int nline;

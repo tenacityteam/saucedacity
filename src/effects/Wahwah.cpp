@@ -91,8 +91,7 @@ EffectWahwah::EffectWahwah()
 }
 
 EffectWahwah::~EffectWahwah()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -343,7 +342,7 @@ bool EffectWahwah::TransferDataFromWindow()
 
 // EffectWahwah implementation
 
-void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
+void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate) const
 {
    data.samplerate = sampleRate;
    data.lfoskip = mFreq * 2 * M_PI / sampleRate;
@@ -365,7 +364,7 @@ void EffectWahwah::InstanceInit(EffectWahwahState & data, float sampleRate)
    data.outgain = DB_TO_LINEAR(mOutGain);
 }
 
-size_t EffectWahwah::InstanceProcess(EffectWahwahState & data, float **inBlock, float **outBlock, size_t blockLen)
+size_t EffectWahwah::InstanceProcess(EffectWahwahState & data, float **inBlock, float **outBlock, size_t blockLen) const
 {
    float *ibuf = inBlock[0];
    float *obuf = outBlock[0];

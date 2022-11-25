@@ -88,7 +88,7 @@ DeviceToolBar::~DeviceToolBar()
 DeviceToolBar &DeviceToolBar::Get( SaucedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<DeviceToolBar*>( toolManager.GetToolBar(DeviceBarID) );
+   return *dynamic_cast<DeviceToolBar*>( toolManager.GetToolBar(DeviceBarID) );
 }
 
 const DeviceToolBar &DeviceToolBar::Get( const SaucedacityProject &project )
@@ -108,10 +108,10 @@ void DeviceToolBar::Create(wxWindow *parent)
 
 void DeviceToolBar::DeinitChildren()
 {
-   mInput         = NULL;
-   mOutput        = NULL;
-   mInputChannels = NULL;
-   mHost          = NULL;
+   mInput         = nullptr;
+   mOutput        = nullptr;
+   mInputChannels = nullptr;
+   mHost          = nullptr;
 }
 
 void DeviceToolBar::Populate()
@@ -219,7 +219,7 @@ void DeviceToolBar::OnFocus(wxFocusEvent &event)
 
 void DeviceToolBar::OnCaptureKey(wxCommandEvent &event)
 {
-   wxKeyEvent *kevent = (wxKeyEvent *)event.GetEventObject();
+   auto *kevent = (wxKeyEvent *)event.GetEventObject();
    int keyCode = kevent->GetKeyCode();
 
    // Pass UP/DOWN/LEFT/RIGHT through for input/output choice
@@ -233,8 +233,6 @@ void DeviceToolBar::OnCaptureKey(wxCommandEvent &event)
       return;
    }
    event.Skip();
-
-   return;
 }
 
 void DeviceToolBar::UpdatePrefs()
@@ -266,18 +264,18 @@ void DeviceToolBar::UpdatePrefs()
       mInput->SetStringSelection(desc);
       FillInputChannels();
    } else if (mInput->GetStringSelection() != desc && mInput->GetCount()) {
-      for (size_t i = 0; i < inMaps.size(); i++) {
-         if (inMaps[i].hostString == hostName &&
-             MakeDeviceSourceString(&inMaps[i]) == mInput->GetString(0)) {
+      for (const auto & inMap : inMaps) {
+         if (inMap.hostString == hostName &&
+             MakeDeviceSourceString(&inMap) == mInput->GetString(0)) {
             // use the default.  It should exist but check just in case, falling back on the 0 index.
-            DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(inMaps[i].hostIndex);
+            DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(inMap.hostIndex);
             if (defaultMap) {
                mInput->SetStringSelection(MakeDeviceSourceString(defaultMap));
-               SetDevices(defaultMap, NULL);
+               SetDevices(defaultMap, nullptr);
             } else {
                //use the first item (0th index) if we have no familiar devices
                mInput->SetSelection(0);
-               SetDevices(&inMaps[i], NULL);
+               SetDevices(&inMap, nullptr);
             }
             break;
          }
@@ -296,18 +294,18 @@ void DeviceToolBar::UpdatePrefs()
       mOutput->SetStringSelection(desc);
    } else if (mOutput->GetStringSelection() != desc &&
               mOutput->GetCount()) {
-      for (size_t i = 0; i < outMaps.size(); i++) {
-         if (outMaps[i].hostString == hostName &&
-             MakeDeviceSourceString(&outMaps[i]) == mOutput->GetString(0)) {
+      for (const auto & outMap : outMaps) {
+         if (outMap.hostString == hostName &&
+             MakeDeviceSourceString(&outMap) == mOutput->GetString(0)) {
             // use the default.  It should exist but check just in case, falling back on the 0 index.
-            DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultOutputDevice(outMaps[i].hostIndex);
+            DeviceSourceMap *defaultMap = DeviceManager::Instance()->GetDefaultOutputDevice(outMap.hostIndex);
             if (defaultMap) {
                mOutput->SetStringSelection(MakeDeviceSourceString(defaultMap));
-               SetDevices(NULL, defaultMap);
+               SetDevices(nullptr, defaultMap);
             } else {
                //use the first item (0th index) if we have no familiar devices
                mOutput->SetSelection(0);
-               SetDevices(NULL, &outMaps[i]);
+               SetDevices(nullptr, &outMap);
             }
             break;
          }
@@ -418,7 +416,7 @@ void DeviceToolBar::FillHosts()
    mHost->Clear();
    mHost->Append(hosts);
 
-   if (hosts.size() == 0) {
+   if (hosts.empty()) {
       mHost->Enable(false);
    }
 
@@ -458,10 +456,10 @@ void DeviceToolBar::FillHostDevices()
 
    // If no host was found based on the prefs device host, load the first available one
    if (foundHostIndex == -1) {
-      if (outMaps.size()) {
+      if (!outMaps.empty()) {
          foundHostIndex = outMaps[0].hostIndex;
       }
-      else if (inMaps.size()) {
+      else if (!inMaps.empty()) {
          foundHostIndex = inMaps[0].hostIndex;
       }
    }
@@ -637,8 +635,8 @@ void DeviceToolBar::ChangeDevice(bool isInput)
       return;
    }
 
-   SetDevices(isInput ? &maps[newIndex] : NULL,
-              isInput ? NULL            : &maps[newIndex]);
+   SetDevices(isInput ? &maps[newIndex] : nullptr,
+              isInput ? nullptr            : &maps[newIndex]);
 }
 
 void DeviceToolBar::OnChoice(wxCommandEvent &event)

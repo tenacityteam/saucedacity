@@ -37,28 +37,28 @@ class SAUCEDACITY_DLL_API ImageRoll
 
    ImageRoll();
    ImageRoll(const wxImage &src);
-   ImageRoll(RollType type, const wxImage &src, wxColour magicColor);
+   ImageRoll(RollType type, const wxImage &src, const wxColour& magicColor);
    ImageRoll(const ImageRoll&);
    ImageRoll &operator =(const ImageRoll&);
    ~ImageRoll();
 
-   bool Ok() const;
+   [[nodiscard]] bool Ok() const;
 
-   wxSize GetMinSize() const { return mMinSize; }
-   wxSize GetMaxSize() const { return mMaxSize; }
+   [[nodiscard]] wxSize GetMinSize() const { return mMinSize; }
+   [[nodiscard]] wxSize GetMaxSize() const { return mMaxSize; }
 
    void Draw(wxDC &dc, wxRect rect);
 
-   static ImageArray SplitH(const wxImage &src, wxColour magicColor);
-   static ImageArray SplitV(const wxImage &src, wxColour magicColor);
+   static ImageArray SplitH(const wxImage &src, const wxColour& magicColor);
+   static ImageArray SplitV(const wxImage &src, const wxColour& magicColor);
 
  protected:
 
-   void DrawBitmap(wxDC &dc, wxBitmap &bitmap,
+   static void DrawBitmap(wxDC &dc, wxBitmap &bitmap,
                    int x, int y,
                    int /* wxRasterOperationMode */ logicalFunc);
 
-   void Init(RollType type, const wxImage &src, wxColour magicColor);
+   void Init(RollType type, const wxImage &src, const wxColour& magicColor);
 
    RollType     mType;
    // wxBitmap copies cheaply with reference counting

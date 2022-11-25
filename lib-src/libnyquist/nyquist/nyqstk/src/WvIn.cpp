@@ -30,7 +30,7 @@ WvIn :: ~WvIn()
 {
 }
 
-StkFloat WvIn :: lastOut( void ) const
+StkFloat WvIn :: lastOut( ) const
 {
   if ( lastOutputs_.empty() ) return 0.0;
 
@@ -44,7 +44,7 @@ StkFloat WvIn :: lastOut( void ) const
   return output / lastOutputs_.size();
 }
 
-StkFloat WvIn :: tick( void )
+StkFloat WvIn :: tick( )
 {
   computeFrame();
   return lastOut();

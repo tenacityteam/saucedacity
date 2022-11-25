@@ -48,25 +48,25 @@ public:
    PluginDescriptor &operator =(PluginDescriptor &&);
    virtual ~PluginDescriptor();
 
-   bool IsInstantiated() const;
+   [[nodiscard]] bool IsInstantiated() const;
 
-   PluginType GetPluginType() const;
+   [[nodiscard]] PluginType GetPluginType() const;
 
    // All plugins
 
    // These return untranslated strings
-   const wxString & GetID() const;
-   const wxString & GetProviderID() const;
-   const PluginPath & GetPath() const;
-   const ComponentInterfaceSymbol & GetSymbol() const;
+   [[nodiscard]] const wxString & GetID() const;
+   [[nodiscard]] const wxString & GetProviderID() const;
+   [[nodiscard]] const PluginPath & GetPath() const;
+   [[nodiscard]] const ComponentInterfaceSymbol & GetSymbol() const;
 
-   wxString GetUntranslatedVersion() const;
+   [[nodiscard]] wxString GetUntranslatedVersion() const;
    // There is no translated version
 
-   wxString GetVendor() const;
+   [[nodiscard]] wxString GetVendor() const;
 
-   bool IsEnabled() const;
-   bool IsValid() const;
+   [[nodiscard]] bool IsEnabled() const;
+   [[nodiscard]] bool IsValid() const;
 
    void SetEnabled(bool enable);
    void SetValid(bool valid);
@@ -77,20 +77,20 @@ public:
    // (Use Effect::GetFamilyName instead)
    // This string persists in configuration files
    // So config compatibility will break if it is changed across Audacity versions
-   wxString GetEffectFamily() const;
+   [[nodiscard]] wxString GetEffectFamily() const;
 
-   EffectType GetEffectType() const;
-   bool IsEffectDefault() const;
-   bool IsEffectInteractive() const;
-   bool IsEffectLegacy() const;
-   bool IsEffectRealtime() const;
-   bool IsEffectAutomatable() const;
+   [[nodiscard]] EffectType GetEffectType() const;
+   [[nodiscard]] bool IsEffectDefault() const;
+   [[nodiscard]] bool IsEffectInteractive() const;
+   [[nodiscard]] bool IsEffectLegacy() const;
+   [[nodiscard]] bool IsEffectRealtime() const;
+   [[nodiscard]] bool IsEffectAutomatable() const;
 
    // Importer plugins only
 
-   const wxString & GetImporterIdentifier() const;
-   const TranslatableString & GetImporterFilterDescription() const;
-   const FileExtensions & GetImporterExtensions() const;
+   [[nodiscard]] const wxString & GetImporterIdentifier() const;
+   [[nodiscard]] const TranslatableString & GetImporterFilterDescription() const;
+   [[nodiscard]] const FileExtensions & GetImporterExtensions() const;
 
 private:
    friend class PluginManager;
@@ -175,8 +175,8 @@ class SAUCEDACITY_DLL_API PluginManager final : public PluginManagerInterface
 {
 public:
 
-   RegistryPath GetPluginEnabledSetting( const PluginID &ID ) const;
-   RegistryPath GetPluginEnabledSetting( const PluginDescriptor &desc ) const;
+   [[nodiscard]] RegistryPath GetPluginEnabledSetting( const PluginID &ID ) const;
+   [[nodiscard]] RegistryPath GetPluginEnabledSetting( const PluginDescriptor &desc ) const;
 
    // PluginManagerInterface implementation
 
@@ -246,7 +246,7 @@ public:
    static wxString GetPluginTypeString(PluginType type);
 
    int GetPluginCount(PluginType type);
-   const PluginDescriptor *GetPlugin(const PluginID & ID) const;
+   [[nodiscard]] const PluginDescriptor *GetPlugin(const PluginID & ID) const;
 
    //! @name iteration over plugins of certain types, supporting range-for syntax
    //! @{
@@ -274,8 +274,8 @@ public:
    };
    struct Range {
       Iterator first;
-      Iterator begin() const { return first; }
-      int end() const { return 0; }
+      [[nodiscard]] Iterator begin() const { return first; }
+      static int end() { return 0; }
    };
 
    Range AllPlugins() { return { Iterator{ *this } }; }
@@ -304,7 +304,7 @@ public:
 private:
    // private! Use Get()
    PluginManager();
-   ~PluginManager();
+   ~PluginManager() override;
 
    void LoadGroup(FileConfig *pRegistry, PluginType type);
    void SaveGroup(FileConfig *pRegistry, PluginType type);
@@ -338,8 +338,8 @@ private:
    // The PluginID must be kept unique.  Since the wxFileConfig class does not preserve
    // case, we use base64 encoding.
    wxString ConvertID(const PluginID & ID);
-   wxString b64encode(const void *in, int len);
-   int b64decode(const wxString &in, void *out);
+   static wxString b64encode(const void *in, int len);
+   static int b64decode(const wxString &in, void *out);
 
 private:
    friend std::default_delete<PluginManager>;

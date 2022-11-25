@@ -66,8 +66,8 @@
 
 /* object access macros */
 #define getclass(x)	((x)->n_vdata[0])
-#define getivar(x,i)	((x)->n_vdata[i+1])
-#define setivar(x,i,v)	((x)->n_vdata[i+1] = (v))
+#define getivar(x,i)	((x)->n_vdata[(i)+1])
+#define setivar(x,i,v)	((x)->n_vdata[(i)+1] = (v))
 
 /* subr/fsubr access macros */
 #define getsubr(x)	((x)->n_subr)
@@ -171,7 +171,7 @@ typedef struct node {
     char n_flags;		/* flag bits */
     union ninfo { 		/* value */
         struct xsubr {		/* subr/fsubr node */
-            struct node *(*xs_subr)(void);	/* function pointer */
+            struct node *(*xs_subr)();	/* function pointer */
             int xs_offset;		/* offset into funtab */
         } n_xsubr;
         struct xcons {		/* cons node */

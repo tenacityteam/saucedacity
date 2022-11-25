@@ -47,7 +47,7 @@ class CommandBuilder
       CommandBuilder(SaucedacityProject *project, const wxString &cmdName,
                      const wxString &cmdParams);
       ~CommandBuilder();
-      bool WasValid();
+      [[nodiscard]] bool WasValid() const;
       OldStyleCommandPointer GetCommand();
       wxString GetResponse();
 };

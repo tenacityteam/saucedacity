@@ -59,7 +59,7 @@ public:
 
    TimerRecordDialog(
       wxWindow* parent, SaucedacityProject &project, bool bAlreadySaved);
-   ~TimerRecordDialog();
+   ~TimerRecordDialog() override;
 
    void OnTimer(wxTimerEvent& event);
    ///Runs the wait for start dialog.  Returns false if the user clicks stop.
@@ -77,7 +77,7 @@ private:
    void OnOK(wxCommandEvent& event);
    void OnHelpButtonClick(wxCommandEvent& event);
 
-   TranslatableString GetDisplayDate(wxDateTime & dt);
+   static TranslatableString GetDisplayDate(wxDateTime & dt);
    void PopulateOrExchange(ShuttleGui& S);
 
    bool TransferDataFromWindow() override;
@@ -97,8 +97,8 @@ private:
    void UpdateTextBoxControls();
 
    // Add Path Controls to Form
-   wxTextCtrlWrapper *NewPathControl(
-      wxWindow *wParent, const int iID,
+   static wxTextCtrlWrapper *NewPathControl(
+      wxWindow *wParent, int iID,
       const TranslatableString &sCaption, const TranslatableString &sValue);
 
    int ExecutePostRecordActions(bool bWasStopped);

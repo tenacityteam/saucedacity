@@ -88,7 +88,7 @@ public:
 
 #elif defined(__WXGTK__)
 
-   virtual ~NativeWindow()
+   ~NativeWindow() override
    {
    }
 

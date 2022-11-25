@@ -22,7 +22,7 @@ Generator :: ~Generator()
 {
 }
 
-StkFloat Generator :: tick( void )
+StkFloat Generator :: tick( )
 {
   return computeSample();
 }

@@ -205,7 +205,7 @@ void PopulatePreferences()
       int action = AudacityMessageBox(
          prompt,
          XO("Reset Saucedacity Preferences"),
-         wxYES_NO, NULL);
+         wxYES_NO, nullptr);
       if (action == wxYES)   // reset
       {
          ResetPreferences();
@@ -385,7 +385,7 @@ static void QuitAudacity(bool bForce)
    else
 /*end+*/
    {
-      if (AllProjects{}.size())
+      if (!AllProjects{}.empty())
          // PRL:  Always did at least once before close might be vetoed
          // though I don't know why that is important
          ProjectManager::SaveWindowSize();
@@ -417,7 +417,7 @@ static void QuitAudacity(bool bForce)
    }
 
    //remove our logger
-   std::unique_ptr<wxLog>{ wxLog::SetActiveTarget(NULL) }; // DELETE
+   std::unique_ptr<wxLog>{ wxLog::SetActiveTarget(nullptr) }; // DELETE
 
    if (bForce)
    {
@@ -450,12 +450,12 @@ public:
    {
    };
 
-   ~IPCConn()
+   ~IPCConn() override
    {
    };
 
    bool OnExec(const wxString & WXUNUSED(topic),
-               const wxString & data)
+               const wxString & data) override
    {
       // Add the filename to the queue.  It will be opened by
       // the OnTimer() event when it is safe to do so.
@@ -474,14 +474,14 @@ public:
       Create(appl);
    };
 
-   ~IPCServ()
+   ~IPCServ() override
    {
    };
 
    wxConnectionBase *OnAcceptConnection(const wxString & topic) override
    {
       if (topic != IPC_TOPIC) {
-         return NULL;
+         return nullptr;
       }
 
       // Trust wxWidgets framework to DELETE it
@@ -671,9 +671,9 @@ void SaucedacityApp::OnTimer(wxTimerEvent& WXUNUSED(event))
    // AppleEvent messages (via wxWidgets).  So, open any that are
    // in the queue and clean the queue.
    if (gInited) {
-      if (ofqueue.size()) {
+      if (!ofqueue.empty()) {
          // Load each file on the queue
-         while (ofqueue.size()) {
+         while (!ofqueue.empty()) {
             wxString name;
             name.swap(ofqueue[0]);
             ofqueue.erase( ofqueue.begin() );
@@ -1137,115 +1137,114 @@ bool SaucedacityApp::InitPart2()
    wxBitmap logo(logoimage);
 
    SaucedacityProject *project;
-   {
-      // Bug 718: Position splash screen on same screen
-      // as where Audacity project will appear.
-      wxRect wndRect;
-      bool bMaximized = false;
-      bool bIconized = false;
-      GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
+    {
+        // Bug 718: Position splash screen on same screen
+        // as where Audacity project will appear.
+        wxRect wndRect;
+        bool bMaximized = false;
+        bool bIconized = false;
+        GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
 
-      wxSplashScreen temporarywindow(
-         logo,
-         wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT,
-         0,
-         NULL,
-         wxID_ANY,
-         wndRect.GetTopLeft(),
-         wxDefaultSize,
-         wxSTAY_ON_TOP);
+        wxSplashScreen temporarywindow(
+                logo,
+                wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT,
+                0,
+                nullptr,
+                wxID_ANY,
+                wndRect.GetTopLeft(),
+                wxDefaultSize,
+                wxSTAY_ON_TOP);
 
-      // Unfortunately with the Windows 10 Creators update, the splash screen
-      // now appears before setting its position.
-      // On a dual monitor screen it will appear on one screen and then
-      // possibly jump to the second.
-      // We could fix this by writing our own splash screen and using Hide()
-      // until the splash scren was correctly positioned, then Show()
+        // Unfortunately with the Windows 10 Creators update, the splash screen
+        // now appears before setting its position.
+        // On a dual monitor screen it will appear on one screen and then
+        // possibly jump to the second.
+        // We could fix this by writing our own splash screen and using Hide()
+        // until the splash scren was correctly positioned, then Show()
 
-      // Possibly move it on to the second screen...
-      temporarywindow.SetPosition( wndRect.GetTopLeft() );
-      // Centered on whichever screen it is on.
-      temporarywindow.Center();
-      temporarywindow.SetTitle(_("Saucedacity is starting up..."));
-      SetTopWindow(&temporarywindow);
-      temporarywindow.Show();
-      temporarywindow.Raise();
+        // Possibly move it on to the second screen...
+        temporarywindow.SetPosition(wndRect.GetTopLeft());
+        // Centered on whichever screen it is on.
+        temporarywindow.Center();
+        temporarywindow.SetTitle(_("Saucedacity is starting up..."));
+        SetTopWindow(&temporarywindow);
+        temporarywindow.Show();
+        temporarywindow.Raise();
 
 
-      // ANSWER-ME: Why is YieldFor needed at all?
-      //wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT|wxEVT_CATEGORY_UNKNOWN);
-      wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
+        // ANSWER-ME: Why is YieldFor needed at all?
+        //wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT|wxEVT_CATEGORY_UNKNOWN);
+        wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
 
-      //JKC: Would like to put module loading here.
+        //JKC: Would like to put module loading here.
 
-      // More initialization
+        // More initialization
 
-      InitDitherers();
-      try
-      {
-         AudioIO::Init();
-      } catch (std::runtime_error& e)
-      {
-         /** GP: There are several possibilities for reaching this point:
-          * 1. atomic<double> might be converted to atomic<float> (AudioIO::AudioIO)
-          * 2. sizeof(float) is not greater than sizeof(short).
-          * 
-          * This is preferrably done
-          **/
-         AudacityMessageBox(XO("Saucedacity has encountered a critical error. This "
-                               "is likely to do with your platform.\n\n"
-                               "Error message (for devs): %s").Format(e.what()),
-                            XO("Saucedacity - Critical Error")
-         );
+        InitDitherers();
+        try {
+            AudioIO::Init();
+        } catch (std::runtime_error &e) {
+            /** GP: There are several possibilities for reaching this point:
+             * 1. atomic<double> might be converted to atomic<float> (AudioIO::AudioIO)
+             * 2. sizeof(float) is not greater than sizeof(short).
+             *
+             * This is preferrably done
+             **/
+            AudacityMessageBox(XO("Saucedacity has encountered a critical error. This "
+                                  "is likely to do with your platform.\n\n"
+                                  "Error message (for devs): %s").Format(e.what()),
+                               XO("Saucedacity - Critical Error")
+            );
 
-         return false;
-      }
+            return false;
+        }
 
 #ifdef __WXMAC__
 
-      // On the Mac, users don't expect a program to quit when you close the last window.
-      // Create a menubar that will show when all project windows are closed.
+        // On the Mac, users don't expect a program to quit when you close the last window.
+        // Create a menubar that will show when all project windows are closed.
 
-      auto fileMenu = std::make_unique<wxMenu>();
-      auto urecentMenu = std::make_unique<wxMenu>();
-      auto recentMenu = urecentMenu.get();
-      fileMenu->Append(wxID_NEW, wxString(_("&New")) + wxT("\tCtrl+N"));
-      fileMenu->Append(wxID_OPEN, wxString(_("&Open...")) + wxT("\tCtrl+O"));
-      fileMenu->AppendSubMenu(urecentMenu.release(), _("Open &Recent..."));
-      fileMenu->Append(wxID_ABOUT, _("&About Saucedacity..."));
-      fileMenu->Append(wxID_PREFERENCES, wxString(_("&Preferences...")) + wxT("\tCtrl+,"));
+        auto fileMenu = std::make_unique<wxMenu>();
+        auto urecentMenu = std::make_unique<wxMenu>();
+        auto recentMenu = urecentMenu.get();
+        fileMenu->Append(wxID_NEW, wxString(_("&New")) + wxT("\tCtrl+N"));
+        fileMenu->Append(wxID_OPEN, wxString(_("&Open...")) + wxT("\tCtrl+O"));
+        fileMenu->AppendSubMenu(urecentMenu.release(), _("Open &Recent..."));
+        fileMenu->Append(wxID_ABOUT, _("&About Saucedacity..."));
+        fileMenu->Append(wxID_PREFERENCES, wxString(_("&Preferences...")) + wxT("\tCtrl+,"));
 
-      {
-         auto menuBar = std::make_unique<wxMenuBar>();
-         menuBar->Append(fileMenu.release(), _("&File"));
+        {
+           auto menuBar = std::make_unique<wxMenuBar>();
+           menuBar->Append(fileMenu.release(), _("&File"));
 
-         // PRL:  Are we sure wxWindows will not leak this menuBar?
-         // The online documentation is not explicit.
-         wxMenuBar::MacSetCommonMenuBar(menuBar.release());
-      }
+           // PRL:  Are we sure wxWindows will not leak this menuBar?
+           // The online documentation is not explicit.
+           wxMenuBar::MacSetCommonMenuBar(menuBar.release());
+        }
 
-      auto &recentFiles = FileHistory::Global();
-      recentFiles.UseMenu(recentMenu);
+        auto &recentFiles = FileHistory::Global();
+        recentFiles.UseMenu(recentMenu);
 
 #endif //__WXMAC__
-      temporarywindow.Show(false);
-   }
 
-   // Workaround Bug 1377 - Crash after Audacity starts and low disk space warning appears
-   // The temporary splash window is closed AND cleaned up, before attempting to create
-   // a project and possibly creating a modal warning dialog by doing so.
-   // Also fixes problem of warning being obscured.
-   // Downside is that we have no splash screen for the (brief) time that we spend
-   // creating the project.
-   // Root cause is problem with wxSplashScreen and other dialogs co-existing, that
-   // seemed to arrive with wx3.
-   {
-      project = ProjectManager::New();
-   }
+        // Workaround Bug 1377 - Crash after Audacity starts and low disk space warning appears
+        // The temporary splash window is closed AND cleaned up, before attempting to create
+        // a project and possibly creating a modal warning dialog by doing so.
+        // Also fixes problem of warning being obscured.
+        // Downside is that we have no splash screen for the (brief) time that we spend
+        // creating the project.
+        // Root cause is problem with wxSplashScreen and other dialogs co-existing, that
+        // seemed to arrive with wx3.
+        {
+            project = ProjectManager::New();
+        }
 
-   if( ProjectSettings::Get( *project ).GetShowSplashScreen() ){
-      SplashDialog::DoHelpWelcome(*project);
-   }
+        if (ProjectSettings::Get(*project).GetShowSplashScreen()) {
+            SplashDialog::DoHelpWelcome(*project);
+        }
+
+        temporarywindow.Show(false);
+    }
 
    #ifdef USE_FFMPEG
    FFmpegStartup();
@@ -1360,7 +1359,7 @@ void SaucedacityApp::InitCommandHandler()
 // AppCommandEvent callback - just pass the event on to the CommandHandler
 void SaucedacityApp::OnReceiveCommand(AppCommandEvent &event)
 {
-   wxASSERT(NULL != mCmdHandler);
+   wxASSERT(nullptr != mCmdHandler);
    mCmdHandler->OnReceiveCommand(event);
 }
 
@@ -1410,7 +1409,7 @@ bool SaucedacityApp::InitTempDir()
 {
    // We need to find a temp directory location.
    auto tempFromPrefs = TempDirectory::TempDir();
-   auto tempDefaultLoc = TempDirectory::DefaultTempDir();
+   const auto& tempDefaultLoc = TempDirectory::DefaultTempDir();
 
    wxString temp;
 
@@ -1585,7 +1584,7 @@ bool SaucedacityApp::CreateSingleInstanceChecker(const wxString &dir)
 
 #if defined(__UNIX__)
 
-void SaucedacityApp::CleanupIPCResources()
+void SaucedacityApp::CleanupIPCResources() const
 {
    if (mWasServer)
    {
@@ -1781,15 +1780,15 @@ bool SaucedacityApp::CreateSingleInstanceChecker(const wxString& /* unused */)
    sock->Connect(addr, true);
    if (!sock->IsConnected())
    {
-      // All attempts to become the server or connect to one have failed.  Not
-      // sure what we can say about the error, but it's probably not because
-      // Audacity is already running.
-      AudacityMessageBox(
-         XO("An unrecoverable error has occurred during startup"),
-         XO("Saucedacity Startup Failure"),
-         wxOK | wxICON_ERROR);
+       // All attempts to become the server or connect to one have failed.  Not
+       // sure what we can say about the error, but it's probably not because
+       // Audacity is already running.
+       AudacityMessageBox(
+               XO("Unable to connect to the IPC server. Saucedacity cannot continue."),
+               XO("Saucedacity Startup Failure"),
+               wxOK | wxICON_ERROR);
 
-      return false;
+       return false;
    }
 
    // Parse the command line to ensure correct syntax, but ignore
@@ -1815,7 +1814,7 @@ bool SaucedacityApp::CreateSingleInstanceChecker(const wxString& /* unused */)
    // Let the user know that another copy is running.
    AudacityMessageBox(XO("Another copy of Saucedacity has been detected"
                            "running on this system. Running multiple copies of"
-                           "Saucedacity is not supported\n\n"
+                           "Saucedacity is not supported.\n\n"
                            "You will now be redirected to the running copy."),
                       XO("Saucedacity is already running"),
                       wxOK
@@ -1945,7 +1944,7 @@ void SaucedacityApp::OnEndSession(wxCloseEvent & event)
    // Try to close each open window.  If the user hits Cancel
    // in a Save Changes dialog, don't continue.
    gIsQuitting = true;
-   if (AllProjects{}.size())
+   if (!AllProjects{}.empty())
       // PRL:  Always did at least once before close might be vetoed
       // though I don't know why that is important
       ProjectManager::SaveWindowSize();
@@ -2047,7 +2046,7 @@ void SaucedacityApp::OnMenuOpen(wxCommandEvent & event)
 
 
    if(AllProjects{}.empty())
-      ProjectManager::OpenFiles(NULL);
+      ProjectManager::OpenFiles(nullptr);
    else
       event.Skip();
 

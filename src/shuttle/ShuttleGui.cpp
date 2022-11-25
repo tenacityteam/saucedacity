@@ -129,7 +129,7 @@ ShuttleGuiBase::ShuttleGuiBase(
    wxWindow * pParent, teShuttleMode ShuttleMode, bool vertical, wxSize minSize )
    : mpDlg{ pParent }
 {
-   wxASSERT( (pParent != NULL ) || ( ShuttleMode != eIsCreating));
+   wxASSERT( (pParent != nullptr ) || ( ShuttleMode != eIsCreating));
    mpbOptionalFlag = nullptr;
    mpParent = pParent;
    mShuttleMode = ShuttleMode;
@@ -142,10 +142,10 @@ ShuttleGuiBase::~ShuttleGuiBase()
 
 void ShuttleGuiBase::Init(bool vertical, wxSize minSize)
 {
-   mpShuttle = NULL;
-   mpSizer = NULL;
-   mpWind = NULL;
-   mpSubSizer = NULL;
+   mpShuttle = nullptr;
+   mpSizer = nullptr;
+   mpWind = nullptr;
+   mpSubSizer = nullptr;
 
    mRadioSettingName = wxT("");
    mRadioCount = -1;
@@ -946,9 +946,9 @@ wxStaticBox * ShuttleGuiBase::StartStatic(const TranslatableString &Str, int iPr
 {
    UseUpId();
    if( mShuttleMode != eIsCreating )
-      return NULL;
+      return nullptr;
    auto translated = Str.Translation();
-   wxStaticBox * pBox = safenew wxStaticBoxWrapper(
+   auto * pBox = safenew wxStaticBoxWrapper(
       GetParent(), miId, translated );
    pBox->SetLabel( translated );
    if (Str.empty()) {
@@ -1121,9 +1121,9 @@ wxNotebookPage * ShuttleGuiBase::StartNotebookPage(
    const TranslatableString & Name )
 {
    if( mShuttleMode != eIsCreating )
-      return NULL;
+      return nullptr;
 //      return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wx);
-   auto pNotebook = static_cast< wxBookCtrlBase* >( mpParent );
+   auto pNotebook = dynamic_cast< wxBookCtrlBase* >( mpParent );
    wxNotebookPage * pPage = safenew wxPanelWrapper(GetParent());
    const auto translated = Name.Translation();
    pPage->SetName(translated);
@@ -1162,7 +1162,7 @@ public:
       wxPanelWrapper( parent, id, pos, size, style )
    {
    };
-   ~InvisiblePanel(){;};
+   ~InvisiblePanel() override{;};
    void OnPaint( wxPaintEvent &event );
    void OnErase(wxEraseEvent &/*evt*/){;};
    DECLARE_EVENT_TABLE()
@@ -1390,7 +1390,7 @@ wxSpinCtrl * ShuttleGuiBase::DoTieSpinCtrl(
       return AddSpinCtrl( Prompt, WrappedRef.ReadAsInt(), max, min );
 
    UseUpId();
-   wxSpinCtrl * pSpinCtrl=NULL;
+   wxSpinCtrl * pSpinCtrl=nullptr;
 
    wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
    pSpinCtrl = wxDynamicCast(pWnd, wxSpinCtrl);
@@ -1428,7 +1428,7 @@ wxTextCtrl * ShuttleGuiBase::DoTieTextBox(
       return AddTextBox( Prompt, WrappedRef.ReadAsString(), nChars );
 
    UseUpId();
-   wxTextCtrl * pTextBox=NULL;
+   wxTextCtrl * pTextBox=nullptr;
 
    wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
    pTextBox = wxDynamicCast(pWnd, wxTextCtrl);
@@ -1466,7 +1466,7 @@ wxTextCtrl * ShuttleGuiBase::DoTieNumericTextBox(
       return AddNumericTextBox( Prompt, WrappedRef.ReadAsString(), nChars );
 
    UseUpId();
-   wxTextCtrl * pTextBox=NULL;
+   wxTextCtrl * pTextBox=nullptr;
 
    wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
    pTextBox = wxDynamicCast(pWnd, wxTextCtrl);
@@ -1503,7 +1503,7 @@ wxSlider * ShuttleGuiBase::DoTieSlider(
    // The Add function does a UseUpId(), so don't do it here in that case.
    if( mShuttleMode != eIsCreating )
       UseUpId();
-   wxSlider * pSlider=NULL;
+   wxSlider * pSlider=nullptr;
    switch( mShuttleMode )
    {
       case eIsCreating:
@@ -1549,7 +1549,7 @@ wxChoice * ShuttleGuiBase::TieChoice(
    if( mShuttleMode != eIsCreating )
       UseUpId();
 
-   wxChoice * pChoice=NULL;
+   wxChoice * pChoice=nullptr;
    switch( mShuttleMode )
    {
    case eIsCreating:
@@ -1603,7 +1603,7 @@ wxRadioButton * ShuttleGuiBase::TieRadioButton()
    mRadioCount++;
 
    UseUpId();
-   wxRadioButton * pRadioButton = NULL;
+   wxRadioButton * pRadioButton = nullptr;
 
    switch( mShuttleMode )
    {
@@ -1895,7 +1895,7 @@ wxCheckBox * ShuttleGuiBase::TieCheckBox(
    const TranslatableString &Prompt,
    const BoolSetting &Setting)
 {
-   wxCheckBox * pCheck=NULL;
+   wxCheckBox * pCheck=nullptr;
 
    auto Value = Setting.GetDefault();
    WrappedType WrappedRef( Value );
@@ -1912,7 +1912,7 @@ wxCheckBox * ShuttleGuiBase::TieCheckBoxOnRight(
    const TranslatableString &Prompt,
    const BoolSetting & Setting)
 {
-   wxCheckBox * pCheck=NULL;
+   wxCheckBox * pCheck=nullptr;
 
    auto Value = Setting.GetDefault();
    WrappedType WrappedRef( Value );
@@ -1931,7 +1931,7 @@ wxSlider * ShuttleGuiBase::TieSlider(
    const int max,
    const int min)
 {
-   wxSlider * pSlider=NULL;
+   wxSlider * pSlider=nullptr;
 
    auto Value = Setting.GetDefault();
    WrappedType WrappedRef( Value );
@@ -1950,7 +1950,7 @@ wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
    const int max,
    const int min)
 {
-   wxSpinCtrl * pSpinCtrl=NULL;
+   wxSpinCtrl * pSpinCtrl=nullptr;
 
    auto Value = Setting.GetDefault();
    WrappedType WrappedRef( Value );
@@ -1968,7 +1968,7 @@ wxTextCtrl * ShuttleGuiBase::TieTextBox(
    const StringSetting & Setting,
    const int nChars)
 {
-   wxTextCtrl * pText=(wxTextCtrl*)NULL;
+   auto * pText=(wxTextCtrl*)nullptr;
 
    auto Value = Setting.GetDefault();
    WrappedType WrappedRef( Value );
@@ -1986,7 +1986,7 @@ wxTextCtrl * ShuttleGuiBase::TieIntegerTextBox(
    const IntSetting &Setting,
    const int nChars)
 {
-   wxTextCtrl * pText=(wxTextCtrl*)NULL;
+   auto * pText=(wxTextCtrl*)nullptr;
 
    auto Value = Setting.GetDefault();
    WrappedType WrappedRef( Value );
@@ -2004,7 +2004,7 @@ wxTextCtrl * ShuttleGuiBase::TieNumericTextBox(
    const DoubleSetting & Setting,
    const int nChars)
 {
-   wxTextCtrl * pText=(wxTextCtrl*)NULL;
+   auto * pText=(wxTextCtrl*)nullptr;
 
    auto Value = Setting.GetDefault();
    WrappedType WrappedRef( Value );
@@ -2033,7 +2033,7 @@ wxChoice *ShuttleGuiBase::TieChoice(
    const auto &Choices = symbols.GetMsgids();
    const auto &InternalChoices = symbols.GetInternals();
 
-   wxChoice * pChoice=(wxChoice*)NULL;
+   auto * pChoice=(wxChoice*)nullptr;
 
    int TempIndex=0;
 //   int TempIndex = TranslateToIndex( Default, InternalChoices );
@@ -2230,7 +2230,7 @@ void ShuttleGuiBase::UpdateSizersCore(bool bPrepend, int Flags, bool prompt)
       PushSizer();
    }
 
-   mpWind = NULL;
+   mpWind = nullptr;
    miProp = 0;
    miSizerProp =0;
 }
@@ -2274,17 +2274,17 @@ long ShuttleGuiBase::GetStyle( long style )
 // ONLY if the value it is to be set to is non NULL.
 void SetIfCreated( wxChoice * &Var, wxChoice * Val )
 {
-   if( Val != NULL )
+   if( Val != nullptr )
       Var = Val;
 };
 void SetIfCreated( wxTextCtrl * &Var, wxTextCtrl * Val )
 {
-   if( Val != NULL )
+   if( Val != nullptr )
       Var = Val;
 };
 void SetIfCreated( wxStaticText *&Var, wxStaticText * Val )
 {
-   if( Val != NULL )
+   if( Val != nullptr )
       Var = Val;
 };
 
@@ -2337,7 +2337,7 @@ ShuttleGui & ShuttleGui::Optional( bool &bVar ){
 
 std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wxWindow *extra)
 {
-   wxASSERT(parent != NULL); // To justify safenew
+   wxASSERT(parent != nullptr); // To justify safenew
 
    int margin;
    {
@@ -2354,11 +2354,11 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
 #endif
    }
 
-   wxButton *b = NULL;
+   wxButton *b = nullptr;
    auto bs = std::make_unique<wxStdDialogButtonSizer>();
    
    const auto makeButton =
-   [parent]( wxWindowID id, const wxString label = {} ) {
+   [parent]( wxWindowID id, const wxString& label = {} ) {
       auto result = safenew wxButton( parent, id, label );
       result->SetName( result->GetLabel() );
       return result;
@@ -2511,7 +2511,7 @@ void ShuttleGui::AddStandardButtons(long buttons, wxWindow *extra)
 wxSizerItem * ShuttleGui::AddSpace( int width, int height, int prop )
 {
    if( mShuttleMode != eIsCreating )
-      return NULL;
+      return nullptr;
 
 //   SetProportions(0);
   // return mpSizer->Add( width, height, miProp);

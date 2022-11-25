@@ -365,7 +365,7 @@ namespace {
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control.          */
-static const BuiltinFormatString TimeConverterFormats_[] =  {
+const BuiltinFormatString TimeConverterFormats_[] =  {
    {
    /* i18n-hint: Name of time display format that shows time in seconds */
    { XO("seconds") },
@@ -573,7 +573,7 @@ static const BuiltinFormatString TimeConverterFormats_[] =  {
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-static const BuiltinFormatString FrequencyConverterFormats_[] = {
+const BuiltinFormatString FrequencyConverterFormats_[] = {
    {
       /* i18n-hint: Name of display format that shows frequency in hertz */
       { XO("Hz") },
@@ -605,7 +605,7 @@ static const BuiltinFormatString FrequencyConverterFormats_[] = {
  *  array of string pairs for name of the format and the format string
  *  needed to create that format output. This is used for the pop-up
  *  list of formats to choose from in the control. */
-static const BuiltinFormatString BandwidthConverterFormats_[] = {
+const BuiltinFormatString BandwidthConverterFormats_[] = {
    {
    /* i18n-hint: Name of display format that shows log of frequency
     * in octaves */
@@ -830,7 +830,7 @@ void NumericConverter::ParseFormatString(
 
          if (inFrac) {
             int base = fracMult * range;
-            mFields.push_back(NumericField(inFrac, base, range, zeropad));
+            mFields.emplace_back(inFrac, base, range, zeropad);
             fracMult *= range;
             numFracFields++;
          }
@@ -838,7 +838,7 @@ void NumericConverter::ParseFormatString(
             unsigned int j;
             for(j=0; j<mFields.size(); j++)
                mFields[j].base *= range;
-            mFields.push_back(NumericField(inFrac, 1, range, zeropad));
+            mFields.emplace_back(inFrac, 1, range, zeropad);
             numWholeFields++;
          }
          numStr = wxT("");
@@ -900,7 +900,7 @@ void NumericConverter::ParseFormatString(
       mFields[i].pos = pos;
 
       for(j=0; j<mFields[i].digits; j++) {
-         mDigits.push_back(DigitInfo(i, j, pos, wxRect()));
+         mDigits.emplace_back(i, j, pos, wxRect());
          mValueTemplate += wxT("0");
          mValueMask += wxT("0");
          pos++;
@@ -965,8 +965,8 @@ void NumericConverter::ValueToControls(double rawValue, bool nearest /* = true *
    bool round = true;
    // We round on the last field.  If we have a fractional field we round using it.
    // Otherwise we round to nearest integer.
-   for(unsigned int i = 0; i < mFields.size(); i++) {
-      if (mFields[i].frac)
+   for(auto & mField : mFields) {
+      if (mField.frac)
          round = false;
    }
    if (theValue < 0)
@@ -1060,7 +1060,7 @@ void NumericConverter::ControlsToValue()
    unsigned int i;
    double t = 0.0;
 
-   if (mFields.size() > 0 &&
+   if (!mFields.empty() &&
       mValueString.Mid(mFields[0].pos, 1) == wxChar('-')) {
       mValue = mInvalidValue;
       return;
@@ -1191,7 +1191,7 @@ int NumericConverter::GetFormatIndex()
    return ndx;
 }
 
-int NumericConverter::GetNumBuiltins()
+int NumericConverter::GetNumBuiltins() const
 {
    return mNBuiltins;
 }
@@ -1259,10 +1259,10 @@ void NumericConverter::Adjust(int steps, int dir)
 
    while (steps != 0)
    {
-      for (size_t i = 0; i < mFields.size(); i++)
+      for (auto & mField : mFields)
       {
-         if ((mDigits[mFocusedDigit].pos >= mFields[i].pos) &&
-             (mDigits[mFocusedDigit].pos < mFields[i].pos + mFields[i].digits))
+         if ((mDigits[mFocusedDigit].pos >= mField.pos) &&
+             (mDigits[mFocusedDigit].pos < mField.pos + mField.digits))
          {   //it's this field
             if (!mNtscDrop)
             {
@@ -1280,14 +1280,14 @@ void NumericConverter::Adjust(int steps, int dir)
 
             mValue *= mScalingFactor;
 
-            double mult = pow(10., mFields[i].digits - (mDigits[mFocusedDigit].pos - mFields[i].pos) - 1);
-            if (mFields[i].frac)
+            double mult = pow(10., mField.digits - (mDigits[mFocusedDigit].pos - mField.pos) - 1);
+            if (mField.frac)
             {
-               mValue += ((mult / (double)mFields[i].base) * dir);
+               mValue += ((mult / (double)mField.base) * dir);
             }
             else
             {
-               mValue += ((mult * (double)mFields[i].base) * dir);
+               mValue += ((mult * (double)mField.base) * dir);
             }
 
             if (mNtscDrop)
@@ -1498,7 +1498,7 @@ void NumericTextCtrl::EnableMenu(bool enable)
    else {
       wxToolTip *tt = GetToolTip();
       if (tt && tt->GetTip() == tip)
-         SetToolTip(NULL);
+         SetToolTip(nullptr);
    }
 #endif
    mMenuEnabled = enable;
@@ -1589,7 +1589,7 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
 
          // Remember metrics for each digit
          for (int j = 0, dcnt = mFields[i].digits; j < dcnt; ++j) {
-            mDigits.push_back(DigitInfo(i, j, pos, wxRect(x, mBorderTop, boxW, boxH)));
+            mDigits.emplace_back(i, j, pos, wxRect(x, mBorderTop, boxW, boxH));
             x += boxW;
             pos++;
          }
@@ -1609,12 +1609,12 @@ wxSize NumericTextCtrl::ComputeSizing(bool update, wxCoord boxW, wxCoord boxH)
    }
    else {
       // Determine the maximum x-position (length) of the remaining fields
-      for (int i = 0, fcnt = mFields.size(); i < fcnt; ++i) {
+      for (auto & mField : mFields) {
          // Get the size of the label
-         dc.GetTextExtent(mFields[i].label, &strW, &strH);
+         dc.GetTextExtent(mField.label, &strW, &strH);
 
          // Just bump to next field
-         x += (boxW * mFields[i].digits) + strW;
+         x += (boxW * mField.digits) + strW;
       }
    }
 
@@ -1859,7 +1859,7 @@ void NumericTextCtrl::OnFocus(wxFocusEvent &event)
 
 void NumericTextCtrl::OnCaptureKey(wxCommandEvent &event)
 {
-   wxKeyEvent *kevent = (wxKeyEvent *)event.GetEventObject();
+   auto *kevent = (wxKeyEvent *)event.GetEventObject();
    int keyCode = kevent->GetKeyCode();
 
    // Convert numeric keypad entries.
@@ -1887,8 +1887,6 @@ void NumericTextCtrl::OnCaptureKey(wxCommandEvent &event)
    }
 
    event.Skip();
-
-   return;
 }
 
 void NumericTextCtrl::OnKeyUp(wxKeyEvent &event)
@@ -1911,7 +1909,7 @@ void NumericTextCtrl::OnKeyUp(wxKeyEvent &event)
 
 void NumericTextCtrl::OnKeyDown(wxKeyEvent &event)
 {
-   if (mDigits.size() == 0)
+   if (mDigits.empty())
    {
       mFocusedDigit = 0;
       return;

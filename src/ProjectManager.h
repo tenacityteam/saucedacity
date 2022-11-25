@@ -106,10 +106,10 @@ public:
    // Routine to estimate how many minutes of recording time are left on disk
    int GetEstimatedRecordingMinsLeftOnDisk(long lCaptureChannels = 0);
    // Converts number of minutes to human readable format
-   TranslatableString GetHoursMinsString(int iMinutes);
+   static TranslatableString GetHoursMinsString(int iMinutes);
 
    void SetStatusText( const TranslatableString &text, int number );
-   void SetSkipSavePrompt(bool bSkip) { sbSkipPromptingForSave = bSkip; };
+   static void SetSkipSavePrompt(bool bSkip) { sbSkipPromptingForSave = bSkip; };
 
 private:
    void OnReconnectionFailure(wxCommandEvent & event);

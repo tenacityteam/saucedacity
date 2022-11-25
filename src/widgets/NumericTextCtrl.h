@@ -21,6 +21,7 @@
 #include <lib-strings/Internat.h>
 #include <lib-utility/MemoryX.h>
 
+#include <utility>
 #include <vector>
 #include <wx/setup.h> // for wxUSE_* macros
 #include <wx/defs.h>
@@ -61,9 +62,9 @@ public:
       TranslatableString fraction;
 
       FormatStrings(
-         const TranslatableString &format = {},
-         const TranslatableString &fraction = {})
-         : formatStr{ format }, fraction{ fraction }
+         TranslatableString format = {},
+         TranslatableString fraction = {})
+         : formatStr{std::move( format )}, fraction{std::move( fraction )}
       {}
 
       friend bool operator == ( const FormatStrings &x, const FormatStrings &y )
@@ -124,7 +125,7 @@ public:
 
    int GetFormatIndex();
 
-   int GetNumBuiltins();
+   int GetNumBuiltins() const;
    NumericFormatSymbol GetBuiltinName(const int index);
    FormatStrings GetBuiltinFormat(const int index);
    FormatStrings GetBuiltinFormat(const NumericFormatSymbol & name);
@@ -207,7 +208,7 @@ class SAUCEDACITY_DLL_API NumericTextCtrl final
                    const wxPoint &pos = wxDefaultPosition,
                    const wxSize &size = wxDefaultSize);
 
-   virtual ~NumericTextCtrl();
+   ~NumericTextCtrl() override;
 
    // Hide the inherited function that takes wxString
    void SetName( const TranslatableString &name );
@@ -227,8 +228,8 @@ class SAUCEDACITY_DLL_API NumericTextCtrl final
 
    void SetFieldFocus(int /* digit */);
 
-   wxSize GetDimensions() { return wxSize(mWidth + mButtonWidth, mHeight); }
-   wxSize GetDigitSize() { return wxSize(mDigitBoxW, mDigitBoxH); }
+   wxSize GetDimensions() const { return wxSize(mWidth + mButtonWidth, mHeight); }
+   wxSize GetDigitSize() const { return wxSize(mDigitBoxW, mDigitBoxH); }
    void SetDigitSize(int width, int height);
    void SetReadOnly(bool readOnly = true);
    void EnableMenu(bool enable = true);
@@ -239,7 +240,7 @@ class SAUCEDACITY_DLL_API NumericTextCtrl final
    // this control returns to the program, so you can specify.
    void SetInvalidValue(double invalidValue);
 
-   int GetFocusedField() { return mLastField; }
+   int GetFocusedField() const { return mLastField; }
    int GetFocusedDigit() { return mFocusedDigit; }
 
 private:

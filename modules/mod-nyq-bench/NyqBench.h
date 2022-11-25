@@ -80,9 +80,9 @@ class NyqRedirector:wxSTD streambuf
 {
  public:
    NyqRedirector(NyqTextCtrl *text);
-   virtual ~NyqRedirector();
+   ~NyqRedirector() override;
 
-   int overflow(int c);
+   int overflow(int c) override;
 
  private:
    void AppendText();
@@ -100,9 +100,9 @@ class NyqBench:public wxFrame
 {
  public:
    NyqBench(wxWindow *parent);
-   virtual ~NyqBench();
+   ~NyqBench() override;
 
-   virtual bool Validate();
+   bool Validate() override;
 
    void ShowNyqBench(const CommandContext&);
 
@@ -150,11 +150,11 @@ class NyqBench:public wxFrame
    void OnGo(wxCommandEvent & e);
    void OnStop(wxCommandEvent & e);
 
-   void OnAbout(wxCommandEvent & e);
+   static void OnAbout(wxCommandEvent & e);
 
    void OnFindDialog(wxFindDialogEvent & e);
 
-   void OnTextUpdate(wxCommandEvent & e);
+   static void OnTextUpdate(wxCommandEvent & e);
 
    void OnMenuUpdate(wxUpdateUIEvent & e);
  

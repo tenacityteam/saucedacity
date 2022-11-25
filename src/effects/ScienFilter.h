@@ -35,7 +35,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectScienFilter();
-   virtual ~EffectScienFilter();
+   ~EffectScienFilter() override;
 
    // ComponentInterface implementation
 
@@ -51,7 +51,7 @@ public:
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool DefineParams( ShuttleParams & S ) override;
    bool GetAutomationParameters(CommandParameters & parms) override;
@@ -135,12 +135,12 @@ public:
    EffectScienFilterPanel(
       wxWindow *parent, wxWindowID winid,
       EffectScienFilter *effect, double lo, double hi);
-   virtual ~EffectScienFilterPanel();
+   ~EffectScienFilterPanel() override;
 
    // We don't need or want to accept focus.
-   bool AcceptsFocus() const;
+   [[nodiscard]] bool AcceptsFocus() const override;
    // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
-   bool AcceptsFocusFromKeyboard() const;
+   [[nodiscard]] bool AcceptsFocusFromKeyboard() const override;
 
    void SetFreqRange(double lo, double hi);
    void SetDbRange(double min, double max);

@@ -35,7 +35,7 @@ class WaveClipTrimHandle : public UIHandle
     static HitTestPreview HitPreview(const SaucedacityProject*, bool unsafe);
 
 public:
-    WaveClipTrimHandle(const std::pair<double, double>& range, const std::vector<std::shared_ptr<WaveClip>>& clips, Border targetBorder);
+    WaveClipTrimHandle(std::pair<double, double>  range, std::vector<std::shared_ptr<WaveClip>>  clips, Border targetBorder);
 
     static UIHandlePtr HitAnywhere(std::weak_ptr<WaveClipTrimHandle>& holder,
         WaveTrack* waveTrack,
@@ -48,15 +48,15 @@ public:
 
     HitTestPreview Preview(const TrackPanelMouseState& mouseState, SaucedacityProject* pProject) override;
 
-    virtual Result Click
+    Result Click
     (const TrackPanelMouseEvent& event, SaucedacityProject* pProject) override;
 
-    virtual Result Drag
+    Result Drag
     (const TrackPanelMouseEvent& event, SaucedacityProject* pProject) override;
 
-    virtual Result Release
+    Result Release
     (const TrackPanelMouseEvent& event, SaucedacityProject* pProject,
         wxWindow* pParent) override;
 
-    virtual Result Cancel(SaucedacityProject* pProject) override;
+    Result Cancel(SaucedacityProject* pProject) override;
 };

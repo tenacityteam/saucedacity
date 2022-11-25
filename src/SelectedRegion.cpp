@@ -41,7 +41,7 @@ bool SelectedRegion::HandleXMLAttribute
  const wxChar *legacyT0Name, const wxChar *legacyT1Name)
 {
    typedef bool (SelectedRegion::*Setter)(double, bool);
-   Setter setter = 0;
+   Setter setter = nullptr;
    if (!wxStrcmp(attr, legacyT0Name))
       setter = &SelectedRegion::setT0;
    else if (!wxStrcmp(attr, legacyT1Name))

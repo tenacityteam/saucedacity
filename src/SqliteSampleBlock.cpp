@@ -9,6 +9,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 **********************************************************************/
 
 #include <cfloat>
+#include <utility>
 #include <sqlite3.h>
 
 #include "DBConnection.h"
@@ -30,7 +31,7 @@ class SqliteSampleBlock final : public SampleBlock
 public:
 
    explicit SqliteSampleBlock(
-      const std::shared_ptr<SqliteSampleBlockFactory> &pFactory);
+      std::shared_ptr<SqliteSampleBlockFactory> pFactory);
    ~SqliteSampleBlock() override;
 
    void CloseLock() override;
@@ -44,32 +45,32 @@ public:
 
    void Delete();
 
-   SampleBlockID GetBlockID() const override;
+   [[nodiscard]] SampleBlockID GetBlockID() const override;
 
    size_t DoGetSamples(samplePtr dest,
                        sampleFormat destformat,
                        size_t sampleoffset,
                        size_t numsamples) override;
-   sampleFormat GetSampleFormat() const;
-   size_t GetSampleCount() const override;
+   [[nodiscard]] sampleFormat GetSampleFormat() const;
+   [[nodiscard]] size_t GetSampleCount() const override;
 
    bool GetSummary256(float *dest, size_t frameoffset, size_t numframes) override;
    bool GetSummary64k(float *dest, size_t frameoffset, size_t numframes) override;
-   double GetSumMin() const;
-   double GetSumMax() const;
-   double GetSumRms() const;
+   [[nodiscard]] double GetSumMin() const;
+   [[nodiscard]] double GetSumMax() const;
+   [[nodiscard]] double GetSumRms() const;
 
    /// Gets extreme values for the specified region
    MinMaxRMS DoGetMinMaxRMS(size_t start, size_t len) override;
 
    /// Gets extreme values for the entire block
-   MinMaxRMS DoGetMinMaxRMS() const override;
+   [[nodiscard]] MinMaxRMS DoGetMinMaxRMS() const override;
 
-   size_t GetSpaceUsage() const override;
+   [[nodiscard]] size_t GetSpaceUsage() const override;
    void SaveXML(XMLWriter &xmlFile) override;
 
 private:
-   bool IsSilent() const { return mBlockID <= 0; }
+   [[nodiscard]] bool IsSilent() const { return mBlockID <= 0; }
    void Load(SampleBlockID sbid);
    bool GetSummary(float *dest,
                    size_t frameoffset,
@@ -93,8 +94,8 @@ private:
 private:
    //! This must never be called for silent blocks
    /*! @post return value is not null */
-   DBConnection *Conn() const;
-   sqlite3 *DB() const
+   [[nodiscard]] DBConnection *Conn() const;
+   [[nodiscard]] sqlite3 *DB() const
    {
       return Conn()->DB();
    }
@@ -292,8 +293,8 @@ auto SqliteSampleBlockFactory::SetBlockDeletionCallback(
 }
 
 SqliteSampleBlock::SqliteSampleBlock(
-   const std::shared_ptr<SqliteSampleBlockFactory> &pFactory)
-:  mpFactory(pFactory)
+   std::shared_ptr<SqliteSampleBlockFactory> pFactory)
+:  mpFactory(std::move(pFactory))
 {
    mSampleFormat = floatSample;
    mSampleBytes = 0;
@@ -497,7 +498,7 @@ MinMaxRMS SqliteSampleBlock::DoGetMinMaxRMS(size_t start, size_t len)
 
       // TODO: actually use summaries
       SampleBuffer blockData(len, floatSample);
-      float *samples = (float *) blockData.ptr();
+      auto *samples = (float *) blockData.ptr();
 
       size_t copied = DoGetSamples((samplePtr) samples, floatSample, start, len);
       for (size_t i = 0; i < copied; ++i, ++samples)
@@ -587,8 +588,8 @@ size_t SqliteSampleBlock::GetBlob(void *dest,
    }
 
    // Retrieve returned data
-   samplePtr src = (samplePtr) sqlite3_column_blob(stmt, 0);
-   size_t blobbytes = (size_t) sqlite3_column_bytes(stmt, 0);
+   auto src = (samplePtr) sqlite3_column_blob(stmt, 0);
+   auto blobbytes = (size_t) sqlite3_column_bytes(stmt, 0);
 
    srcoffset = std::min(srcoffset, blobbytes);
    minbytes = std::min(srcbytes, blobbytes - srcoffset);
@@ -855,8 +856,8 @@ void SqliteSampleBlock::CalcSummary(Sizes sizes)
    mSummary256.reinit(mSummary256Bytes);
    mSummary64k.reinit(mSummary64kBytes);
 
-   float *summary256 = (float *) mSummary256.get();
-   float *summary64k = (float *) mSummary64k.get();
+   auto *summary256 = (float *) mSummary256.get();
+   auto *summary64k = (float *) mSummary64k.get();
 
    float min;
    float max;
@@ -947,7 +948,7 @@ void SqliteSampleBlock::CalcSummary(Sizes sizes)
       }
 
       double denom = (i < sumLen - 1) ? 256.0 : summaries - fraction;
-      float rms = (float) sqrt(sumsq / denom);
+      auto rms = (float) sqrt(sumsq / denom);
 
       summary64k[i * fields] = min;
       summary64k[i * fields + 1] = max;

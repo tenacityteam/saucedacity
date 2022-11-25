@@ -51,8 +51,7 @@ EffectManager::EffectManager()
 }
 
 EffectManager::~EffectManager()
-{
-}
+= default;
 
 // Here solely for the purpose of Nyquist Workbench until
 // a better solution is devised.
@@ -69,7 +68,7 @@ const PluginID & EffectManager::RegisterEffect(std::unique_ptr<Effect> uEffect)
 // a better solution is devised.
 void EffectManager::UnregisterEffect(const PluginID & ID)
 {
-   PluginID id = ID;
+   const PluginID& id = ID;
    PluginManager::Get().UnregisterPlugin(id);
    mEffects.erase(id);
 }
@@ -176,7 +175,7 @@ void EffectManager::GetCommandDefinition(const PluginID & ID, const CommandConte
       return;
 
    // This is capturing the output context into the shuttle.
-   ShuttleGetDefinition S(  *context.pOutput.get()->mStatusTarget.get() );
+   ShuttleGetDefinition S(  *context.pOutput->mStatusTarget );
    S.StartStruct();
    // using GET to expose a CommandID to the user!
    // Macro command details are one place that we do expose Identifier
@@ -216,7 +215,7 @@ void EffectManager::SetSkipStateFlag(bool flag)
    mSkipStateFlag = flag;
 }
 
-bool EffectManager::GetSkipStateFlag()
+bool EffectManager::GetSkipStateFlag() const
 {
    return mSkipStateFlag;
 }
@@ -339,8 +338,8 @@ bool EffectManager::HasPresets(const PluginID & ID)
       return false;
    }
 
-   return effect->GetUserPresets().size() > 0 ||
-          effect->GetFactoryPresets().size() > 0 ||
+   return !effect->GetUserPresets().empty() ||
+          !effect->GetFactoryPresets().empty() ||
           effect->HasCurrentSettings() ||
           effect->HasFactoryDefaults();
 }
@@ -361,9 +360,9 @@ class EffectPresetsDialog final : public wxDialogWrapper
 {
 public:
    EffectPresetsDialog(wxWindow *parent, Effect *effect);
-   virtual ~EffectPresetsDialog();
+   ~EffectPresetsDialog() override;
 
-   wxString GetSelected() const;
+   [[nodiscard]] wxString GetSelected() const;
    void SetSelected(const wxString & parms);
 
 private:
@@ -423,12 +422,12 @@ EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
    mUserPresets = effect->GetUserPresets();
    mFactoryPresets = effect->GetFactoryPresets();
 
-   if (mUserPresets.size() > 0)
+   if (!mUserPresets.empty())
    {
       mType->Append(_("User Presets"));
    }
 
-   if (mFactoryPresets.size() > 0)
+   if (!mFactoryPresets.empty())
    {
       mType->Append(_("Factory Presets"));
    }
@@ -447,8 +446,7 @@ EffectPresetsDialog::EffectPresetsDialog(wxWindow *parent, Effect *effect)
 }
 
 EffectPresetsDialog::~EffectPresetsDialog()
-{
-}
+= default;
 
 wxString EffectPresetsDialog::GetSelected() const
 {
@@ -499,9 +497,8 @@ void EffectPresetsDialog::SetPrefix(
    else if (type == XO("Factory Presets"))
    {
       mPresets->Clear();
-      for (size_t i = 0, cnt = mFactoryPresets.size(); i < cnt; i++)
+      for (auto label : mFactoryPresets)
       {
-         auto label = mFactoryPresets[i];
          if (label.empty())
          {
             label = _("None");
@@ -564,9 +561,8 @@ void EffectPresetsDialog::UpdateUI()
       }
 
       mPresets->Clear();
-      for (size_t i = 0, cnt = mFactoryPresets.size(); i < cnt; i++)
+      for (auto label : mFactoryPresets)
       {
-         auto label = mFactoryPresets[i];
          if (label.empty())
          {
             label = _("None");
@@ -710,22 +706,22 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
    // Must have a "valid" ID
    if (ID.empty())
    {
-      return NULL;
+      return nullptr;
    }
 
    // If it is actually a command then refuse it (as an effect).
    if( mCommands.find( ID ) != mCommands.end() )
-      return NULL;
+      return nullptr;
 
    // TODO: This is temporary and should be redone when all effects are converted
    if (mEffects.find(ID) == mEffects.end())
    {
       // This will instantiate the effect client if it hasn't already been done
-      EffectDefinitionInterface *ident = dynamic_cast<EffectDefinitionInterface *>(PluginManager::Get().GetInstance(ID));
+      auto *ident = dynamic_cast<EffectDefinitionInterface *>(PluginManager::Get().GetInstance(ID));
       if (ident && ident->IsLegacy())
       {
          auto effect = dynamic_cast<Effect *>(ident);
-         if (effect && effect->Startup(NULL))
+         if (effect && effect->Startup(nullptr))
          {
             mEffects[ID] = effect;
             return effect;
@@ -735,7 +731,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
       auto effect = std::make_shared<Effect>(); // TODO: use make_unique and store in std::unordered_map
       if (effect)
       {
-         EffectClientInterface *client = dynamic_cast<EffectClientInterface *>(ident);
+         auto *client = dynamic_cast<EffectClientInterface *>(ident);
          if (client && effect->Startup(client))
          {
             auto pEffect = effect.get();
@@ -753,7 +749,7 @@ Effect *EffectManager::GetEffect(const PluginID & ID)
                .Format( GetCommandName(ID) ),
             XO("Effect failed to initialize"));
 
-      return NULL;
+      return nullptr;
    }
 
    return mEffects[ID];
@@ -764,7 +760,7 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
    // Must have a "valid" ID
    if (ID.empty())
    {
-      return NULL;
+      return nullptr;
    }
 
    // TODO: This is temporary and should be redone when all effects are converted
@@ -811,7 +807,7 @@ AudacityCommand *EffectManager::GetAudacityCommand(const PluginID & ID)
             .Format( GetCommandName(ID) ),
          XO("Command failed to initialize"));
 
-      return NULL;
+      return nullptr;
    }
 
    return mCommands[ID];

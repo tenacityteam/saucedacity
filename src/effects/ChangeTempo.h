@@ -34,7 +34,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectChangeTempo();
-   virtual ~EffectChangeTempo();
+   ~EffectChangeTempo() override;
 
    // ComponentInterface implementation
 

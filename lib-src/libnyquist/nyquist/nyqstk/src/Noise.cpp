@@ -11,8 +11,8 @@
 /***************************************************/
 
 #include "Noise.h"
-#include <stdlib.h>
-#include <time.h>
+#include <cstdlib>
+#include <ctime>
 
 using namespace Nyq;
 
@@ -37,7 +37,7 @@ Noise :: ~Noise()
 void Noise :: setSeed( unsigned int seed )
 {
   if ( seed == 0 )
-    srand( (unsigned int) time(NULL) );
+    srand( (unsigned int) time(nullptr) );
   else
     srand( seed );
 }

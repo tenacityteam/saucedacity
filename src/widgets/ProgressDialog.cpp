@@ -1115,7 +1115,7 @@ void ProgressDialog::AddMessageAsColumn(wxBoxSizer * pSizer,
          { sText.Join( text, wxT("\n") ); });
 
    // Create a statictext object and add to the sizer
-   wxStaticText* oText = safenew wxStaticText(this,
+   auto* oText = safenew wxStaticText(this,
                                               wxID_ANY,
                                               sText.Translation(),
                                               wxDefaultPosition,

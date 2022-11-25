@@ -909,7 +909,7 @@ void compute_one_frame(PV *pv, int ana_hopsize)
 }
 
 
-void update_position_queue(PV *pv, float *ana_center)
+void update_position_queue(PV *pv, const float *ana_center)
 {
     int fftsize = pv->fftsize;
     float *frame_next = pv->frame_next;

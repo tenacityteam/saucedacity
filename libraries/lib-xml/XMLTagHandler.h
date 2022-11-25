@@ -20,7 +20,7 @@
 
 
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "Identifier.h"
 
@@ -69,11 +69,11 @@ public:
       RightChannel = 1,
       MonoChannel = 2
    };
-   static bool IsValidChannel(const int nValue);
+   static bool IsValidChannel(int nValue);
 #ifdef USE_MIDI
    static bool IsValidVisibleChannels(const int nValue);
 #endif
-   static bool IsValidSampleFormat(const int nValue); // true if nValue is one sampleFormat enum values
+   static bool IsValidSampleFormat(int nValue); // true if nValue is one sampleFormat enum values
 };
 
 

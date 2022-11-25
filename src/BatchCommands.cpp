@@ -956,8 +956,6 @@ void MacroCommands::Split(const wxString & str, wxString & command, wxString & p
 
    command = str.Mid(0, splitAt);
    param = str.Mid(splitAt + 1);
-
-   return;
 }
 
 wxString MacroCommands::Join(const wxString & command, const wxString & param)

@@ -25,13 +25,13 @@ class Chorus : public Effect
   /*!
     An StkError can be thrown if the rawwave path is incorrect.
   */
-  Chorus( StkFloat baseDelay = 6000 );
+  explicit Chorus( StkFloat baseDelay = 6000 );
 
   //! Class destructor.
-  ~Chorus();
+  ~Chorus() override;
 
   //! Reset and clear all internal state.
-  void clear();
+  void clear() override;
 
   //! Set modulation depth.
   void setModDepth(StkFloat depth);
@@ -41,7 +41,7 @@ class Chorus : public Effect
 
  protected:
 
-  StkFloat computeSample( StkFloat input );
+  StkFloat computeSample( StkFloat input ) override;
 
   DelayL delayLine_[2];
   SineWave mods_[2];

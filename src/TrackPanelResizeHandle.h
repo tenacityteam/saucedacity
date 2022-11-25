@@ -26,9 +26,9 @@ public:
 
    static HitTestPreview HitPreview(bool bLinked);
 
-   virtual ~TrackPanelResizeHandle();
+   ~TrackPanelResizeHandle() override;
 
-   std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
+   [[nodiscard]] std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
 
    Result Click
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject) override;

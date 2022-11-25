@@ -73,7 +73,7 @@ UIHandlePtr MinimizeButtonHandle::HitTest
    TrackInfo::GetMinimizeRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
-      auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
+      auto pTrack = dynamic_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
       auto result = std::make_shared<MinimizeButtonHandle>( pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
       return result;
@@ -128,7 +128,7 @@ UIHandlePtr SelectButtonHandle::HitTest
    TrackInfo::GetSelectButtonRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
-      auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
+      auto pTrack = dynamic_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
       auto result = std::make_shared<SelectButtonHandle>( pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
       return result;
@@ -194,7 +194,7 @@ UIHandlePtr CloseButtonHandle::HitTest
    TrackInfo::GetCloseBoxRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
-      auto pTrack = static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
+      auto pTrack = dynamic_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
       auto result = std::make_shared<CloseButtonHandle>( pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
       return result;
@@ -224,7 +224,7 @@ UIHandle::Result MenuButtonHandle::CommitChanges
    if (!pCell)
       return RefreshCode::Cancelled;
    auto pTrack =
-      static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
+      dynamic_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
    if (!pTrack)
       return RefreshCode::Cancelled;
    trackPanel.CallAfter(
@@ -255,7 +255,7 @@ UIHandlePtr MenuButtonHandle::HitTest
    TrackInfo::GetTitleBarRect(rect, buttonRect);
 
    if (buttonRect.Contains(state.m_x, state.m_y)) {
-      auto pTrack = static_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
+      auto pTrack = dynamic_cast<CommonTrackPanelCell*>(pCell.get())->FindTrack();
       auto result = std::make_shared<MenuButtonHandle>( pCell, pTrack, buttonRect );
       result = AssignUIHandlePtr(holder, result);
       return result;

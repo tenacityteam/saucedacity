@@ -8,7 +8,7 @@
 
 **********************************************************************/
 
-#include <errno.h>
+#include <cerrno>
 #include <wx/wfstream.h>
 
 #include "FileConfig.h"

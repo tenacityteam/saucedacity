@@ -45,7 +45,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectPhaser();
-   virtual ~EffectPhaser();
+   ~EffectPhaser() override;
 
    // ComponentInterface implementation
 
@@ -62,7 +62,7 @@ public:
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
@@ -84,8 +84,8 @@ public:
 private:
    // EffectPhaser implementation
 
-   void InstanceInit(EffectPhaserState & data, float sampleRate);
-   size_t InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, size_t blockLen);
+   void InstanceInit(EffectPhaserState & data, float sampleRate) const;
+   size_t InstanceProcess(EffectPhaserState & data, float **inBlock, float **outBlock, size_t blockLen) const;
 
    void OnStagesSlider(wxCommandEvent & evt);
    void OnDryWetSlider(wxCommandEvent & evt);

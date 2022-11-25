@@ -81,7 +81,7 @@ public:
       }
    }
 
-   NumberScale Reversal() const
+   [[nodiscard]] NumberScale Reversal() const
    {
       NumberScale result(*this);
       std::swap(result.mValue0, result.mValue1);
@@ -152,7 +152,7 @@ public:
    }
 
    // Random access
-   float PositionToValue(float pp) const
+   [[nodiscard]] float PositionToValue(float pp) const
    {
       switch (mType) {
       default:
@@ -229,7 +229,7 @@ public:
       float mValue;
    };
 
-   Iterator begin(float nPositions) const
+   [[nodiscard]] Iterator begin(float nPositions) const
    {
       switch (mType) {
       default:
@@ -253,7 +253,7 @@ public:
    }
 
    // Inverse
-   float ValueToPosition(float val) const
+   [[nodiscard]] float ValueToPosition(float val) const
    {
       switch (mType) {
       default:

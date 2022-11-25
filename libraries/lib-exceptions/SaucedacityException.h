@@ -16,6 +16,7 @@
 #include "../lib-strings/Internat.h"
 #include <exception>
 #include <functional>
+#include <utility>
 
 #include "Internat.h"
 
@@ -41,7 +42,7 @@ class EXCEPTIONS_API SaucedacityException : public std::exception
   public:
     SaucedacityException();
     SaucedacityException(const char* what_arg);
-    virtual ~SaucedacityException();
+    ~SaucedacityException() override;
 
     //! Don't allow moves of this class or subclasses
     // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2442
@@ -81,7 +82,7 @@ class EXCEPTIONS_API MessageBoxException /* not final */
     //! If default-constructed with empty caption, it makes no message box.
     explicit MessageBoxException(
       ExceptionType exceptionType, //!< Exception type
-      const TranslatableString &caption //!< Shown in message box's frame; not the actual message
+      TranslatableString caption //!< Shown in message box's frame; not the actual message
     );
 
     ~MessageBoxException() override;
@@ -109,12 +110,12 @@ class EXCEPTIONS_API SimpleMessageBoxException /* not final */
 public:
    explicit SimpleMessageBoxException(
       ExceptionType exceptionType,        //!< Exception type
-      const TranslatableString &message_, //<! Message to show
+      TranslatableString message_, //<! Message to show
       const TranslatableString &caption = XO("Message"), //<! Short caption in frame around message
       const wxString &helpUrl_ = "" // Optional URL for help.
    )
       : MessageBoxException { exceptionType, caption }
-      , message{ message_ }
+      , message{std::move( message_ )}
    {
       helpUrl = helpUrl_;
    }
@@ -125,7 +126,7 @@ public:
       SimpleMessageBoxException && ) = delete;
 
    // Format a default, internationalized error message for this exception.
-   virtual TranslatableString ErrorMessage() const override;
+   TranslatableString ErrorMessage() const override;
 
 private:
    TranslatableString message; //!< Stored message

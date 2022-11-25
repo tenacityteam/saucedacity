@@ -71,12 +71,12 @@ class SAUCEDACITY_DLL_API TrackPanel final
               wxWindowID id,
               const wxPoint & pos,
               const wxSize & size,
-              const std::shared_ptr<TrackList> &tracks,
+              std::shared_ptr<TrackList> tracks,
               ViewInfo * viewInfo,
               SaucedacityProject * project,
               AdornedRulerPanel * ruler );
 
-   virtual ~ TrackPanel();
+   ~ TrackPanel() override;
 
    void UpdatePrefs() override;
 
@@ -102,16 +102,16 @@ class SAUCEDACITY_DLL_API TrackPanel final
    void OnUndoReset( wxCommandEvent &event );
 
    void Refresh
-      (bool eraseBackground = true, const wxRect *rect = (const wxRect *) NULL)
+      (bool eraseBackground = true, const wxRect *rect = (const wxRect *) nullptr)
       override;
 
    void RefreshTrack(Track *trk, bool refreshbacking = true);
 
    void HandlePageUpKey();
    void HandlePageDownKey();
-   SaucedacityProject * GetProject() const override;
+   [[nodiscard]] SaucedacityProject * GetProject() const override;
 
-   void OnTrackMenu(Track *t = NULL);
+   void OnTrackMenu(Track *t = nullptr);
 
    void VerticalScroll( float fracPosition);
 
@@ -124,10 +124,10 @@ class SAUCEDACITY_DLL_API TrackPanel final
    void UpdateVRulerSize();
 
  protected:
-   bool IsAudioActive();
+   bool IsAudioActive() const;
 
 public:
-   size_t GetSelectedTrackCount() const;
+   [[nodiscard]] size_t GetSelectedTrackCount() const;
 
 protected:
    void UpdateSelectionDisplay();
@@ -164,7 +164,7 @@ protected:
 public:
 // JKC Nov-2011: These four functions only used from within a dll
 // They work around some messy problems with constructors.
-   const TrackList * GetTracks() const { return mTracks.get(); }
+   [[nodiscard]] const TrackList * GetTracks() const { return mTracks.get(); }
    TrackList * GetTracks() { return mTracks.get(); }
    ViewInfo * GetViewInfo(){ return mViewInfo;}
    TrackPanelListener * GetListener(){ return mListener;}

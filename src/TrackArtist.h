@@ -76,7 +76,7 @@ namespace TrackArt {
                                        const wxRect & rect );
 
    SAUCEDACITY_DLL_API
-   wxString TruncateText(wxDC& dc, const wxString& text, const int maxWidth);
+   wxString TruncateText(wxDC& dc, const wxString& text, int maxWidth);
 }
 
 class SAUCEDACITY_DLL_API TrackArtist final : private PrefsListener {
@@ -97,11 +97,11 @@ public:
    };
 
    TrackArtist( TrackPanel *parent_ );
-   ~TrackArtist();
+   ~TrackArtist() override;
    static TrackArtist *Get( TrackPanelDrawingContext & );
 
-   void SetBackgroundBrushes(wxBrush unselectedBrushIn, wxBrush selectedBrushIn,
-                             wxPen unselectedPenIn, wxPen selectedPenIn) {
+   void SetBackgroundBrushes(const wxBrush& unselectedBrushIn, const wxBrush& selectedBrushIn,
+                             const wxPen& unselectedPenIn, const wxPen& selectedPenIn) {
      this->unselectedBrush = unselectedBrushIn;
      this->selectedBrush = selectedBrushIn;
      this->unselectedPen = unselectedPenIn;

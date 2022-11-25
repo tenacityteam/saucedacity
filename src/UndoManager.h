@@ -49,6 +49,7 @@
 #ifndef __AUDACITY_UNDOMANAGER__
 #define __AUDACITY_UNDOMANAGER__
 
+#include <utility>
 #include <vector>
 #include <wx/event.h> // to declare custom event types
 #include "ClientData.h"
@@ -84,9 +85,9 @@ class TrackList;
 
 struct UndoState {
    UndoState(std::shared_ptr<TrackList> &&tracks_,
-      const std::shared_ptr<Tags> &tags_,
+      std::shared_ptr<Tags> tags_,
       const SelectedRegion &selectedRegion_)
-      : tracks(std::move(tracks_)), tags(tags_), selectedRegion(selectedRegion_)
+      : tracks(std::move(tracks_)), tags(std::move(tags_)), selectedRegion(selectedRegion_)
    {}
 
    std::shared_ptr<TrackList> tracks;
@@ -97,13 +98,13 @@ struct UndoState {
 struct UndoStackElem {
 
    UndoStackElem(std::shared_ptr<TrackList> &&tracks_,
-      const TranslatableString &description_,
-      const TranslatableString &shortDescription_,
+      TranslatableString description_,
+      TranslatableString shortDescription_,
       const SelectedRegion &selectedRegion_,
       const std::shared_ptr<Tags> &tags_)
       : state(std::move(tracks_), tags_, selectedRegion_)
-      , description(description_)
-      , shortDescription(shortDescription_)
+      , description(std::move(description_))
+      , shortDescription(std::move(shortDescription_))
    {
    }
 
@@ -141,7 +142,7 @@ class SAUCEDACITY_DLL_API UndoManager final
  
    explicit
    UndoManager( SaucedacityProject &project );
-   ~UndoManager();
+   ~UndoManager() override;
 
    UndoManager( const UndoManager& ) = delete;
    UndoManager& operator = ( const UndoManager& ) = delete;
@@ -192,8 +193,8 @@ class SAUCEDACITY_DLL_API UndoManager final
    bool UndoAvailable();
    bool RedoAvailable();
 
-   bool UnsavedChanges() const;
-   int GetSavedState() const;
+   [[nodiscard]] bool UnsavedChanges() const;
+   [[nodiscard]] int GetSavedState() const;
    void StateSaved();
 
    // Return value must first be calculated by CalculateSpaceUsage():

@@ -53,10 +53,10 @@ class SAUCEDACITY_DLL_API FileHistory
 
    // stl-style accessors
    using const_iterator = FilePaths::const_iterator;
-   const_iterator begin() const { return mHistory.begin(); }
-   const_iterator end() const { return mHistory.end(); }
+   [[nodiscard]] const_iterator begin() const { return mHistory.begin(); }
+   [[nodiscard]] const_iterator end() const { return mHistory.end(); }
    const FilePath &operator[] ( size_t ii ) const { return mHistory[ ii ]; }
-   bool empty() const { return mHistory.empty(); }
+   [[nodiscard]] bool empty() const { return mHistory.empty(); }
 
  private:
    void AddFileToHistory(const FilePath & file, bool update);

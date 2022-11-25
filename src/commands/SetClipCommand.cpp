@@ -31,8 +31,7 @@ const ComponentInterfaceSymbol SetClipCommand::Symbol
 namespace{ BuiltinCommandsModule::Registration< SetClipCommand > reg; }
 
 SetClipCommand::SetClipCommand()
-{
-}
+= default;
 
 enum kColours
 {

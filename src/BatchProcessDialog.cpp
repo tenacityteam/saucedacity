@@ -383,7 +383,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    activityWin.SetName();
    ShuttleGui S(&activityWin, eIsCreating);
 
-   wxListCtrl * fileList = NULL;
+   wxListCtrl * fileList = nullptr;
 
    S.StartVerticalLay(1);
    {
@@ -712,9 +712,6 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
    }
 
    S.EndHorizontalLay();
-
-   
-   return;
 }
 
 /// This clears and updates the contents of mList, the commands for the current macro.

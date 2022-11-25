@@ -11,7 +11,7 @@
 #ifndef __AUDACITY_TRANSLATABLE_STRING__
 #define __AUDACITY_TRANSLATABLE_STRING__
 
-#include <stddef.h> // for size_t
+#include <cstddef> // for size_t
 #include <functional>
 #include <wx/string.h>
 
@@ -76,17 +76,17 @@ public:
       return *this;
    }
 
-   bool empty() const { return mMsgid.empty(); }
+   [[nodiscard]] bool empty() const { return mMsgid.empty(); }
 
    //! MSGID is the English lookup key in the catalog, not necessarily for user's eyes if locale is some other.
    /*! The MSGID might not be all the information TranslatableString holds.
       This is a deliberately ugly-looking function name.  Use with caution. */
-   Identifier MSGID() const;
+   [[nodiscard]] Identifier MSGID() const;
 
-   wxString Translation() const { return DoFormat( false ); }
+   [[nodiscard]] wxString Translation() const { return DoFormat( false ); }
 
    //! Format as an English string for debugging logs and developers' eyes, not for end users
-   wxString Debug() const { return DoFormat( true ); }
+   [[nodiscard]] wxString Debug() const { return DoFormat( true ); }
 
    //! Warning: comparison of msgids only, which is not all of the information!
    /*! This operator makes it easier to define a std::unordered_map on TranslatableStrings */
@@ -99,7 +99,7 @@ public:
    { return !(x == y); }
 
    //! Returns true if context is NullContextFormatter
-   bool IsVerbatim() const;
+   [[nodiscard]] bool IsVerbatim() const;
 
    //! Capture variadic format arguments (by copy) when there is no plural.
    /*! The substitution is computed later in a call to Translate() after msgid is
@@ -167,7 +167,7 @@ public:
       this and for the argument are both delayed until Translate() is invoked
       on this, and then the formatter concatenates the translations */
    TranslatableString &Join(
-      TranslatableString arg, const wxString &separator = {} ) &;
+      const TranslatableString& arg, const wxString &separator = {} ) &;
    TranslatableString &&Join(
       TranslatableString arg, const wxString &separator = {} ) &&
    { return std::move( Join( std::move(arg), separator ) ); }
@@ -202,10 +202,10 @@ public:
    { return std::move( Strip( options ) ); }
 
    //! non-mutating, constructs another TranslatableString object
-   TranslatableString Stripped( unsigned options = MenuCodes ) const
+   [[nodiscard]] TranslatableString Stripped( unsigned options = MenuCodes ) const
    { return TranslatableString{ *this }.Strip( options ); }
 
-   wxString StrippedTranslation() const { return Stripped().Translation(); }
+   [[nodiscard]] wxString StrippedTranslation() const { return Stripped().Translation(); }
 
 private:
    static const Formatter NullContextFormatter;
@@ -217,7 +217,7 @@ private:
       mMsgid.swap( str );
    }
 
-   friend TranslatableString Verbatim( wxString str );
+   friend TranslatableString Verbatim( const wxString& str );
 
    enum class Request {
       Context,     //!< return a disambiguating context string
@@ -232,7 +232,7 @@ private:
    static wxString DoSubstitute(
       const Formatter &formatter,
       const wxString &format, const wxString &context, bool debug );
-   wxString DoFormat( bool debug ) const
+   [[nodiscard]] wxString DoFormat( bool debug ) const
    {  return DoSubstitute(
       mFormatter, mMsgid, DoGetContext(mFormatter), debug ); }
 
@@ -325,7 +325,7 @@ inline Sink &operator <<( Sink &sink, const TranslatableString &str )
 //! Require calls to the one-argument constructor to go through this distinct global function name.
 /*! This makes it easier to locate and
    review the uses of this function, separately from the uses of the type. */
-inline TranslatableString Verbatim( wxString str )
-{ return TranslatableString( std::move( str ) ); }
+inline TranslatableString Verbatim( const wxString& str )
+{ return TranslatableString( str ); }
 
 #endif

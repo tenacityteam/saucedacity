@@ -16,9 +16,7 @@
 #include "widgets/AuStaticText.h"
 #include "wxArrayStringEx.h"
 
-namespace Journal {
-
-namespace WindowPaths {
+namespace Journal::WindowPaths {
 
 namespace {
 
@@ -122,8 +120,6 @@ wxWindow *FindByPath( const Path &path )
       return pWindow;
    }
    return nullptr;
-}
-
 }
 
 }

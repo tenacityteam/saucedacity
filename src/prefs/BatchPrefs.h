@@ -24,7 +24,7 @@ class BatchPrefs final : public PrefsPanel
 {
 public:
    BatchPrefs(wxWindow * parent, wxWindowID winid);
-   ~BatchPrefs();
+   ~BatchPrefs() override;
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
    ManualPageID HelpPageName() override;

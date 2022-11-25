@@ -122,20 +122,20 @@ ExpandingToolBar::ExpandingToolBar(wxWindow* parent,
    mIsExpanded(false),
    mAutoExpand(true),
    mFirstTime(true),
-   mFrameParent(NULL),
-   mDialogParent(NULL),
-   mAreaParent(NULL),
+   mFrameParent(nullptr),
+   mDialogParent(nullptr),
+   mAreaParent(nullptr),
    mSavedArrangement{},
-   mTopLevelParent(NULL)
+   mTopLevelParent(nullptr)
 {
    mMainPanel = safenew wxPanelWrapper(this, -1,
                             wxDefaultPosition, wxSize(1, 1));
    mExtraPanel = safenew wxPanelWrapper(this, -1,
                              wxDefaultPosition, wxSize(1, 1));
 
-   mGrabber = NULL;
+   mGrabber = nullptr;
 
-   ToolBarArea *toolBarParent =
+   auto *toolBarParent =
       dynamic_cast<ToolBarArea *>(GetParent());
    if (toolBarParent)
       mGrabber = safenew ToolBarGrabber(this, -1, this);
@@ -176,7 +176,7 @@ void ExpandingToolBar::OnSize(wxSizeEvent & WXUNUSED(event))
    // for it during our first OnSize event.
 
    if (!mFrameParent) {
-      ToolBarFrame *toolBarParent =
+      auto *toolBarParent =
          dynamic_cast<ToolBarFrame *>(GetParent());
       if (toolBarParent) {
          // We were placed into a floating window
@@ -186,7 +186,7 @@ void ExpandingToolBar::OnSize(wxSizeEvent & WXUNUSED(event))
    }
 
    if (!mDialogParent) {
-      ToolBarDialog *toolBarParent =
+      auto *toolBarParent =
          dynamic_cast<ToolBarDialog *>(GetParent());
       if (toolBarParent) {
          // We were placed into a dialog
@@ -196,7 +196,7 @@ void ExpandingToolBar::OnSize(wxSizeEvent & WXUNUSED(event))
    }
 
    if (!mAreaParent) {
-      ToolBarArea *toolBarParent =
+      auto *toolBarParent =
          dynamic_cast<ToolBarArea *>(GetParent());
       if (toolBarParent) {
          // We were placed into an area full of other toolbars
@@ -293,7 +293,7 @@ class ExpandingToolBarEvtHandler final : public wxEvtHandler
       return mInheritedEvtHandler->ProcessEvent(evt);
    }
 
-   ~ExpandingToolBarEvtHandler()
+   ~ExpandingToolBarEvtHandler() override
    {
       mWindow->RemoveEventHandler(this);
    }
@@ -626,7 +626,7 @@ void ExpandingToolBar::FinishMoving()
 
    // DELETE mTargetPanel; // I think this is not needed, but unreachable anyway -- PRL
 
-   mAreaParent->SetCapturedChild(NULL);
+   mAreaParent->SetCapturedChild(nullptr);
 
    mDragImage->Hide();
    mDragImage->EndDrag();
@@ -746,7 +746,7 @@ ToolBarDialog::ToolBarDialog(wxWindow* parent,
       wxSYSTEM_MENU |
 #endif
       wxCAPTION|wxCLOSE_BOX),
-   mChild(NULL)
+   mChild(nullptr)
 {
 }
 
@@ -798,7 +798,7 @@ ToolBarFrame::ToolBarFrame(wxWindow* parent,
       wxSYSTEM_MENU |
 #endif
       wxCAPTION|wxCLOSE_BOX),
-   mChild(NULL)
+   mChild(nullptr)
 {
 }
 
@@ -848,7 +848,7 @@ ToolBarArea::ToolBarArea(wxWindow* parent,
                          const wxSize& size):
    wxPanelWrapper(parent, id, pos, size),
    mInOnSize(false),
-   mCapturedChild(NULL)
+   mCapturedChild(nullptr)
 {
 
 }
@@ -1236,15 +1236,15 @@ std::vector<wxRect> ToolBarArea::GetDropTargets()
          row = childRow;
          mDropTargetIndices.push_back(i);
          mDropTargetRows.push_back(row);
-         mDropTargets.push_back(wxRect(childRect.x, childRect.y,
-                                 0, childRect.height));
+         mDropTargets.emplace_back(childRect.x, childRect.y,
+                                 0, childRect.height);
       }
 
       // Add a target after this child (always)
       mDropTargetIndices.push_back(i+1);
       mDropTargetRows.push_back(row);
-      mDropTargets.push_back(wxRect(childRect.x+childRect.width, childRect.y,
-                              0, childRect.height));
+      mDropTargets.emplace_back(childRect.x+childRect.width, childRect.y,
+                              0, childRect.height);
    }
 
    return mDropTargets;

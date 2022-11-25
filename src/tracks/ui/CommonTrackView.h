@@ -29,11 +29,11 @@ public:
    // Do not further override this...
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &, const SaucedacityProject *pProject)
-      final override;
+      final ;
 
    void TimeShiftHitTest();
 
-   virtual int GetMinimizedHeight() const override;
+   int GetMinimizedHeight() const override;
 
 protected:
    // Rather override this for subclasses:

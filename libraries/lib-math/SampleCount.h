@@ -41,12 +41,12 @@ public:
    sampleCount ( const sampleCount& ) = default;
    sampleCount &operator= ( const sampleCount& ) = default;
 
-   float as_float() const { return value; }
-   double as_double() const { return value; }
+   [[nodiscard]] float as_float() const { return value; }
+   [[nodiscard]] double as_double() const { return value; }
 
-   long long as_long_long() const { return value; }
+   [[nodiscard]] long long as_long_long() const { return value; }
 
-   size_t as_size_t() const;
+   [[nodiscard]] size_t as_size_t() const;
 
    sampleCount &operator += (sampleCount b) { value += b.value; return *this; }
    sampleCount &operator -= (sampleCount b) { value -= b.value; return *this; }
@@ -57,11 +57,11 @@ public:
    sampleCount operator - () const { return -value; }
 
    sampleCount &operator ++ () { ++value; return *this; }
-   sampleCount operator ++ (int)
+   const sampleCount operator ++ (int)
       { sampleCount result{ *this }; ++value; return result; }
 
    sampleCount &operator -- () { --value; return *this; }
-   sampleCount operator -- (int)
+   const sampleCount operator -- (int)
       { sampleCount result{ *this }; --value; return result; }
 
 private:

@@ -34,14 +34,14 @@ class SAUCEDACITY_DLL_API AButton final : public wxWindow {
            wxWindowID id,
            const wxPoint & pos,
            const wxSize & size,
-           ImageRoll up,
-           ImageRoll over,
-           ImageRoll down,
-           ImageRoll overDown,
-           ImageRoll dis,
+           const ImageRoll& up,
+           const ImageRoll& over,
+           const ImageRoll& down,
+           const ImageRoll& overDown,
+           const ImageRoll& dis,
            bool toggle);
 
-   virtual ~ AButton();
+   ~ AButton() override;
 
    // hide the inherited function that takes naked wxString:
    void SetToolTip(const TranslatableString &toolTip);
@@ -49,28 +49,28 @@ class SAUCEDACITY_DLL_API AButton final : public wxWindow {
    // hide the inherited function that takes naked wxString:
    void SetLabel(const TranslatableString &label);
 
-   bool AcceptsFocus() const override { return s_AcceptsFocus; }
-   bool AcceptsFocusFromKeyboard() const override { return mEnabled; }
+   [[nodiscard]] bool AcceptsFocus() const override { return s_AcceptsFocus; }
+   [[nodiscard]] bool AcceptsFocusFromKeyboard() const override { return mEnabled; }
 
    void SetFocusFromKbd() override;
 
    // Associate a set of four images (button up, highlight, button down,
    // disabled) with one nondefault state of the button
    void SetAlternateImages(unsigned idx,
-                                   ImageRoll up,
-                                   ImageRoll over,
-                                   ImageRoll down,
-                                   ImageRoll overDown,
-                                   ImageRoll dis);
+                                   const ImageRoll& up,
+                                   const ImageRoll& over,
+                                   const ImageRoll& down,
+                                   const ImageRoll& overDown,
+                                   const ImageRoll& dis);
 
    // Associate a set of four images (button up, highlight, button down,
    // disabled) with one nondefault state of the button
    void SetAlternateImages(unsigned idx,
-                                   wxImage up,
-                                   wxImage over,
-                                   wxImage down,
-                                   wxImage overDown,
-                                   wxImage dis);
+                                   const wxImage& up,
+                                   const wxImage& over,
+                                   const wxImage& down,
+                                   const wxImage& overDown,
+                                   const wxImage& dis);
 
    // Choose state of the button
    void SetAlternateIdx(unsigned idx);
@@ -82,7 +82,7 @@ class SAUCEDACITY_DLL_API AButton final : public wxWindow {
 
    void SetFocusRect(wxRect & r);
 
-   bool IsEnabled() const { return mEnabled; }
+   [[nodiscard]] bool IsEnabled() const { return mEnabled; }
    void Disable();
    void Enable();
    void SetEnabled(bool state) {
@@ -106,14 +106,14 @@ class SAUCEDACITY_DLL_API AButton final : public wxWindow {
    void OnSetFocus(wxFocusEvent & event);
    void OnKillFocus(wxFocusEvent & event);
 
-   bool WasShiftDown(); // returns true if shift was held down
+   [[nodiscard]] bool WasShiftDown() const; // returns true if shift was held down
                                 // the last time the button was clicked
-   bool WasControlDown(); // returns true if control was held down
+   [[nodiscard]] bool WasControlDown() const; // returns true if control was held down
                                   // the last time the button was clicked
-   bool IsDown(){ return mButtonIsDown;}
+   [[nodiscard]] bool IsDown() const{ return mButtonIsDown;}
 
    // Double click is detected, but not automatically cleared.
-   bool IsDoubleClicked() const { return mIsDoubleClicked; }
+   [[nodiscard]] bool IsDoubleClicked() const { return mIsDoubleClicked; }
    void ClearDoubleClicked() { mIsDoubleClicked = false; }
 
    void SetButtonToggles( bool toggler ){ mToggle = toggler;}
@@ -133,7 +133,7 @@ class SAUCEDACITY_DLL_API AButton final : public wxWindow {
       AButtonDis
    };
 
-   AButtonState GetState();
+   [[nodiscard]] AButtonState GetState() const;
 
    void UseDisabledAsDownHiliteImage(bool flag);
 
@@ -153,11 +153,11 @@ class SAUCEDACITY_DLL_API AButton final : public wxWindow {
              wxWindowID id,
              const wxPoint & pos,
              const wxSize & size,
-             ImageRoll up,
-             ImageRoll over,
-             ImageRoll down,
-             ImageRoll overDown,
-             ImageRoll dis,
+             const ImageRoll& up,
+             const ImageRoll& over,
+             const ImageRoll& down,
+             const ImageRoll& overDown,
+             const ImageRoll& dis,
              bool toggle);
 
    unsigned mAlternateIdx;

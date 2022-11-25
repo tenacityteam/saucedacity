@@ -217,11 +217,11 @@ void GetNextWindowPlacement(wxRect *nextRect, bool *pMaximized, bool *pIconized)
    }
 
    bool validWindowSize = false;
-   ProjectWindow * validProject = NULL;
+   ProjectWindow * validProject = nullptr;
    for ( auto iter = AllProjects{}.rbegin(), end = AllProjects{}.rend();
       iter != end; ++iter
    ) {
-      auto pProject = *iter;
+      const auto& pProject = *iter;
       if (!GetProjectFrame( *pProject ).IsIconized()) {
          validWindowSize = true;
          validProject = &ProjectWindow::Get( *pProject );
@@ -313,7 +313,7 @@ public:
    void OnSetFocus(wxFocusEvent & e)
    {
       wxWindow *w = e.GetWindow();
-      if (w != NULL) {
+      if (w != nullptr) {
          w->SetFocus();
       }
    }
@@ -353,7 +353,7 @@ END_EVENT_TABLE()
 // Common mouse wheel handling in track panel cells, moved here to avoid
 // compilation dependencies on Track, TrackPanel, and Scrubbing at low levels
 // which made cycles
-static struct MouseWheelHandler {
+struct MouseWheelHandler {
 
 MouseWheelHandler()
 {
@@ -1098,7 +1098,7 @@ void ProjectWindow::FixScrollbars()
 
    // Don't use the full 2^31 max int range but a bit less, so rounding
    // errors in calculations do not overflow max int
-   wxInt64 maxScrollbarRange = (wxInt64)(2147483647 * 0.999);
+   auto maxScrollbarRange = (wxInt64)(2147483647 * 0.999);
    if (viewInfo.sbarTotal > maxScrollbarRange)
       viewInfo.sbarScale = ((double)maxScrollbarRange) / viewInfo.sbarTotal;
    else

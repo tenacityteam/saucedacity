@@ -26,7 +26,7 @@ struct FFMPEG_SUPPORT_API AVFormatFunctions
    int                (*av_interleaved_write_frame) (AVFormatContext *s, AVPacket *pkt) = nullptr;
    AVOutputFormat*    (*av_oformat_next) (const AVOutputFormat *f) = nullptr;
    AVStream*          (*avformat_new_stream) (AVFormatContext *s, const AVCodec *c) = nullptr;
-   AVFormatContext*   (*avformat_alloc_context) (void) = nullptr;
+   AVFormatContext*   (*avformat_alloc_context) () = nullptr;
    int                (*av_write_trailer) (AVFormatContext *s) = nullptr;
    unsigned int       (*av_codec_get_tag) (const struct AVCodecTag * const *tags, AVCodecIDFwd id) = nullptr;
    int                (*avformat_open_input) (AVFormatContext **ic_ptr, const char *filename, const AVInputFormat *fmt, AVDictionary **options) = nullptr;
@@ -36,7 +36,7 @@ struct FFMPEG_SUPPORT_API AVFormatFunctions
    void               (*avformat_free_context) (AVFormatContext *s) = nullptr;
 
    // The following functions are not present in all library versions:
-   void               (*av_register_all) (void) = nullptr;
+   void               (*av_register_all) () = nullptr;
    void               (*avio_context_free)(AVIOContext** s) = nullptr;
    const AVOutputFormat* (*av_muxer_iterate)(void** opaque);   
 };

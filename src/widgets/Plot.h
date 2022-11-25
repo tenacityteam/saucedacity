@@ -49,8 +49,8 @@ class Plot : public wxPanelWrapper
       std::vector<PlotData> m_plots;
       std::unique_ptr<Ruler> m_xruler, m_yruler;
 
-      int XToScreen(float x, wxRect& rect);
-      int YToScreen(float y, wxRect& rect);
+      int XToScreen(float x, wxRect& rect) const;
+      int YToScreen(float y, wxRect& rect) const;
 
       DECLARE_EVENT_TABLE()
 };

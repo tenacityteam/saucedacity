@@ -85,8 +85,7 @@ EffectBassTreble::EffectBassTreble()
 }
 
 EffectBassTreble::~EffectBassTreble()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -317,7 +316,7 @@ bool EffectBassTreble::TransferDataFromWindow()
 
 // EffectBassTreble implementation
 
-void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRate)
+void EffectBassTreble::InstanceInit(EffectBassTrebleState & data, float sampleRate) const
 {
    data.samplerate = sampleRate;
    data.slope = 0.4f;   // same slope for both filters

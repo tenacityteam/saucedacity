@@ -34,7 +34,7 @@ public:
 
    ~WaveformVZoomHandle() override;
 
-   std::shared_ptr<WaveTrack> GetTrack() const { return mpTrack.lock(); }
+   [[nodiscard]] std::shared_ptr<WaveTrack> GetTrack() const { return mpTrack.lock(); }
 
    void Enter( bool forward, SaucedacityProject * ) override;
 
@@ -80,7 +80,7 @@ class WaveformVRulerMenuTable : public WaveTrackVRulerMenuTable
    WaveformVRulerMenuTable()
       : WaveTrackVRulerMenuTable{ "WaveFormVRuler" }
    {}
-   virtual ~WaveformVRulerMenuTable() {}
+   ~WaveformVRulerMenuTable() override {}
    DECLARE_POPUP_MENU(WaveformVRulerMenuTable);
 
 public:

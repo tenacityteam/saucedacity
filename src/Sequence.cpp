@@ -142,7 +142,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format,
       // no change
       return false;
 
-   if (mBlock.size() == 0)
+   if (mBlock.empty())
    {
       mSampleFormat = format;
       return true;
@@ -224,7 +224,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format,
 std::pair<float, float> Sequence::GetMinMax(
    sampleCount start, sampleCount len, bool mayThrow) const
 {
-   if (len == 0 || mBlock.size() == 0) {
+   if (len == 0 || mBlock.empty()) {
       return {
          0.f,
          // FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
@@ -307,7 +307,7 @@ float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
 {
    // len is the number of samples that we want the rms of.
    // it may be longer than a block, and the code is carefully set up to handle that.
-   if (len == 0 || mBlock.size() == 0)
+   if (len == 0 || mBlock.empty())
       return 0.f;
 
    double sumsq = 0.0;
@@ -677,7 +677,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
 /*! @excsafety{Strong} */
 void Sequence::SetSilence(sampleCount s0, sampleCount len)
 {
-   SetSamples(NULL, mSampleFormat, s0, len);
+   SetSamples(nullptr, mSampleFormat, s0, len);
 }
 
 /*! @excsafety{Strong} */

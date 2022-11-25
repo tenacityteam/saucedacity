@@ -218,7 +218,7 @@ struct TrackPositioner final : ClientData::Base, wxEvtHandler
    }
 };
 
-static const SaucedacityProject::AttachedObjects::RegisteredFactory key{
+const SaucedacityProject::AttachedObjects::RegisteredFactory key{
   []( SaucedacityProject &project ){
      return std::make_shared< TrackPositioner >( project );
    }

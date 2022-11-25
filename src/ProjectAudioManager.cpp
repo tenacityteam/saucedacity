@@ -627,8 +627,8 @@ bool ProjectAudioManager::DoRecord(SaucedacityProject &project,
             // wave tracks; in case the track recorded to changes scale
             // type (for instance), during the recording.
             auto updater = [](Track &d, const Track &s){
-               auto &dst = static_cast<WaveTrack&>(d);
-               auto &src = static_cast<const WaveTrack&>(s);
+               auto &dst = dynamic_cast<WaveTrack&>(d);
+               auto &src = dynamic_cast<const WaveTrack&>(s);
                dst.Reinit(src);
             };
 
@@ -892,7 +892,7 @@ void ProjectAudioManager::OnAudioIOStopRecording()
          auto &tracks = TrackList::Get( project );
          auto gAudioIO = AudioIO::Get();
          auto &intervals = gAudioIO->LostCaptureIntervals();
-         if (intervals.size()) {
+         if (!intervals.empty()) {
             // Make a track with labels for recording errors
             auto uTrack = std::make_shared<LabelTrack>();
             auto pTrack = uTrack.get();

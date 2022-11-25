@@ -72,12 +72,10 @@ DECLARE_BUILTIN_MODULE(BuiltinsCommandBuiltin);
 ///////////////////////////////////////////////////////////////////////////////
 
 BuiltinCommandsModule::BuiltinCommandsModule()
-{
-}
+= default;
 
 BuiltinCommandsModule::~BuiltinCommandsModule()
-{
-}
+= default;
 
 // ============================================================================
 // ComponentInterface implementation
@@ -127,8 +125,7 @@ bool BuiltinCommandsModule::Initialize()
 void BuiltinCommandsModule::Terminate()
 {
    // Nothing to do here
-   return;
-}
+   }
 
 EffectFamilySymbol BuiltinCommandsModule::GetOptionalFamilySymbol()
 {

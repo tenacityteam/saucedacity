@@ -130,7 +130,7 @@ ToolFrame::ToolFrame
    Layout();
 
    // Inform toolbar of change
-   bar->SetDocked( NULL, true );
+   bar->SetDocked( nullptr, true );
 
    // Make sure resizable floaters don't get any smaller than initial size
    if( bar->IsResizable() )
@@ -381,9 +381,9 @@ ToolManager::ToolManager( SaucedacityProject *parent )
    mParent = parent;
    mLastPos.x = mBarPos.x = -1;
    mLastPos.y = mBarPos.y = -1;
-   mDragWindow = NULL;
-   mDragDock = NULL;
-   mDragBar = NULL;
+   mDragWindow = nullptr;
+   mDragDock = nullptr;
+   mDragBar = nullptr;
 
    // Create the down arrow
    pt[ 0 ].x = 0;
@@ -409,7 +409,7 @@ ToolManager::ToolManager( SaucedacityProject *parent )
 
    // Create the indicator frame
    // parent is null but FramePtr ensures destruction
-   mIndicator = FramePtr{ safenew wxFrame( NULL,
+   mIndicator = FramePtr{ safenew wxFrame( nullptr,
                              wxID_ANY,
                              wxEmptyString,
                              wxDefaultPosition,
@@ -502,8 +502,8 @@ void ToolManager::Destroy()
 
       mTopDock = mBotDock = nullptr; // indicate that it has been destroyed
 
-      for ( size_t ii = 0; ii < ToolBarCount; ++ii )
-         mBars[ii].reset();
+      for (auto & mBar : mBars)
+         mBar.reset();
 
       mIndicator.reset();
    }
@@ -591,7 +591,7 @@ void ToolManager::Reset()
       if( bar->IsDocked() )
       {
          bar->GetDock()->Undock( bar );
-         floater = NULL;
+         floater = nullptr;
       }
       else
       {
@@ -645,7 +645,7 @@ void ToolManager::Reset()
 
       // Next condition will always (?) be true, as the reset configuration is
       // with no floating toolbars.
-      if( dock != NULL )
+      if( dock != nullptr )
       {
          // when we dock, we reparent, so bar is no longer a child of floater.
          dock->Dock( bar, false, position );
@@ -659,7 +659,7 @@ void ToolManager::Reset()
 
          // Maybe construct a NEW floater
          // this happens if we have just been bounced out of a dock.
-         if( floater == NULL ) {
+         if( floater == nullptr ) {
             wxASSERT(mParent);
             floater = safenew ToolFrame( mParent, this, bar, wxPoint(-1,-1) );
             bar->Reparent( floater );
@@ -672,7 +672,7 @@ void ToolManager::Reset()
          // they won't overlap too much.
          floater->CentreOnParent( );
          floater->Move( floater->GetPosition() + wxSize( ndx * 10 - 200, ndx * 10 ));
-         bar->SetDocked( NULL, false );
+         bar->SetDocked( nullptr, false );
          Expose( ndx, false );
       }
 
@@ -699,7 +699,7 @@ int ToolManager::FilterEvent(wxEvent &event)
    // the last one of our own that is not a grabber.
 
    if (event.GetEventType() == wxEVT_KILL_FOCUS) {
-      auto &focusEvent = static_cast<wxFocusEvent&>(event);
+      auto &focusEvent = dynamic_cast<wxFocusEvent&>(event);
       auto window = focusEvent.GetWindow();
       auto top = wxGetTopLevelParent(window);
       if(auto toolFrame = dynamic_cast<ToolFrame*>(top))
@@ -888,7 +888,7 @@ void ToolManager::ReadConfig()
 
          // Construct a NEW floater
          wxASSERT(mParent);
-         ToolFrame *f = safenew ToolFrame( mParent, this, bar, wxPoint( x, y ) );
+         auto *f = safenew ToolFrame( mParent, this, bar, wxPoint( x, y ) );
 
          // Set the width and height
          if( width[ ndx ] != -1 && height[ ndx ] != -1 )
@@ -906,7 +906,7 @@ void ToolManager::ReadConfig()
          bar->GetParent()->SetMinSize(msz);
 
          // Inform toolbar of change
-         bar->SetDocked( NULL, false );
+         bar->SetDocked( nullptr, false );
 
          // Show or hide it
          Expose( ndx, show[ ndx ] );
@@ -930,9 +930,9 @@ void ToolManager::ReadConfig()
       d->LoadConfig();
 
       // Add all unordered toolbars
-      for( int ord = 0; ord < (int) unordered[ dock ].size(); ord++ )
+      for(int ord : unordered[ dock ])
       {
-         ToolBar *t = mBars[ unordered[ dock ][ ord ] ].get();
+         ToolBar *t = mBars[ ord ].get();
 
          // Dock it
          d->Dock( t, false );
@@ -1193,7 +1193,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       else
       {
          // Calling SetDocked() to force the grabber button to popup
-         mDragBar->SetDocked( NULL, false );
+         mDragBar->SetDocked( nullptr, false );
       }
 
       DoneDragging();
@@ -1243,7 +1243,7 @@ void ToolManager::OnMouse( wxMouseEvent & event )
       // To find which dock, rather than test against pos, test against the whole dragger rect.
       // This means it is enough to overlap the dock to dock with it.
       wxRect barRect = mDragWindow->GetRect();
-      ToolDock *dock = NULL;
+      ToolDock *dock = nullptr;
       if( tr.Intersects( barRect ) )
          dock = mTopDock;
       else if( br.Intersects( barRect ) )
@@ -1383,8 +1383,7 @@ void ToolManager::OnTimer( wxTimerEvent & event )
 #endif
    }
 
-   return;
-}
+   }
 
 //
 // Handle Indicator paint events
@@ -1395,7 +1394,7 @@ void ToolManager::OnTimer( wxTimerEvent & event )
 void ToolManager::OnIndicatorPaint( wxPaintEvent & event )
 {
    // TODO: Better to use a bitmap than a triangular region.
-   wxWindow *w = (wxWindow *)event.GetEventObject();
+   auto *w = (wxWindow *)event.GetEventObject();
    wxPaintDC dc( w );
    // TODO: Better (faster) to use the existing spare brush.
    wxBrush brush( theTheme.Colour( clrTrackPanelText ) );
@@ -1428,7 +1427,7 @@ void ToolManager::UndockBar( wxPoint mp )
    mp -= mDragOffset;
 
    // Inform toolbar of change
-   mDragBar->SetDocked( NULL, true );
+   mDragBar->SetDocked( nullptr, true );
    mDragBar->SetPositioned();
 
    // Construct a NEW floater
@@ -1520,7 +1519,7 @@ void ToolManager::HandleEscapeKey()
          // Floater remains, and returns to where it begain
          auto parent = mDragBar->GetParent();
          parent->SetPosition(mPrevPosition);
-         mDragBar->SetDocked(NULL, false);
+         mDragBar->SetDocked(nullptr, false);
       }
 
       DoneDragging();
@@ -1545,10 +1544,10 @@ void ToolManager::DoneDragging()
    // Hide the indicator
    mIndicator->Hide();
 
-   mDragWindow = NULL;
-   mDragDock = NULL;
-   mDragBar = NULL;
-   mPrevDock = NULL;
+   mDragWindow = nullptr;
+   mDragDock = nullptr;
+   mDragBar = nullptr;
+   mPrevDock = nullptr;
    mPrevSlot = { ToolBarConfiguration::UnspecifiedPosition };
    mPrevConfiguration.Clear();
    mLastPos.x = mBarPos.x = -1;

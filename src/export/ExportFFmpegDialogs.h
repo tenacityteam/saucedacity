@@ -74,9 +74,9 @@ class ExportFFmpegAC3Options final : public wxPanelWrapper
 public:
 
    ExportFFmpegAC3Options(wxWindow *parent, int format);
-   virtual ~ExportFFmpegAC3Options();
+   ~ExportFFmpegAC3Options() override;
 
-   void PopulateOrExchange(ShuttleGui & S);
+   static void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
@@ -95,9 +95,9 @@ class ExportFFmpegAACOptions final : public wxPanelWrapper
 public:
 
    ExportFFmpegAACOptions(wxWindow *parent, int format);
-   virtual ~ExportFFmpegAACOptions();
+   ~ExportFFmpegAACOptions() override;
 
-   void PopulateOrExchange(ShuttleGui & S);
+   static void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 };
@@ -107,9 +107,9 @@ class ExportFFmpegAMRNBOptions final : public wxPanelWrapper
 public:
 
    ExportFFmpegAMRNBOptions(wxWindow *parent, int format);
-   virtual ~ExportFFmpegAMRNBOptions();
+   ~ExportFFmpegAMRNBOptions() override;
 
-   void PopulateOrExchange(ShuttleGui & S);
+   static void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
@@ -124,9 +124,9 @@ class ExportFFmpegOPUSOptions final : public wxPanelWrapper
 public:
 
    ExportFFmpegOPUSOptions(wxWindow *parent, int format);
-   ~ExportFFmpegOPUSOptions();
+   ~ExportFFmpegOPUSOptions() override;
 
-   void PopulateOrExchange(ShuttleGui & S);
+   static void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
@@ -158,9 +158,9 @@ class ExportFFmpegWMAOptions final : public wxPanelWrapper
 public:
 
    ExportFFmpegWMAOptions(wxWindow *parent, int format);
-   ~ExportFFmpegWMAOptions();
+   ~ExportFFmpegWMAOptions() override;
 
-   void PopulateOrExchange(ShuttleGui & S);
+   static void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 
@@ -177,7 +177,7 @@ class ExportFFmpegCustomOptions final : public wxPanelWrapper
 public:
 
    ExportFFmpegCustomOptions(wxWindow *parent, int format);
-   ~ExportFFmpegCustomOptions();
+   ~ExportFFmpegCustomOptions() override;
 
    void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
@@ -209,7 +209,7 @@ class ExportFFmpegOptions final : public wxDialogWrapper
 public:
 
    ExportFFmpegOptions(wxWindow *parent);
-   ~ExportFFmpegOptions();
+   ~ExportFFmpegOptions() override;
    void PopulateOrExchange(ShuttleGui & S);
    void OnOK(wxCommandEvent& event);
    void OnGetURL(wxCommandEvent& event);
@@ -320,7 +320,7 @@ class FFmpegPresets : XMLTagHandler
 {
 public:
    FFmpegPresets();
-   ~FFmpegPresets();
+   ~FFmpegPresets() override;
 
    void GetPresetList(wxArrayString &list);
    void LoadPreset(ExportFFmpegOptions *parent, wxString &name);
@@ -330,11 +330,11 @@ public:
    FFmpegPreset *FindPreset(wxString &name);
 
    void ImportPresets(wxString &filename);
-   void ExportPresets(wxString &filename);
+   void ExportPresets(wxString &filename) const;
 
    bool HandleXMLTag(const wxChar *tag, const wxChar **attrs) override;
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
-   void WriteXMLHeader(XMLWriter &xmlFile) const;
+   static void WriteXMLHeader(XMLWriter &xmlFile) ;
    void WriteXML(XMLWriter &xmlFile) const;
 
 private:

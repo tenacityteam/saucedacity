@@ -17,12 +17,12 @@ public:
    {
    }
 
-   int GetNumDataPointers() const noexcept override
+   [[nodiscard]] int GetNumDataPointers() const noexcept override
    {
       return AV_NUM_DATA_POINTERS;
    }
 
-   uint8_t* GetData(int index) const noexcept override
+   [[nodiscard]] uint8_t* GetData(int index) const noexcept override
    {
       if (mAVFrame == nullptr)
          return {};
@@ -33,7 +33,7 @@ public:
       return mAVFrame->data[index];
    }
 
-   int GetLineSize(int index) const noexcept override
+   [[nodiscard]] int GetLineSize(int index) const noexcept override
    {
       if (mAVFrame == nullptr)
          return {};
@@ -44,7 +44,7 @@ public:
       return mAVFrame->linesize[index];
    }
 
-   uint8_t* GetExtendedData(int index) const noexcept override
+   [[nodiscard]] uint8_t* GetExtendedData(int index) const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->extended_data[index];
@@ -52,7 +52,7 @@ public:
       return {};
    }
 
-   int GetWidth() const noexcept override
+   [[nodiscard]] int GetWidth() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->width;
@@ -60,7 +60,7 @@ public:
       return {};
    }
 
-   int GetHeight() const noexcept override
+   [[nodiscard]] int GetHeight() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->height;
@@ -68,7 +68,7 @@ public:
       return {};
    }
 
-   int GetSamplesCount() const noexcept override
+   [[nodiscard]] int GetSamplesCount() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->nb_samples;
@@ -82,7 +82,7 @@ public:
          mAVFrame->nb_samples = count;
    }
 
-   AVSampleFormatFwd GetFormat() const noexcept override
+   [[nodiscard]] AVSampleFormatFwd GetFormat() const noexcept override
    {
       if (mAVFrame != nullptr)
          return static_cast<AVSampleFormatFwd>(mAVFrame->format);
@@ -96,7 +96,7 @@ public:
          mAVFrame->format = format;
    }
 
-   int GetKeyFrame() const noexcept override
+   [[nodiscard]] int GetKeyFrame() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->key_frame;
@@ -104,7 +104,7 @@ public:
       return {};
    }
 
-   AudacityAVRational GetSampleAspectRatio() const noexcept override
+   [[nodiscard]] AudacityAVRational GetSampleAspectRatio() const noexcept override
    {
       if (mAVFrame != nullptr)
          return { mAVFrame->sample_aspect_ratio.num,
@@ -113,7 +113,7 @@ public:
       return {};
    }
 
-   int64_t GetPresentationTimestamp() const noexcept override
+   [[nodiscard]] int64_t GetPresentationTimestamp() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->pts;
@@ -121,7 +121,7 @@ public:
       return {};
    }
 
-   int64_t GetPacketPresentationTimestamp() const noexcept override
+   [[nodiscard]] int64_t GetPacketPresentationTimestamp() const noexcept override
    {
       if (mAVFrame != nullptr)
 #if LIBAVUTIL_VERSION_MAJOR <= 56
@@ -133,7 +133,7 @@ public:
       return {};
    }
 
-   int64_t GetPacketDecompressionTimestamp() const noexcept override
+   [[nodiscard]] int64_t GetPacketDecompressionTimestamp() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->pkt_dts;
@@ -141,7 +141,7 @@ public:
       return {};
    }
 
-   int GetCodedPictureNumber() const noexcept override
+   [[nodiscard]] int GetCodedPictureNumber() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->coded_picture_number;
@@ -149,7 +149,7 @@ public:
       return {};
    }
 
-   int GetDisplayPictureNumber() const noexcept override
+   [[nodiscard]] int GetDisplayPictureNumber() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->display_picture_number;
@@ -157,7 +157,7 @@ public:
       return {};
    }
 
-   int GetQuality() const noexcept override
+   [[nodiscard]] int GetQuality() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->quality;
@@ -165,7 +165,7 @@ public:
       return {};
    }
 
-   void* GetOpaque() const noexcept override
+   [[nodiscard]] void* GetOpaque() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->opaque;
@@ -179,7 +179,7 @@ public:
          mAVFrame->opaque = opaque;
    }
 
-   int GetRepeatPict() const noexcept override
+   [[nodiscard]] int GetRepeatPict() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->repeat_pict;
@@ -187,7 +187,7 @@ public:
       return {};
    }
 
-   int GetInterlacedFrame() const noexcept override
+   [[nodiscard]] int GetInterlacedFrame() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->interlaced_frame;
@@ -195,7 +195,7 @@ public:
       return {};
    }
 
-   int GetTopFieldFirst() const noexcept override
+   [[nodiscard]] int GetTopFieldFirst() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->top_field_first;
@@ -203,7 +203,7 @@ public:
       return {};
    }
 
-   int GetPaletteHasChanged() const noexcept override
+   [[nodiscard]] int GetPaletteHasChanged() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->palette_has_changed;
@@ -211,7 +211,7 @@ public:
       return {};
    }
 
-   int64_t GetReorderedOpaque() const noexcept override
+   [[nodiscard]] int64_t GetReorderedOpaque() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->reordered_opaque;
@@ -219,7 +219,7 @@ public:
       return {};
    }
 
-   int GetSampleRate() const noexcept override
+   [[nodiscard]] int GetSampleRate() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->sample_rate;
@@ -227,7 +227,7 @@ public:
       return {};
    }
 
-   uint64_t GetChannelLayout() const noexcept override
+   [[nodiscard]] uint64_t GetChannelLayout() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->channel_layout;
@@ -247,7 +247,7 @@ public:
       }
    }
 
-   int GetSideDataCount() const noexcept override
+   [[nodiscard]] int GetSideDataCount() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->nb_side_data;
@@ -255,7 +255,7 @@ public:
       return {};
    }
 
-   int GetFlags() const noexcept override
+   [[nodiscard]] int GetFlags() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->flags;
@@ -263,7 +263,7 @@ public:
       return {};
    }
 
-   int64_t GetBestEffortTimestamp() const noexcept override
+   [[nodiscard]] int64_t GetBestEffortTimestamp() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->best_effort_timestamp;
@@ -271,7 +271,7 @@ public:
       return {};
    }
 
-   int64_t GetPacketPos() const noexcept override
+   [[nodiscard]] int64_t GetPacketPos() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->pkt_pos;
@@ -279,7 +279,7 @@ public:
       return {};
    }
 
-   int64_t GetPacketDuration() const noexcept override
+   [[nodiscard]] int64_t GetPacketDuration() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->pkt_duration;
@@ -287,7 +287,7 @@ public:
       return {};
    }
 
-   AVDictionaryWrapper GetMetadata() const noexcept override
+   [[nodiscard]] AVDictionaryWrapper GetMetadata() const noexcept override
    {
       if (mAVFrame != nullptr)
          return AVDictionaryWrapper(mFFmpeg, mAVFrame->metadata);
@@ -295,7 +295,7 @@ public:
       return AVDictionaryWrapper(mFFmpeg);
    }
 
-   int GetDecodeErrorFlags() const noexcept override
+   [[nodiscard]] int GetDecodeErrorFlags() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->decode_error_flags;
@@ -303,7 +303,7 @@ public:
       return {};
    }
 
-   int GetChannels() const noexcept override
+   [[nodiscard]] int GetChannels() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->channels;
@@ -311,7 +311,7 @@ public:
       return {};
    }
 
-   int GetPacketSize() const noexcept override
+   [[nodiscard]] int GetPacketSize() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->pkt_size;

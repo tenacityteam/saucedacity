@@ -25,7 +25,7 @@ class DirectoriesPrefs final : public PrefsPanel
 {
  public:
    DirectoriesPrefs(wxWindow * parent, wxWindowID winid);
-   ~DirectoriesPrefs();
+   ~DirectoriesPrefs() override;
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
 

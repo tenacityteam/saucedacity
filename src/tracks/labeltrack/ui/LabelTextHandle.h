@@ -33,10 +33,10 @@ public:
 
    explicit LabelTextHandle
       ( const std::shared_ptr<LabelTrack> &pLT, int labelNum );
-   virtual ~LabelTextHandle();
+   ~LabelTextHandle() override;
 
-   std::shared_ptr<LabelTrack> GetTrack() const { return mpLT.lock(); }
-   int GetLabelNum() const { return mLabelNum; }
+   [[nodiscard]] std::shared_ptr<LabelTrack> GetTrack() const { return mpLT.lock(); }
+   [[nodiscard]] int GetLabelNum() const { return mLabelNum; }
 
    void Enter(bool forward, SaucedacityProject *) override;
 

@@ -21,7 +21,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectInvert();
-   virtual ~EffectInvert();
+   ~EffectInvert() override;
 
    // ComponentInterface implementation
 

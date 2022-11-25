@@ -27,7 +27,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectReverb();
-   virtual ~EffectReverb();
+   ~EffectReverb() override;
 
    struct Params
    {
@@ -57,7 +57,7 @@ public:
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool DefineParams( ShuttleParams & S ) override;

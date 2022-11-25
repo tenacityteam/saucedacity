@@ -45,7 +45,7 @@ public:
                      std::unique_ptr<Validator> &&valid);
 
    // Methods for accessing the signature
-   ParamValueMap GetDefaults() const;
+   [[nodiscard]] ParamValueMap GetDefaults() const;
    Validator &GetValidator(const wxString &paramName);
 };
 

@@ -37,7 +37,7 @@ for drawing different aspects of the label and its text box.
 
 #include <cstdio>
 #include <algorithm>
-#include <limits.h>
+#include <climits>
 #include <cfloat>
 
 #include <wx/log.h>
@@ -645,7 +645,7 @@ XMLTagHandler *LabelTrack::HandleXMLChild(const wxChar *tag)
    if (!wxStrcmp(tag, wxT("label")))
       return this;
    else
-      return NULL;
+      return nullptr;
 }
 
 void LabelTrack::WriteXML(XMLWriter &xmlFile) const

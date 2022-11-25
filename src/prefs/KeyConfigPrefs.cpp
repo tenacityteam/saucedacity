@@ -91,9 +91,9 @@ KeyConfigPrefs::KeyConfigPrefs(
    const CommandID &name)
 /* i18n-hint: as in computer keyboard (not musical!) */
 :  PrefsPanel(parent, winid, XO("Keyboard")),
-   mView(NULL),
-   mKey(NULL),
-   mFilter(NULL),
+   mView(nullptr),
+   mKey(nullptr),
+   mFilter(nullptr),
    mFilterTimer(this, FilterTimerID),
    mFilterPending(false)
    , mProject{ pProject }
@@ -387,7 +387,7 @@ bool KeyConfigPrefs::ContainsIllegalDups(
 
    for (size_t i{ 0 }; i < mKeys.size(); i++)
    {
-      if (mKeys[i] == EMPTY_SHORTCUT || mKeys[i] == NO_SHORTCUT)
+      if (mKeys[i].empty() || mKeys[i] == NO_SHORTCUT)
          continue;
 
       if (seen.count(mKeys[i]) == 0)
@@ -397,7 +397,7 @@ bool KeyConfigPrefs::ContainsIllegalDups(
          IndexesArray checkMe{ seen.at(mKeys[i]) };
          for (int index : checkMe)
          {
-            if (mDefaultKeys[i] == EMPTY_SHORTCUT ||
+            if (mDefaultKeys[i].empty() ||
                mDefaultKeys[i] != mDefaultKeys[index])
             {
                fMatching = mManager->GetPrefixedLabelFromName(mNames[i]);
@@ -430,7 +430,7 @@ TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
          if (k == index)
             continue;
          else if (toAdd[index] == mKeys[k] &&
-            (mDefaultKeys[k] == EMPTY_SHORTCUT ||
+            (mDefaultKeys[k].empty() ||
              mDefaultKeys[k] != mDefaultKeys[index]))
             return (int)k;
 
@@ -443,7 +443,7 @@ TranslatableString KeyConfigPrefs::MergeWithExistingKeys(
    {
       if (mKeys[i] != NO_SHORTCUT)
          continue;
-      else if (toAdd[i] == EMPTY_SHORTCUT)
+      else if (toAdd[i].empty())
          mManager->SetKeyFromIndex(i, noKey);
       else
       {
@@ -556,7 +556,7 @@ void KeyConfigPrefs::OnImport(wxCommandEvent & WXUNUSED(event))
    TranslatableString message{ 
       XO("Loaded %d keyboard shortcuts\n").Format(mManager->GetNumberOfKeysRead()) };
 
-   if (disabledShortcuts.Translation() != (""))
+   if (!disabledShortcuts.Translation().empty())
       message += XO("\nThe following commands are not mentioned in the imported file, "
          "but have their shortcuts removed because of the conflict with other new shortcuts:\n") +
          disabledShortcuts;
@@ -607,9 +607,9 @@ void KeyConfigPrefs::FilterKeys( std::vector<NormalizedKeyString> & arr )
    const auto &MaxListOnly = CommandManager::ExcludedList();
 
    // Remove items that are in MaxList.
-   for (size_t i = 0; i < arr.size(); i++) {
-      if( std::binary_search(MaxListOnly.begin(), MaxListOnly.end(), arr[i]) )
-         arr[i] = {};
+   for (auto & i : arr) {
+      if( std::binary_search(MaxListOnly.begin(), MaxListOnly.end(), i) )
+         i = {};
    }
 }
 
@@ -631,7 +631,7 @@ void KeyConfigPrefs::OnImportDefaults(wxCommandEvent & event)
 
 void KeyConfigPrefs::OnHotkeyKeyDown(wxKeyEvent & e)
 {
-   wxTextCtrl *t = (wxTextCtrl *)e.GetEventObject();
+   auto *t = (wxTextCtrl *)e.GetEventObject();
 
    // Make sure we can navigate away from the hotkey textctrl.
    // On Linux and OSX, it can get stuck, but it doesn't hurt
@@ -682,7 +682,7 @@ void KeyConfigPrefs::OnFilterTimer(wxTimerEvent & WXUNUSED(e))
 
 void KeyConfigPrefs::OnFilterKeyDown(wxKeyEvent & e)
 {
-   wxTextCtrl *t = (wxTextCtrl *)e.GetEventObject();
+   auto *t = (wxTextCtrl *)e.GetEventObject();
    int keycode = e.GetKeyCode();
 
    // Make sure we can navigate away from the hotkey textctrl.
@@ -785,7 +785,7 @@ void KeyConfigPrefs::OnSet(wxCommandEvent & WXUNUSED(event))
          if (mNames[i] == newCommand)
             return;
 
-         if (newComDefaultKey == EMPTY_SHORTCUT ||
+         if (newComDefaultKey.empty() ||
             mDefaultKeys[i] != newComDefaultKey)
          {
             oldCommands.push_back(mNames[i]);
@@ -932,8 +932,7 @@ void KeyConfigPrefs::Cancel()
       mManager->SetKeyFromIndex(i, mKeys[i]);
    }
 
-   return;
-}
+   }
 
 PrefsPanel::Factory
 KeyConfigPrefsFactory( const CommandID &name )

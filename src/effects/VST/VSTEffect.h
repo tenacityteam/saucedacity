@@ -96,8 +96,8 @@ class VSTEffect final : public wxEvtHandler,
                   public VSTEffectLink
 {
  public:
-   VSTEffect(const PluginPath & path, VSTEffect *master = NULL);
-   virtual ~VSTEffect();
+   VSTEffect(const PluginPath & path, VSTEffect *master = nullptr);
+   ~VSTEffect() override;
 
    // ComponentInterface implementation
 
@@ -132,10 +132,10 @@ class VSTEffect final : public wxEvtHandler,
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
+   [[nodiscard]] size_t GetBlockSize() const override;
 
    bool IsReady() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
 
@@ -207,7 +207,7 @@ private:
    static int b64decode(const wxString &in, void *out);
 
    // Realtime
-   unsigned GetChannelCount();
+   [[nodiscard]] unsigned GetChannelCount() const;
    void SetChannelCount(unsigned numChannels);
 
    // UI
@@ -246,13 +246,13 @@ private:
    // Utility methods
 
    VstTimeInfo *GetTimeInfo();
-   float GetSampleRate();
-   int GetProcessLevel();
+   [[nodiscard]] float GetSampleRate() const;
+   [[nodiscard]] int GetProcessLevel() const;
    void SetBufferDelay(int samples);
    void NeedIdle();
    void NeedEditIdle(bool state);
    void SizeWindow(int w, int h);
-   void UpdateDisplay();
+   static void UpdateDisplay();
    void Automate(int index, float value);
    void PowerOn();
    void PowerOff();
@@ -404,7 +404,7 @@ class VSTEffectsModule final : public ModuleInterface
 {
 public:
    VSTEffectsModule();
-   virtual ~VSTEffectsModule();
+   ~VSTEffectsModule() override;
 
    // ComponentInterface implementation
 

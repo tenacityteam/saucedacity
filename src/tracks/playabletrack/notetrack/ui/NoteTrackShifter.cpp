@@ -15,7 +15,7 @@ public:
       InitIntervals();
    }
    ~NoteTrackShifter() override {}
-   Track &GetTrack() const override { return *mpTrack; }
+   [[nodiscard]] Track &GetTrack() const override { return *mpTrack; }
    
    HitTestResult HitTest(
       double time, const ViewInfo &viewInfo, HitTestParams* ) override
@@ -38,7 +38,7 @@ public:
 
    // Ensure that t0 is still within the data.
    // This corrects for any rounding errors.
-   double AdjustT0(double t0) const override
+   [[nodiscard]] double AdjustT0(double t0) const override
    {
       auto& track = GetTrack();
       if (t0 < track.GetStartTime())

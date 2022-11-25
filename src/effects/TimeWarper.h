@@ -62,13 +62,13 @@ class SAUCEDACITY_DLL_API TimeWarper /* not final */
 {
 public:
    virtual ~TimeWarper();
-   virtual double Warp(double originalTime) const = 0;
+   [[nodiscard]] virtual double Warp(double originalTime) const = 0;
 };
 
 class SAUCEDACITY_DLL_API IdentityTimeWarper final : public TimeWarper
 {
 public:
-   double Warp(double originalTime) const override;
+   [[nodiscard]] double Warp(double originalTime) const override;
 };
 
 class SAUCEDACITY_DLL_API ShiftTimeWarper final : public TimeWarper
@@ -79,8 +79,8 @@ private:
 public:
    ShiftTimeWarper(std::unique_ptr<TimeWarper> &&warper, double shiftAmount)
       : mWarper(std::move(warper)), mShift(shiftAmount) { }
-   virtual ~ShiftTimeWarper() {}
-   double Warp(double originalTime) const override;
+   ~ShiftTimeWarper() override = default;
+   [[nodiscard]] double Warp(double originalTime) const override;
 };
 
 class SAUCEDACITY_DLL_API LinearTimeWarper final : public TimeWarper
@@ -94,7 +94,7 @@ public:
       : mScale((tAfter1 - tAfter0)/(tBefore1 - tBefore0)),
         mShift(tAfter0 - mScale*tBefore0)
    { }
-   double Warp(double originalTime) const override;
+   [[nodiscard]] double Warp(double originalTime) const override;
 };
 
 class SAUCEDACITY_DLL_API LinearInputRateTimeWarper final : public TimeWarper
@@ -107,7 +107,7 @@ private:
 public:
    LinearInputRateTimeWarper(double tStart, double tEnd,
                              double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+   [[nodiscard]] double Warp(double originalTime) const override;
 };
 
 class SAUCEDACITY_DLL_API LinearOutputRateTimeWarper final : public TimeWarper
@@ -122,7 +122,7 @@ private:
 public:
    LinearOutputRateTimeWarper(double tStart, double tEnd,
                               double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+   [[nodiscard]] double Warp(double originalTime) const override;
 };
 
 class SAUCEDACITY_DLL_API LinearInputStretchTimeWarper final : public TimeWarper
@@ -135,7 +135,7 @@ private:
 public:
    LinearInputStretchTimeWarper(double tStart, double tEnd,
                                 double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+   [[nodiscard]] double Warp(double originalTime) const override;
 };
 
 class SAUCEDACITY_DLL_API LinearOutputStretchTimeWarper final : public TimeWarper
@@ -148,7 +148,7 @@ private:
 public:
    LinearOutputStretchTimeWarper(double tStart, double tEnd,
                                  double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+   [[nodiscard]] double Warp(double originalTime) const override;
 };
 
 class SAUCEDACITY_DLL_API GeometricInputTimeWarper final : public TimeWarper
@@ -161,7 +161,7 @@ private:
 public:
    GeometricInputTimeWarper(double tStart, double tEnd,
                             double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+   [[nodiscard]] double Warp(double originalTime) const override;
 };
 
 class SAUCEDACITY_DLL_API GeometricOutputTimeWarper final : public TimeWarper
@@ -174,7 +174,7 @@ private:
 public:
    GeometricOutputTimeWarper(double tStart, double tEnd,
                              double rStart, double rEnd);
-   double Warp(double originalTime) const override;
+   [[nodiscard]] double Warp(double originalTime) const override;
 };
 
 class SAUCEDACITY_DLL_API PasteTimeWarper final : public TimeWarper
@@ -183,7 +183,7 @@ private:
    const double mOldT1, mNewT1;
 public:
    PasteTimeWarper(double oldT1, double newT1);
-   double Warp(double originalTime) const override;
+   [[nodiscard]] double Warp(double originalTime) const override;
 };
 
 
@@ -200,8 +200,8 @@ public:
       : mWarper(std::move(warper)), mTStart(tStart), mTEnd(tEnd),
          mOffset(mWarper->Warp(mTEnd)-mTEnd)
    { }
-   virtual ~RegionTimeWarper() {}
-   double Warp(double originalTime) const override
+   ~RegionTimeWarper() override = default;
+   [[nodiscard]] double Warp(double originalTime) const override
    {
       if (originalTime < mTStart)
       {

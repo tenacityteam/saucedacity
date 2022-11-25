@@ -29,14 +29,15 @@
 */
 /***************************************************/
 
-#include "string.h"
+#include <cstring>
 #include "FileRead.h"
-#include <stdio.h>
+#include <cstdio>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <string.h>
+#include <cstring>
 #include <cmath>
 #include <cstdio>
+#include <utility>
 
 /* this is defined in xlisp.h, but it seems a bad idea
  * to create an stk dependency on xlisp, or to add a new
@@ -49,14 +50,14 @@ extern "C" {
 using namespace Nyq;
 
 FileRead :: FileRead()
-  : fd_(0)
+  : fd_(nullptr)
 {
 }
 
 FileRead :: FileRead( std::string fileName, bool typeRaw )
-  : fd_(0)
+  : fd_(nullptr)
 {
-    open( fileName, typeRaw );
+    open( std::move(fileName), typeRaw );
 }
 
 FileRead :: ~FileRead()
@@ -65,26 +66,26 @@ FileRead :: ~FileRead()
     fclose( fd_ );
 }
 
-void FileRead :: close( void )
+void FileRead :: close( )
 {
   if ( fd_ ) fclose( fd_ );
-  fd_ = 0;
+  fd_ = nullptr;
   wavFile_ = false;
 }
 
-bool FileRead :: isOpen( void )
+bool FileRead :: isOpen( )
 {
   if ( fd_ ) return true;
   else return false;
 }
 
-void FileRead :: open( std::string fileName, bool typeRaw )
+void FileRead :: open( const std::string& fileName, bool typeRaw )
 {
   // If another file is open, close it.
   close();
 
   // Try to open the file.
-  fd_ = NULL;
+  fd_ = nullptr;
   if (ok_to_open(fileName.c_str(), "rb"))
     fd_ = fopen( fileName.c_str(), "rb" );
   if ( !fd_ ) {
@@ -590,7 +591,7 @@ bool FileRead :: getMatInfo( const char *fileName )
 void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNormalize )
 {
   // Make sure we have an open file.
-  if ( fd_ == 0 ) {
+  if ( fd_ == nullptr ) {
     errorString_ << "FileRead::read: a file is not open!";
     Stk::handleError( StkError::WARNING );
     return;
@@ -618,7 +619,7 @@ void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNorma
 
   // Read samples into StkFrames data buffer.
   if ( dataType_ == STK_SINT16 ) {
-    SINT16 *buf = (SINT16 *) &buffer[0];
+    auto *buf = (SINT16 *) &buffer[0];
     if ( fseek( fd_, dataOffset_+(offset*2), SEEK_SET ) == -1 ) goto error;
     if ( fread( buf, nSamples * 2, 1, fd_ ) != 1 ) goto error;
     if ( byteswap_ ) {
@@ -637,7 +638,7 @@ void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNorma
     }
   }
   else if ( dataType_ == STK_SINT32 ) {
-    SINT32 *buf = (SINT32 *) &buffer[0];
+    auto *buf = (SINT32 *) &buffer[0];
     if ( fseek( fd_, dataOffset_+(offset*4 ), SEEK_SET ) == -1 ) goto error;
     if ( fread( buf, nSamples * 4, 1, fd_ ) != 1 ) goto error;
     if ( byteswap_ ) {
@@ -656,7 +657,7 @@ void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNorma
     }
   }
   else if ( dataType_ == STK_FLOAT32 ) {
-    FLOAT32 *buf = (FLOAT32 *) &buffer[0];
+    auto *buf = (FLOAT32 *) &buffer[0];
     if ( fseek( fd_, dataOffset_+(offset*4), SEEK_SET ) == -1 ) goto error;
     if ( fread( buf, nSamples * 4, 1, fd_ ) != 1 ) goto error;
     if ( byteswap_ ) {
@@ -668,7 +669,7 @@ void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNorma
       buffer[i] = buf[i];
   }
   else if ( dataType_ == STK_FLOAT64 ) {
-    FLOAT64 *buf = (FLOAT64 *) &buffer[0];
+    auto *buf = (FLOAT64 *) &buffer[0];
     if ( fseek( fd_, dataOffset_+(offset*8), SEEK_SET ) == -1 ) goto error;
     if ( fread( buf, nSamples * 8, 1, fd_ ) != 1 ) goto error;
     if ( byteswap_ ) {
@@ -680,7 +681,7 @@ void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNorma
       buffer[i] = buf[i];
   }
   else if ( dataType_ == STK_SINT8 && wavFile_ ) { // 8-bit WAV data is unsigned!
-    unsigned char *buf = (unsigned char *) &buffer[0];
+    auto *buf = (unsigned char *) &buffer[0];
     if ( fseek( fd_, dataOffset_+offset, SEEK_SET ) == -1 ) goto error;
     if ( fread( buf, nSamples, 1, fd_) != 1 ) goto error;
     if ( doNormalize ) {

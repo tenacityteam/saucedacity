@@ -67,7 +67,7 @@ public:
       const wxString &title = {},
       int restoreFocus = -1);
 
-   std::vector<MenuItem> GetMenuItems(const wxRect&, const wxPoint*, SaucedacityProject*);
+   std::vector<MenuItem> GetMenuItems(const wxRect&, const wxPoint*, SaucedacityProject*) override;
 
 private:
    void BindTo( LabelTrack *pParent );
@@ -106,7 +106,7 @@ public:
    bool IsTextSelected( SaucedacityProject &project ) const;
 
 private:
-   void CreateCustomGlyphs();
+   static void CreateCustomGlyphs();
 
 public:
    static wxFont GetFont(const wxString &faceName, int size = DefaultFontSize);
@@ -136,7 +136,7 @@ private:
       Index &operator ++();
       Index &operator --();
 
-      bool IsModified() const;
+      [[nodiscard]] bool IsModified() const;
       void SetModified(bool modified);
 
    private:

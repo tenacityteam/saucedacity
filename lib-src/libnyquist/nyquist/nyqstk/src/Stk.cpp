@@ -13,7 +13,7 @@
 /***************************************************/
 
 #include "Stk.h"
-#include <stdlib.h>
+#include <cstdlib>
 
 using namespace Nyq;
 
@@ -28,15 +28,15 @@ const Stk::StkFormat Stk :: STK_FLOAT64 = 0x20;
 bool Stk :: showWarnings_ = false;
 bool Stk :: printErrors_ = true;
 
-Stk :: Stk(void)
+Stk :: Stk()
 {
 }
 
-Stk :: ~Stk(void)
+Stk :: ~Stk()
 {
 }
 
-void Stk :: setRawwavePath( std::string path )
+void Stk :: setRawwavePath( const std::string& path )
 {
   if ( !path.empty() )
     rawwavepath_ = path;
@@ -127,7 +127,7 @@ void Stk :: handleError( const char *message, StkError::Type type )
   handleError( msg, type );
 }
 
-void Stk :: handleError( std::string message, StkError::Type type )
+void Stk :: handleError( const std::string& message, StkError::Type type )
 {
   if ( type == StkError::WARNING || type == StkError::STATUS ) {
     if ( !showWarnings_ ) return;
@@ -166,7 +166,7 @@ StkFrames :: StkFrames( unsigned int nFrames, unsigned int nChannels, bool inter
     }
 #endif
   }
-  else data_ = 0;
+  else data_ = nullptr;
 
   dataRate_ = Stk::sampleRate();
 }
@@ -186,7 +186,7 @@ StkFrames :: StkFrames( const StkFloat& value, unsigned int nFrames, unsigned in
 #endif
     for ( long i=0; i<(long)size_; i++ ) data_[i] = value;
   }
-  else data_ = 0;
+  else data_ = nullptr;
 
   dataRate_ = Stk::sampleRate();
 }
@@ -296,7 +296,7 @@ StkFloat StkFrames :: interpolate( StkFloat frame, unsigned int channel ) const
     }
 #endif
 
-  size_t iIndex = ( size_t ) frame;                    // integer part of index
+  auto iIndex = ( size_t ) frame;                    // integer part of index
   StkFloat output, alpha = frame - (StkFloat) iIndex;  // fractional part of index
 
   if ( interleaved_ ) {

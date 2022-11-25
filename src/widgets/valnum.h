@@ -71,7 +71,7 @@ protected:
         m_maxSet = other.m_maxSet;
     }
 
-    bool HasFlag(NumValidatorStyle style) const
+    [[nodiscard]] bool HasFlag(NumValidatorStyle style) const
     {
         return (m_style & style) != 0;
     }
@@ -79,20 +79,20 @@ protected:
     // Get the text entry of the associated control. Normally shouldn't ever
     // return NULL (and will assert if it does return it) but the caller should
     // still test the return value for safety.
-    wxTextEntry *GetTextEntry() const;
+    [[nodiscard]] wxTextEntry *GetTextEntry() const;
 
     // Convert NumValidatorStyle::THOUSANDS_SEPARATOR and NumValidatorStyle::NO_TRAILING_ZEROES
     // bits of our style to the corresponding NumberFormatter::Style values.
-    int GetFormatFlags() const;
+    [[nodiscard]] int GetFormatFlags() const;
 
     // Return true if pressing a '-' key is acceptable for the current control
     // contents and insertion point. This is meant to be called from the
     // derived class IsCharOk() implementation.
-    bool IsMinusOk(const wxString& val, int pos) const;
+    [[nodiscard]] static bool IsMinusOk(const wxString& val, int pos) ;
 
     // Return the string which would result from inserting the given character
     // at the specified position.
-    wxString GetValueAfterInsertingChar(const wxString &valArg, int pos, wxChar ch) const
+    static wxString GetValueAfterInsertingChar(const wxString &valArg, int pos, wxChar ch)
     {
         wxString val(valArg);
         val.insert(pos, ch);
@@ -109,11 +109,11 @@ private:
     //
     // Notice that the base class checks for '-' itself so it's never passed to
     // this function.
-    virtual bool IsCharOk(const wxString& val, int pos, wxChar ch) const = 0;
+    [[nodiscard]] virtual bool IsCharOk(const wxString& val, int pos, wxChar ch) const = 0;
 
     // NormalizeString the contents of the string if it's a valid number, return
     // empty string otherwise.
-    virtual wxString NormalizeString(const wxString& s) const = 0;
+    [[nodiscard]] virtual wxString NormalizeString(const wxString& s) const = 0;
 
     // Do all checks to ensure this is a valid value.
     // Returns 'true' if the control has valid value.
@@ -241,7 +241,7 @@ protected:
 
     // Implement NumValidatorBase virtual method which is the same for
     // both integer and floating point numbers.
-    wxString NormalizeString(const wxString& s) const override
+    [[nodiscard]] wxString NormalizeString(const wxString& s) const override
     {
         LongestValueType value;
         return BaseValidator::FromString(s, &value) ? NormalizeValue(value)
@@ -311,19 +311,19 @@ protected:
     }
 
     // Provide methods for NumValidator use.
-    wxString ToString(LongestValueType value) const;
+    [[nodiscard]] wxString ToString(LongestValueType value) const;
     static bool FromString(const wxString& s, LongestValueType *value);
 
     void DoSetMin(LongestValueType min) { m_min = min; }
     void DoSetMax(LongestValueType max) { m_max = max; }
 
-    bool IsInRange(LongestValueType value) const
+    [[nodiscard]] bool IsInRange(LongestValueType value) const
     {
         return m_min <= value && value <= m_max;
     }
 
     // Implement NumValidatorBase pure virtual method.
-    bool IsCharOk(const wxString& val, int pos, wxChar ch) const override;
+    [[nodiscard]] bool IsCharOk(const wxString& val, int pos, wxChar ch) const override;
     bool DoValidateNumber(TranslatableString * errMsg) const override;
 
 private:
@@ -361,7 +361,7 @@ public:
     }
 
     // Clone is required by wxwidgets; implemented via copy constructor
-    wxObject *Clone() const override { return safenew IntegerValidator(*this); }
+    [[nodiscard]] wxObject *Clone() const override { return safenew IntegerValidator(*this); }
 
 private:
     DECLARE_NO_ASSIGN_CLASS(IntegerValidator)
@@ -412,23 +412,23 @@ protected:
     }
 
     // Provide methods for NumValidator use.
-    wxString ToString(LongestValueType value) const;
+    [[nodiscard]] wxString ToString(LongestValueType value) const;
     static bool FromString(const wxString& s, LongestValueType *value);
 
     void DoSetMin(LongestValueType min) { m_min = min; }
     void DoSetMax(LongestValueType max) { m_max = max; }
 
-    bool IsInRange(LongestValueType value) const
+    [[nodiscard]] bool IsInRange(LongestValueType value) const
     {
         return m_min <= value && value <= m_max;
     }
 
     // Implement NumValidatorBase pure virtual method.
-    bool IsCharOk(const wxString& val, int pos, wxChar ch) const override;
+    [[nodiscard]] bool IsCharOk(const wxString& val, int pos, wxChar ch) const override;
     bool DoValidateNumber(TranslatableString * errMsg) const override;
 
     //Checks that it doesn't have too many decimal digits.
-    bool ValidatePrecision(const wxString& s) const;
+    [[nodiscard]] bool ValidatePrecision(const wxString& s) const;
 
 private:
     // Maximum number of decimals digits after the decimal separator.
@@ -474,7 +474,7 @@ public:
     }
 
     // Clone is required by wxwidgets; implemented via copy constructor
-    wxObject *Clone() const override
+    [[nodiscard]] wxObject *Clone() const override
     {
         return safenew FloatingPointValidator(*this);
     }

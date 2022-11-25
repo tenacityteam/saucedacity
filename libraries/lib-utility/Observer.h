@@ -84,7 +84,7 @@ public:
       (Publisher was destroyed, or this was not reassigned since it was last
       Reset(), default-constructed, or moved from)
     */
-   bool Expired() const { return m_wRecord.expired(); }
+   [[nodiscard]] bool Expired() const { return m_wRecord.expired(); }
 
    //! @return not expired
    explicit operator bool() const { return !Expired(); }

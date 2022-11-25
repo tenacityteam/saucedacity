@@ -69,12 +69,10 @@ DECLARE_BUILTIN_MODULE(BuiltinsEffectBuiltin);
 ///////////////////////////////////////////////////////////////////////////////
 
 BuiltinEffectsModule::BuiltinEffectsModule()
-{
-}
+= default;
 
 BuiltinEffectsModule::~BuiltinEffectsModule()
-{
-}
+= default;
 
 // ============================================================================
 // ComponentInterface implementation
@@ -123,8 +121,7 @@ bool BuiltinEffectsModule::Initialize()
 void BuiltinEffectsModule::Terminate()
 {
    // Nothing to do here
-   return;
-}
+   }
 
 EffectFamilySymbol BuiltinEffectsModule::GetOptionalFamilySymbol()
 {

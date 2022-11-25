@@ -281,7 +281,7 @@ BeginSection( "Scales" );
             POPUP_MENU_FN( OnSpectrumScaleType ),
             []( PopupMenuHandler &handler, wxMenu &menu, int id ){
                WaveTrack *const wt =
-                  static_cast<SpectrumVRulerMenuTable&>( handler )
+                  dynamic_cast<SpectrumVRulerMenuTable&>( handler )
                      .mpData->pTrack;
                if ( id ==
                   OnFirstSpectrumScaleID +

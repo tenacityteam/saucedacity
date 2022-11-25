@@ -44,7 +44,7 @@ RingBuffer::~RingBuffer()
 // Calculations of free and filled space, given snapshots taken of the start
 // and end values
 
-size_t RingBuffer::Filled( size_t start, size_t end )
+size_t RingBuffer::Filled( size_t start, size_t end ) const
 {
    return (end + mBufferSize - start) % mBufferSize;
 }

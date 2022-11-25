@@ -32,6 +32,8 @@
 
 #include <wx/eventfilter.h>
 #include <wx/setup.h> // for wxUSE_* macros
+
+#include <utility>
 #include "KeyboardCapture.h"
 #include "UIHandle.h"
 #include "TrackPanelMouseEvent.h"
@@ -48,7 +50,7 @@ struct CellularPanel::Filter : wxEventFilter
       wxEvtHandler::AddFilter( this );
    }
 
-   ~Filter()
+   ~Filter() override
    {
       wxEvtHandler::RemoveFilter( this );
    }
@@ -62,7 +64,7 @@ struct CellularPanel::Filter : wxEventFilter
    {
       if ( spActivePanel &&
          event.GetEventType() == wxEVT_KEY_DOWN &&
-         static_cast< wxKeyEvent& >( event ).GetKeyCode() == WXK_ESCAPE ) {
+         dynamic_cast< wxKeyEvent& >( event ).GetKeyCode() == WXK_ESCAPE ) {
          spActivePanel->HandleEscapeKey( true );
          return Event_Processed;
       }
@@ -428,7 +430,7 @@ bool CellularPanel::HasEscape()
        !Target()->HasEscape())
        return false;
 
-   return state.mTargets.size() > 0;
+   return !state.mTargets.empty();
 }
 
 bool CellularPanel::ChangeTarget(bool forward, bool cycle)
@@ -470,7 +472,7 @@ bool CellularPanel::ChangeTarget(bool forward, bool cycle)
 bool CellularPanel::IsMouseCaptured()
 {
    auto &state = *mState;
-   return state.mUIHandle != NULL;
+   return state.mUIHandle != nullptr;
 }
 
 void CellularPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
@@ -529,7 +531,7 @@ void CellularPanel::OnCaptureKey(wxCommandEvent & event)
 {
    auto &state = *mState;
    state.mEnableTab = false;
-   wxKeyEvent *kevent = static_cast<wxKeyEvent *>(event.GetEventObject());
+   auto *kevent = dynamic_cast<wxKeyEvent *>(event.GetEventObject());
    const auto code = kevent->GetKeyCode();
    if ( WXK_ESCAPE != code )
       HandleInterruptedDrag();
@@ -830,25 +832,25 @@ public:
 
    ~DefaultRightButtonHandler() override;
 
-   virtual Result Click
+   Result Click
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject) override
    {
       return RefreshCode::RefreshNone;
    }
 
-   virtual Result Drag
+   Result Drag
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject) override
    {
       return RefreshCode::RefreshNone;
    }
 
-   virtual HitTestPreview Preview
+   HitTestPreview Preview
       (const TrackPanelMouseState &state, SaucedacityProject *pProject) override
    {
       return {};
    }
 
-   virtual Result Release
+   Result Release
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject,
        wxWindow *pParent) override
    {
@@ -859,7 +861,7 @@ public:
       return RefreshCode::RefreshNone;
    }
 
-   virtual Result Cancel(SaucedacityProject *pProject) override
+   Result Cancel(SaucedacityProject *pProject) override
    {
       return RefreshCode::RefreshNone;
    }
@@ -997,16 +999,16 @@ namespace {
       using SimpleNodeVisitor = CellularPanel::SimpleNodeVisitor;
 
       // Visit cells only
-      Adaptor( const SimpleCellVisitor& function_ )
+      explicit Adaptor( const SimpleCellVisitor& function_ )
       : function{ [&](const wxRect &rect, TrackPanelNode &cell) {
-         return function_( rect, static_cast<TrackPanelCell&>(cell) );
+         return function_( rect, dynamic_cast<TrackPanelCell&>(cell) );
       } }
       {}
 
       // Visit cells and groups, each once only, choosing pre- or post- ordering
       // for the groups
-      Adaptor( const SimpleNodeVisitor &function_, bool pre_ )
-         : function{ function_ }, pre{ pre_ }, post{ ! pre_ } {}
+      Adaptor( SimpleNodeVisitor function_, bool pre_ )
+         : function{std::move( function_ )}, pre{ pre_ }, post{ ! pre_ } {}
 
       void VisitCell( const wxRect &rect, TrackPanelCell &cell ) override
          { return function( rect, cell ); }
@@ -1164,7 +1166,7 @@ wxRect CellularPanel::FindRect(
 UIHandlePtr CellularPanel::Target()
 {
    auto &state = *mState;
-   if (state.mTargets.size())
+   if (!state.mTargets.empty())
       return state.mTargets[state.mTarget];
    else
       return {};

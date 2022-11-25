@@ -176,9 +176,7 @@ public:
       Fit();
       SetMinSize(GetSize());
       Center();
-
-      return;
-   }
+  }
 
    void OnBrowse(wxCommandEvent & WXUNUSED(event))
    {
