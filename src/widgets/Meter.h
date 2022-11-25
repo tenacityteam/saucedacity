@@ -215,9 +215,9 @@ class SAUCEDACITY_DLL_API MeterPanel final
    void SetActiveStyle(Style style);
    void SetBarAndClip(int iBar, bool vert);
    void DrawMeterBar(wxDC &dc, MeterBar *meterBar);
-   void ResetBar(MeterBar *bar, bool resetClipping);
+   static void ResetBar(MeterBar *bar, bool resetClipping);
    void RepaintBarsNow();
-   wxFont GetFont() const;
+   static wxFont GetFont() ;
 
    //
    // Pop-up menu

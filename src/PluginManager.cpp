@@ -330,10 +330,10 @@ void PluginDescriptor::SetImporterExtensions( FileExtensions extensions )
 const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
    ModuleInterface *provider, ComponentInterface *pInterface )
 {
-   EffectDefinitionInterface * pEInterface = dynamic_cast<EffectDefinitionInterface*>(pInterface);
+   auto * pEInterface = dynamic_cast<EffectDefinitionInterface*>(pInterface);
    if( pEInterface )
       return PluginManager::Get().RegisterPlugin(provider, pEInterface, PluginTypeEffect);
-   ComponentInterface * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
+   auto * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
    if( pCInterface )
       return PluginManager::Get().RegisterPlugin(provider, pCInterface);
    static wxString empty;
@@ -343,7 +343,7 @@ const PluginID &PluginManagerInterface::DefaultRegistrationCallback(
 const PluginID &PluginManagerInterface::AudacityCommandRegistrationCallback(
    ModuleInterface *provider, ComponentInterface *pInterface )
 {
-   ComponentInterface * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
+   auto * pCInterface = dynamic_cast<ComponentInterface*>(pInterface);
    if( pCInterface )
       return PluginManager::Get().RegisterPlugin(provider, pCInterface);
    static wxString empty;
@@ -491,8 +491,7 @@ void PluginManager::FindFilesInPathList(const wxString & pattern,
       wxDir::GetAllFiles(ff.GetPath(), &files, ff.GetFullName(), directories ? wxDIR_DEFAULT : wxDIR_FILES);
    }
 
-   return;
-}
+   }
 
 bool PluginManager::HasSharedConfigGroup(const PluginID & ID, const RegistryPath & group)
 {
@@ -673,7 +672,7 @@ std::unique_ptr<PluginManager> PluginManager::mInstance{};
 
 PluginManager::PluginManager()
 {
-   mSettings = NULL;
+   mSettings = nullptr;
 }
 
 PluginManager::~PluginManager()
@@ -731,7 +730,7 @@ void PluginManager::Initialize()
 void PluginManager::Terminate()
 {
    // Get rid of all non-module plugins first
-   PluginMap::iterator iter = mPlugins.begin();
+   auto iter = mPlugins.begin();
    while (iter != mPlugins.end())
    {
       PluginDescriptor & plug = iter->second;
@@ -929,8 +928,8 @@ void PluginManager::Load()
       }
       // Doing the deletion within the search loop risked skipping some items,
       // hence the delayed delete.
-      for (unsigned int i = 0; i < groupsToDelete.size(); i++) {
-         registry.DeleteGroup(groupsToDelete[i]);
+      for (const auto & i : groupsToDelete) {
+         registry.DeleteGroup(i);
       }
       registry.SetPath("");
       registry.Write(REGVERKEY, REGVERCUR);
@@ -948,7 +947,6 @@ void PluginManager::Load()
    LoadGroup(&registry, PluginTypeImporter);
 
    LoadGroup(&registry, PluginTypeStub);
-   return;
 }
 
 void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
@@ -1205,8 +1203,7 @@ void PluginManager::LoadGroup(FileConfig *pRegistry, PluginType type)
       mPlugins[groupName] = std::move(plug);
    }
 
-   return;
-}
+   }
 
 void PluginManager::Save()
 {
@@ -1319,8 +1316,7 @@ void PluginManager::SaveGroup(FileConfig *pRegistry, PluginType type)
       }
    }
 
-   return;
-}
+   }
 
 // If bFast is true, do not do a full check.  Just check the ones
 // that are quick to check.  Currently (Feb 2017) just Nyquist
@@ -1377,9 +1373,9 @@ void PluginManager::CheckForUpdates(bool bFast)
             PluginPaths paths;
             if (auto provider = mm.CreateProviderInstance( plugID, plugPath ) )
                paths = provider->FindPluginPaths( *this );
-            for (size_t i = 0, cnt = paths.size(); i < cnt; i++)
+            for (auto & i : paths)
             {
-               wxString path = paths[i].BeforeFirst(wxT(';'));;
+               wxString path = i.BeforeFirst(wxT(';'));;
                if ( ! make_iterator_range( pathIndex ).contains( path ) )
                {
                   PluginID ID = plugID + wxT("_") + path;
@@ -1405,8 +1401,6 @@ void PluginManager::CheckForUpdates(bool bFast)
    }
 
    Save();
-
-   return;
 }
 
 // Here solely for the purpose of Nyquist Workbench until
@@ -1776,7 +1770,7 @@ bool PluginManager::SetConfig(const RegistryPath & key, const wxString & value)
 
    if (!key.empty())
    {
-      wxString wxval = value;
+      const wxString& wxval = value;
       result = GetSettings()->Write(key, wxval);
       if (result)
       {
@@ -1963,7 +1957,7 @@ const static char padc = wxT('=');
 
 wxString PluginManager::b64encode(const void *in, int len)
 {
-   unsigned char *p = (unsigned char *) in;
+   auto *p = (unsigned char *) in;
    wxString out;
 
    unsigned long temp;
@@ -2004,7 +1998,7 @@ wxString PluginManager::b64encode(const void *in, int len)
 int PluginManager::b64decode(const wxString &in, void *out)
 {
    int len = in.length();
-   unsigned char *p = (unsigned char *) out;
+   auto *p = (unsigned char *) out;
 
    if (len % 4)  //Sanity check
    {

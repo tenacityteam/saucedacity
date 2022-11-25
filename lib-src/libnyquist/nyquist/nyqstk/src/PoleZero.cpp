@@ -30,7 +30,7 @@ PoleZero :: ~PoleZero()
 {
 }
 
-void PoleZero :: clear(void)
+void PoleZero :: clear()
 {
   Filter::clear();
 }
@@ -71,12 +71,12 @@ void PoleZero :: setGain(StkFloat gain)
   Filter::setGain(gain);
 }
 
-StkFloat PoleZero :: getGain(void) const
+StkFloat PoleZero :: getGain() const
 {
   return Filter::getGain();
 }
 
-StkFloat PoleZero :: lastOut(void) const
+StkFloat PoleZero :: lastOut() const
 {
   return Filter::lastOut();
 }

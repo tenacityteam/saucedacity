@@ -30,17 +30,17 @@ public:
   PRCRev( StkFloat T60 = 1.0 );
 
   //! Class destructor.
-  ~PRCRev();
+  ~PRCRev() override;
 
   //! Reset and clear all internal state.
-  void clear();
+  void clear() override;
 
   //! Set the reverberation T60 decay time.
   void setT60( StkFloat T60 );
 
 protected:
 
-  StkFloat computeSample( StkFloat input );
+  StkFloat computeSample( StkFloat input ) override;
 
   Delay allpassDelays_[2];
   Delay combDelays_[2];

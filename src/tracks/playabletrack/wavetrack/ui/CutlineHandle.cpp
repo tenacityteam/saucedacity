@@ -11,6 +11,8 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "CutlineHandle.h"
 
+#include <utility>
+
 #include "../../../../HitTestResult.h"
 #include "../../../../ProjectAudioIO.h"
 #include "../../../../ProjectHistory.h"
@@ -23,8 +25,8 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../../images/Cursors.h"
 
 CutlineHandle::CutlineHandle
-( const std::shared_ptr<WaveTrack> &pTrack, WaveTrackLocation location )
-   : mpTrack{ pTrack }
+( std::shared_ptr<WaveTrack> pTrack, WaveTrackLocation location )
+   : mpTrack{std::move( pTrack )}
    , mLocation{ location }
 {
 }

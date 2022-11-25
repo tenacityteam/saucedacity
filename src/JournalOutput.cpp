@@ -20,7 +20,7 @@ namespace {
 struct FlushingTextFile : wxTextFile {
    // Flush output when the program quits, even if that makes an incomplete
    // journal file without an exit
-   ~FlushingTextFile() { if ( IsOpened() ) { Write(); Close(); } }
+   ~FlushingTextFile() override { if ( IsOpened() ) { Write(); Close(); } }
 } sFileOut;
 
 }

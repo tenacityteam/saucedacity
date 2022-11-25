@@ -129,14 +129,14 @@ ControlToolBar::~ControlToolBar()
 ControlToolBar *ControlToolBar::Find( SaucedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return static_cast<ControlToolBar*>(
+   return dynamic_cast<ControlToolBar*>(
       toolManager.GetToolBar(TransportBarID) );
 }
 
 ControlToolBar &ControlToolBar::Get( SaucedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<ControlToolBar*>(
+   return *dynamic_cast<ControlToolBar*>(
       toolManager.GetToolBar(TransportBarID) );
 }
 
@@ -247,7 +247,7 @@ void ControlToolBar::RegenerateTooltips()
 #if wxUSE_TOOLTIPS
    for (long iWinID = ID_PAUSE_BUTTON; iWinID < BUTTON_COUNT; iWinID++)
    {
-      auto pCtrl = static_cast<AButton*>(this->FindWindow(iWinID));
+      auto pCtrl = dynamic_cast<AButton*>(this->FindWindow(iWinID));
       CommandID name;
       switch (iWinID)
       {
@@ -287,12 +287,12 @@ void ControlToolBar::RegenerateTooltips()
             {  bool bPreferNewTrack;
                gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
                // For the shortcut tooltip.
-               commands.push_back( {
+               commands.emplace_back(
                   wxT("Record2ndChoice"),
                   !bPreferNewTrack
                      ? XO("Record New Track")
                      : XO("Append Record")
-               } );
+               );
             }
             break;
          case ID_PAUSE_BUTTON:
@@ -301,13 +301,13 @@ void ControlToolBar::RegenerateTooltips()
             break;
          case ID_FF_BUTTON:
             // With shift
-            commands.push_back( {
-               wxT("SelEnd"), XO("Select to End") } );
+            commands.emplace_back(
+               wxT("SelEnd"), XO("Select to End") );
             break;
          case ID_REW_BUTTON:
             // With shift
-            commands.push_back( {
-               wxT("SelStart"), XO("Select to Start") } );
+            commands.emplace_back(
+               wxT("SelStart"), XO("Select to Start") );
             break;
       }
       ToolBar::SetButtonToolTip(

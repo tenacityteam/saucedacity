@@ -59,7 +59,7 @@ wxDEFINE_EVENT( EVT_RECONNECTION_FAILURE, wxCommandEvent);
 //
 // Note that endianness is not an issue here since SQLite integers are
 // architecture independent.
-#define PACK(b1, b2, b3, b4) ((b1 << 24) | (b2 << 16) | (b3 << 8) | b4)
+#define PACK(b1, b2, b3, b4) (((b1) << 24) | ((b2) << 16) | ((b3) << 8) | (b4))
 
 // The ProjectFileID is stored in the SQLite database header to identify the file
 // as an Audacity project file. It can be used by applications that identify file
@@ -222,7 +222,7 @@ bool ProjectFileIO::InitializeSQL()
 
 static void RefreshAllTitles(bool bShowProjectNumbers )
 {
-   for ( auto pProject : AllProjects{} ) {
+   for ( const auto& pProject : AllProjects{} ) {
       if ( !GetProjectFrame( *pProject ).IsIconized() ) {
          ProjectFileIO::Get( *pProject ).SetProjectTitle(
             bShowProjectNumbers ? pProject->GetProjectNumber() : -1 );
@@ -712,7 +712,7 @@ bool ProjectFileIO::UpgradeSchema()
 // in the set, it will be deleted.
 void ProjectFileIO::InSet(sqlite3_context *context, int argc, sqlite3_value **argv)
 {
-   BlockIDs *blockids = (BlockIDs *) sqlite3_user_data(context);
+   auto *blockids = (BlockIDs *) sqlite3_user_data(context);
    SampleBlockID blockid = sqlite3_value_int64(argv[0]);
 
    sqlite3_result_int(context, blockids->find(blockid) != blockids->end());
@@ -1107,7 +1107,7 @@ FilePath ProjectFileIO::SafetyFileName(const FilePath &src)
    };
 
    auto suffixes = AuxiliaryFileSuffixes();
-   suffixes.push_back({});
+   suffixes.emplace_back();
 
    // Find backup paths not already occupied; check all auxiliary suffixes
    const auto name = fn.GetName();
@@ -1193,7 +1193,7 @@ bool ProjectFileIO::MoveProject(const FilePath &src, const FilePath &dst)
          auto dstName = dst + suffix;
          if (!RenameOrWarn(srcName, dstName))
             return false;
-         pairs.push_back({ srcName, dstName });
+         pairs.emplace_back( srcName, dstName );
       }
    }
 
@@ -1241,7 +1241,7 @@ ProjectFileIO::BackupProject::~BackupProject()
       if (!mSafety.empty()) {
          // Failed; restore from safety files
          auto suffixes = AuxiliaryFileSuffixes();
-         suffixes.push_back({});
+         suffixes.emplace_back();
          for (const auto &suffix : suffixes) {
             auto path = mPath + suffix;
             if (wxFileExists(path))
@@ -1382,15 +1382,14 @@ void ProjectFileIO::Compact(
       }
    }
 
-   return;
-}
+   }
 
-bool ProjectFileIO::WasCompacted()
+bool ProjectFileIO::WasCompacted() const
 {
    return mWasCompacted;
 }
 
-bool ProjectFileIO::HadUnused()
+bool ProjectFileIO::HadUnused() const
 {
    return mHadUnused;
 }
@@ -1629,7 +1628,7 @@ void ProjectFileIO::OnCheckpointFailure()
    mProject.ProcessEvent(evt);
 }
 
-void ProjectFileIO::WriteXMLHeader(XMLWriter &xmlFile) const
+void ProjectFileIO::WriteXMLHeader(XMLWriter &xmlFile)
 {
    xmlFile.Write(wxT("<?xml "));
    xmlFile.Write(wxT("version=\"1.0\" "));
@@ -1880,7 +1879,7 @@ bool ProjectFileIO::LoadProject(const FilePath &fileName, bool ignoreAutosave)
       auto blockids = WaveTrackFactory::Get( mProject )
          .GetSampleBlockFactory()
             ->GetActiveBlockIDs();
-      if (blockids.size() > 0)
+      if (!blockids.empty())
       {
          success = DeleteBlocks(blockids, true);
          if (!success)
@@ -2226,7 +2225,7 @@ bool ProjectFileIO::IsRecovered() const
 wxLongLong ProjectFileIO::GetFreeDiskSpace() const
 {
    wxLongLong freeSpace;
-   if (wxGetDiskSpace(wxPathOnly(mFileName), NULL, &freeSpace))
+   if (wxGetDiskSpace(wxPathOnly(mFileName), nullptr, &freeSpace))
    {
       if (FileNames::IsOnFATFileSystem(mFileName)) {
          // 4 GiB per-file maximum
@@ -2253,7 +2252,7 @@ wxLongLong ProjectFileIO::GetFreeDiskSpace() const
 void ProjectFileIO::ShowError(const GenericUI::WindowPlacement &placement,
                               const TranslatableString &dlogTitle,
                               const TranslatableString &message,
-                              const wxString &helpPage)
+                              const wxString &helpPage) const
 {
    using namespace Saucedacity;
    using namespace GenericUI;
@@ -2329,8 +2328,7 @@ void ProjectFileIO::SetBypass()
       }
    }
 
-   return;
-}
+   }
 
 int64_t ProjectFileIO::GetBlockUsage(SampleBlockID blockid)
 {
@@ -2341,7 +2339,7 @@ int64_t ProjectFileIO::GetBlockUsage(SampleBlockID blockid)
 }
 
 int64_t ProjectFileIO::GetCurrentUsage(
-   const std::vector<const TrackList*> &trackLists) const
+   const std::vector<const TrackList*> &trackLists)
 {
    unsigned long long current = 0;
    const auto fn = BlockSpaceUsageAccumulator(current);

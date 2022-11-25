@@ -17,6 +17,7 @@ class wxRect;
 class wxSize;
 class TrackPanelCell;
 #include <memory>
+#include <utility>
 
 // This is a hack so that the code that fakes a MOUSE_LEFT_BTN_UP on
 // capture lost doesn't get in the way of handling MOUSE_RIGHT_BTN_UP.
@@ -28,10 +29,10 @@ struct TrackPanelMouseState
 {
    TrackPanelMouseState
       ( wxMouseState &state_, const wxRect &rect_,
-        const std::shared_ptr<TrackPanelCell> &pCell_ )
+        std::shared_ptr<TrackPanelCell> pCell_ )
       : state{ state_ }
       , rect{ rect_ }
-      , pCell{ pCell_ }
+      , pCell{std::move( pCell_ )}
    {
    }
 
@@ -46,11 +47,11 @@ struct TrackPanelMouseEvent
 {
    TrackPanelMouseEvent
       ( wxMouseEvent &event_, const wxRect &rect_, const wxSize &whole_,
-        const std::shared_ptr<TrackPanelCell> &pCell_ )
+        std::shared_ptr<TrackPanelCell> pCell_ )
       : event{ event_ }
       , rect{ rect_ }
       , whole{ whole_ }
-      , pCell{ pCell_ }
+      , pCell{std::move( pCell_ )}
       , steps{ 0 }
    {
    }

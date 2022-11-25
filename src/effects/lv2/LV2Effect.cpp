@@ -27,6 +27,7 @@
 #include <lib-math/SampleCount.h>
 
 #include <cmath>
+#include <memory>
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -102,8 +103,8 @@ URIDLIST
 class LV2EffectMeter final : public wxWindow
 {
 public:
-   LV2EffectMeter(wxWindow *parent, const LV2ControlPortPtr ctrl);
-   virtual ~LV2EffectMeter();
+   LV2EffectMeter(wxWindow *parent, const LV2ControlPortPtr& ctrl);
+   ~LV2EffectMeter() override;
 
 private:
    void OnErase(wxEraseEvent &evt);
@@ -125,7 +126,7 @@ BEGIN_EVENT_TABLE(LV2EffectMeter, wxWindow)
    EVT_SIZE(LV2EffectMeter::OnSize)
 END_EVENT_TABLE()
 
-LV2EffectMeter::LV2EffectMeter(wxWindow *parent, const LV2ControlPortPtr port)
+LV2EffectMeter::LV2EffectMeter(wxWindow *parent, const LV2ControlPortPtr& port)
 :  wxWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxDEFAULT_CONTROL_BORDER),
    mControlPort(port)
 {
@@ -200,7 +201,7 @@ class LV2EffectSettingsDialog final : public wxDialogWrapper
 {
 public:
    LV2EffectSettingsDialog(wxWindow *parent, LV2Effect *effect);
-   virtual ~LV2EffectSettingsDialog();
+   ~LV2EffectSettingsDialog() override;
 
    void PopulateOrExchange(ShuttleGui &S);
 
@@ -366,10 +367,10 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
 {
    mPlug = plug;
 
-   mHost = NULL;
-   mMaster = NULL;
-   mProcess = NULL;
-   mSuilInstance = NULL;
+   mHost = nullptr;
+   mMaster = nullptr;
+   mProcess = nullptr;
+   mSuilInstance = nullptr;
 
    mSampleRate = 44100;
    mBlockSize = DEFAULT_BLOCKSIZE;
@@ -384,10 +385,10 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
    mRolling = false;
    mActivated = false;
 
-   mDialog = NULL;
+   mDialog = nullptr;
 
-   mUIIdleInterface = NULL;
-   mUIShowInterface = NULL;
+   mUIIdleInterface = nullptr;
+   mUIShowInterface = nullptr;
 
    mAudioIn = 0;
    mAudioOut = 0;
@@ -400,7 +401,7 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
    mPositionSpeed = 1.0;
    mPositionFrame = 0.0;
    
-   mNativeWin = NULL;
+   mNativeWin = nullptr;
    mNativeWinInitialSize = wxDefaultSize;
    mNativeWinLastSize = wxDefaultSize;
    mResizing = false;
@@ -408,8 +409,8 @@ LV2Effect::LV2Effect(const LilvPlugin *plug)
    mResized = false;
 #endif
 
-   mExternalUIHost.plugin_human_id = NULL;
-   mExternalWidget = NULL;
+   mExternalUIHost.plugin_human_id = nullptr;
+   mExternalWidget = nullptr;
    mExternalUIClosed = false;
 
    mNoResize = false;
@@ -491,7 +492,7 @@ EffectFamilySymbol LV2Effect::GetFamily()
 
 bool LV2Effect::IsInteractive()
 {
-   return mControlPorts.size() != 0;
+   return !mControlPorts.empty();
 }
 
 bool LV2Effect::IsDefault()
@@ -533,7 +534,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
                                  sizeof(mSampleRate),
                                  urid_Float,
                                  &mSampleRate);
-   AddOption(0, 0, 0, NULL);
+   AddOption(0, 0, 0, nullptr);
 
    if (!ValidateOptions(lilv_plugin_get_uri(mPlug)))
    {
@@ -562,12 +563,12 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
    mExternalUIHost.plugin_human_id = lilv_node_as_string(pluginName);
    lilv_node_free(pluginName);
 
-   AddFeature(LV2_UI__noUserResize, NULL);
-   AddFeature(LV2_UI__fixedSize, NULL);
-   AddFeature(LV2_UI__idleInterface, NULL);
-   AddFeature(LV2_UI__makeResident, NULL);
-   AddFeature(LV2_BUF_SIZE__boundedBlockLength, NULL);
-   AddFeature(LV2_BUF_SIZE__fixedBlockLength, NULL);
+   AddFeature(LV2_UI__noUserResize, nullptr);
+   AddFeature(LV2_UI__fixedSize, nullptr);
+   AddFeature(LV2_UI__idleInterface, nullptr);
+   AddFeature(LV2_UI__makeResident, nullptr);
+   AddFeature(LV2_BUF_SIZE__boundedBlockLength, nullptr);
+   AddFeature(LV2_BUF_SIZE__fixedBlockLength, nullptr);
    AddFeature(LV2_OPTIONS__options, mOptions.data());
    AddFeature(LV2_URI_MAP_URI, &mUriMapFeature);
    AddFeature(LV2_URID__map, &mURIDMapFeature);
@@ -578,19 +579,19 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
    AddFeature(LV2_EXTERNAL_UI__Host, &mExternalUIHost);
    AddFeature(LV2_EXTERNAL_UI_DEPRECATED_URI, &mExternalUIHost);
    // Some plugins specify this as a feature
-   AddFeature(LV2_EXTERNAL_UI__Widget, NULL);
+   AddFeature(LV2_EXTERNAL_UI__Widget, nullptr);
 
-   mInstanceAccessFeature = AddFeature(LV2_INSTANCE_ACCESS_URI, NULL);
-   mParentFeature = AddFeature(LV2_UI__parent, NULL);
+   mInstanceAccessFeature = AddFeature(LV2_INSTANCE_ACCESS_URI, nullptr);
+   mParentFeature = AddFeature(LV2_UI__parent, nullptr);
 
-   AddFeature(NULL, NULL);
+   AddFeature(nullptr, nullptr);
 
    if (!ValidateFeatures(lilv_plugin_get_uri(mPlug)))
    {
       return false;
    }
 
-   auto minLength = lilv_world_get(gWorld, lilv_plugin_get_uri(mPlug), node_MinBlockLength, NULL);
+   auto minLength = lilv_world_get(gWorld, lilv_plugin_get_uri(mPlug), node_MinBlockLength, nullptr);
    if (minLength)
    {
       if (lilv_node_is_int(minLength))
@@ -604,7 +605,7 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
       lilv_node_free(minLength);
    }
 
-   auto maxLength = lilv_world_get(gWorld, lilv_plugin_get_uri(mPlug), node_MaxBlockLength, NULL);
+   auto maxLength = lilv_world_get(gWorld, lilv_plugin_get_uri(mPlug), node_MaxBlockLength, nullptr);
    if (maxLength)
    {
       if (lilv_node_is_int(maxLength))
@@ -667,10 +668,10 @@ bool LV2Effect::SetHost(EffectHostInterface *host)
       LilvNode *group = lilv_port_get(mPlug, port, node_Group);
       if (group)
       {
-         groupName = LilvString(lilv_world_get(gWorld, group, node_Label, NULL), true);
+         groupName = LilvString(lilv_world_get(gWorld, group, node_Label, nullptr), true);
          if (groupName.empty())
          {
-            groupName = LilvString(lilv_world_get(gWorld, group, node_Name, NULL), true);
+            groupName = LilvString(lilv_world_get(gWorld, group, node_Name, nullptr), true);
          }
 
          if (groupName.empty())
@@ -986,9 +987,9 @@ void LV2Effect::SetSampleRate(double rate)
       mMaster->SetSampleRate();
    }
 
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
+   for (auto & mSlave : mSlaves)
    {
-      mSlaves[i]->SetSampleRate();
+      mSlave->SetSampleRate();
    }
 }
 
@@ -1010,9 +1011,9 @@ size_t LV2Effect::SetBlockSize(size_t maxBlockSize)
       mMaster->SetBlockSize();
    }
 
-   for (size_t i = 0, cnt = mSlaves.size(); i < cnt; i++)
+   for (auto & mSlave : mSlaves)
    {
-      mSlaves[i]->SetBlockSize();
+      mSlave->SetBlockSize();
    }
 
    return mBlockSize;
@@ -1041,7 +1042,7 @@ size_t LV2Effect::GetTailSize()
 
 bool LV2Effect::IsReady()
 {
-   return mMaster != NULL;
+   return mMaster != nullptr;
 }
 
 bool LV2Effect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames WXUNUSED(chanMap))
@@ -1070,7 +1071,7 @@ bool LV2Effect::ProcessFinalize()
    if (mProcess)
    {
       FreeInstance(mProcess);
-      mProcess = NULL;
+      mProcess = nullptr;
    }
 
    return true;
@@ -1107,7 +1108,7 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
                                    port->mBuffer.size());
 
          LV2_Atom_Forge_Frame seqFrame;
-         LV2_Atom_Sequence *seq = ( LV2_Atom_Sequence *)
+         auto *seq = ( LV2_Atom_Sequence *)
             lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0);
 
          if (port->mWantsPosition)
@@ -1166,7 +1167,7 @@ size_t LV2Effect::ProcessBlock(float **inbuf, float **outbuf, size_t size)
       {
          port->mBuffer.resize(port->mMinimumSize);
 
-         LV2_Atom *chunk = ( LV2_Atom *) port->mBuffer.data();
+         auto *chunk = ( LV2_Atom *) port->mBuffer.data();
          chunk->size = port->mMinimumSize;
          chunk->type = urid_Chunk;
       }
@@ -1279,7 +1280,7 @@ bool LV2Effect::RealtimeProcessStart()
                                    port->mBuffer.size());
 
          LV2_Atom_Forge_Frame seqFrame;
-         LV2_Atom_Sequence *seq = (LV2_Atom_Sequence *)
+         auto *seq = (LV2_Atom_Sequence *)
             lv2_atom_forge_sequence_head(&mForge, &seqFrame, 0);
 
          if (port->mWantsPosition)
@@ -1394,7 +1395,7 @@ size_t LV2Effect::RealtimeProcess(int group, float **inbuf, float **outbuf, size
       {
          port->mBuffer.resize(port->mMinimumSize);
 
-         LV2_Atom *chunk = ( LV2_Atom *) buf;
+         auto *chunk = ( LV2_Atom *) buf;
          chunk->size = port->mMinimumSize;
          chunk->type = urid_Chunk;
       }
@@ -1564,11 +1565,11 @@ bool LV2Effect::PopulateUI(ShuttleGui &S)
 
    mParent->PushEventHandler(this);
 
-   mSuilHost = NULL;
-   mSuilInstance = NULL;
+   mSuilHost = nullptr;
+   mSuilInstance = nullptr;
 
    mMaster = InitInstance(mSampleRate);
-   if (mMaster == NULL)
+   if (mMaster == nullptr)
    {
       AudacityMessageBox( XO("Couldn't instantiate effect") );
       return false;
@@ -1643,32 +1644,32 @@ bool LV2Effect::CloseUI()
       if (mNativeWin)
       {
          mNativeWin->Destroy();
-         mNativeWin = NULL;
+         mNativeWin = nullptr;
       }
 
-      mUIIdleInterface = NULL;
-      mUIShowInterface = NULL;
-      mExternalWidget = NULL;
+      mUIIdleInterface = nullptr;
+      mUIShowInterface = nullptr;
+      mExternalWidget = nullptr;
 
       suil_instance_free(mSuilInstance);
-      mSuilInstance = NULL;
+      mSuilInstance = nullptr;
    }
 
    if (mSuilHost)
    {
       suil_host_free(mSuilHost);
-      mSuilHost = NULL;
+      mSuilHost = nullptr;
    }
 
    if (mMaster)
    {
       FreeInstance(mMaster);
-      mMaster = NULL;
+      mMaster = nullptr;
    }
 
-   mUIHost = NULL;
-   mParent = NULL;
-   mDialog = NULL;
+   mUIHost = nullptr;
+   mParent = nullptr;
+   mDialog = nullptr;
 
    return true;
 }
@@ -1706,7 +1707,7 @@ RegistryPaths LV2Effect::GetFactoryPresets()
 
          lilv_world_load_resource(gWorld, preset);
 
-         LilvNodes *labels = lilv_world_find_nodes(gWorld, preset, node_Label, NULL);
+         LilvNodes *labels = lilv_world_find_nodes(gWorld, preset, node_Label, nullptr);
          if (labels)
          {
             const LilvNode *label = lilv_nodes_get_first(labels);
@@ -1745,7 +1746,7 @@ bool LV2Effect::LoadFactoryPreset(int id)
    LilvState *state = lilv_state_new_from_world(gWorld, &mURIDMapFeature, preset);
    if (state)
    {
-      lilv_state_restore(state, mMaster->GetInstance(), set_value_func, this, 0, NULL);
+      lilv_state_restore(state, mMaster->GetInstance(), set_value_func, this, 0, nullptr);
 
       lilv_state_free(state);
 
@@ -1754,7 +1755,7 @@ bool LV2Effect::LoadFactoryPreset(int id)
 
    lilv_node_free(preset);
 
-   return state != NULL;
+   return state != nullptr;
 }
 
 bool LV2Effect::LoadFactoryDefaults()
@@ -1863,7 +1864,7 @@ LV2_Feature *LV2Effect::AddFeature(const char *uri, void *data)
 
    if (uri)
    {
-      mFeatures[ndx].reset(safenew LV2_Feature);
+      mFeatures[ndx] = std::make_unique<LV2_Feature>();
       mFeatures[ndx]->URI = uri;
       mFeatures[ndx]->data = data;
    }
@@ -1885,7 +1886,7 @@ bool LV2Effect::CheckFeatures(const LilvNode *subject, const LilvNode *predicate
 {
    bool supported = true;
 
-   LilvNodes *nodes = lilv_world_find_nodes(gWorld, subject, predicate, NULL);
+   LilvNodes *nodes = lilv_world_find_nodes(gWorld, subject, predicate, nullptr);
    if (nodes)
    {
       LILV_FOREACH(nodes, i, nodes)
@@ -1949,7 +1950,7 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, const LilvNode *predicate,
 {
    bool supported = true;
 
-   LilvNodes *nodes = lilv_world_find_nodes(gWorld, subject, predicate, NULL);
+   LilvNodes *nodes = lilv_world_find_nodes(gWorld, subject, predicate, nullptr);
    if (nodes)
    {
       LILV_FOREACH(nodes, i, nodes)
@@ -2000,17 +2001,17 @@ bool LV2Effect::CheckOptions(const LilvNode *subject, const LilvNode *predicate,
 
 LV2Wrapper *LV2Effect::InitInstance(float sampleRate)
 {
-   LV2Wrapper *wrapper = new LV2Wrapper(this);
-   if (wrapper == NULL)
+   auto *wrapper = new LV2Wrapper(this);
+   if (wrapper == nullptr)
    {
-      return NULL;
+      return nullptr;
    }
    
    LilvInstance *instance = wrapper->Instantiate(mPlug, sampleRate, mFeatures);
    if (!instance)
    {
       delete wrapper;
-      return NULL;
+      return nullptr;
    }
 
    wrapper->SetBlockSize();
@@ -2084,8 +2085,8 @@ bool LV2Effect::BuildFancy()
 #endif
 
    // Determine if the plugin has a supported UI
-   const LilvUI *ui = NULL;
-   const LilvNode *uiType = NULL;
+   const LilvUI *ui = nullptr;
+   const LilvNode *uiType = nullptr;
    LilvUIs *uis = lilv_plugin_get_uis(mPlug);
    if (uis)
    {
@@ -2105,7 +2106,7 @@ bool LV2Effect::BuildFancy()
                break;
             }
 
-            ui = NULL;
+            ui = nullptr;
          }
 
          lilv_node_free(containerType);
@@ -2113,7 +2114,7 @@ bool LV2Effect::BuildFancy()
    }
 
    // Check for other supported UIs
-   if (ui == NULL)
+   if (ui == nullptr)
    {
       LILV_FOREACH(uis, iter, uis)
       {
@@ -2123,12 +2124,12 @@ bool LV2Effect::BuildFancy()
             uiType = node_ExternalUI;
             break;
          }
-         ui = NULL;
+         ui = nullptr;
       }
    }
 
    // No usable UI found
-   if (ui == NULL)
+   if (ui == nullptr)
    {
       lilv_uis_free(uis);
       return false;
@@ -2173,8 +2174,8 @@ bool LV2Effect::BuildFancy()
    // Create the suil host
    mSuilHost = suil_host_new(LV2Effect::suil_port_write_func,
                              LV2Effect::suil_port_index_func,
-                             NULL,
-                             NULL);
+                             nullptr,
+                             nullptr);
    if (!mSuilHost)
    {
       lilv_uis_free(uis);
@@ -2190,8 +2191,8 @@ bool LV2Effect::BuildFancy()
    lilv_free(libPath);
 #endif
 
-   char *bundlePath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)), NULL);
-   char *binaryPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), NULL);
+   char *bundlePath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_bundle_uri(ui)), nullptr);
+   char *binaryPath = lilv_file_uri_parse(lilv_node_as_uri(lilv_ui_get_binary_uri(ui)), nullptr);
 
    mSuilInstance = suil_instance_new(mSuilHost,
                                      this,
@@ -2215,7 +2216,7 @@ bool LV2Effect::BuildFancy()
 #endif
 
       suil_host_free(mSuilHost);
-      mSuilHost = NULL;
+      mSuilHost = nullptr;
 
       return false;
    }
@@ -2232,7 +2233,7 @@ bool LV2Effect::BuildFancy()
    }
    else
    {
-      WXWidget widget = (WXWidget) suil_instance_get_widget(mSuilInstance);
+      auto widget = (WXWidget) suil_instance_get_widget(mSuilInstance);
 
 #if defined(__WXGTK__)
       // Needed by some plugins (e.g., Invada) to ensure the display is fully
@@ -2257,7 +2258,7 @@ bool LV2Effect::BuildFancy()
          mNativeWin->SetMinSize(mNativeWinInitialSize);
       }
 
-      wxSizerItem *si = NULL;
+      wxSizerItem *si = nullptr;
       auto vs = std::make_unique<wxBoxSizer>(wxVERTICAL);
       if (vs)
       {
@@ -2318,7 +2319,7 @@ bool LV2Effect::BuildPlain()
    wxSizer *innerSizer;
 
    wxASSERT(mParent); // To justify safenew
-   wxScrolledWindow *const w = safenew 
+   auto *const w = safenew
       wxScrolledWindow(mParent,
                        wxID_ANY,
                        wxDefaultPosition,
@@ -2365,15 +2366,15 @@ bool LV2Effect::BuildPlain()
 
          std::sort(mGroups.begin(), mGroups.end());
 
-         for (size_t i = 0, groupCount = mGroups.size(); i < groupCount; i++)
+         for (auto & mGroup : mGroups)
          {
-            wxString label = mGroups[i];
+            wxString label = mGroup;
             auto groupSizer = std::make_unique<wxStaticBoxSizer>(wxVERTICAL, w, label);
 
             auto gridSizer = std::make_unique<wxFlexGridSizer>(numCols, 5, 5);
             gridSizer->AddGrowableCol(3);
 
-            for (auto & p : mGroupMap[mGroups[i]])
+            for (auto & p : mGroupMap[mGroup])
             {
                auto & port = mControlPorts[p];
 
@@ -2393,7 +2394,7 @@ bool LV2Effect::BuildPlain()
                   gridSizer->Add(1, 1, 0);
 
                   wxASSERT(w); // To justify safenew
-                  wxButton *b = safenew wxButton(w, ID_Triggers + p, labelText);
+                  auto *b = safenew wxButton(w, ID_Triggers + p, labelText);
                   gridSizer->Add(b, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                   port->mCtrl.button = b;
 
@@ -2410,7 +2411,7 @@ bool LV2Effect::BuildPlain()
 
                if (port->mToggle)
                {
-                  wxCheckBox *c = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
+                  auto *c = safenew wxCheckBox(w, ID_Toggles + p, wxT(""));
                   c->SetName(labelText);
                   c->SetValue(port->mVal > 0);
                   gridSizer->Add(c, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
@@ -2436,7 +2437,7 @@ bool LV2Effect::BuildPlain()
                      s = 0;
                   }
 
-                  wxChoice *c = safenew wxChoice(w, ID_Choices + p);
+                  auto *c = safenew wxChoice(w, ID_Choices + p);
                   c->SetName(labelText);
                   c->Append(port->mScaleLabels);
                   c->SetSelection(s);
@@ -2452,7 +2453,7 @@ bool LV2Effect::BuildPlain()
                   gridSizer->Add(1, 1, 0);
                   gridSizer->Add(1, 1, 0);
 
-                  LV2EffectMeter *m = safenew LV2EffectMeter(w, port);
+                  auto *m = safenew LV2EffectMeter(w, port);
                   gridSizer->Add(m, 0, wxALIGN_CENTER_VERTICAL | wxEXPAND);
                   port->mCtrl.meter = m;
 
@@ -2460,7 +2461,7 @@ bool LV2Effect::BuildPlain()
                }
                else
                {
-                  wxTextCtrl *t = safenew wxTextCtrl(w, ID_Texts + p, wxT(""));
+                  auto *t = safenew wxTextCtrl(w, ID_Texts + p, wxT(""));
                   t->SetName(labelText);
                   gridSizer->Add(t, 0, wxALIGN_CENTER_VERTICAL | wxALIGN_LEFT);
                   port->mText = t;
@@ -2513,7 +2514,7 @@ bool LV2Effect::BuildPlain()
                      gridSizer->Add(1, 1, 0);
                   }
 
-                  wxSlider *s = safenew wxSliderWrapper(w, ID_Sliders + p,
+                  auto *s = safenew wxSliderWrapper(w, ID_Sliders + p,
                                                         0, 0, 1000,
                                                         wxDefaultPosition,
                                                         wxSize(150, -1));
@@ -2555,7 +2556,7 @@ bool LV2Effect::BuildPlain()
          for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
          {
             wxSizer *groupSizer = innerSizer->GetItem(i)->GetSizer();
-            wxFlexGridSizer *gridSizer = (wxFlexGridSizer *) groupSizer->GetItem((size_t) 0)->GetSizer();
+            auto *gridSizer = (wxFlexGridSizer *) groupSizer->GetItem((size_t) 0)->GetSizer();
 
             size_t items = gridSizer->GetChildren().GetCount();
             int cols = gridSizer->GetCols();
@@ -2571,7 +2572,7 @@ bool LV2Effect::BuildPlain()
          for (size_t i = (GetType() == EffectTypeGenerate); i < cnt; i++)
          {
             wxSizer *groupSizer = innerSizer->GetItem(i)->GetSizer();
-            wxFlexGridSizer *gridSizer = (wxFlexGridSizer *) groupSizer->GetItem((size_t) 0)->GetSizer();
+            auto *gridSizer = (wxFlexGridSizer *) groupSizer->GetItem((size_t) 0)->GetSizer();
 
             size_t items = gridSizer->GetChildren().GetCount();
             int cols = gridSizer->GetCols();
@@ -2818,7 +2819,7 @@ void LV2Effect::OnIdle(wxIdleEvent &evt)
    {
       ZixRing *ring = mControlOut->mRing;
 
-      LV2_Atom *atom = (LV2_Atom *) malloc(mControlOut->mMinimumSize);
+      auto *atom = (LV2_Atom *) malloc(mControlOut->mMinimumSize);
       if (atom)
       {
          while (zix_ring_read(ring, atom, sizeof(LV2_Atom)))
@@ -3004,7 +3005,7 @@ const char *LV2Effect::URID_Unmap(LV2_URID urid)
       }
    }
 
-   return NULL;
+   return nullptr;
 }
 
 // static callback
@@ -3051,7 +3052,7 @@ int LV2Effect::LogVPrintf(LV2_URID type, const char *fmt, va_list ap)
       level = wxLOG_Message;
    }
 
-   char *msg = NULL;
+   char *msg = nullptr;
    int len = wxCRT_VsnprintfA(msg, 0, fmt, ap);
 
    msg = (char *) malloc(len + 1);
@@ -3102,8 +3103,6 @@ void LV2Effect::ui_closed(LV2UI_Controller controller)
 void LV2Effect::UIClosed()
 {
    mExternalUIClosed = true;
-
-   return;
 }
 
 // static callback
@@ -3139,8 +3138,7 @@ void LV2Effect::SuilPortWrite(uint32_t port_index,
       }
    }
 
-   return;
-}
+   }
 
 // static callback
 uint32_t LV2Effect::suil_port_index_func(SuilController controller,
@@ -3191,7 +3189,7 @@ const void *LV2Effect::GetPortValue(const char *port_symbol,
    *size = 0;
    *type = 0;
 
-   return NULL;
+   return nullptr;
 }
 
 // static callback
@@ -3280,11 +3278,11 @@ void LV2Effect::SizeRequest(GtkWidget *widget, GtkRequisition *requisition)
 LV2Wrapper::LV2Wrapper(LV2Effect *effect)
 :  mEffect(effect)
 {
-   mInstance = NULL;
-   mHandle = NULL;
-   mOptionsInterface = NULL;
-   mStateInterface = NULL;
-   mWorkerInterface = NULL;
+   mInstance = nullptr;
+   mHandle = nullptr;
+   mOptionsInterface = nullptr;
+   mStateInterface = nullptr;
+   mWorkerInterface = nullptr;
    mWorkerSchedule = {};
    mFreeWheeling = false;
    mLatency = 0.0;
@@ -3300,7 +3298,7 @@ LV2Wrapper::~LV2Wrapper()
       {
          mStopWorker = true;
 
-         LV2Work work = {0, NULL};
+         LV2Work work = {0, nullptr};
          mRequests.Post(work);
 
          thread->Wait();
@@ -3313,7 +3311,7 @@ LV2Wrapper::~LV2Wrapper()
       }
 
       lilv_instance_free(mInstance);
-      mInstance = NULL;
+      mInstance = nullptr;
    }
 }
 
@@ -3330,7 +3328,7 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
       mWorkerSchedule.schedule_work = LV2Wrapper::schedule_work;
       mEffect->AddFeature(LV2_WORKER__schedule, &mWorkerSchedule);
 
-      mEffect->AddFeature(NULL, NULL);
+      mEffect->AddFeature(nullptr, nullptr);
    }
 
 #if defined(__WXMSW__)
@@ -3361,12 +3359,12 @@ LilvInstance *LV2Wrapper::Instantiate(const LilvPlugin *plugin,
       features.pop_back();
 
       // Re-add terminator
-      mEffect->AddFeature(NULL, NULL);
+      mEffect->AddFeature(nullptr, nullptr);
    }
 
    if (!mInstance)
    {
-      return NULL;
+      return nullptr;
    }
 
    mHandle = lilv_instance_get_handle(mInstance);
@@ -3407,7 +3405,7 @@ LV2_Handle LV2Wrapper::GetHandle()
    return mHandle;
 }
 
-float LV2Wrapper::GetLatency()
+float LV2Wrapper::GetLatency() const
 {
    return mLatency;
 }
@@ -3466,7 +3464,7 @@ void *LV2Wrapper::Entry()
                              work.data);
    }
 
-   return (void *) 0;
+   return (void *) nullptr;
 }
 
 void LV2Wrapper::SendResponses()

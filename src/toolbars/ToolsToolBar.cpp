@@ -104,7 +104,7 @@ ToolsToolBar::~ToolsToolBar()
 ToolsToolBar &ToolsToolBar::Get( SaucedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<ToolsToolBar*>( toolManager.GetToolBar(ToolsBarID) );
+   return *dynamic_cast<ToolsToolBar*>( toolManager.GetToolBar(ToolsBarID) );
 }
 
 const ToolsToolBar &ToolsToolBar::Get( const SaucedacityProject &project )
@@ -161,8 +161,7 @@ void ToolsToolBar::RegenerateTooltips()
    #endif
 
    //		wxSafeYield();
-   return;
-}
+   }
 
 void ToolsToolBar::UpdatePrefs()
 {
@@ -255,7 +254,7 @@ bool ToolsToolBar::IsDown(int tool) const
    return mTool[tool]->IsDown();
 }
 
-int ToolsToolBar::GetDownTool()
+int ToolsToolBar::GetDownTool() const
 {
    int tool;
 
@@ -277,7 +276,7 @@ void ToolsToolBar::OnTool(wxCommandEvent & evt)
       else
          mTool[i]->PopUp();
 
-   for ( auto pProject : AllProjects{} )
+   for ( const auto& pProject : AllProjects{} )
       ProjectWindow::Get( *pProject ).RedrawProject();
 
    gPrefs->Write(wxT("/GUI/ToolBars/Tools/MultiToolActive"),

@@ -30,14 +30,14 @@ class SAUCEDACITY_DLL_API BuiltinEffectsModule final : public ModuleInterface
 {
 public:
    BuiltinEffectsModule();
-   virtual ~BuiltinEffectsModule();
+   ~BuiltinEffectsModule() override;
 
    using Factory = std::function< std::unique_ptr<Effect> () >;
 
    // Typically you make a static object of this type in the .cpp file that
    // also implements the Effect subclass.
    template< typename Subclass >
-   struct Registration final { Registration( bool excluded = false ) {
+   struct Registration final { explicit Registration( bool excluded = false ) {
       DoRegistration(
          Subclass::Symbol, []{ return std::make_unique< Subclass >(); },
          excluded );

@@ -47,17 +47,17 @@ public:
       : eWrappedType{ eWrappedNotSet }
    {}
 
-   bool IsString();
+   bool IsString() const;
 
-   wxString ReadAsString();
-   int ReadAsInt();
-   double ReadAsDouble();
-   bool ReadAsBool();
+   wxString ReadAsString() const;
+   int ReadAsInt() const;
+   double ReadAsDouble() const;
+   bool ReadAsBool() const;
 
-   void WriteToAsString( const wxString & InStr);
-   void WriteToAsInt( const int InInt);
-   void WriteToAsDouble( const double InDouble);
-   void WriteToAsBool( const bool InBool);
+   void WriteToAsString( const wxString & InStr) const;
+   void WriteToAsInt( int InInt) const;
+   void WriteToAsDouble( double InDouble) const;
+   void WriteToAsBool( bool InBool) const;
 
 public :
 

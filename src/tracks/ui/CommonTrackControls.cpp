@@ -44,24 +44,24 @@ std::vector<UIHandlePtr> CommonTrackControls::HitTest
 
    auto sThis = shared_from_this();
 
-   if (NULL != (result = CloseButtonHandle::HitTest(
+   if (nullptr != (result = CloseButtonHandle::HitTest(
       mCloseHandle, state, rect, this)))
       results.push_back(result);
 
-   if (NULL != (result = MenuButtonHandle::HitTest(
+   if (nullptr != (result = MenuButtonHandle::HitTest(
       mMenuHandle, state, rect, sThis)))
       results.push_back(result);
 
-   if (NULL != (result = MinimizeButtonHandle::HitTest(
+   if (nullptr != (result = MinimizeButtonHandle::HitTest(
       mMinimizeHandle, state, rect, this)))
       results.push_back(result);
 
-   if (NULL != (result = SelectButtonHandle::HitTest(
+   if (nullptr != (result = SelectButtonHandle::HitTest(
       mSelectButtonHandle, state, rect, this)))
       results.push_back(result);
 
    if (results.empty()) {
-      if (NULL != (result = TrackSelectHandle::HitAnywhere(
+      if (nullptr != (result = TrackSelectHandle::HitAnywhere(
          mSelectHandle, FindTrack())))
          results.push_back(result);
    }
@@ -124,7 +124,7 @@ void TrackMenuTable::InitUserData(void *pUserData)
 BEGIN_POPUP_MENU(TrackMenuTable)
    static const auto enableIfCanMove = [](bool up){ return
       [up]( PopupMenuHandler &handler, wxMenu &menu, int id ){
-         auto pData = static_cast<TrackMenuTable&>( handler ).mpData;
+         auto pData = dynamic_cast<TrackMenuTable&>( handler ).mpData;
          const auto &tracks = TrackList::Get( pData->project );
          Track *const pTrack = pData->pTrack;
          menu.Enable( id,

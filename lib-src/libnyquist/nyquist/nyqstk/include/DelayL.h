@@ -46,7 +46,7 @@ public:
   DelayL(StkFloat delay, unsigned long maxDelay);
 
   //! Class destructor.
-  ~DelayL();
+  ~DelayL() override;
 
   //! Set the delay-line length.
   /*!
@@ -55,17 +55,17 @@ public:
   void setDelay(StkFloat delay);
 
   //! Return the current delay-line length.
-  StkFloat getDelay(void) const;
+  StkFloat getDelay() const;
 
   //! Return the value which will be output by the next call to tick().
   /*!
     This method is valid only for delay settings greater than zero!
    */
-  StkFloat nextOut(void);
+  StkFloat nextOut() override;
 
  protected:
 
-  StkFloat computeSample( StkFloat input );
+  StkFloat computeSample( StkFloat input ) override;
 
   StkFloat alpha_;
   StkFloat omAlpha_;

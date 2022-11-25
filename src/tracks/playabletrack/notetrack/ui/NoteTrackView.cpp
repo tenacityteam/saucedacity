@@ -148,7 +148,7 @@ const char *IsShape(Alg_note_ptr note)
     }
     parameters = parameters->next;
   }
-  return NULL;
+  return nullptr;
 }
 
 // returns value of attr, or default if not found
@@ -208,7 +208,7 @@ const char *LookupStringAttribute(Alg_note_ptr note, Alg_attribute attr, const c
 }
 
 // returns value of attr, or default if not found
-const char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, char *def)
+const char *LookupAtomAttribute(Alg_note_ptr note, Alg_attribute attr, const char *def)
 {
   Alg_parameters_ptr parameters = note->parameters;
   while (parameters) {
@@ -472,16 +472,16 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
    iterator.begin();
    //for every event
    Alg_event_ptr evt;
-   while (0 != (evt = iterator.next())) {
+   while (nullptr != (evt = iterator.next())) {
       if (evt->get_type() == 'n') { // 'n' means a note
-         Alg_note_ptr note = (Alg_note_ptr) evt;
+         auto note = (Alg_note_ptr) evt;
          // if the note's channel is visible
          if (track->IsVisibleChan(evt->chan)) {
             double xx = note->time + track->GetOffset();
             double x1 = xx + note->dur;
             if (xx < h1 && x1 > h) { // omit if outside box
-               const char *shape = NULL;
-               if (note->loud > 0.0 || 0 == (shape = IsShape(note))) {
+               const char *shape = nullptr;
+               if (note->loud > 0.0 || nullptr == (shape = IsShape(note))) {
                   wxRect nr; // "note rectangle"
                   nr.y = data.PitchToY(note->pitch);
                   nr.height = data.GetPitchHeight(1);
@@ -652,8 +652,8 @@ void DrawNoteTrack(TrackPanelDrawingContext &context,
                      //// if no color specified, copy color from brush
                      //else dc.SetTextBackground(dc.GetPen().GetColour());
 
-                     const char *font = LookupAtomAttribute(note, fonta, NULL);
-                     const char *weight = LookupAtomAttribute(note, weighta, NULL);
+                     const char *font = LookupAtomAttribute(note, fonta, nullptr);
+                     const char *weight = LookupAtomAttribute(note, weighta, nullptr);
                      int size = LookupIntAttribute(note, sizei, 8);
                      const char *justify = LookupStringAttribute(note, justifys, "ld");
                      wxFont wxfont;

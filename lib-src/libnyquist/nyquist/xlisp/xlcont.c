@@ -38,7 +38,7 @@ FORWARD LOCAL void doupdates(LVAL list, int pflag);
 
 
 /* dummy node type for a list */
-#define LIST	-1
+#define LIST	(-1)
 
 /* xquote - special form 'quote' */
 LVAL xquote(void)

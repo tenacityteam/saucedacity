@@ -88,15 +88,15 @@ public:
 
    // Accessors
 
-   double t0() const { return mT0; }
-   double t1() const { return mT1; }
-   double duration() const { return mT1 - mT0; }
-   bool isPoint() const { return mT1 <= mT0; }
+   [[nodiscard]] double t0() const { return mT0; }
+   [[nodiscard]] double t1() const { return mT1; }
+   [[nodiscard]] double duration() const { return mT1 - mT0; }
+   [[nodiscard]] bool isPoint() const { return mT1 <= mT0; }
 
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-   double f0() const { return mF0; }
-   double f1() const { return mF1; }
-   double fc() const {
+   [[nodiscard]] double f0() const { return mF0; }
+   [[nodiscard]] double f1() const { return mF1; }
+   [[nodiscard]] double fc() const {
       if (mF0 == UndefinedFrequency ||
           mF1 == UndefinedFrequency)
           return UndefinedFrequency;

@@ -11,7 +11,7 @@
 #pragma once
 
 #include <cstdint>
-#include <errno.h>
+#include <cerrno>
 
 #define AUDACITY_MKTAG(a, b, c, d) ((a) | ((b) << 8) | ((c) << 16) | ((unsigned)(d) << 24))
 #define AUDACITY_FFERRTAG(a, b, c, d) (-(int)AUDACITY_MKTAG(a, b, c, d))
@@ -74,7 +74,7 @@
 #define AUDACITY_AV_NOPTS_VALUE ((int64_t)UINT64_C(0x8000000000000000))
 
 #ifndef AV_VERSION_INT
-#define AV_VERSION_INT(a, b, c) (a << 16 | b << 8 | c)
+#define AV_VERSION_INT(a, b, c) ((a) << 16 | (b) << 8 | (c))
 #endif
 
 #define AUDACITY_AV_TIME_BASE (1000 * 1000)
@@ -95,7 +95,7 @@
 #define FF_COMPLIANCE_NORMAL 0
 #define FF_COMPLIANCE_UNOFFICIAL -1
  */
-#define AUDACITY_FF_COMPLIANCE_EXPERIMENTAL -2
+#define AUDACITY_FF_COMPLIANCE_EXPERIMENTAL (-2)
 
 /*
 #define FF_PROFILE_AAC_MAIN 0
@@ -170,7 +170,7 @@ struct FFMPegVersion final
    unsigned Minor { 0 };
    unsigned Micro { 0 };
 
-   unsigned GetIntVersion() const noexcept
+   [[nodiscard]] unsigned GetIntVersion() const noexcept
    {
       return AV_VERSION_INT(Major, Minor, Micro);
    }

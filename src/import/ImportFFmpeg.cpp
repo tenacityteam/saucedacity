@@ -172,7 +172,7 @@ public:
    {
    }
 
-   ~FFmpegImportPlugin() { }
+   ~FFmpegImportPlugin() override { }
 
    wxString GetPluginStringID() override { return wxT("libav"); }
    TranslatableString GetPluginFormatDescription() override;
@@ -200,7 +200,7 @@ class FFmpegImportFileHandle final : public ImportFileHandle
 
 public:
    FFmpegImportFileHandle(const FilePath & name);
-   ~FFmpegImportFileHandle();
+   ~FFmpegImportFileHandle() override;
 
    ///! Format initialization
    ///\return true if successful, false otherwise
@@ -377,7 +377,7 @@ bool FFmpegImportFileHandle::InitCodecs()
          auto codec = mFFmpeg->CreateDecoder(id);
          auto name = mFFmpeg->avcodec_get_name(id);
 
-         if (codec == NULL)
+         if (codec == nullptr)
          {
             wxLogError(
                wxT("FFmpeg : CreateDecoder() failed. Index[%02d], Codec[%02x - %s]"),

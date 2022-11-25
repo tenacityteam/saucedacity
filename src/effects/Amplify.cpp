@@ -83,8 +83,7 @@ EffectAmplify::EffectAmplify()
 }
 
 EffectAmplify::~EffectAmplify()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -286,8 +285,6 @@ void EffectAmplify::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
-
-   return;
 }
 
 bool EffectAmplify::TransferDataToWindow()

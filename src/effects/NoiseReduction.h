@@ -20,7 +20,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectNoiseReduction();
-   virtual ~EffectNoiseReduction();
+   ~EffectNoiseReduction() override;
 
    using Effect::TrackProgress;
 

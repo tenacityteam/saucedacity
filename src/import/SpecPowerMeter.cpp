@@ -51,7 +51,7 @@ float SpecPowerCalculation::CalcPower(float* sig, float fc, float bw)
    }
    
    // Calc the FFT
-   FFT(mSigLen, 0, sig, mSigI.get(), mSigFR.get(), mSigFI.get());
+   FFT(mSigLen, false, sig, mSigI.get(), mSigFR.get(), mSigFI.get());
    
    // Calc the in-band power
    pwr = CalcBinPower(mSigFR.get(), mSigFI.get(), loBin, hiBin);
@@ -59,7 +59,7 @@ float SpecPowerCalculation::CalcPower(float* sig, float fc, float bw)
    return pwr;     
 }
 
-float SpecPowerCalculation::CalcBinPower(float* sig_f_r, float* sig_f_i, int loBin, int hiBin)
+float SpecPowerCalculation::CalcBinPower(const float* sig_f_r, const float* sig_f_i, int loBin, int hiBin)
 {
    float pwr = 0.0f;
    
@@ -71,7 +71,7 @@ float SpecPowerCalculation::CalcBinPower(float* sig_f_r, float* sig_f_i, int loB
    return pwr;
 }
 
-int SpecPowerCalculation::Freq2Bin(float fc)
+int SpecPowerCalculation::Freq2Bin(float fc) const
 {
    int bin;
    

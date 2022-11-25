@@ -24,12 +24,12 @@ class SoundActivatedRecordDialog final : public wxDialogWrapper
 {
 public:
    SoundActivatedRecordDialog(wxWindow* parent);
-   ~SoundActivatedRecordDialog();
+   ~SoundActivatedRecordDialog() override;
 
 private:
    void OnOK(wxCommandEvent& event);
 
-   void PopulateOrExchange(ShuttleGui& S);
+   static void PopulateOrExchange(ShuttleGui& S);
 
    DECLARE_EVENT_TABLE()
 };

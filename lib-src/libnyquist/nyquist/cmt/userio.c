@@ -448,7 +448,7 @@ int askbool(prompt, deflt)
 char *prompt;
 int deflt;
 {
-#define undefined -1
+#define undefined (-1)
     char defchar;    /* the default answer */
     char c;     /* user input */
     char in_string[100];

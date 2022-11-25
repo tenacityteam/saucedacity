@@ -33,7 +33,7 @@ public:
 
    MinimizeButtonHandle &operator=(const MinimizeButtonHandle&) = default;
 
-   virtual ~MinimizeButtonHandle();
+   ~MinimizeButtonHandle() override;
 
    static UIHandlePtr HitTest
       (std::weak_ptr<MinimizeButtonHandle> &holder,
@@ -59,7 +59,7 @@ public:
 
    SelectButtonHandle &operator=(const SelectButtonHandle&) = default;
 
-   virtual ~SelectButtonHandle();
+   ~SelectButtonHandle() override;
 
    static UIHandlePtr HitTest
       (std::weak_ptr<SelectButtonHandle> &holder,
@@ -87,7 +87,7 @@ public:
 
    CloseButtonHandle &operator=(const CloseButtonHandle&) = default;
 
-   virtual ~CloseButtonHandle();
+   ~CloseButtonHandle() override;
 
    static UIHandlePtr HitTest
       (std::weak_ptr<CloseButtonHandle> &holder,
@@ -115,7 +115,7 @@ public:
 
    MenuButtonHandle &operator=(const MenuButtonHandle&) = default;
 
-   virtual ~MenuButtonHandle();
+   ~MenuButtonHandle() override;
 
    static UIHandlePtr HitTest
       (std::weak_ptr<MenuButtonHandle> &holder,

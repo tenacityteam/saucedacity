@@ -251,11 +251,11 @@ EffectEqualization::EffectEqualization(int Options)
    , mFilterFuncI{ windowSize }
 {
    mOptions = Options;
-   mGraphic = NULL;
-   mDraw = NULL;
-   mCurve = NULL;
-   mPanel = NULL;
-   mMSlider = NULL;
+   mGraphic = nullptr;
+   mDraw = nullptr;
+   mCurve = nullptr;
+   mPanel = nullptr;
+   mMSlider = nullptr;
 
    hFFT = GetFFT(windowSize);
 
@@ -334,8 +334,7 @@ EffectEqualization::EffectEqualization(int Options)
 
 
 EffectEqualization::~EffectEqualization()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -405,7 +404,7 @@ bool EffectEqualization::DefineParams( ShuttleParams & S ){
          S.Define( d, nameVal,  0.0, -10000.0, 10000.0, 0.0 );
          if( f <= 0.0 )
             break;
-         mCurves[0].points.push_back( EQPoint( f,d ));
+         mCurves[0].points.emplace_back( f,d );
       }
       setCurve( 0 );
    }
@@ -496,11 +495,11 @@ RegistryPaths EffectEqualization::GetFactoryPresets()
 {
    RegistryPaths names;
 
-   for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
+   for (const auto & FactoryPreset : FactoryPresets)
    {
-      if ((mOptions == kEqOptionGraphic) && (FactoryPresets[i].bForBoth == false))
+      if ((mOptions == kEqOptionGraphic) && (FactoryPreset.bForBoth == false))
          continue;
-      names.push_back(FactoryPresets[i].name.Translation());
+      names.push_back(FactoryPreset.name.Translation());
    }
 
    return names;
@@ -589,7 +588,7 @@ bool EffectEqualization::ValidateUI()
 
 // Effect implementation
 
-wxString EffectEqualization::GetPrefsPrefix()
+wxString EffectEqualization::GetPrefsPrefix() const
 {
    wxString base = wxT("/Effects/Equalization/");
    if( mOptions == kEqOptionGraphic )
@@ -753,8 +752,8 @@ bool EffectEqualization::Process()
 
 bool EffectEqualization::CloseUI()
 {
-   mCurve = NULL;
-   mPanel = NULL;
+   mCurve = nullptr;
+   mPanel = nullptr;
 
    return Effect::CloseUI();
 }
@@ -1178,8 +1177,6 @@ void EffectEqualization::PopulateOrExchange(ShuttleGui & S)
       szrV->SetMinSize(sz);
    }
    ForceRecalc();
-
-   return;
 }
 
 //
@@ -1246,7 +1243,7 @@ bool EffectEqualization::TransferDataFromWindow()
    wxString tip;
 
    bool rr = false;
-   float dB = (float) mdBMinSlider->GetValue();
+   auto dB = (float) mdBMinSlider->GetValue();
    if (dB != mdBMin) {
       rr = true;
       mdBMin = dB;
@@ -1418,7 +1415,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
             continue;   // clip is not within selection
 
          //save the actual clip start/end so that we can rejoin them after we paste.
-         clipRealStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
+         clipRealStartEndTimes.emplace_back(clipStartT,clipEndT);
 
          if( clipStartT < startT )  // does selection cover the whole clip?
             clipStartT = startT; // don't copy all the NEW clip
@@ -1426,7 +1423,7 @@ bool EffectEqualization::ProcessOne(int count, WaveTrack * t,
             clipEndT = startT + lenT; // don't copy all the NEW clip
 
          //save them
-         clipStartEndTimes.push_back(std::pair<double,double>(clipStartT,clipEndT));
+         clipStartEndTimes.emplace_back(clipStartT,clipEndT);
       }
       //now go thru and replace the old clips with NEW
       for(unsigned int i = 0; i < clipStartEndTimes.size(); i++)
@@ -1513,7 +1510,7 @@ bool EffectEqualization::CalcFilter()
    //transfer to time domain to do the padding and windowing
    Floats outr{ mWindowSize };
    Floats outi{ mWindowSize };
-   InverseRealFFT(mWindowSize, mFilterFuncR.get(), NULL, outr.get()); // To time domain
+   InverseRealFFT(mWindowSize, mFilterFuncR.get(), nullptr, outr.get()); // To time domain
 
    {
       size_t i = 0;
@@ -1595,12 +1592,12 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
 // We've disabled the XML management of curves.
 // Just going via .cfg files now.
 #if 1
-   (void)fileName;
-   (void)append;
-   mCurves.clear();
-   mCurves.push_back( wxT("unnamed") );   // we still need a default curve to use
+    (void)fileName;
+    (void)append;
+    mCurves.clear();
+    mCurves.push_back( wxT("unnamed") );   // we still need a default curve to use
 #else
-   // Construct normal curve filename
+    // Construct normal curve filename
    //
    // LLL:  Wouldn't you know that as of WX 2.6.2, there is a conflict
    //       between wxStandardPaths and wxConfig under Linux.  The latter
@@ -1682,15 +1679,13 @@ void EffectEqualization::LoadCurves(const wxString &fileName, bool append)
       mCurves.back().points = tempCustom.points;
    }
 #endif
-   return;
 }
-
 //
 // Update presets to match Audacity version.
 //
 void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
 {
-   if (mCurves.size() == 0)
+   if (mCurves.empty())
       return;
 
    wxString unnamed = wxT("unnamed");
@@ -1799,8 +1794,6 @@ void EffectEqualization::UpdateDefaultCurves(bool updateAll /* false */)
    wxString eqCurvesCurrentVersion = wxString::Format(wxT("%d.%d"), EQCURVES_VERSION, EQCURVES_REVISION);
    gPrefs->Write(GetPrefsPrefix()+"PresetVersion", eqCurvesCurrentVersion);
    gPrefs->Flush();
-
-   return;
 }
 
 //
@@ -2120,7 +2113,7 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
          double db = value[ point ];
 
          // Add it to the curve
-         mCurves[ curve ].points.push_back( EQPoint( freq, db ) );
+         mCurves[ curve ].points.emplace_back( freq, db );
       }
    }
    else
@@ -2136,7 +2129,7 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
          double db = value[ point ];
 
          // Add it to the curve
-         mCurves[ curve ].points.push_back( EQPoint( freq, db ) );
+         mCurves[ curve ].points.emplace_back( freq, db );
       }
    }
    // Remember that we've updated the unnamed curve
@@ -2149,7 +2142,7 @@ void EffectEqualization::EnvelopeUpdated(Envelope *env, bool lin)
 //
 //
 //
-bool EffectEqualization::IsLinear()
+bool EffectEqualization::IsLinear() const
 {
    return mDrawMode && mLin;
 }
@@ -2217,11 +2210,11 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
             do
             {
                exists = false;
-               for(size_t i = 0; i < mCurves.size(); i++)
+               for(auto & mCurve : mCurves)
                {
                   if(n>0)
                      strValueTemp.Printf(wxT("%s (%d)"),strValue,n);
-                  if(mCurves[i].Name == strValueTemp)
+                  if(mCurve.Name == strValueTemp)
                   {
                      exists = true;
                      break;
@@ -2274,7 +2267,7 @@ bool EffectEqualization::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
       }
 
       // Create a NEW point
-      mCurves[ mCurves.size() - 1 ].points.push_back( EQPoint( f, d ) );
+      mCurves[ mCurves.size() - 1 ].points.emplace_back( f, d );
 
       // Tell caller it was processed
       return true;
@@ -2304,7 +2297,7 @@ XMLTagHandler *EffectEqualization::HandleXMLChild(const wxChar *tag)
       return this;
    }
 
-   return NULL;
+   return nullptr;
 }
 
 //
@@ -2359,12 +2352,12 @@ void EffectEqualization::UpdateCurves()
    if( mCurve ) 
       mCurve->Clear();
    bool selectedCurveExists = false;
-   for (size_t i = 0, cnt = mCurves.size(); i < cnt; i++)
+   for (auto & curve : mCurves)
    {
-      if (mCurveName == mCurves[ i ].Name)
+      if (mCurveName == curve.Name)
          selectedCurveExists = true;
       if( mCurve ) 
-         mCurve->Append(mCurves[ i ].Name);
+         mCurve->Append(curve.Name);
    }
    // In rare circumstances, mCurveName may not exist (bug 1891)
    if (!selectedCurveExists)
@@ -2494,7 +2487,7 @@ void EffectEqualization::UpdateGraphic()
    mDrawMode = false;
 }
 
-void EffectEqualization::EnvLogToLin(void)
+void EffectEqualization::EnvLogToLin()
 {
    size_t numPoints = mLogEnvelope->GetNumberOfPoints();
    if( numPoints == 0 )
@@ -2518,7 +2511,7 @@ void EffectEqualization::EnvLogToLin(void)
    mLinEnvelope->Reassign(1., value[numPoints-1]);
 }
 
-void EffectEqualization::EnvLinToLog(void)
+void EffectEqualization::EnvLinToLog()
 {
    size_t numPoints = mLinEnvelope->GetNumberOfPoints();
    if( numPoints == 0 )
@@ -2560,7 +2553,7 @@ void EffectEqualization::EnvLinToLog(void)
       EnvelopeUpdated(mLogEnvelope.get(), false);
 }
 
-void EffectEqualization::ErrMin(void)
+void EffectEqualization::ErrMin()
 {
    double vals[NUM_PTS];
    double error = 0.0;
@@ -2651,14 +2644,14 @@ void EffectEqualization::GraphicEQ(Envelope *env)
    case kBspline:  // B-spline
       {
          int minF = 0;
-         for(size_t i = 0; i < NUM_PTS; i++)
+         for(double mWhen : mWhens)
          {
-            while( (mWhenSliders[minF] <= mWhens[i]) & (minF < (int)mBandsInUse) )
+            while( (mWhenSliders[minF] <= mWhen) & (minF < (int)mBandsInUse) )
                minF++;
             minF--;
             if( minF < 0 ) //before first slider
             {
-               dist = mWhens[i] - mWhenSliders[0];
+               dist = mWhen - mWhenSliders[0];
                span = mWhenSliders[1] - mWhenSliders[0];
                s = dist/span;
                if( s < -1.5 )
@@ -2670,9 +2663,9 @@ void EffectEqualization::GraphicEQ(Envelope *env)
             }
             else
             {
-               if( mWhens[i] > mWhenSliders[mBandsInUse-1] )   //after last fader
+               if( mWhen > mWhenSliders[mBandsInUse-1] )   //after last fader
                {
-                  dist = mWhens[i] - mWhenSliders[mBandsInUse-1];
+                  dist = mWhen - mWhenSliders[mBandsInUse-1];
                   span = mWhenSliders[mBandsInUse-1] - mWhenSliders[mBandsInUse-2];
                   s = dist/span;
                   if( s > 1.5 )
@@ -2685,7 +2678,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                }
                else  //normal case
                {
-                  dist = mWhens[i] - mWhenSliders[minF];
+                  dist = mWhen - mWhenSliders[minF];
                   span = mWhenSliders[minF+1] - mWhenSliders[minF];
                   s = dist/span;
                   if(s < .5 )
@@ -2706,9 +2699,9 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                   }
                }
             }
-            if(mWhens[i]<=0.)
+            if(mWhen<=0.)
                env->Reassign(0., value);
-            env->Insert( mWhens[i], value );
+            env->Insert( mWhen, value );
          }
          env->Reassign( 1., value );
          break;
@@ -2717,14 +2710,14 @@ void EffectEqualization::GraphicEQ(Envelope *env)
    case kCosine:  // Cosine squared
       {
          int minF = 0;
-         for(size_t i = 0; i < NUM_PTS; i++)
+         for(double mWhen : mWhens)
          {
-            while( (mWhenSliders[minF] <= mWhens[i]) & (minF < (int)mBandsInUse) )
+            while( (mWhenSliders[minF] <= mWhen) & (minF < (int)mBandsInUse) )
                minF++;
             minF--;
             if( minF < 0 ) //before first slider
             {
-               dist = mWhenSliders[0] - mWhens[i];
+               dist = mWhenSliders[0] - mWhen;
                span = mWhenSliders[1] - mWhenSliders[0];
                if( dist < span )
                   value = mEQVals[0]*(1. + cos(M_PI*dist/span))/2.;
@@ -2733,10 +2726,10 @@ void EffectEqualization::GraphicEQ(Envelope *env)
             }
             else
             {
-               if( mWhens[i] > mWhenSliders[mBandsInUse-1] )   //after last fader
+               if( mWhen > mWhenSliders[mBandsInUse-1] )   //after last fader
                {
                   span = mWhenSliders[mBandsInUse-1] - mWhenSliders[mBandsInUse-2];
-                  dist = mWhens[i] - mWhenSliders[mBandsInUse-1];
+                  dist = mWhen - mWhenSliders[mBandsInUse-1];
                   if( dist < span )
                      value = mEQVals[mBandsInUse-1]*(1. + cos(M_PI*dist/span))/2.;
                   else
@@ -2745,14 +2738,14 @@ void EffectEqualization::GraphicEQ(Envelope *env)
                else  //normal case
                {
                   span = mWhenSliders[minF+1] - mWhenSliders[minF];
-                  dist = mWhenSliders[minF+1] - mWhens[i];
+                  dist = mWhenSliders[minF+1] - mWhen;
                   value = mEQVals[minF]*(1. + cos(M_PI*(span-dist)/span))/2. +
                      mEQVals[minF+1]*(1. + cos(M_PI*dist/span))/2.;
                }
             }
-            if(mWhens[i]<=0.)
+            if(mWhen<=0.)
                env->Reassign(0., value);
-            env->Insert( mWhens[i], value );
+            env->Insert( mWhen, value );
          }
          env->Reassign( 1., value );
          break;
@@ -2774,7 +2767,7 @@ void EffectEqualization::GraphicEQ(Envelope *env)
    ForceRecalc();
 }
 
-void EffectEqualization::spline(double x[], double y[], size_t n, double y2[])
+void EffectEqualization::spline(const double x[], const double y[], size_t n, double y2[])
 {
    wxASSERT( n > 0 );
 
@@ -2796,7 +2789,7 @@ void EffectEqualization::spline(double x[], double y[], size_t n, double y2[])
       y2[i] = y2[i]*y2[i+1] + u[i];
 }
 
-double EffectEqualization::splint(double x[], double y[], size_t n, double y2[], double xr)
+double EffectEqualization::splint(const double x[], const double y[], size_t n, const double y2[], double xr)
 {
    wxASSERT( n > 1 );
 
@@ -2829,7 +2822,7 @@ void EffectEqualization::OnSize(wxSizeEvent & event)
 
 void EffectEqualization::OnSlider(wxCommandEvent & event)
 {
-   wxSlider *s = (wxSlider *)event.GetEventObject();
+   auto *s = (wxSlider *)event.GetEventObject();
    for (size_t i = 0; i < mBandsInUse; i++)
    {
       if( s == mSliders[i])
@@ -2910,7 +2903,7 @@ void EffectEqualization::OnSliderDBMAX(wxCommandEvent & WXUNUSED(event))
 void EffectEqualization::OnCurve(wxCommandEvent & WXUNUSED(event))
 {
    // Select NEW curve
-   wxASSERT( mCurve != NULL );
+   wxASSERT( mCurve != nullptr );
    setCurve( mCurve->GetCurrentSelection() );
    if( !mDrawMode )
       UpdateGraphic();
@@ -3080,7 +3073,7 @@ EqualizationPanel::EqualizationPanel(
    mParent = parent;
    mEffect = effect;
 
-   mBitmap = NULL;
+   mBitmap = nullptr;
    mWidth = 0;
    mHeight = 0;
 
@@ -3383,8 +3376,7 @@ wxDialogWrapper(parent, wxID_ANY, XO("Manage Curves List"),
 }
 
 EditCurvesDialog::~EditCurvesDialog()
-{
-}
+= default;
 
 /// Creates the dialog and its contents.
 void EditCurvesDialog::Populate()
@@ -3429,8 +3421,6 @@ void EditCurvesDialog::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
    PopulateList(mPosition);
    Fit();
-
-   return;
 }
 
 void EditCurvesDialog::PopulateList(int position)
@@ -3642,9 +3632,7 @@ void EditCurvesDialog::OnRename(wxCommandEvent & WXUNUSED(event))
       item = mList->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
    }
 
-   PopulateList(firstItem);  // Note: only saved to file when you OK out of the dialog
-   return;
-}
+   PopulateList(firstItem);  }
 
 // Delete curve/curves
 void EditCurvesDialog::OnDelete(wxCommandEvent & WXUNUSED(event))
@@ -3765,9 +3753,7 @@ void EditCurvesDialog::OnImport( wxCommandEvent & WXUNUSED(event))
    mEffect->LoadCurves(fileName, true);   // use main interface to load imported curves
    mEditCurves = mEffect->mCurves;  // copy back to this interface
    mEffect->mCurves = temp;   // and reset the main interface how it was
-   PopulateList(0);  // update the EditCurvesDialog dialog
-   return;
-}
+   PopulateList(0);  }
 
 void EditCurvesDialog::OnExport( wxCommandEvent & WXUNUSED(event))
 {

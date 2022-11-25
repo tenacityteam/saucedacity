@@ -213,8 +213,7 @@ void LabelTextHandle::HandleTextDragRelease(
       }
    }
 
-   return;
-}
+   }
 
 UIHandle::Result LabelTextHandle::Drag
 (const TrackPanelMouseEvent &evt, SaucedacityProject *pProject)

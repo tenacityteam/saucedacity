@@ -5,7 +5,7 @@
 ### Linux
 
 Most distributions do not package all of Saucedacity's dependencies (yet).
-wxWidgets 3.1 is required for building Saucedacity but many distributions only
+wxWidgets 3.1 or later is required for building Saucedacity but many distributions only
 package wxWidgets 3.0. [PortMidi](https://github.com/mixxxdj/portmidi) and
 [PortSMF](https://github.com/tenacityteam/portsmf) are required for MIDI support
 but some distributions do not package PortSMF (Saucedacity can still build without
@@ -14,6 +14,9 @@ optional dependency used for time stretching that is not available in many Linux
 distribution package managers either. Optionally,
 [vcpkg can be used](#vcpkg-on-Linux) to build dependencies from source which
 may be helpful if your distribution is missing some packages.
+
+**Note**: Building wxWidgets as a static library does **NOT** work! You will need to build
+it as a shared library.
 
 Installing ccache and ninja-build is highly recommended for faster builds but
 not required. CMake will automatically use ccache if it is installed.
@@ -26,7 +29,7 @@ To install Saucedacity's dependencies, run:
 sudo apt-get install build-essential libavcodec-dev libavformat-dev libavutil-dev libflac++-dev libglib2.0-dev libgtk-3-dev libid3tag0-dev libjack-dev liblilv-dev libmad0-dev libmp3lame-dev libogg-dev libpng-dev portaudio19-dev libportmidi-dev libportsmf-dev libserd-dev libsndfile1-dev libsord-dev libsoundtouch-dev libsoxr-dev libsuil-dev libtwolame-dev vamp-plugin-sdk libvorbis-dev lv2-dev zlib1g-dev cmake ninja-build libjpeg-dev libtiff-dev liblzma-dev libsqlite3-dev
 ```
 
-wxWidgets 3.1 is required but not packaged in Debian or Ubuntu. Refer
+wxWidgets 3.1 or later is required but not packaged in Debian or Ubuntu. Refer
 to the
 [wxWidgets documentation](https://docs.wxwidgets.org/3.1/overview_cmake.html)
 for how to install it from source code. The above package list

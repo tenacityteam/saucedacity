@@ -24,7 +24,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectRepeat();
-   virtual ~EffectRepeat();
+   ~EffectRepeat() override;
 
    // ComponentInterface implementation
 

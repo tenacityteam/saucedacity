@@ -27,15 +27,15 @@ class SAUCEDACITY_DLL_API TimeDialog final : public wxDialogWrapper
 
    TimeDialog(wxWindow *parent,
               const TranslatableString &title,
-              const NumericFormatSymbol &format,
+              NumericFormatSymbol format,
               double rate,
               double time,
-              const TranslatableString &prompt = XO("Duration"));
+              TranslatableString prompt = XO("Duration"));
 
    void SetFormatString(const NumericFormatSymbol &formatString);
    void SetSampleRate(double sampleRate);
    void SetTimeValue(double newTime);
-   const double GetTimeValue();
+   const double GetTimeValue() const;
 
  private:
 

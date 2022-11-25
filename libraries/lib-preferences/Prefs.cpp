@@ -84,7 +84,7 @@ struct Hub : Observer::Publisher<int>
    using Publisher::Publish;
 };
 
-static Hub &hub()
+Hub &hub()
 {
    static Hub theHub;
    return theHub;
@@ -210,9 +210,9 @@ void ResetPreferences()
 void FinishPreferences()
 {
    if (gPrefs) {
-      wxConfigBase::Set(NULL);
+      wxConfigBase::Set(nullptr);
       ugPrefs.reset();
-      gPrefs = NULL;
+      gPrefs = nullptr;
    }
 }
 
@@ -428,12 +428,12 @@ void PreferenceInitializer::ReinitializeAll()
       (*pInitializer)();
 }
 
-wxConfigBase *SettingBase::GetConfig() const
+wxConfigBase *SettingBase::GetConfig()
 {
    return gPrefs;
 }
 
-bool SettingBase::Delete()
+bool SettingBase::Delete() const
 {
    auto config = GetConfig();
    return config && config->DeleteEntry( GetPath() );

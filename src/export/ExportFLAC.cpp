@@ -53,9 +53,9 @@ class ExportFLACOptions final : public wxPanelWrapper
 public:
 
    ExportFLACOptions(wxWindow *parent, int format);
-   virtual ~ExportFLACOptions();
+   ~ExportFLACOptions() override;
 
-   void PopulateOrExchange(ShuttleGui & S);
+   static void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 };
@@ -136,8 +136,6 @@ void ExportFLACOptions::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
-
-   return;
 }
 
 ///
@@ -221,8 +219,8 @@ public:
                bool selectedOnly,
                double t0,
                double t1,
-               MixerSpec *mixerSpec = NULL,
-               const Tags *metadata = NULL,
+               MixerSpec *mixerSpec = nullptr,
+               const Tags *metadata = nullptr,
                int subformat = 0) override;
 
 private:
@@ -450,7 +448,7 @@ void ExportFLAC::OptionsCreate(ShuttleGui &S, int format)
 bool ExportFLAC::GetMetadata(SaucedacityProject *project, const Tags *tags)
 {
    // Retrieve tags if needed
-   if (tags == NULL)
+   if (tags == nullptr)
       tags = &Tags::Get( *project );
 
    mMetadata.reset(::FLAC__metadata_object_new(FLAC__METADATA_TYPE_VORBIS_COMMENT));

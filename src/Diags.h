@@ -70,12 +70,12 @@ extern void diagnostics_do_perfmon_stop( t_diag_struct ** ppDiag);
    MAKE_TIMER( timername ); { \
    static t_diag_struct diag = { DEFAULT_LOG_COUNT, DEFAULT_LOG_COUNT, 0,0,0,0,wxT(message)};\
    if( --diag.countdown >=0 )\
-      diagnostics_do_perfmon_start( &diag, &timername );\
+      diagnostics_do_perfmon_start( &diag, &(timername) );\
 }
 
 #define TIMER_STOP( timername ){ \
-   if( timername != NULL )\
-      diagnostics_do_perfmon_stop( &timername );\
+   if( (timername) != NULL )\
+      diagnostics_do_perfmon_stop( &(timername) );\
 }
 
 

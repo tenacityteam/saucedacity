@@ -120,25 +120,24 @@ EffectChangePitch::EffectChangePitch()
    // NULL out these control members because there are some cases where the
    // event table handlers get called during this method, and those handlers that
    // can cause trouble check for NULL.
-   m_pChoice_FromPitch = NULL;
-   m_pSpin_FromOctave = NULL;
-   m_pChoice_ToPitch = NULL;
-   m_pSpin_ToOctave = NULL;
+   m_pChoice_FromPitch = nullptr;
+   m_pSpin_FromOctave = nullptr;
+   m_pChoice_ToPitch = nullptr;
+   m_pSpin_ToOctave = nullptr;
 
-   m_pTextCtrl_SemitonesChange = NULL;
+   m_pTextCtrl_SemitonesChange = nullptr;
 
-   m_pTextCtrl_FromFrequency = NULL;
-   m_pTextCtrl_ToFrequency = NULL;
+   m_pTextCtrl_FromFrequency = nullptr;
+   m_pTextCtrl_ToFrequency = nullptr;
 
-   m_pTextCtrl_PercentChange = NULL;
-   m_pSlider_PercentChange = NULL;
+   m_pTextCtrl_PercentChange = nullptr;
+   m_pSlider_PercentChange = nullptr;
 
    SetLinearEffectFlag(true);
 }
 
 EffectChangePitch::~EffectChangePitch()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -385,7 +384,6 @@ void EffectChangePitch::PopulateOrExchange(ShuttleGui & S)
 
    }
    S.EndVerticalLay();
-   return;
 }
 
 bool EffectChangePitch::TransferDataToWindow()

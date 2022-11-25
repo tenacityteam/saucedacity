@@ -124,7 +124,7 @@ public:
       mIsMidi = false;
       mWantsPosition = false;
       mMinimumSize = 1024;
-      mRing = NULL;
+      mRing = nullptr;
    }
    virtual ~LV2AtomPort()
    {
@@ -205,8 +205,8 @@ public:
       mEnumeration = false;
       mLogarithmic = false;
       mNotOnGui = false;
-      mCtrl.button = NULL;
-      mText = NULL;
+      mCtrl.button = nullptr;
+      mText = nullptr;
    };
  
    wxString mUnits;
@@ -258,7 +258,7 @@ class LV2Effect final : public wxEvtHandler,
 {
 public:
    LV2Effect(const LilvPlugin *plug);
-   virtual ~LV2Effect();
+   ~LV2Effect() override;
 
    // ComponentInterface implementation
 
@@ -296,7 +296,7 @@ public:
    size_t GetTailSize() override;
 
    bool IsReady() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inbuf, float **outbuf, size_t size) override;
 
@@ -345,7 +345,7 @@ private:
    bool SaveParameters(const RegistryPath & group);
 
    LV2Wrapper *InitInstance(float sampleRate);
-   void FreeInstance(LV2Wrapper *wrapper);
+   static void FreeInstance(LV2Wrapper *wrapper);
 
    static uint32_t uri_to_id(LV2_URI_Map_Callback_Data callback_data,
                              const char *map,
@@ -385,7 +385,7 @@ private:
 
    bool TransferDataToWindow() /* not override */;
    bool TransferDataFromWindow() /* not override */;
-   void SetSlider(const LV2ControlPortPtr & port);
+   static void SetSlider(const LV2ControlPortPtr & port);
 
    void OnTrigger(wxCommandEvent & evt);
    void OnToggle(wxCommandEvent & evt);
@@ -596,19 +596,19 @@ public:
 
 public:
    LV2Wrapper(LV2Effect *effect);
-   virtual ~LV2Wrapper();
+   ~LV2Wrapper() override;
 
    LilvInstance *Instantiate(const LilvPlugin *plugin,
                              double sampleRrate,
                              std::vector<std::unique_ptr<LV2_Feature>> & features);
 
-   void *Entry();
+   void *Entry() override;
 
    LilvInstance *GetInstance();
    
    LV2_Handle GetHandle();
 
-   float GetLatency();
+   float GetLatency() const;
 
    void SetFreeWheeling(bool enable);
 

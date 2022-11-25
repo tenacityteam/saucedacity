@@ -127,9 +127,9 @@ class ExportMP2Options final : public wxPanelWrapper
 {
 public:
    ExportMP2Options(wxWindow *parent, int format);
-   virtual ~ExportMP2Options();
+   ~ExportMP2Options() override;
 
-   void PopulateOrExchange(ShuttleGui & S);
+   static void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;
 };
@@ -216,15 +216,15 @@ public:
                bool selectedOnly,
                double t0,
                double t1,
-               MixerSpec *mixerSpec = NULL,
-               const Tags *metadata = NULL,
+               MixerSpec *mixerSpec = nullptr,
+               const Tags *metadata = nullptr,
                int subformat = 0) override;
 
 private:
 
    int AddTags(SaucedacityProject *project, ArrayOf<char> &buffer, bool *endOfFile, const Tags *tags);
 #ifdef USE_LIBID3TAG
-   void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
+   static void AddFrame(struct id3_tag *tp, const wxString & n, const wxString & v, const char *name);
 #endif
 
 };
@@ -273,7 +273,7 @@ ProgressResult ExportMP2::Export(SaucedacityProject *project,
    }
 
    // Put ID3 tags at beginning of file
-   if (metadata == NULL)
+   if (metadata == nullptr)
       metadata = &Tags::Get( *project );
 
    FileIO outFile(fName, FileIO::Output);
@@ -324,7 +324,7 @@ ProgressResult ExportMP2::Export(SaucedacityProject *project,
          if (pcmNumSamples == 0)
             break;
 
-         short *pcmBuffer = (short *)mixer->GetBuffer();
+         auto *pcmBuffer = (short *)mixer->GetBuffer();
 
          int mp2BufferNumBytes = twolame_encode_buffer_interleaved(
             encodeOptions,
@@ -447,7 +447,7 @@ int ExportMP2::AddTags(
 
    id3_length_t len;
 
-   len = id3_tag_render(tp.get(), 0);
+   len = id3_tag_render(tp.get(), nullptr);
    buffer.reinit(len);
    len = id3_tag_render(tp.get(), (id3_byte_t *)buffer.get());
 

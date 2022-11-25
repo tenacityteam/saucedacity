@@ -28,7 +28,7 @@ void abs_max(double *x, long desde, long hasta, double *x_maxptr, long *indptr)
 
 }
 
-void xcorr(double *s, double *rxx, long N)
+void xcorr(const double *s, double *rxx, long N)
 {
 	/* use:
 	xcorr(s,rxx,N);

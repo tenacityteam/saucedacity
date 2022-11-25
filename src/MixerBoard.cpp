@@ -90,7 +90,7 @@ void MixerTrackSlider::OnMouseEvent(wxMouseEvent &event)
 
    if (event.ButtonUp())
    {
-      MixerTrackCluster* pMixerTrackCluster = (MixerTrackCluster*)(this->GetParent());
+      auto* pMixerTrackCluster = (MixerTrackCluster*)(this->GetParent());
       switch (mStyle)
       {
       case DB_SLIDER: pMixerTrackCluster->HandleSliderGain(true); break;
@@ -107,7 +107,7 @@ void MixerTrackSlider::OnFocus(wxFocusEvent &event)
 
 void MixerTrackSlider::OnCaptureKey(wxCommandEvent &event)
 {
-   wxKeyEvent *kevent = (wxKeyEvent *)event.GetEventObject();
+   auto *kevent = (wxKeyEvent *)event.GetEventObject();
    int keyCode = kevent->GetKeyCode();
 
    // Pass LEFT/RIGHT/UP/DOWN/PAGEUP/PAGEDOWN through for input/output sliders
@@ -118,8 +118,6 @@ void MixerTrackSlider::OnCaptureKey(wxCommandEvent &event)
    }
 
    event.Skip();
-
-   return;
 }
 
 
@@ -847,7 +845,7 @@ void MixerBoardScrolledWindow::OnMouseEvent(wxMouseEvent& event)
 #define MIXER_BOARD_MIN_HEIGHT      460
 
 // Min width is one cluster wide, plus margins.
-#define MIXER_BOARD_MIN_WIDTH       kTripleInset + kMixerTrackClusterWidth*2 + kTripleInset
+#define MIXER_BOARD_MIN_WIDTH       (kTripleInset + kMixerTrackClusterWidth*2 + kTripleInset)
 
 
 BEGIN_EVENT_TABLE(MixerBoard, wxWindow)
@@ -865,15 +863,15 @@ MixerBoard::MixerBoard(SaucedacityProject* pProject,
 
    // mute & solo button images
    // Create once and store on MixerBoard for use in all MixerTrackClusters.
-   mImageMuteUp = NULL;
-   mImageMuteOver = NULL;
-   mImageMuteDown = NULL;
-   mImageMuteDownWhileSolo = NULL;
-   mImageMuteDisabled = NULL;
-   mImageSoloUp = NULL;
-   mImageSoloOver = NULL;
-   mImageSoloDown = NULL;
-   mImageSoloDisabled = NULL;
+   mImageMuteUp = nullptr;
+   mImageMuteOver = nullptr;
+   mImageMuteDown = nullptr;
+   mImageMuteDownWhileSolo = nullptr;
+   mImageMuteDisabled = nullptr;
+   mImageSoloUp = nullptr;
+   mImageSoloOver = nullptr;
+   mImageSoloDown = nullptr;
+   mImageSoloDisabled = nullptr;
 
    mMuteSoloWidth = kRightSideStackWidth - kInset; // correct for max width, but really set in MixerBoard::CreateMuteSoloImages
 
@@ -941,7 +939,7 @@ MixerBoard::MixerBoard(SaucedacityProject* pProject,
 
    wxTheApp->Connect(EVT_AUDIOIO_PLAYBACK,
       wxCommandEventHandler(MixerBoard::OnStartStop),
-      NULL,
+      nullptr,
       this);
 }
 
@@ -951,7 +949,7 @@ MixerBoard::MixerBoard(SaucedacityProject* pProject,
 void MixerBoard::UpdatePrefs()
 {
    // Destroys this:
-   static_cast<MixerBoardFrame*>(GetParent())->Recreate( mProject );
+   dynamic_cast<MixerBoardFrame*>(GetParent())->Recreate( mProject );
 
 // Old approach modified things in situ.
 // However with a theme change there is so much to modify, it is easier
@@ -990,7 +988,7 @@ void MixerBoard::UpdateTrackClusters()
    const int nClusterHeight = mScrolledWindow->GetClientSize().GetHeight() - kDoubleInset;
    size_t nClusterCount = mMixerTrackClusters.size();
    unsigned int nClusterIndex = 0;
-   MixerTrackCluster* pMixerTrackCluster = NULL;
+   MixerTrackCluster* pMixerTrackCluster = nullptr;
 
    for (auto pPlayableTrack: mTracks->Leaders<PlayableTrack>()) {
       // TODO: more-than-two-channels
@@ -1075,7 +1073,7 @@ void MixerBoard::RemoveTrackCluster(size_t nIndex)
 wxBitmap* MixerBoard::GetMusicalInstrumentBitmap(const Track* pTrack)
 {
    if (mMusicalInstruments.empty())
-      return NULL;
+      return nullptr;
 
    // random choice:    return mMusicalInstruments[(int)pTrack % mMusicalInstruments.size()].mBitmap;
 
@@ -1123,14 +1121,14 @@ bool MixerBoard::HasSolo()
 
 void MixerBoard::RefreshTrackClusters(bool bEraseBackground /*= true*/)
 {
-   for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
-      mMixerTrackClusters[i]->Refresh(bEraseBackground);
+   for (auto & mMixerTrackCluster : mMixerTrackClusters)
+      mMixerTrackCluster->Refresh(bEraseBackground);
 }
 
 void MixerBoard::ResizeTrackClusters()
 {
-   for (unsigned int nClusterIndex = 0; nClusterIndex < mMixerTrackClusters.size(); nClusterIndex++)
-      mMixerTrackClusters[nClusterIndex]->HandleResize();
+   for (auto & mMixerTrackCluster : mMixerTrackClusters)
+      mMixerTrackCluster->HandleResize();
 }
 
 void MixerBoard::ResetMeters(const bool bResetClipping)
@@ -1140,8 +1138,8 @@ void MixerBoard::ResetMeters(const bool bResetClipping)
    if (!this->IsShown())
       return;
 
-   for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
-      mMixerTrackClusters[i]->ResetMeter(bResetClipping);
+   for (auto & mMixerTrackCluster : mMixerTrackClusters)
+      mMixerTrackCluster->ResetMeter(bResetClipping);
 }
 
 void MixerBoard::UpdateMeters(const double t1, const bool bLoopedPlay)
@@ -1165,8 +1163,8 @@ void MixerBoard::UpdateMeters(const double t1, const bool bLoopedPlay)
       return;
    }
 
-   for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
-      mMixerTrackClusters[i]->UpdateMeter(mPrevT1, t1);
+   for (auto & mMixerTrackCluster : mMixerTrackClusters)
+      mMixerTrackCluster->UpdateMeter(mPrevT1, t1);
 
    mPrevT1 = t1;
 }
@@ -1200,7 +1198,7 @@ void MixerBoard::MakeButtonBitmap( wxMemoryDC & dc, wxBitmap & WXUNUSED(bitmap),
       fontSize = 8;
    #endif
    wxFont font(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   GetTextExtent(translation, &textWidth, &textHeight, NULL, NULL, &font);
+   GetTextExtent(translation, &textWidth, &textHeight, nullptr, nullptr, &font);
 
    AColor::UseThemeColour( &dc, clrMedium );
    dc.DrawRectangle(bev);
@@ -1260,7 +1258,7 @@ void MixerBoard::CreateMuteSoloImages()
 int MixerBoard::FindMixerTrackCluster(const PlayableTrack* pTrack,
                                         MixerTrackCluster** hMixerTrackCluster) const
 {
-   *hMixerTrackCluster = NULL;
+   *hMixerTrackCluster = nullptr;
    for (unsigned int i = 0; i < mMixerTrackClusters.size(); i++)
    {
       if (mMixerTrackClusters[i]->mTrack.get() == pTrack)
@@ -1486,7 +1484,7 @@ void MixerBoardFrame::Recreate( SaucedacityProject *pProject )
 
    //wxLogDebug("Got rid of board %p", mMixerBoard );
    mMixerBoard->Destroy();
-   mMixerBoard = NULL;
+   mMixerBoard = nullptr;
    mMixerBoard = safenew MixerBoard(pProject, this, pos, siz);
    //wxLogDebug("Created NEW board %p", mMixerBoard );
    mMixerBoard->UpdateTrackClusters();

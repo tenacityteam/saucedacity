@@ -27,7 +27,7 @@ public:
    ~ProjectWindowBase() override;
 
    SaucedacityProject &GetProject() { return mProject; }
-   const SaucedacityProject &GetProject() const { return mProject; }
+   [[nodiscard]] const SaucedacityProject &GetProject() const { return mProject; }
 
 protected:
    SaucedacityProject &mProject;

@@ -36,7 +36,7 @@ class MATH_API Resample final
    /// the fast method.
    // dMinFactor and dMaxFactor specify the range of factors for variable-rate resampling.
    // For constant-rate, pass the same value for both.
-   Resample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor);
+   Resample(bool useBestMethod, double dMinFactor, double dMaxFactor);
    ~Resample();
 
    static EnumSetting< int > FastMethodSetting;
@@ -73,7 +73,7 @@ class MATH_API Resample final
                         size_t  outBufferLen);
 
  protected:
-   void SetMethod(const bool useBestMethod);
+   void SetMethod(bool useBestMethod);
 
  protected:
    int   mMethod; // resampler-specific enum for resampling method

@@ -59,7 +59,7 @@ public:
    void Clear();
 
    void AppendByte(char data);
-   void AppendData(const void* data, const size_t length);
+   void AppendData(const void* data, size_t length);
 
    // This function possibly has O(size) complexity as it may
    // require copying bytes to a linear chunk
@@ -75,7 +75,7 @@ public:
 
       Iterator& operator++();
 
-      Iterator operator++(int);
+      const Iterator operator++(int);
 
       StreamChunk operator*() const;
       StreamChunk operator->() const;

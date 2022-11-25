@@ -396,8 +396,8 @@ sampleCount VoiceKey::OffForward (
 
       //Change the millisecond-based parameters into sample-based parameters
       double rate = t.GetRate();                                                     //Translates seconds to samples
-      unsigned int WindowSizeInt = (unsigned int)(rate  * mWindowSize);               //Size of window to examine
-      unsigned int SilentWindowSizeInt = (unsigned int)(rate  * mSilentWindowSize);   //This much signal is necessary to trip key
+      auto WindowSizeInt = (unsigned int)(rate  * mWindowSize);               //Size of window to examine
+      auto SilentWindowSizeInt = (unsigned int)(rate  * mSilentWindowSize);   //This much signal is necessary to trip key
 
       sampleCount samplesleft ( len.as_double() - WindowSizeInt );   //Indexes the number of samples remaining in the selection
       auto lastsubthresholdsample = start;          //start this off at the selection start
@@ -532,7 +532,7 @@ sampleCount VoiceKey::OffBackward (
 
       //Change the millisecond-based parameters into sample-based parameters
       double rate = t.GetRate();                                                     //Translates seconds to samples
-      unsigned int WindowSizeInt = (unsigned int)(rate  * mWindowSize);               //Size of window to examine
+      auto WindowSizeInt = (unsigned int)(rate  * mWindowSize);               //Size of window to examine
       //unsigned int SilentWindowSizeInt = (unsigned int)(rate  * mSilentWindowSize);   //This much signal is necessary to trip key
 
       auto samplesleft = len - WindowSizeInt;                 //Indexes the number of samples remaining in the selection
@@ -756,7 +756,7 @@ void VoiceKey::CalibrateNoise(const WaveTrack & t, sampleCount start, sampleCoun
    //Now, change the millisecond-based parameters into sample-based parameters
    //(This depends on WaveTrack t)
    double rate = t.GetRate();
-   unsigned int WindowSizeInt = (unsigned int)(rate  * mWindowSize);
+   auto WindowSizeInt = (unsigned int)(rate  * mWindowSize);
    //   unsigned int SignalWindowSizeInt = (unsigned int)(rate  * mSignalWindowSize);
 
 
@@ -961,7 +961,7 @@ double VoiceKey::TestDirectionChanges(
    const auto blockSize = limitSampleBufferSize(
       t.GetMaxBlockSize(), len);               //Determine size of sampling buffer
    unsigned long directionchanges = 1;
-   float lastval=float(0);
+   auto lastval=float(0);
    int lastdirection=1;
 
    Floats buffer{ blockSize };       //Get a sampling buffer

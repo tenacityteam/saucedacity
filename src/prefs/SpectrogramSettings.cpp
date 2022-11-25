@@ -327,7 +327,7 @@ void SpectrogramSettings::LoadPrefs()
    InvalidateCaches();
 }
 
-void SpectrogramSettings::SavePrefs()
+void SpectrogramSettings::SavePrefs() const
 {
    gPrefs->Write(wxT("/Spectrum/MinFreq"), minFreq);
    gPrefs->Write(wxT("/Spectrum/MaxFreq"), maxFreq);
@@ -542,7 +542,7 @@ namespace
 
 void SpectrogramSettings::CacheWindows() const
 {
-   if (hFFT == NULL || window == NULL) {
+   if (hFFT == nullptr || window == nullptr) {
 
       double scale;
       auto factor = ZeroPaddingFactor();
@@ -590,7 +590,7 @@ void SpectrogramSettings::ConvertToActualWindowSizes()
 #endif
 }
 
-float SpectrogramSettings::findBin( float frequency, float binUnit ) const
+float SpectrogramSettings::findBin( float frequency, float binUnit )
 {
    float linearBin = frequency / binUnit;
    if (linearBin < 0)

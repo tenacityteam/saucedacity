@@ -1,17 +1,17 @@
 // This header was generated from the FFMPEG headers
 #pragma once
 
-#include <math.h>
-#include <stdarg.h>
-#include <errno.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <inttypes.h>
-#include <time.h>
-#include <limits.h>
-#include <stdio.h>
-#include <stddef.h>
+#include <cmath>
+#include <cstdarg>
+#include <cerrno>
+#include <cstdint>
+#include <cstdlib>
+#include <cstring>
+#include <cinttypes>
+#include <ctime>
+#include <climits>
+#include <cstdio>
+#include <cstddef>
 
 #define AVCODEC_AVCODEC_H
 
@@ -19,13 +19,13 @@
 
 #define AVUTIL_AVUTIL_H
 
-unsigned avutil_version(void);
+unsigned avutil_version();
 
-const char *av_version_info(void);
+const char *av_version_info();
 
-const char *avutil_configuration(void);
+const char *avutil_configuration();
 
-const char *avutil_license(void);
+const char *avutil_license();
 
 enum AVMediaType {
     AVMEDIA_TYPE_UNKNOWN = -1,  
@@ -179,7 +179,7 @@ char av_get_picture_type_char(enum AVPictureType pict_type);
 #define FFMIN(a,b) ((a) > (b) ? (b) : (a))
 #define FFMIN3(a,b,c) FFMIN(FFMIN(a,b),c)
 
-#define FFSWAP(type,a,b) do{type SWAP_tmp= b; b= a; a= SWAP_tmp;}while(0)
+#define FFSWAP(type,a,b) do{type SWAP_tmp= b; (b)= a; (a)= SWAP_tmp;}while(0)
 #define FF_ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
 
 #   define av_ceil_log2     av_ceil_log2_c
@@ -322,26 +322,26 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
 #define GET_UTF8(val, GET_BYTE, ERROR)\
     val= (GET_BYTE);\
     {\
-        uint32_t top = (val & 128) >> 1;\
-        if ((val & 0xc0) == 0x80 || val >= 0xFE)\
-            ERROR\
-        while (val & top) {\
+        uint32_t top = ((val) & 128) >> 1;\
+        if (((val) & 0xc0) == 0x80 || (val) >= 0xFE)\
+            (ERROR)\
+        while ((val) & top) {\
             int tmp= (GET_BYTE) - 128;\
             if(tmp>>6)\
                 ERROR\
-            val= (val<<6) + tmp;\
+            val= ((val)<<6) + tmp;\
             top <<= 5;\
         }\
-        val &= (top << 1) - 1;\
+        (val) &= (top << 1) - 1;\
     }
 
 #define GET_UTF16(val, GET_16BIT, ERROR)\
     val = GET_16BIT;\
     {\
-        unsigned int hi = val - 0xD800;\
+        unsigned int hi = (val) - 0xD800;\
         if (hi < 0x800) {\
-            val = GET_16BIT - 0xDC00;\
-            if (val > 0x3FFU || hi > 0x3FFU)\
+            (val) = (GET_16BIT) - 0xDC00;\
+            if ((val) > 0x3FFU || hi > 0x3FFU)\
                 ERROR\
             val += (hi<<10) + 0x10000;\
         }\
@@ -352,16 +352,16 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
         int bytes, shift;\
         uint32_t in = val;\
         if (in < 0x80) {\
-            tmp = in;\
+            (tmp) = in;\
             PUT_BYTE\
         } else {\
             bytes = (av_log2(in) + 4) / 5;\
             shift = (bytes - 1) * 6;\
-            tmp = (256 - (256 >> bytes)) | (in >> shift);\
-            PUT_BYTE\
+            (tmp) = (256 - (256 >> bytes)) | (in >> shift);\
+            (PUT_BYTE)\
             while (shift >= 6) {\
                 shift -= 6;\
-                tmp = 0x80 | ((in >> shift) & 0x3f);\
+                (tmp) = 0x80 | ((in >> shift) & 0x3f);\
                 PUT_BYTE\
             }\
         }\
@@ -371,10 +371,10 @@ static av_always_inline av_const int av_parity_c(uint32_t v)
     {\
         uint32_t in = val;\
         if (in < 0x10000) {\
-            tmp = in;\
+            (tmp) = in;\
             PUT_16BIT\
         } else {\
-            tmp = 0xD800 | ((in - 0x10000) >> 10);\
+            (tmp) = 0xD800 | ((in - 0x10000) >> 10);\
             PUT_16BIT\
             tmp = 0xDC00 | ((in - 0x10000) & 0x3FF);\
             PUT_16BIT\
@@ -448,14 +448,14 @@ void *av_mallocz(size_t size) av_malloc_attrib av_alloc_size(1);
 av_alloc_size(1, 2) static inline void *av_malloc_array(size_t nmemb, size_t size)
 {
     if (!size || nmemb >= INT_MAX / size)
-        return NULL;
+        return nullptr;
     return av_malloc(nmemb * size);
 }
 
 av_alloc_size(1, 2) static inline void *av_mallocz_array(size_t nmemb, size_t size)
 {
     if (!size || nmemb >= INT_MAX / size)
-        return NULL;
+        return nullptr;
     return av_mallocz(nmemb * size);
 }
 
@@ -703,7 +703,7 @@ typedef struct AVClass {
     int (*query_ranges)(struct AVOptionRanges **, void *obj, const char *key, int flags);
 } AVClass;
 
-#define AV_LOG_QUIET    -8
+#define AV_LOG_QUIET    (-8)
 
 #define AV_LOG_PANIC     0
 
@@ -729,7 +729,7 @@ void av_log(void *avcl, int level, const char *fmt, ...) av_printf_format(3, 4);
 
 void av_vlog(void *avcl, int level, const char *fmt, va_list vl);
 
-int av_log_get_level(void);
+int av_log_get_level();
 
 void av_log_set_level(int level);
 
@@ -754,7 +754,7 @@ int av_log_format_line2(void *ptr, int level, const char *fmt, va_list vl,
 #define AV_LOG_PRINT_LEVEL 2
 
 void av_log_set_flags(int arg);
-int av_log_get_flags(void);
+int av_log_get_flags();
 
 #define AVUTIL_PIXFMT_H
 
@@ -1171,7 +1171,7 @@ unsigned av_int_list_length_for_size(unsigned elsize,
 
 FILE *av_fopen_utf8(const char *path, const char *mode);
 
-AVRational av_get_time_base_q(void);
+AVRational av_get_time_base_q();
 
 #define AV_FOURCC_MAX_STRING_SIZE 32
 
@@ -1331,7 +1331,7 @@ AVBufferRef *av_buffer_pool_get(AVBufferPool *pool);
 #define AV_CPU_FLAG_VFP_VM       (1 << 7) 
 #define AV_CPU_FLAG_SETEND       (1 <<16)
 
-int av_get_cpu_flags(void);
+int av_get_cpu_flags();
 
 void av_force_cpu_flags(int flags);
 
@@ -1342,9 +1342,9 @@ int av_parse_cpu_flags(const char *s);
 
 int av_parse_cpu_caps(unsigned *flags, const char *s);
 
-int av_cpu_count(void);
+int av_cpu_count();
 
-size_t av_cpu_max_align(void);
+size_t av_cpu_max_align();
 
 #define AVUTIL_CHANNEL_LAYOUT_H
 
@@ -1481,7 +1481,7 @@ int av_dict_copy(AVDictionary **dst, const AVDictionary *src, int flags);
 void av_dict_free(AVDictionary **m);
 
 int av_dict_get_string(const AVDictionary *m, char **buffer,
-                       const char key_val_sep, const char pairs_sep);
+                       char key_val_sep, char pairs_sep);
 
 #define AVUTIL_FRAME_H
 
@@ -1682,7 +1682,7 @@ void    av_frame_set_color_range(AVFrame *frame, enum AVColorRange val);
 
 const char *av_get_colorspace_name(enum AVColorSpace val);
 
-AVFrame *av_frame_alloc(void);
+AVFrame *av_frame_alloc();
 
 void av_frame_free(AVFrame **frame);
 
@@ -2707,7 +2707,7 @@ typedef struct AVCodecContext {
     int global_quality;
 
     int compression_level;
-#define FF_COMPRESSION_DEFAULT -1
+#define FF_COMPRESSION_DEFAULT (-1)
 
     int flags;
 
@@ -3075,8 +3075,8 @@ typedef struct AVCodecContext {
 #define FF_COMPLIANCE_VERY_STRICT   2 
 #define FF_COMPLIANCE_STRICT        1 
 #define FF_COMPLIANCE_NORMAL        0
-#define FF_COMPLIANCE_UNOFFICIAL   -1 
-#define FF_COMPLIANCE_EXPERIMENTAL -2 
+#define FF_COMPLIANCE_UNOFFICIAL   (-1)
+#define FF_COMPLIANCE_EXPERIMENTAL (-2)
 
     int error_concealment;
 #define FF_EC_GUESS_MVS   1
@@ -3184,8 +3184,8 @@ typedef struct AVCodecContext {
      int nsse_weight;
 
      int profile;
-#define FF_PROFILE_UNKNOWN -99
-#define FF_PROFILE_RESERVED -100
+#define FF_PROFILE_UNKNOWN (-99)
+#define FF_PROFILE_RESERVED (-100)
 
 #define FF_PROFILE_AAC_MAIN 0
 #define FF_PROFILE_AAC_LOW  1
@@ -3277,7 +3277,7 @@ typedef struct AVCodecContext {
 #define FF_PROFILE_HEVC_REXT                        4
 
      int level;
-#define FF_LEVEL_UNKNOWN -99
+#define FF_LEVEL_UNKNOWN (-99)
 
     enum AVDiscard skip_loop_filter;
 
@@ -3315,7 +3315,7 @@ typedef struct AVCodecContext {
     char *sub_charenc;
 
     int sub_charenc_mode;
-#define FF_SUB_CHARENC_MODE_DO_NOTHING  -1  
+#define FF_SUB_CHARENC_MODE_DO_NOTHING  (-1)
 #define FF_SUB_CHARENC_MODE_AUTOMATIC    0  
 #define FF_SUB_CHARENC_MODE_PRE_DECODER  1  
 
@@ -3583,15 +3583,15 @@ typedef struct AVCodecParameters {
 
 AVCodec *av_codec_next(const AVCodec *c);
 
-unsigned avcodec_version(void);
+unsigned avcodec_version();
 
-const char *avcodec_configuration(void);
+const char *avcodec_configuration();
 
-const char *avcodec_license(void);
+const char *avcodec_license();
 
 void avcodec_register(AVCodec *codec);
 
-void avcodec_register_all(void);
+void avcodec_register_all();
 
 AVCodecContext *avcodec_alloc_context3(const AVCodec *codec);
 
@@ -3599,16 +3599,16 @@ void avcodec_free_context(AVCodecContext **avctx);
 
 int avcodec_get_context_defaults3(AVCodecContext *s, const AVCodec *codec);
 
-const AVClass *avcodec_get_class(void);
+const AVClass *avcodec_get_class();
 
-const AVClass *avcodec_get_frame_class(void);
+const AVClass *avcodec_get_frame_class();
 
-const AVClass *avcodec_get_subtitle_rect_class(void);
+const AVClass *avcodec_get_subtitle_rect_class();
 
 attribute_deprecated
 int avcodec_copy_context(AVCodecContext *dest, const AVCodecContext *src);
 
-AVCodecParameters *avcodec_parameters_alloc(void);
+AVCodecParameters *avcodec_parameters_alloc();
 
 void avcodec_parameters_free(AVCodecParameters **par);
 
@@ -3626,7 +3626,7 @@ int avcodec_close(AVCodecContext *avctx);
 
 void avsubtitle_free(AVSubtitle *sub);
 
-AVPacket *av_packet_alloc(void);
+AVPacket *av_packet_alloc();
 
 AVPacket *av_packet_clone(const AVPacket *src);
 
@@ -3697,7 +3697,7 @@ AVCodec *avcodec_find_decoder_by_name(const char *name);
 int avcodec_default_get_buffer2(AVCodecContext *s, AVFrame *frame, int flags);
 
 attribute_deprecated
-unsigned avcodec_get_edge_width(void);
+unsigned avcodec_get_edge_width();
 
 void avcodec_align_dimensions(AVCodecContext *s, int *width, int *height);
 
@@ -4038,11 +4038,11 @@ int av_bsf_receive_packet(AVBSFContext *ctx, AVPacket *pkt);
 
 void av_bsf_free(AVBSFContext **ctx);
 
-const AVClass *av_bsf_get_class(void);
+const AVClass *av_bsf_get_class();
 
 typedef struct AVBSFList AVBSFList;
 
-AVBSFList *av_bsf_list_alloc(void);
+AVBSFList *av_bsf_list_alloc();
 
 void av_bsf_list_free(AVBSFList **lst);
 
@@ -4590,7 +4590,7 @@ typedef struct AVStreamInternal AVStreamInternal;
 
 #define AV_PTS_WRAP_IGNORE      0   
 #define AV_PTS_WRAP_ADD_OFFSET  1   
-#define AV_PTS_WRAP_SUB_OFFSET  -1  
+#define AV_PTS_WRAP_SUB_OFFSET  (-1)
 
 typedef struct AVStream {
     int index;    
@@ -4873,7 +4873,7 @@ typedef struct AVFormatContext {
     int max_ts_probe;
 
     int avoid_negative_ts;
-#define AVFMT_AVOID_NEG_TS_AUTO             -1 
+#define AVFMT_AVOID_NEG_TS_AUTO             (-1)
 #define AVFMT_AVOID_NEG_TS_MAKE_NON_NEGATIVE 1 
 #define AVFMT_AVOID_NEG_TS_MAKE_ZERO         2 
 
@@ -4973,30 +4973,30 @@ typedef struct AVPacketList {
     struct AVPacketList *next;
 } AVPacketList;
 
-unsigned avformat_version(void);
+unsigned avformat_version();
 
-const char *avformat_configuration(void);
+const char *avformat_configuration();
 
-const char *avformat_license(void);
+const char *avformat_license();
 
-void av_register_all(void);
+void av_register_all();
 
 void av_register_input_format(AVInputFormat *format);
 void av_register_output_format(AVOutputFormat *format);
 
-int avformat_network_init(void);
+int avformat_network_init();
 
-int avformat_network_deinit(void);
+int avformat_network_deinit();
 
 AVInputFormat  *av_iformat_next(const AVInputFormat  *f);
 
 AVOutputFormat *av_oformat_next(const AVOutputFormat *f);
 
-AVFormatContext *avformat_alloc_context(void);
+AVFormatContext *avformat_alloc_context();
 
 void avformat_free_context(AVFormatContext *s);
 
-const AVClass *avformat_get_class(void);
+const AVClass *avformat_get_class();
 
 AVStream *avformat_new_stream(AVFormatContext *s, const AVCodec *c);
 
@@ -5154,13 +5154,13 @@ int av_match_ext(const char *filename, const char *extensions);
 int avformat_query_codec(const AVOutputFormat *ofmt, enum AVCodecID codec_id,
                          int std_compliance);
 
-const struct AVCodecTag *avformat_get_riff_video_tags(void);
+const struct AVCodecTag *avformat_get_riff_video_tags();
 
-const struct AVCodecTag *avformat_get_riff_audio_tags(void);
+const struct AVCodecTag *avformat_get_riff_audio_tags();
 
-const struct AVCodecTag *avformat_get_mov_video_tags(void);
+const struct AVCodecTag *avformat_get_mov_video_tags();
 
-const struct AVCodecTag *avformat_get_mov_audio_tags(void);
+const struct AVCodecTag *avformat_get_mov_audio_tags();
 
 AVRational av_guess_sample_aspect_ratio(AVFormatContext *format, AVStream *stream, AVFrame *frame);
 

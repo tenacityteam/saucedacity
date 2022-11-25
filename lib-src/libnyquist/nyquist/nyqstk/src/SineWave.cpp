@@ -20,7 +20,7 @@ using namespace Nyq;
 
 StkFrames SineWave :: table_;
 
-SineWave :: SineWave( void )
+SineWave :: SineWave( )
   : time_(0.0), rate_(1.0), phaseOffset_(0.0)
 {
   if ( table_.empty() ) {
@@ -35,7 +35,7 @@ SineWave :: ~SineWave()
 {
 }
 
-void SineWave :: reset(void)
+void SineWave :: reset()
 {
   time_ = 0.0;
   lastOutput_ = 0;
@@ -75,7 +75,7 @@ void SineWave :: addPhaseOffset( StkFloat angle )
   phaseOffset_ = TABLE_SIZE * angle;
 }
 
-StkFloat SineWave :: computeSample( void )
+StkFloat SineWave :: computeSample( )
 {
   // Check limits of time address ... if necessary, recalculate modulo
   // TABLE_SIZE.

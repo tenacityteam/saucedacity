@@ -25,7 +25,7 @@
 
 fast_float FilterUp(float Imp[], float ImpD[], 
                      int Nwing, boolean Interp,
-                     float *Xp, double Ph, int Inc)
+                     const float *Xp, double Ph, int Inc)
 {
     float *Hp, *Hdp = NULL, *End;
     fast_float a = 0;
@@ -77,7 +77,7 @@ fast_float FilterUp(float Imp[], float ImpD[],
 
 fast_float FilterUD( float Imp[], float ImpD[],
                      int Nwing, boolean Interp,
-                     float *Xp, double Ph, int Inc, double dhb)
+                     const float *Xp, double Ph, int Inc, double dhb)
 {
     double a;
     float *Hp, *Hdp, *End;

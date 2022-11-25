@@ -38,7 +38,7 @@ public:
     explicit wxGtkString(gchar *s) : m_str(s) { }
     ~wxGtkString() { g_free(m_str); }
 
-    const gchar *c_str() const { return m_str; }
+    [[nodiscard]] const gchar *c_str() const { return m_str; }
 
     operator gchar *() const { return m_str; }
 
@@ -150,8 +150,8 @@ static void gtk_filedialog_update_preview_callback(GtkFileChooser *chooser,
     if ( !filename )
         return;
 
-    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file_at_size(filename, 128, 128, NULL);
-    gboolean have_preview = pixbuf != NULL;
+    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file_at_size(filename, 128, 128, nullptr);
+    gboolean have_preview = pixbuf != nullptr;
 
     gtk_image_set_from_pixbuf(GTK_IMAGE(preview), pixbuf);
     if ( pixbuf )
@@ -177,7 +177,7 @@ static GtkWidget* find_widget(GtkWidget* parent, const gchar* name, int depth)
 {
     // printf("%*.*c%s\n", depth, depth, ' ', gtk_widget_get_name(parent));
    
-    GtkWidget *widget = NULL;
+    GtkWidget *widget = nullptr;
     if (g_ascii_strncasecmp(gtk_widget_get_name(parent), name, strlen(name)) == 0)
     {
         return parent;
@@ -285,7 +285,7 @@ bool FileDialog::Create(wxWindow *parent, const wxString& message,
     }
 
     GtkFileChooserAction gtk_action;
-    GtkWindow* gtk_parent = NULL;
+    GtkWindow* gtk_parent = nullptr;
     if (parent)
         gtk_parent = GTK_WINDOW( gtk_widget_get_toplevel(parent->m_widget) );
 
@@ -427,7 +427,7 @@ FileDialog::~FileDialog()
         // get chooser to drop its reference right now, allowing wxWindow dtor
         // to verify that ref count drops to zero
         gtk_file_chooser_set_extra_widget(
-            GTK_FILE_CHOOSER(m_widget), NULL);
+            GTK_FILE_CHOOSER(m_widget), nullptr);
     }
 }
 
@@ -447,15 +447,15 @@ int FileDialog::ShowModal()
     WX_HOOK_MODAL_DIALOG();
 
     // Create the root window
-    wxBoxSizer *verticalSizer = new wxBoxSizer(wxVERTICAL);
-    wxPanel *root = new wxPanel(this, wxID_ANY);
+    auto *verticalSizer = new wxBoxSizer(wxVERTICAL);
+    auto *root = new wxPanel(this, wxID_ANY);
     
     if (HasUserPaneCreator())
     {
-       wxPanel *userpane = new wxPanel(root, wxID_ANY);
+       auto *userpane = new wxPanel(root, wxID_ANY);
        CreateUserPane(userpane);
  
-       wxBoxSizer *horizontalSizer = new wxBoxSizer(wxHORIZONTAL);
+       auto *horizontalSizer = new wxBoxSizer(wxHORIZONTAL);
        horizontalSizer->Add(userpane, 1, wxEXPAND, 0);
        verticalSizer->Add(horizontalSizer, 1, wxEXPAND|wxALL, 0);
     }

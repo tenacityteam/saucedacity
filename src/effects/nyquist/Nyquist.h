@@ -69,7 +69,7 @@ public:
     * an empty string, then prompt the user for the Nyquist code to interpret.
     */
    NyquistEffect(const wxString &fName);
-   virtual ~NyquistEffect();
+   ~NyquistEffect() override;
 
    // ComponentInterface implementation
 
@@ -131,16 +131,16 @@ private:
    bool TransferDataFromPromptWindow();
    bool TransferDataFromEffectWindow();
 
-   bool IsOk();
-   const TranslatableString &InitializationError() const { return mInitError; }
+   bool IsOk() const;
+   [[nodiscard]] const TranslatableString &InitializationError() const { return mInitError; }
 
    static FilePaths GetNyquistSearchPath();
 
    static wxString NyquistToWxString(const char *nyqString);
-   wxString EscapeString(const wxString & inStr);
+   static wxString EscapeString(const wxString & inStr);
    static std::vector<EnumValueSymbol> ParseChoice(const wxString & text);
 
-   FileExtensions ParseFileExtensions(const wxString & text);
+   static FileExtensions ParseFileExtensions(const wxString & text);
    FileNames::FileType ParseFileType(const wxString & text);
    FileNames::FileTypes ParseFileTypes(const wxString & text);
 
@@ -180,7 +180,7 @@ private:
                            wxString *pExtraString = nullptr);
    static wxString UnQuote(const wxString &s, bool allowParens = true,
                            wxString *pExtraString = nullptr);
-   double GetCtrlValue(const wxString &s);
+   static double GetCtrlValue(const wxString &s);
 
    void OnLoad(wxCommandEvent & evt);
    void OnSave(wxCommandEvent & evt);
@@ -192,9 +192,9 @@ private:
    void OnTime(wxCommandEvent & evt);
    void OnFileButton(wxCommandEvent & evt);
 
-   void resolveFilePath(wxString & path, FileExtension extension = {});
-   bool validatePath(wxString path);
-   wxString ToTimeFormat(double t);
+   static void resolveFilePath(wxString & path, const FileExtension& extension = {});
+   static bool validatePath(const wxString& path);
+   static wxString ToTimeFormat(double t);
 
 private:
 

@@ -26,18 +26,18 @@ public:
 
    explicit AVOutputFormatWrapper(const AVOutputFormat* wrapped) noexcept;
 
-   const AVOutputFormat* GetWrappedValue() const noexcept;
+   [[nodiscard]] const AVOutputFormat* GetWrappedValue() const noexcept;
 
    //! This class is move-only, although it doesn't manage a resource
    virtual ~AVOutputFormatWrapper() = default;
 
-   virtual const char* GetName() const noexcept = 0;
-   virtual const char* GetLongName() const noexcept = 0;
-   virtual const char* GetMimeType() const noexcept = 0;
-   virtual const char* GetExtensions() const noexcept = 0;
-   virtual AVCodecIDFwd GetAudioCodec() const noexcept = 0;
-   virtual int GetFlags() const noexcept = 0;
-   virtual const struct AVCodecTag* const* GetCodecTag() const noexcept = 0;
+   [[nodiscard]] virtual const char* GetName() const noexcept = 0;
+   [[nodiscard]] virtual const char* GetLongName() const noexcept = 0;
+   [[nodiscard]] virtual const char* GetMimeType() const noexcept = 0;
+   [[nodiscard]] virtual const char* GetExtensions() const noexcept = 0;
+   [[nodiscard]] virtual AVCodecIDFwd GetAudioCodec() const noexcept = 0;
+   [[nodiscard]] virtual int GetFlags() const noexcept = 0;
+   [[nodiscard]] virtual const struct AVCodecTag* const* GetCodecTag() const noexcept = 0;
 protected:
    const AVOutputFormat* mAVOutputFormat { nullptr };
 };

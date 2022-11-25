@@ -116,7 +116,7 @@ void DevicePrefs::GetNamesAndLabels()
    int nDevices = Pa_GetDeviceCount();
    for (int i = 0; i < nDevices; i++) {
       const PaDeviceInfo *info = Pa_GetDeviceInfo(i);
-      if ((info!=NULL)&&(info->maxOutputChannels > 0 || info->maxInputChannels > 0)) {
+      if ((info!=nullptr)&&(info->maxOutputChannels > 0 || info->maxInputChannels > 0)) {
          wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(info->hostApi)->name);
          if (!make_iterator_range(mHostNames)
             .contains( Verbatim( name ) )) {
@@ -214,7 +214,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui & S)
 void DevicePrefs::OnHost(wxCommandEvent & e)
 {
    // Bail if we have no hosts
-   if (mHostNames.size() < 1)
+   if (mHostNames.empty())
       return;
 
    // Find the index for the host API selected
@@ -239,7 +239,7 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
    // FIXME: TRAP_ERR PaErrorCode not handled.  nDevices can be negative number.
    if (nDevices == 0) {
       mHost->Clear();
-      mHost->Append(_("No audio interfaces"), (void *) NULL);
+      mHost->Append(_("No audio interfaces"), (void *) nullptr);
       mHost->SetSelection(0);
    }
 
@@ -286,12 +286,12 @@ void DevicePrefs::OnHost(wxCommandEvent & e)
    /* deal with not having any devices at all */
    if (mPlay->GetCount() == 0) {
       playnames.push_back(_("No devices found"));
-      mPlay->Append(playnames[0], (void *) NULL);
+      mPlay->Append(playnames[0], (void *) nullptr);
       mPlay->SetSelection(0);
    }
    if (mRecord->GetCount() == 0) {
       recordnames.push_back(_("No devices found"));
-      mRecord->Append(recordnames[0], (void *) NULL);
+      mRecord->Append(recordnames[0], (void *) nullptr);
       mRecord->SetSelection(0);
    }
 
@@ -333,8 +333,8 @@ void DevicePrefs::OnDevice(wxCommandEvent & WXUNUSED(event))
    int sel = mChannels->GetSelection();
    int cnt = 0;
 
-   DeviceSourceMap *inMap = (DeviceSourceMap *) mRecord->GetClientData(ndx);
-   if (inMap != NULL) {
+   auto *inMap = (DeviceSourceMap *) mRecord->GetClientData(ndx);
+   if (inMap != nullptr) {
       cnt = inMap->numChannels;
    }
 
@@ -391,7 +391,7 @@ bool DevicePrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
-   DeviceSourceMap *map = NULL;
+   DeviceSourceMap *map = nullptr;
 
    if (mPlay->GetCount() > 0) {
       map = (DeviceSourceMap *) mPlay->GetClientData(
@@ -400,7 +400,7 @@ bool DevicePrefs::Commit()
    if (map)
       AudioIOPlaybackDevice.Write(map->deviceString);
 
-   map = NULL;
+   map = nullptr;
    if (mRecord->GetCount() > 0) {
       map = (DeviceSourceMap *) mRecord->GetClientData(mRecord->GetSelection());
    }

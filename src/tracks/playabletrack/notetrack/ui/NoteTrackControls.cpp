@@ -49,11 +49,11 @@ std::vector<UIHandlePtr> NoteTrackControls::HitTest
       auto track = std::static_pointer_cast<NoteTrack>(FindTrack());
       auto result = [&]{
          UIHandlePtr result;
-         if (NULL != (result = MuteButtonHandle::HitTest(
+         if (nullptr != (result = MuteButtonHandle::HitTest(
             mMuteHandle, state, rect, pProject, track)))
             return result;
 
-         if (NULL != (result = SoloButtonHandle::HitTest(
+         if (nullptr != (result = SoloButtonHandle::HitTest(
             mSoloHandle, state, rect, pProject, track)))
             return result;
 #ifdef EXPERIMENTAL_MIDI_OUT
@@ -115,7 +115,7 @@ enum {
 /// Scrolls the note track up or down by an octave
 void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
 {
-   NoteTrack *const pTrack = static_cast<NoteTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<NoteTrack*>(mpData->pTrack);
 
    wxASSERT(event.GetId() == OnUpOctaveID
       || event.GetId() == OnDownOctaveID);
@@ -183,7 +183,7 @@ void SliderDrawFunction
 {
    wxRect sliderRect = rect;
    TrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
-   auto nt = static_cast<const NoteTrack*>( pTrack );
+   auto nt = dynamic_cast<const NoteTrack*>( pTrack );
    Selector( sliderRect, nt, captured, pParent )->OnPaint(*dc, highlight);
 }
 
@@ -217,7 +217,7 @@ void MidiControlsDrawFunction
    wxRect midiRect = rect;
    GetMidiControlsHorizontalBounds(rect, midiRect);
    NoteTrack::DrawLabelControls
-      ( static_cast<const NoteTrack *>(pTrack), dc, midiRect, channel );
+      ( dynamic_cast<const NoteTrack *>(pTrack), dc, midiRect, channel );
 }
 }
 

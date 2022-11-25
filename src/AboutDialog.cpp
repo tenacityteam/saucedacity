@@ -327,7 +327,7 @@ AboutDialog::AboutDialog(wxWindow * parent)
    sActiveInstance = this;
 
    SetName();
-   icon = NULL;
+   icon = nullptr;
    ShuttleGui S( this, eIsCreating );
    S.StartNotebook();
    {
@@ -1132,7 +1132,7 @@ void AboutDialog::AddCredit( const wxString &name, Role role )
 }
 
 void AboutDialog::AddCredit(
-   const wxString &name, TranslatableString format, Role role )
+   const wxString &name, const TranslatableString& format, Role role )
 {
    auto str = format.empty()
       ? Verbatim( name )

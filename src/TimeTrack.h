@@ -37,7 +37,7 @@ class SAUCEDACITY_DLL_API TimeTrack final : public Track {
     */
    TimeTrack(const TimeTrack &orig, double *pT0 = nullptr, double *pT1 = nullptr);
 
-   virtual ~TimeTrack();
+   ~TimeTrack() override;
 
 
    bool SupportsBasicEditing() const override;

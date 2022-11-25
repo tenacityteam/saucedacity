@@ -83,7 +83,7 @@ class SAUCEDACITY_DLL_API Tags final
    Tags();  // constructor
    Tags( const Tags& ) = default;
    //Tags( Tags && ) = default;
-   virtual ~Tags();
+   ~Tags() override;
 
    std::shared_ptr<Tags> Duplicate() const;
 
@@ -109,8 +109,8 @@ class SAUCEDACITY_DLL_API Tags final
    int GetNumUserGenres();
    wxString GetUserGenre(int value);
 
-   wxString GetGenre(int value);
-   int GetGenre(const wxString & name);
+   static wxString GetGenre(int value);
+   static int GetGenre(const wxString & name);
 
    bool HasTag(const wxString & name) const;
    wxString GetTag(const wxString & name) const;
@@ -118,10 +118,10 @@ class SAUCEDACITY_DLL_API Tags final
    using Iterators = IteratorRange<TagMap::const_iterator>;
    Iterators GetRange() const;
 
-   void SetTag(const wxString & name, const wxString & value, const bool bSpecialTag=false);
+   void SetTag(const wxString & name, const wxString & value, bool bSpecialTag=false);
    void SetTag(const wxString & name, const int & value);
 
-   bool IsEmpty();
+   bool IsEmpty() const;
    void Clear();
 
    friend bool operator == (const Tags &lhs, const Tags &rhs);
@@ -149,7 +149,7 @@ class TagsEditorDialog final : public wxDialogWrapper
               bool editTitle,
               bool editTrack);
 
-   virtual ~TagsEditorDialog();
+   ~TagsEditorDialog() override;
 
 #if !defined(__WXMSW__)
    bool IsEscapeKey(const wxKeyEvent& /*event*/) override { return false; }
@@ -186,7 +186,7 @@ class TagsEditorDialog final : public wxDialogWrapper
 
    void OnKeyDown(wxKeyEvent &event);
 
-   bool IsWindowRectValid(const wxRect *windowRect) const;
+   static bool IsWindowRectValid(const wxRect *windowRect) ;
 
  private:
    Tags *mTags;

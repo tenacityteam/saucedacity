@@ -26,7 +26,7 @@ class DeviceToolBar final : public ToolBar {
  public:
 
    DeviceToolBar( SaucedacityProject &project );
-   virtual ~DeviceToolBar();
+   ~DeviceToolBar() override;
 
    static DeviceToolBar &Get( SaucedacityProject &project );
    static const DeviceToolBar &Get( const SaucedacityProject &project );
@@ -67,7 +67,7 @@ class DeviceToolBar final : public ToolBar {
    void SetDevices(const DeviceSourceMap *in, const DeviceSourceMap *out);
    void SetNames();
    void RegenerateTooltips() override;
-   void ShowComboDialog(wxChoice *combo, const TranslatableString &title);
+   static void ShowComboDialog(wxChoice *combo, const TranslatableString &title);
 
    wxChoice *mInput;
    wxChoice *mOutput;

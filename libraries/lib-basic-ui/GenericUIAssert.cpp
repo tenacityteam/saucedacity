@@ -11,6 +11,8 @@ Avery King
 
 #include "GenericUIAssert.h"
 
+#include <utility>
+
 namespace
 {
 
@@ -23,7 +25,7 @@ namespace GenericUI
 
 void SetAssertFn(AssertFn fn)
 {
-    __AssertFn = fn;
+    __AssertFn = std::move(fn);
 }
 
 void Assert(bool condition)

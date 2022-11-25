@@ -283,7 +283,7 @@ Mixer::Mixer(const WaveTrackConstArray &inputTracks,
          mixerSpec->GetNumTracks() == mNumInputTracks )
       mMixerSpec = mixerSpec;
    else
-      mMixerSpec = NULL;
+      mMixerSpec = nullptr;
 
    if (mInterleaved) {
       mNumBuffers = 1;
@@ -363,7 +363,7 @@ void Mixer::Clear()
    }
 }
 
-void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
+void MixBuffers(unsigned numChannels, const int *channelFlags, const float *gains,
                 samplePtr src, SampleBuffer *dests,
                 int len, bool interleaved)
 {
@@ -383,8 +383,8 @@ void MixBuffers(unsigned numChannels, int *channelFlags, float *gains,
       }
 
       float gain = gains[c];
-      float *dest = (float *)destPtr;
-      float *temp = (float *)src;
+      auto *dest = (float *)destPtr;
+      auto *temp = (float *)src;
       for (int j = 0; j < len; j++) {
          *dest += temp[j] * gain;   // the actual mixing process
          dest += skip;

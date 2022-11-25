@@ -22,7 +22,7 @@ class LabelDefaultClickHandle /* not final */ : public UIHandle
 {
 public:
    LabelDefaultClickHandle();
-   virtual ~LabelDefaultClickHandle();
+   ~LabelDefaultClickHandle() override;
 
    LabelDefaultClickHandle &operator=
       (const LabelDefaultClickHandle&) = default;

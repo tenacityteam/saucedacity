@@ -21,7 +21,7 @@ class SAUCEDACITY_DLL_API SpectralSelectionBarListener /* not final */ {
    SpectralSelectionBarListener(){}
    virtual ~SpectralSelectionBarListener(){}
 
-   virtual double SSBL_GetRate() const = 0;
+   [[nodiscard]] virtual double SSBL_GetRate() const = 0;
 
    virtual const NumericFormatSymbol & SSBL_GetFrequencySelectionFormatName() = 0;
    virtual void SSBL_SetFrequencySelectionFormatName(const NumericFormatSymbol & formatName) = 0;

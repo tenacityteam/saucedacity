@@ -82,7 +82,7 @@ struct AudioIOStartStreamOptions
       , playLooped(false)
       , cutPreviewGapStart(0.0)
       , cutPreviewGapLen(0.0)
-      , pStartTime(NULL)
+      , pStartTime(nullptr)
       , preRoll(0.0)
    {}
 
@@ -213,7 +213,7 @@ public:
 #endif
 
    /** \brief Find out if playback / recording is currently paused */
-   bool IsPaused() const;
+   [[nodiscard]] bool IsPaused() const;
 
    virtual void StopStream() = 0;
 
@@ -221,7 +221,7 @@ public:
     * or recording.
     *
     * When this is false, it's safe to start playing or recording */
-   bool IsBusy() const;
+   [[nodiscard]] bool IsBusy() const;
 
    /** \brief Returns true if the audio i/o is running at all, but not during
     * cleanup
@@ -229,19 +229,19 @@ public:
     * Doesn't return true if the device has been closed but some disk i/o or
     * cleanup is still going on. If you want to know if it's safe to start a
     * NEW stream, use IsBusy() */
-   bool IsStreamActive() const;
-   bool IsStreamActive(int token) const;
+   [[nodiscard]] bool IsStreamActive() const;
+   [[nodiscard]] bool IsStreamActive(int token) const;
 
    /** \brief Returns true if the stream is active, or even if audio I/O is
     * busy cleaning up its data or writing to disk.
     *
     * This is used by TrackPanel to determine when a track has been completely
     * recorded, and it's safe to flush to disk. */
-   bool IsAudioTokenActive(int token) const;
+   [[nodiscard]] bool IsAudioTokenActive(int token) const;
 
    /** \brief Returns true if we're monitoring input (but not recording or
     * playing actual audio) */
-   bool IsMonitoring() const;
+   [[nodiscard]] bool IsMonitoring() const;
 
 protected:
    static std::unique_ptr<AudioIOBase> ugAudioIO;

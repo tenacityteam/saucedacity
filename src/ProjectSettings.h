@@ -67,57 +67,57 @@ public:
    ProjectSettings &operator=( const ProjectSettings & ) = delete;
 
 
-   bool GetTracksFitVerticallyZoomed() const { return mTracksFitVerticallyZoomed; } //lda
+   [[nodiscard]] bool GetTracksFitVerticallyZoomed() const { return mTracksFitVerticallyZoomed; } //lda
    void SetTracksFitVerticallyZoomed(bool flag) { mTracksFitVerticallyZoomed = flag; } //lda
 
-   bool GetShowId3Dialog() const { return mShowId3Dialog; } //lda
+   [[nodiscard]] bool GetShowId3Dialog() const { return mShowId3Dialog; } //lda
    void SetShowId3Dialog(bool flag) { mShowId3Dialog = flag; } //lda
 
-   bool IsSyncLocked() const;
+   [[nodiscard]] bool IsSyncLocked() const;
    void SetSyncLock(bool flag);
    
    // Rate
 
    void SetRate(double rate);
-   double GetRate() const;
+   [[nodiscard]] double GetRate() const;
 
    // Snap To
 
    void SetSnapTo(int snap);
-   int GetSnapTo() const;
+   [[nodiscard]] int GetSnapTo() const;
 
    // Current tool
 
    void SetTool(int tool) { mCurrentTool = tool; }
-   int GetTool() const { return mCurrentTool; }
+   [[nodiscard]] int GetTool() const { return mCurrentTool; }
 
    // Speed play
-   double GetPlaySpeed() const {
+   [[nodiscard]] double GetPlaySpeed() const {
       return mPlaySpeed.load( std::memory_order_relaxed ); }
    void SetPlaySpeed( double value ) {
       mPlaySpeed.store( value, std::memory_order_relaxed ); }
 
    // Selection Format
    void SetSelectionFormat(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetSelectionFormat() const;
+   [[nodiscard]] const NumericFormatSymbol & GetSelectionFormat() const;
 
    // AudioTime format
    void SetAudioTimeFormat(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetAudioTimeFormat() const;
+   [[nodiscard]] const NumericFormatSymbol & GetAudioTimeFormat() const;
 
    // Spectral Selection Formats
    void SetFrequencySelectionFormatName(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetFrequencySelectionFormatName() const;
+   [[nodiscard]] const NumericFormatSymbol & GetFrequencySelectionFormatName() const;
 
    void SetBandwidthSelectionFormatName(const NumericFormatSymbol & format);
-   const NumericFormatSymbol & GetBandwidthSelectionFormatName() const;
+   [[nodiscard]] const NumericFormatSymbol & GetBandwidthSelectionFormatName() const;
 
-   bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
-   bool IsSoloNone() const { return mSoloPref == wxT("None"); }
+   [[nodiscard]] bool IsSoloSimple() const { return mSoloPref == wxT("Simple"); }
+   [[nodiscard]] bool IsSoloNone() const { return mSoloPref == wxT("None"); }
 
-   bool EmptyCanBeDirty() const { return mEmptyCanBeDirty; }
+   [[nodiscard]] bool EmptyCanBeDirty() const { return mEmptyCanBeDirty; }
 
-   bool GetShowSplashScreen() const { return mShowSplashScreen; }
+   [[nodiscard]] bool GetShowSplashScreen() const { return mShowSplashScreen; }
 
 private:
    void UpdatePrefs() override;

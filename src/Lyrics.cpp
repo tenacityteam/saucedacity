@@ -143,9 +143,9 @@ void LyricsPanel::Clear()
    mText = wxT("");
 
    // Add two dummy syllables at the beginning
-   mSyllables.push_back(Syllable());
+   mSyllables.emplace_back();
    mSyllables[0].t = -2.0;
-   mSyllables.push_back(Syllable());
+   mSyllables.emplace_back();
    mSyllables[1].t = -1.0;
 
    mHighlightTextCtrl->Clear();
@@ -180,7 +180,7 @@ void LyricsPanel::Add(double t, const wxString &syllable, wxString &highlightTex
       }
    }
 
-   mSyllables.push_back(Syllable());
+   mSyllables.emplace_back();
    Syllable &thisSyllable = mSyllables[i];
    thisSyllable.t = t;
    thisSyllable.text = syllable;
@@ -210,11 +210,11 @@ void LyricsPanel::Finish(double finalT)
 {
    // Add 3 dummy syllables at the end
    int i = mSyllables.size();
-   mSyllables.push_back(Syllable());
+   mSyllables.emplace_back();
    mSyllables[i].t = finalT + 1.0;
-   mSyllables.push_back(Syllable());
+   mSyllables.emplace_back();
    mSyllables[i+1].t = finalT + 2.0;
-   mSyllables.push_back(Syllable());
+   mSyllables.emplace_back();
    mSyllables[i+2].t = finalT + 3.0;
 
    // Mark measurements as invalid
@@ -264,7 +264,7 @@ unsigned int LyricsPanel::GetDefaultFontSize() const
    return (mLyricsStyle == kBouncingBallLyrics) ? 48 : 10;
 }
 
-void LyricsPanel::SetDrawnFont(wxDC *dc)
+void LyricsPanel::SetDrawnFont(wxDC *dc) const
 {
    dc->SetFont(wxFont(mKaraokeFontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 }

@@ -36,8 +36,7 @@ EffectFade::EffectFade(bool fadeIn)
 }
 
 EffectFade::~EffectFade()
-{
-}
+= default;
 
 // ComponentInterface implementation
 

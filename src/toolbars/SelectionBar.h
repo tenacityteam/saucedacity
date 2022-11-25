@@ -47,7 +47,7 @@ class SAUCEDACITY_DLL_API SelectionBar final : public ToolBar {
 
  public:
    SelectionBar( SaucedacityProject &project );
-   virtual ~SelectionBar();
+   ~SelectionBar() override;
 
    static SelectionBar &Get( SaucedacityProject &project );
    static const SelectionBar &Get( const SaucedacityProject &project );

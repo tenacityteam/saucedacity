@@ -144,7 +144,7 @@ void ModulePrefs::PopulateOrExchange(ShuttleGui & S)
            );
         S.EndMultiColumn();
       }
-      if( mModules.size() < 1 )
+      if( mModules.empty() )
       {
         S.AddFixedText( XO("No modules were found") );
       }

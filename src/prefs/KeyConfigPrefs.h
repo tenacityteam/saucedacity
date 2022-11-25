@@ -52,7 +52,7 @@ private:
       TranslatableString & sMatching) const;
    TranslatableString MergeWithExistingKeys(
       const std::vector<NormalizedKeyString> &toAdd);
-   void FilterKeys( std::vector<NormalizedKeyString> & arr );
+   static void FilterKeys( std::vector<NormalizedKeyString> & arr );
    CommandID NameFromKey(const NormalizedKeyString & key);
    void SetKeyForSelected(const NormalizedKeyString & key);
 

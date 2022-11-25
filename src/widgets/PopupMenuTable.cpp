@@ -90,7 +90,7 @@ void PopupMenuBuilder::DoEndGroup( Registry::GroupItem &item, const Path &path )
 
 void PopupMenuBuilder::DoVisit( Registry::SingleItem &item, const Path &path )
 {
-   auto pEntry = static_cast<PopupMenuTableEntry*>( &item );
+   auto pEntry = dynamic_cast<PopupMenuTableEntry*>( &item );
    switch (pEntry->type) {
       case PopupMenuTable::Entry::Item:
       {
@@ -192,7 +192,7 @@ void PopupMenu::DisconnectTable(PopupMenuTable *pTable)
 
       void DoVisit( Registry::SingleItem &item, const Path &path ) override
       {
-         auto pEntry = static_cast<PopupMenuTableEntry*>( &item );
+         auto pEntry = dynamic_cast<PopupMenuTableEntry*>( &item );
          mMenu.pParent->Unbind( wxEVT_COMMAND_MENU_SELECTED,
          pEntry->func, &pEntry->handler, pEntry->id );
          pEntry->handler.DestroyMenu();

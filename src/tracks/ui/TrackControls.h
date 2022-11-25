@@ -23,9 +23,9 @@ public:
    static const TrackControls &Get( const Track &track );
 
    explicit
-   TrackControls( std::shared_ptr<Track> pTrack );
+   TrackControls( const std::shared_ptr<Track>& pTrack );
 
-   virtual ~TrackControls() = 0;
+   ~TrackControls() override = 0;
 };
 
 #include "AttachedVirtualFunction.h"

@@ -33,8 +33,8 @@
 
 #if USE_VST
 
-#include <limits.h>
-#include <stdio.h>
+#include <climits>
+#include <cstdio>
 #include <optional>
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -163,7 +163,7 @@ DECLARE_BUILTIN_MODULE(VSTBuiltin);
 class VSTSubEntry final : public wxModule
 {
 public:
-   bool OnInit()
+   bool OnInit() override
    {
       // Have we been started to check a plugin?
       if (wxTheApp && wxTheApp->argc == 3 && wxStrcmp(wxTheApp->argv[1], VSTCMDKEY) == 0)
@@ -185,7 +185,7 @@ public:
       return true;
    };
 
-   void OnExit() {};
+   void OnExit() override {};
 
    DECLARE_DYNAMIC_CLASS(VSTSubEntry)
 };
@@ -354,8 +354,7 @@ bool VSTEffectsModule::Initialize()
 void VSTEffectsModule::Terminate()
 {
    // Nothing to do here
-   return;
-}
+   }
 
 EffectFamilySymbol VSTEffectsModule::GetOptionalFamilySymbol()
 {
@@ -703,18 +702,18 @@ VSTEffectsModule::CreateInstance(const PluginPath & path)
 void VSTEffectsModule::Check(const wxChar *path)
 {
    VSTEffect effect(path);
-   if (effect.SetHost(NULL))
+   if (effect.SetHost(nullptr))
    {
       auto effectIDs = effect.GetEffectIDs();
       wxString out;
 
-      if (effectIDs.size() > 0)
+      if (!effectIDs.empty())
       {
          wxString subids;
 
-         for (size_t i = 0, cnt = effectIDs.size(); i < cnt; i++)
+         for (int effectID : effectIDs)
          {
-            subids += wxString::Format(wxT("%d;"), effectIDs[i]);
+            subids += wxString::Format(wxT("%d;"), effectID);
          }
 
          out = wxString::Format(wxT("%s%d=%s\n"), OUTPUTKEY, kKeySubIDs, subids.RemoveLast());
@@ -752,7 +751,7 @@ class VSTEffectOptionsDialog final : public wxDialogWrapper
 {
 public:
    VSTEffectOptionsDialog(wxWindow * parent, EffectHostInterface *host);
-   virtual ~VSTEffectOptionsDialog();
+   ~VSTEffectOptionsDialog() override;
 
    void PopulateOrExchange(ShuttleGui & S);
 
@@ -894,11 +893,11 @@ public:
    {
    }
 
-   ~VSTEffectTimer()
+   ~VSTEffectTimer() override
    {
    }
 
-   void Notify()
+   void Notify() override
    {
       mEffect->OnTimer();
    }
@@ -940,7 +939,7 @@ intptr_t VSTEffect::AudioMaster(AEffect * effect,
                                 void * ptr,
                                 float opt)
 {
-   VSTEffect *vst = (effect ? (VSTEffect *) effect->ptr2 : NULL);
+   VSTEffect *vst = (effect ? (VSTEffect *) effect->ptr2 : nullptr);
 
    // Handles operations during initialization...before VSTEffect has had a
    // chance to set its instance pointer.
@@ -1125,10 +1124,10 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
 :  mPath(path),
    mMaster(master)
 {
-   mHost = NULL;
-   mModule = NULL;
-   mAEffect = NULL;
-   mDialog = NULL;
+   mHost = nullptr;
+   mModule = nullptr;
+   mAEffect = nullptr;
+   mDialog = nullptr;
 
    mTimer = std::make_unique<VSTEffectTimer>(this);
    mTimerGuard = 0;
@@ -1160,7 +1159,7 @@ VSTEffect::VSTEffect(const PluginPath & path, VSTEffect *master)
    // UI
    
    mGui = false;
-   mContainer = NULL;
+   mContainer = nullptr;
 
    // If we're a slave then go ahead a load immediately
    if (mMaster)
@@ -1399,8 +1398,8 @@ bool VSTEffect::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames W
    mTimeInfo.flags = kVstTempoValid | kVstNanosValid | kVstTransportPlaying;
 
    // Set processing parameters...power must be off for this
-   callDispatcher(effSetSampleRate, 0, 0, NULL, mSampleRate);
-   callDispatcher(effSetBlockSize, 0, mBlockSize, NULL, 0.0);
+   callDispatcher(effSetSampleRate, 0, 0, nullptr, mSampleRate);
+   callDispatcher(effSetBlockSize, 0, mBlockSize, nullptr, 0.0);
 
    // Turn on the power
    PowerOn();
@@ -1437,7 +1436,7 @@ size_t VSTEffect::ProcessBlock(float **inBlock, float **outBlock, size_t blockLe
    return blockLen;
 }
 
-unsigned VSTEffect::GetChannelCount()
+unsigned VSTEffect::GetChannelCount() const
 {
    return mNumChannels;
 }
@@ -1452,7 +1451,7 @@ bool VSTEffect::RealtimeInitialize()
    mMasterIn.reinit( mAudioIns, mBlockSize, true );
    mMasterOut.reinit( mAudioOuts, mBlockSize );
 
-   return ProcessInitialize(0, NULL);
+   return ProcessInitialize(0, nullptr);
 }
 
 bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
@@ -1467,7 +1466,7 @@ bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
    int clen = 0;
    if (mAEffect->flags & effFlagsProgramChunks)
    {
-      void *chunk = NULL;
+      void *chunk = nullptr;
 
       clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0); // get master's chunk, for the program only
       if (clen != 0)
@@ -1478,17 +1477,17 @@ bool VSTEffect::RealtimeAddProcessor(unsigned numChannels, float sampleRate)
 
    if (clen == 0)
    {
-      callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+      callDispatcher(effBeginSetProgram, 0, 0, nullptr, 0.0);
 
       for (int i = 0; i < mAEffect->numParams; i++)
       {
          slave->callSetParameter(i, callGetParameter(i));
       }
 
-      callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+      callDispatcher(effEndSetProgram, 0, 0, nullptr, 0.0);
    }
 
-   return slave->ProcessInitialize(0, NULL);
+   return slave->ProcessInitialize(0, nullptr);
 }
 
 bool VSTEffect::RealtimeFinalize()
@@ -1608,7 +1607,7 @@ bool VSTEffect::ShowInterface(
    {
       mSampleRate = 44100;
       mBlockSize = 8192;
-      ProcessInitialize(0, NULL);
+      ProcessInitialize(0, nullptr);
    }
 
    if ( factory )
@@ -1654,7 +1653,7 @@ bool VSTEffect::GetAutomationParameters(CommandParameters & parms)
 
 bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
 {
-   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+   callDispatcher(effBeginSetProgram, 0, 0, nullptr, 0.0);
    for (int i = 0; i < mAEffect->numParams; i++)
    {
       wxString name = GetString(effGetParamName, i);
@@ -1676,7 +1675,7 @@ bool VSTEffect::SetAutomationParameters(CommandParameters & parms)
             slave->callSetParameter(i, d);
       }
    }
-   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+   callDispatcher(effEndSetProgram, 0, 0, nullptr, 0.0);
 
    return true;
 }
@@ -1750,7 +1749,7 @@ void VSTEffect::SetHostUI(EffectUIHostInterface *host)
 bool VSTEffect::PopulateUI(ShuttleGui &S)
 {
    auto parent = S.GetParent();
-   mDialog = static_cast<wxDialog *>(wxGetTopLevelParent(parent));
+   mDialog = dynamic_cast<wxDialog *>(wxGetTopLevelParent(parent));
    mParent = parent;
 
    mParent->PushEventHandler(this);
@@ -1828,9 +1827,9 @@ bool VSTEffect::CloseUI()
    mDisplays.reset();
    mLabels.reset();
 
-   mUIHost = NULL;
-   mParent = NULL;
-   mDialog = NULL;
+   mUIHost = nullptr;
+   mParent = nullptr;
+   mDialog = nullptr;
 
    return true;
 }
@@ -1860,7 +1859,7 @@ void VSTEffect::ExportPresets()
         { XO("Audacity VST preset file"), { wxT("xml") }, true },
       },
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
-      NULL);
+      nullptr);
 
    // User canceled...
    if (path.empty())
@@ -1964,8 +1963,6 @@ void VSTEffect::ImportPresets()
    }
 
    RefreshParameters();
-
-   return;
 }
 
 bool VSTEffect::HasOptions()
@@ -2000,8 +1997,8 @@ bool VSTEffect::Load()
    mPath.AfterFirst(wxT(';')).ToLong(&effectID);
    mCurrentEffectID = (intptr_t) effectID;
 
-   mModule = NULL;
-   mAEffect = NULL;
+   mModule = nullptr;
+   mAEffect = nullptr;
 
 #if defined(__WXMAC__)
    // Start clean
@@ -2140,10 +2137,10 @@ bool VSTEffect::Load()
 
    // Try to find the entry point, while suppressing error messages
    pluginMain = (vstPluginMain) dlsym(lib.get(), "VSTPluginMain");
-   if (pluginMain == NULL)
+   if (pluginMain == nullptr)
    {
       pluginMain = (vstPluginMain) dlsym(lib.get(), "main");
-      if (pluginMain == NULL)
+      if (pluginMain == nullptr)
          return false;
    }
 
@@ -2160,7 +2157,7 @@ bool VSTEffect::Load()
    catch (...)
    {
       wxLogMessage(wxT("VST plugin initialization failed\n"));
-      mAEffect = NULL;
+      mAEffect = nullptr;
    }
 
    // Was it successful?
@@ -2174,21 +2171,21 @@ bool VSTEffect::Load()
       mAEffect->ptr2 = this;
 
       // Give the plugin an initial sample rate and blocksize
-      callDispatcher(effSetSampleRate, 0, 0, NULL, 48000.0);
-      callDispatcher(effSetBlockSize, 0, 512, NULL, 0);
+      callDispatcher(effSetSampleRate, 0, 0, nullptr, 48000.0);
+      callDispatcher(effSetBlockSize, 0, 512, nullptr, 0);
 
       // Ask the plugin to identify itself...might be needed for older plugins
-      callDispatcher(effIdentify, 0, 0, NULL, 0);
+      callDispatcher(effIdentify, 0, 0, nullptr, 0);
 
       // Open the plugin
-      callDispatcher(effOpen, 0, 0, NULL, 0.0);
+      callDispatcher(effOpen, 0, 0, nullptr, 0.0);
 
       // Get the VST version the plugin understands
-      mVstVersion = callDispatcher(effGetVstVersion, 0, 0, NULL, 0);
+      mVstVersion = callDispatcher(effGetVstVersion, 0, 0, nullptr, 0);
 
       // Set it again in case plugin ignored it before the effOpen
-      callDispatcher(effSetSampleRate, 0, 0, NULL, 48000.0);
-      callDispatcher(effSetBlockSize, 0, 512, NULL, 0);
+      callDispatcher(effSetSampleRate, 0, 0, nullptr, 48000.0);
+      callDispatcher(effSetBlockSize, 0, 512, nullptr, 0);
 
       // Ensure that it looks like a plugin and can deal with ProcessReplacing
       // calls.  Also exclude synths for now.
@@ -2212,7 +2209,7 @@ bool VSTEffect::Load()
          if (mVstVersion >= 2)
          {
             mVendor = GetString(effGetVendorString);
-            mVersion = wxINT32_SWAP_ON_LE(callDispatcher(effGetVendorVersion, 0, 0, NULL, 0));
+            mVersion = wxINT32_SWAP_ON_LE(callDispatcher(effGetVendorVersion, 0, 0, nullptr, 0));
          }
          if (mVersion == 0)
          {
@@ -2235,7 +2232,7 @@ bool VSTEffect::Load()
          mAutomatable = false;
          for (int i = 0; i < mAEffect->numParams; i++)
          {
-            if (callDispatcher(effCanBeAutomated, 0, i, NULL, 0.0))
+            if (callDispatcher(effCanBeAutomated, 0, i, nullptr, 0.0))
             {
                mAutomatable = true;
                break;
@@ -2274,8 +2271,8 @@ void VSTEffect::Unload()
       PowerOff();
 
       // Finally, close the plugin
-      callDispatcher(effClose, 0, 0, NULL, 0.0);
-      mAEffect = NULL;
+      callDispatcher(effClose, 0, 0, nullptr, 0.0);
+      mAEffect = nullptr;
    }
 
    if (mModule)
@@ -2286,7 +2283,7 @@ void VSTEffect::Unload()
 #endif
 
       mModule.reset();
-      mAEffect = NULL;
+      mAEffect = nullptr;
    }
 }
 
@@ -2295,7 +2292,7 @@ std::vector<int> VSTEffect::GetEffectIDs()
    std::vector<int> effectIDs;
 
    // Are we a shell?
-   if (mVstVersion >= 2 && (VstPlugCategory) callDispatcher(effGetPlugCategory, 0, 0, NULL, 0) == kPlugCategShell)
+   if (mVstVersion >= 2 && (VstPlugCategory) callDispatcher(effGetPlugCategory, 0, 0, nullptr, 0) == kPlugCategShell)
    {
       char name[64];
       int effectID;
@@ -2363,7 +2360,7 @@ bool VSTEffect::SaveParameters(const RegistryPath & group)
 
    if (mAEffect->flags & effFlagsProgramChunks)
    {
-      void *chunk = NULL;
+      void *chunk = nullptr;
       int clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
       if (clen <= 0)
       {
@@ -2401,7 +2398,7 @@ void VSTEffect::OnTimer()
 
    if (mVstVersion >= 2 && mWantsIdle)
    {
-      int ret = callDispatcher(effIdle, 0, 0, NULL, 0.0);
+      int ret = callDispatcher(effIdle, 0, 0, nullptr, 0.0);
       if (!ret)
       {
          mWantsIdle = false;
@@ -2410,7 +2407,7 @@ void VSTEffect::OnTimer()
 
    if (mWantsEditIdle)
    {
-      callDispatcher(effEditIdle, 0, 0, NULL, 0.0);
+      callDispatcher(effEditIdle, 0, 0, nullptr, 0.0);
    }
 }
 
@@ -2432,12 +2429,12 @@ VstTimeInfo *VSTEffect::GetTimeInfo()
    return &mTimeInfo;
 }
 
-float VSTEffect::GetSampleRate()
+float VSTEffect::GetSampleRate() const
 {
    return mTimeInfo.sampleRate;
 }
 
-int VSTEffect::GetProcessLevel()
+int VSTEffect::GetProcessLevel() const
 {
    return mProcessLevel;
 }
@@ -2447,12 +2444,12 @@ void VSTEffect::PowerOn()
    if (!mHasPower)
    {
       // Turn the power on
-      callDispatcher(effMainsChanged, 0, 1, NULL, 0.0);
+      callDispatcher(effMainsChanged, 0, 1, nullptr, 0.0);
 
       // Tell the effect we're going to start processing
       if (mVstVersion >= 2)
       {
-         callDispatcher(effStartProcess, 0, 0, NULL, 0.0);
+         callDispatcher(effStartProcess, 0, 0, nullptr, 0.0);
       }
 
       // Set state
@@ -2467,11 +2464,11 @@ void VSTEffect::PowerOff()
       // Tell the effect we're going to stop processing
       if (mVstVersion >= 2)
       {
-         callDispatcher(effStopProcess, 0, 0, NULL, 0.0);
+         callDispatcher(effStopProcess, 0, 0, nullptr, 0.0);
       }
 
       // Turn the power off
-      callDispatcher(effMainsChanged, 0, 0, NULL, 0.0);
+      callDispatcher(effMainsChanged, 0, 0, nullptr, 0.0);
 
       // Set state
       mHasPower = false;
@@ -2489,8 +2486,7 @@ void VSTEffect::SizeWindow(int w, int h)
       mParent->GetEventHandler()->AddPendingEvent(sw);
    }
 
-   return;
-}
+   }
 
 void VSTEffect::UpdateDisplay()
 {
@@ -2502,8 +2498,7 @@ void VSTEffect::UpdateDisplay()
       mParent->GetEventHandler()->AddPendingEvent(ud);
    }
 #endif
-   return;
-}
+   }
 
 void VSTEffect::Automate(int index, float value)
 {
@@ -2515,8 +2510,6 @@ void VSTEffect::Automate(int index, float value)
 
    for (const auto &slave : mSlaves)
       slave->callSetParameter(index, value);
-
-   return;
 }
 
 void VSTEffect::SetBufferDelay(int samples)
@@ -2527,8 +2520,7 @@ void VSTEffect::SetBufferDelay(int samples)
       mBufferDelay = samples;
    }
 
-   return;
-}
+   }
 
 int VSTEffect::GetString(wxString & outstr, int opcode, int index)
 {
@@ -2581,7 +2573,7 @@ float VSTEffect::callGetParameter(int index)
 
 void VSTEffect::callSetParameter(int index, float value)
 {
-   if (mVstVersion == 0 || callDispatcher(effCanBeAutomated, 0, index, NULL, 0.0))
+   if (mVstVersion == 0 || callDispatcher(effCanBeAutomated, 0, index, nullptr, 0.0))
    {
       mAEffect->setParameter(mAEffect, index, value);
 
@@ -2592,13 +2584,13 @@ void VSTEffect::callSetParameter(int index, float value)
 
 void VSTEffect::callSetProgram(int index)
 {
-   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+   callDispatcher(effBeginSetProgram, 0, 0, nullptr, 0.0);
 
-   callDispatcher(effSetProgram, 0, index, NULL, 0.0);
+   callDispatcher(effSetProgram, 0, index, nullptr, 0.0);
    for (const auto &slave : mSlaves)
       slave->callSetProgram(index);
 
-   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+   callDispatcher(effEndSetProgram, 0, 0, nullptr, 0.0);
 }
 
 void VSTEffect::callSetChunk(bool isPgm, int len, void *buf)
@@ -2633,9 +2625,9 @@ void VSTEffect::callSetChunk(bool isPgm, int len, void *buf, VstPatchChunkInfo *
       }
    }
 
-   callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+   callDispatcher(effBeginSetProgram, 0, 0, nullptr, 0.0);
    callDispatcher(effSetChunk, isPgm ? 1 : 0, len, buf, 0.0);
-   callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+   callDispatcher(effEndSetProgram, 0, 0, nullptr, 0.0);
 
    for (const auto &slave : mSlaves)
       slave->callSetChunk(isPgm, len, buf, info);
@@ -2656,7 +2648,7 @@ const static char padc = wxT('=');
 
 wxString VSTEffect::b64encode(const void *in, int len)
 {
-   unsigned char *p = (unsigned char *) in;
+   auto *p = (unsigned char *) in;
    wxString out;
 
    unsigned long temp;
@@ -2697,7 +2689,7 @@ wxString VSTEffect::b64encode(const void *in, int len)
 int VSTEffect::b64decode(const wxString &in, void *out)
 {
    int len = in.length();
-   unsigned char *p = (unsigned char *) out;
+   auto *p = (unsigned char *) out;
 
    if (len % 4)  //Sanity check
    {
@@ -2785,7 +2777,7 @@ static void OnSize(wxSizeEvent & evt)
    // This is a bit of a hack to prevent VSTs GUI windows from resizing
    // there's no real reason to allow it.  But, there should be a better
    // way of handling it.
-   wxWindow *w = (wxWindow *) evt.GetEventObject();
+   auto *w = (wxWindow *) evt.GetEventObject();
    wxSize sz = w->GetMinSize();
 
    if (sz != wxDefaultSize)
@@ -2822,20 +2814,12 @@ void VSTEffect::BuildFancy()
    NeedEditIdle(true);
 
    mDialog->Bind(wxEVT_SIZE, OnSize);
-
-#ifdef __WXMAC__
-#ifdef __WX_EVTLOOP_BUSY_WAITING__
-   wxEventLoop::SetBusyWaiting(true);
-#endif
-#endif
-
-   return;
 }
 
 void VSTEffect::BuildPlain()
 {
    wxASSERT(mParent); // To justify safenew
-   wxScrolledWindow *const scroller = safenew wxScrolledWindow(mParent,
+   auto *const scroller = safenew wxScrolledWindow(mParent,
       wxID_ANY,
       wxDefaultPosition,
       wxDefaultSize,
@@ -3035,7 +3019,7 @@ void VSTEffect::OnSizeWindow(wxCommandEvent & evt)
 
 void VSTEffect::OnSlider(wxCommandEvent & evt)
 {
-   wxSlider *s = (wxSlider *) evt.GetEventObject();
+   auto *s = (wxSlider *) evt.GetEventObject();
    int i = s->GetId() - ID_Sliders;
 
    callSetParameter(i, s->GetValue() / 1000.0);
@@ -3082,7 +3066,7 @@ bool VSTEffect::LoadFXB(const wxFileName & fn)
       }
 
       // Most references to the data are via an "int" array
-      int32_t *iptr = (int32_t *) bptr;
+      auto *iptr = (int32_t *) bptr;
 
       // Verify that we have at least enough for the header
       if (len < 156)
@@ -3271,7 +3255,7 @@ bool VSTEffect::LoadFXP(const wxFileName & fn)
 bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bool dryrun)
 {
    // Most references to the data are via an "int" array
-   int32_t *iptr = (int32_t *) *bptr;
+   auto *iptr = (int32_t *) *bptr;
 
    // Verify that we have at least enough for a program without parameters
    if (len < 28)
@@ -3358,13 +3342,13 @@ bool VSTEffect::LoadFXProgram(unsigned char **bptr, ssize_t & len, int index, bo
          }
 
          // Load all of the parameters
-         callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+         callDispatcher(effBeginSetProgram, 0, 0, nullptr, 0.0);
          for (int i = 0; i < numParams; i++)
          {
             wxUint32 val = wxUINT32_SWAP_ON_LE(iptr[14 + i]);
             callSetParameter(i, reinterpretAsFloat(val));
          }
-         callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+         callDispatcher(effEndSetProgram, 0, 0, nullptr, 0.0);
       }
 
       // Update in case we're loading an "FxBk" format bank file
@@ -3435,7 +3419,7 @@ bool VSTEffect::LoadXML(const wxFileName & fn)
    // Something went wrong with the file, clean up
    if (mInSet)
    {
-      callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+      callDispatcher(effEndSetProgram, 0, 0, nullptr, 0.0);
 
       mInSet = false;
    }
@@ -3537,8 +3521,6 @@ void VSTEffect::SaveFXB(const wxFileName & fn)
    }
 
    f.Close();
-
-   return;
 }
 
 void VSTEffect::SaveFXP(const wxFileName & fn)
@@ -3558,7 +3540,7 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
 
    wxMemoryBuffer buf;
 
-   int ndx = callDispatcher(effGetProgram, 0, 0, NULL, 0.0);
+   int ndx = callDispatcher(effGetProgram, 0, 0, nullptr, 0.0);
    SaveFXProgram(buf, ndx);
 
    f.Write(buf.GetData(), buf.GetDataLen());
@@ -3572,8 +3554,6 @@ void VSTEffect::SaveFXP(const wxFileName & fn)
    }
 
    f.Close();
-
-   return;
 }
 
 void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
@@ -3631,8 +3611,7 @@ void VSTEffect::SaveFXProgram(wxMemoryBuffer & buf, int index)
       }
    }
 
-   return;
-}
+   }
 
 // Throws exceptions rather than giving error return.
 void VSTEffect::SaveXML(const wxFileName & fn)
@@ -3656,7 +3635,7 @@ void VSTEffect::SaveXML(const wxFileName & fn)
    int clen = 0;
    if (mAEffect->flags & effFlagsProgramChunks)
    {
-      void *chunk = NULL;
+      void *chunk = nullptr;
 
       clen = (int) callDispatcher(effGetChunk, 1, 0, &chunk, 0.0);
       if (clen != 0)
@@ -3858,7 +3837,7 @@ bool VSTEffect::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
          return false;
       }
 
-      callDispatcher(effBeginSetProgram, 0, 0, NULL, 0.0);
+      callDispatcher(effBeginSetProgram, 0, 0, nullptr, 0.0);
 
       mInSet = true;
 
@@ -3960,7 +3939,7 @@ void VSTEffect::HandleXMLEndTag(const wxChar *tag)
    {
       if (mInSet)
       {
-         callDispatcher(effEndSetProgram, 0, 0, NULL, 0.0);
+         callDispatcher(effEndSetProgram, 0, 0, nullptr, 0.0);
 
          mInSet = false;
       }
@@ -4002,7 +3981,7 @@ XMLTagHandler *VSTEffect::HandleXMLChild(const wxChar *tag)
       return this;
    }
 
-   return NULL;
+   return nullptr;
 }
 
 #endif // USE_VST

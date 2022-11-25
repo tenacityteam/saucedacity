@@ -283,7 +283,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
             POPUP_MENU_FN( OnWaveformScaleType ),
             []( PopupMenuHandler &handler, wxMenu &menu, int id ){
                const auto pData =
-                  static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
+                  dynamic_cast< WaveformVRulerMenuTable& >( handler ).mpData;
                WaveTrack *const wt = pData->pTrack;
                if ( id ==
                   OnFirstWaveformScaleID +

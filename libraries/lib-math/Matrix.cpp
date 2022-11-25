@@ -10,7 +10,7 @@
 
 #include "Matrix.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <cmath>
 
 #include <wx/defs.h>

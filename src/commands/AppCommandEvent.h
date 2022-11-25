@@ -32,12 +32,12 @@ private:
    OldStyleCommandPointer mCommand;
 
 public:
-   AppCommandEvent(wxEventType commandType = wxEVT_APP_COMMAND_RECEIVED, int id = 0);
+   explicit AppCommandEvent(wxEventType commandType = wxEVT_APP_COMMAND_RECEIVED, int id = 0);
 
    AppCommandEvent(const AppCommandEvent &event);
-   ~AppCommandEvent();
+   ~AppCommandEvent() override;
 
-   wxEvent *Clone() const override;
+   [[nodiscard]] wxEvent *Clone() const override;
    void SetCommand(const OldStyleCommandPointer &cmd);
    OldStyleCommandPointer GetCommand();
 

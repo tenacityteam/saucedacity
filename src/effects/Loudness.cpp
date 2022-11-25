@@ -18,6 +18,7 @@
 #include "Loudness.h"
 
 #include <cmath>
+#include <memory>
 
 #include <wx/intl.h>
 #include <wx/simplebook.h>
@@ -78,8 +79,7 @@ EffectLoudness::EffectLoudness()
 }
 
 EffectLoudness::~EffectLoudness()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -218,7 +218,7 @@ bool EffectLoudness::Process()
 
       if(mNormalizeTo == kLoudness)
       {
-         mLoudnessProcessor.reset(safenew EBUR128(mCurRate, range.size()));
+         mLoudnessProcessor = std::make_unique<EBUR128>(mCurRate, range.size());
          mLoudnessProcessor->Initialize();
          if(!ProcessOne(range, true))
          {
@@ -441,7 +441,7 @@ void EffectLoudness::FreeBuffers()
    mTrackBuffer[1].reset();
 }
 
-bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
+bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms) const
 {
    // set mRMS.  No progress bar here as it's fast.
    float _rms = track->GetRMS(mCurT0, mCurT1); // may throw
@@ -455,7 +455,7 @@ bool EffectLoudness::GetTrackRMS(WaveTrack* track, float& rms)
 ///  mMult must be set before this is called
 /// In analyse mode, it executes the selected analyse operation on it...
 ///  mMult does not have to be set before this is called
-bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
+bool EffectLoudness::ProcessOne(const TrackIterRange<WaveTrack>& range, bool analyse)
 {
    WaveTrack* track = *range.begin();
 
@@ -508,7 +508,7 @@ bool EffectLoudness::ProcessOne(TrackIterRange<WaveTrack> range, bool analyse)
    return true;
 }
 
-void EffectLoudness::LoadBufferBlock(TrackIterRange<WaveTrack> range,
+void EffectLoudness::LoadBufferBlock(const TrackIterRange<WaveTrack>& range,
                                      sampleCount pos, size_t len)
 {
    // Get the samples from the track and put them in the buffer
@@ -552,7 +552,7 @@ bool EffectLoudness::ProcessBufferBlock()
    return true;
 }
 
-void EffectLoudness::StoreBufferBlock(TrackIterRange<WaveTrack> range,
+void EffectLoudness::StoreBufferBlock(const TrackIterRange<WaveTrack>& range,
                                       sampleCount pos, size_t len)
 {
    int idx = 0;

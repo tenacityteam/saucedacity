@@ -69,12 +69,12 @@ public:
    SettingBase( const wxChar *path ) : mPath{ path } {}
    SettingBase( const wxString &path ) : mPath{ path } {}
 
-   wxConfigBase *GetConfig() const;
+   [[nodiscard]] static wxConfigBase *GetConfig() ;
 
-   const wxString &GetPath() const { return mPath; }
+   [[nodiscard]] const wxString &GetPath() const { return mPath; }
 
    //! Delete the key if present, and return true iff it was.
-   bool Delete();
+   bool Delete() const;
 
 protected:
    SettingBase( const SettingBase& ) = default;

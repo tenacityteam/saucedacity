@@ -19,8 +19,7 @@
 CommandSignature::CommandSignature() = default;
 
 CommandSignature::~CommandSignature()
-{
-}
+= default;
 
 void CommandSignature::AddParameter(const wxString &name,
       const wxVariant &dft,

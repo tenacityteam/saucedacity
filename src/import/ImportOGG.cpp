@@ -87,7 +87,7 @@ public:
    {
    }
 
-   ~OggImportPlugin() { }
+   ~OggImportPlugin() override { }
 
    wxString GetPluginStringID() override { return wxT("liboggvorbis"); }
    TranslatableString GetPluginFormatDescription() override;
@@ -120,7 +120,7 @@ public:
       }
 
    }
-   ~OggImportFileHandle();
+   ~OggImportFileHandle() override;
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
@@ -181,7 +181,7 @@ std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(
       return nullptr;
    }
 
-   int err = ov_open(file->fp(), vorbisFile.get(), NULL, 0);
+   int err = ov_open(file->fp(), vorbisFile.get(), nullptr, 0);
 
    if (err < 0) {
       TranslatableString message;

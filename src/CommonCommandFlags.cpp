@@ -322,7 +322,7 @@ const ReservedCommandFlag&
                focus = focus->GetParent();
          }
          return (focus &&
-            !static_cast<const wxTopLevelWindow*>(focus)->IsIconized()
+            !dynamic_cast<const wxTopLevelWindow*>(focus)->IsIconized()
          );
       },
       CommandFlagOptions{}.QuickTest()

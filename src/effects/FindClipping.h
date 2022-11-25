@@ -24,7 +24,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectFindClipping();
-   virtual ~EffectFindClipping();
+   ~EffectFindClipping() override;
 
    // ComponentInterface implementation
 

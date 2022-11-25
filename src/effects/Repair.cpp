@@ -42,12 +42,10 @@ const ComponentInterfaceSymbol EffectRepair::Symbol
 namespace{ BuiltinEffectsModule::Registration< EffectRepair > reg; }
 
 EffectRepair::EffectRepair()
-{
-}
+= default;
 
 EffectRepair::~EffectRepair()
-{
-}
+= default;
 
 // ComponentInterface implementation
 

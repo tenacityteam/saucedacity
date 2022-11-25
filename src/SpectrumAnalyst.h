@@ -39,18 +39,18 @@ public:
       int windowFunc, // see FFT.h for values
       size_t windowSize, double rate,
       const float *data, size_t dataLen,
-      float *pYMin = NULL, float *pYMax = NULL, // outputs
-      FreqGauge *progress = NULL);
+      float *pYMin = nullptr, float *pYMax = nullptr, // outputs
+      FreqGauge *progress = nullptr);
 
-   const float *GetProcessed() const;
-   int GetProcessedSize() const;
+   [[nodiscard]] const float *GetProcessed() const;
+   [[nodiscard]] int GetProcessedSize() const;
 
-   float GetProcessedValue(float freq0, float freq1) const;
+   [[nodiscard]] float GetProcessedValue(float freq0, float freq1) const;
    float FindPeak(float xPos, float *pY) const;
 
 private:
-   float CubicInterpolate(float y0, float y1, float y2, float y3, float x) const;
-   float CubicMaximize(float y0, float y1, float y2, float y3, float * max) const;
+   [[nodiscard]] static float CubicInterpolate(float y0, float y1, float y2, float y3, float x) ;
+   static float CubicMaximize(float y0, float y1, float y2, float y3, float * max) ;
 
 private:
    Algorithm mAlg;

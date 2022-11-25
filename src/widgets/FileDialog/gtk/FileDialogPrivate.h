@@ -44,11 +44,11 @@ public:
                 const wxString& name = wxFileDialogNameStr);
     virtual ~FileDialog();
 
-    virtual wxString GetPath() const;
+    [[nodiscard]] virtual wxString GetPath() const;
     virtual void GetPaths(wxArrayString& paths) const;
-    virtual wxString GetFilename() const;
+    [[nodiscard]] virtual wxString GetFilename() const;
     virtual void GetFilenames(wxArrayString& files) const;
-    virtual int GetFilterIndex() const;
+    [[nodiscard]] virtual int GetFilterIndex() const;
 
     virtual void SetMessage(const wxString& message);
     virtual void SetPath(const wxString& path);
@@ -59,7 +59,7 @@ public:
 
     virtual int ShowModal();
 
-    virtual bool SupportsExtraControl() const { return true; }
+    [[nodiscard]] virtual bool SupportsExtraControl() const { return true; }
 
     virtual void SetFileExtension(const wxString& extension);
 

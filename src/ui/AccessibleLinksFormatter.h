@@ -44,11 +44,11 @@ public:
 
    //! Replace placeholder with a link, that will open URL in default browser.
    AccessibleLinksFormatter& FormatLink(
-      wxString placeholder, TranslatableString value, std::string targetURL);
+      const wxString& placeholder, TranslatableString value, std::string targetURL);
    
    //! Replace placeholder with a link, that will call a callback provided.
    AccessibleLinksFormatter& FormatLink(
-      wxString placeholder, TranslatableString value,
+      const wxString& placeholder, TranslatableString value,
       LinkClickedHandler handler);
 
    //! Generate the UI.
@@ -72,8 +72,8 @@ private:
    /* Find the positions of the placeholders and sort 
     * arguments according to the positions. 
     */
-   std::vector<ProcessedArgument>
-   ProcessArguments(wxString translatedMessage) const;
+   [[nodiscard]] std::vector<ProcessedArgument>
+   ProcessArguments(const wxString& translatedMessage) const;
 
    TranslatableString mMessage;
    std::vector<FormatArgument> mFormatArguments;

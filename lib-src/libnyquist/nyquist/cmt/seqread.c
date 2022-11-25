@@ -106,11 +106,11 @@ extern int abort_flag;
  8 bits from the right:
 ****************************************************************************/
 
-#define precise(x) (((time_type) x) << 8)
-#define seqround(x) ((((time_type) x) + 128) >> 8)
-#define trunc(x) (((time_type) x) >> 8)
+#define precise(x) (((time_type) (x)) << 8)
+#define seqround(x) ((((time_type) (x)) + 128) >> 8)
+#define trunc(x) (((time_type) (x)) >> 8)
 
-#define nullstring(s) (s[0] == EOS)
+#define nullstring(s) ((s)[0] == EOS)
 
 
 /****************************************************************************
@@ -146,7 +146,7 @@ private void            parsefield(void);
 private boolean         parsenote(void);
 private boolean         parseparm(long *valptr);
 private int             scan(void);
-private int             scan1(char *start);
+private int             scan1(const char *start);
 private long            scanint(void);
 private void            scansymb(char *);
 private long            scansgnint(void);
@@ -1744,7 +1744,7 @@ private int scan(void)
 *    copies one char from start into token, converting to upper case
 ****************************************************************************/
 
-private int scan1(char *start)
+private int scan1(const char *start)
 {
     int i = 0;
 

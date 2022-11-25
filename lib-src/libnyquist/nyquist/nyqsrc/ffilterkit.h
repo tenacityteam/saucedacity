@@ -7,9 +7,9 @@
  */
 
 fast_float FilterUp(mem_float Imp[], mem_float ImpD[], int Nwing, 
-                    boolean Interp, mem_float *Xp, double Ph, int Inc);
+                    boolean Interp, const mem_float *Xp, double Ph, int Inc);
 
 fast_float FilterUD(mem_float Imp[], mem_float ImpD[], int Nwing,
-                    boolean Interp, mem_float *Xp, double Ph, int Inc,
+                    boolean Interp, const mem_float *Xp, double Ph, int Inc,
                     double dhb);
 

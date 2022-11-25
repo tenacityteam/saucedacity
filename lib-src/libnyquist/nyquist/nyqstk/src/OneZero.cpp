@@ -38,11 +38,11 @@ OneZero :: OneZero(StkFloat theZero) : Filter()
   Filter::setCoefficients( b, a );
 }
 
-OneZero :: ~OneZero(void)
+OneZero :: ~OneZero()
 {
 }
 
-void OneZero :: clear(void)
+void OneZero :: clear()
 {
   Filter::clear();
 }
@@ -73,12 +73,12 @@ void OneZero :: setGain(StkFloat gain)
   Filter::setGain(gain);
 }
 
-StkFloat OneZero :: getGain(void) const
+StkFloat OneZero :: getGain() const
 {
   return Filter::getGain();
 }
 
-StkFloat OneZero :: lastOut(void) const
+StkFloat OneZero :: lastOut() const
 {
   return Filter::lastOut();
 }

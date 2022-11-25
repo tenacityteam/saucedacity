@@ -17,9 +17,7 @@
 class Identifier;
 class wxWindow;
 
-namespace Journal
-{
-namespace WindowPaths
+namespace Journal::WindowPaths
 {
    using Path = Identifier;
 
@@ -29,7 +27,6 @@ namespace WindowPaths
    // When playing, find a window by path, corresponding to the window that had the
    // same path in a previous run
    wxWindow *FindByPath( const Path &path );
-}
 }
 
 #endif

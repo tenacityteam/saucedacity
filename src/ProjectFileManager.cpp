@@ -305,7 +305,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       wxULongLong fileSize = wxFileName::GetSize(projectFileIO.GetFileName());
 
       wxDiskspaceSize_t freeSpace;
-      if (wxGetDiskSpace(FileNames::AbbreviatePath(fileName), NULL, &freeSpace))
+      if (wxGetDiskSpace(FileNames::AbbreviatePath(fileName), nullptr, &freeSpace))
       {
          if (freeSpace.GetValue() <= fileSize.GetValue())
          {
@@ -499,7 +499,7 @@ For an audio file that will open in other apps, use 'Export'.\n");
          // saved to disk, and we then need to check the destination file is not
          // open in another window.
          int mayOverwrite = ( projectFileIO.GetFileName() == fName ) ? 2 : 1;
-         for ( auto p : AllProjects{} ) {
+         for ( const auto& p : AllProjects{} ) {
             const wxFileName openProjectName{ ProjectFileIO::Get(*p).GetFileName() };
             if (openProjectName.SameAs(fName)) {
                mayOverwrite -= 1;
@@ -646,7 +646,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
       wxULongLong fileSize = wxFileName::GetSize(projectFileIO.GetFileName());
 
       wxDiskspaceSize_t freeSpace;
-      if (wxGetDiskSpace(FileNames::AbbreviatePath(filename.GetFullPath()), NULL, &freeSpace))
+      if (wxGetDiskSpace(FileNames::AbbreviatePath(filename.GetFullPath()), nullptr, &freeSpace))
       {
          if (freeSpace.GetValue() <= fileSize.GetValue())
          {
@@ -698,7 +698,7 @@ bool ProjectFileManager::SaveCopy(const FilePath &fileName /* = wxT("") */)
    return true;
 }
 
-bool ProjectFileManager::SaveFromTimerRecording(wxFileName fnFile)
+bool ProjectFileManager::SaveFromTimerRecording(const wxFileName& fnFile)
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
@@ -1339,7 +1339,7 @@ namespace {
 class CompactDialog : public wxDialogWrapper
 {
 public:
-   CompactDialog(TranslatableString text)
+   CompactDialog(const TranslatableString& text)
    :  wxDialogWrapper(nullptr, wxID_ANY, XO("Compact Project"))
    {
       ShuttleGui S(this, eIsCreating);

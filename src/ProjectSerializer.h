@@ -38,7 +38,7 @@ public:
    static TranslatableString FailureMessage( const FilePath &filePath );
 
    ProjectSerializer(size_t allocSize = 1024 * 1024);
-   virtual ~ProjectSerializer();
+   ~ProjectSerializer() override;
 
    void StartTag(const wxString & name) override;
    void EndTag(const wxString & name) override;
@@ -60,7 +60,7 @@ public:
    // Non-override functions
    void WriteSubTree(const ProjectSerializer & value);
 
-   const MemoryStream& GetDict() const;
+   static const MemoryStream& GetDict() ;
    const MemoryStream& GetData() const;
 
    bool IsEmpty() const;

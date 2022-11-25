@@ -28,8 +28,8 @@ public:
    SetTrackBase();
    bool Apply(const CommandContext & context) override;
    virtual bool ApplyInner( const CommandContext &context, Track *t  );
-   virtual bool DefineParams( ShuttleParams & S ) override;
-   virtual void PopulateOrExchange(ShuttleGui & S) override;
+   bool DefineParams( ShuttleParams & S ) override;
+   void PopulateOrExchange(ShuttleGui & S) override;
 
    int mTrackIndex;
    int mChannelIndex;

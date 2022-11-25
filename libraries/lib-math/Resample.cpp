@@ -43,7 +43,7 @@ Resample::Resample(const bool useBestMethod, const double dMinFactor, const doub
       mbWantConstRateResampling = false; // variable rate resampling
       q_spec = soxr_quality_spec(SOXR_HQ, SOXR_VR);
    }
-   mHandle.reset(soxr_create(1, dMinFactor, 1, 0, 0, &q_spec, 0));
+   mHandle.reset(soxr_create(1, dMinFactor, 1, nullptr, nullptr, &q_spec, nullptr));
 }
 
 Resample::~Resample()

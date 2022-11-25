@@ -39,7 +39,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectBassTreble();
-   virtual ~EffectBassTreble();
+   ~EffectBassTreble() override;
 
    // ComponentInterface implementation
 
@@ -56,7 +56,7 @@ public:
 
    unsigned GetAudioInCount() override;
    unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool RealtimeInitialize() override;
    bool RealtimeAddProcessor(unsigned numChannels, float sampleRate) override;
@@ -81,12 +81,12 @@ public:
 private:
    // EffectBassTreble implementation
 
-   void InstanceInit(EffectBassTrebleState & data, float sampleRate);
+   void InstanceInit(EffectBassTrebleState & data, float sampleRate) const;
    size_t InstanceProcess(EffectBassTrebleState & data, float **inBlock, float **outBlock, size_t blockLen);
 
-   void Coefficients(double hz, double slope, double gain, double samplerate, int type,
+   static void Coefficients(double hz, double slope, double gain, double samplerate, int type,
                     double& a0, double& a1, double& a2, double& b0, double& b1, double& b2);
-   float DoFilter(EffectBassTrebleState & data, float in);
+   static float DoFilter(EffectBassTrebleState & data, float in);
 
    void OnBassText(wxCommandEvent & evt);
    void OnTrebleText(wxCommandEvent & evt);

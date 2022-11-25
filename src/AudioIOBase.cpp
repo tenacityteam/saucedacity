@@ -211,7 +211,7 @@ std::vector<long> AudioIOBase::GetSupportedPlaybackRates(int devIndex, double ra
 
    std::vector<long> supported;
    int irate = (int)rate;
-   const PaDeviceInfo* devInfo = NULL;
+   const PaDeviceInfo* devInfo = nullptr;
    int i;
 
    devInfo = Pa_GetDeviceInfo(devIndex);
@@ -233,7 +233,7 @@ std::vector<long> AudioIOBase::GetSupportedPlaybackRates(int devIndex, double ra
    pars.channelCount = 1;
    pars.sampleFormat = paFloat32;
    pars.suggestedLatency = devInfo->defaultHighOutputLatency;
-   pars.hostApiSpecificStreamInfo = NULL;
+   pars.hostApiSpecificStreamInfo = nullptr;
 
    // JKC: PortAudio Errors handled OK here.  No need to report them
    for (i = 0; i < NumRatesToTry; i++)
@@ -241,7 +241,7 @@ std::vector<long> AudioIOBase::GetSupportedPlaybackRates(int devIndex, double ra
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000)){
-         if (Pa_IsFormatSupported(NULL, &pars, RatesToTry[i]) == 0)
+         if (Pa_IsFormatSupported(nullptr, &pars, RatesToTry[i]) == 0)
             supported.push_back(RatesToTry[i]);
          Pa_Sleep( 10 );// There are ALSA drivers that don't like being probed
          // too quickly.
@@ -253,7 +253,7 @@ std::vector<long> AudioIOBase::GetSupportedPlaybackRates(int devIndex, double ra
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000))
-         if (Pa_IsFormatSupported(NULL, &pars, irate) == 0)
+         if (Pa_IsFormatSupported(nullptr, &pars, irate) == 0)
             supported.push_back(irate);
    }
 
@@ -276,7 +276,7 @@ std::vector<long> AudioIOBase::GetSupportedCaptureRates(int devIndex, double rat
 
    std::vector<long> supported;
    int irate = (int)rate;
-   const PaDeviceInfo* devInfo = NULL;
+   const PaDeviceInfo* devInfo = nullptr;
    int i;
 
    devInfo = Pa_GetDeviceInfo(devIndex);
@@ -302,7 +302,7 @@ std::vector<long> AudioIOBase::GetSupportedCaptureRates(int devIndex, double rat
    pars.channelCount = recordChannels;
    pars.sampleFormat = paFloat32;
    pars.suggestedLatency = latencyDuration / 1000.0;
-   pars.hostApiSpecificStreamInfo = NULL;
+   pars.hostApiSpecificStreamInfo = nullptr;
 
    for (i = 0; i < NumRatesToTry; i++)
    {
@@ -310,7 +310,7 @@ std::vector<long> AudioIOBase::GetSupportedCaptureRates(int devIndex, double rat
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000))
       {
-         if (Pa_IsFormatSupported(&pars, NULL, RatesToTry[i]) == 0)
+         if (Pa_IsFormatSupported(&pars, nullptr, RatesToTry[i]) == 0)
             supported.push_back(RatesToTry[i]);
          Pa_Sleep( 10 );// There are ALSA drivers that don't like being probed
          // too quickly.
@@ -322,7 +322,7 @@ std::vector<long> AudioIOBase::GetSupportedCaptureRates(int devIndex, double rat
       // LLL: Remove when a proper method of determining actual supported
       //      DirectSound rate is devised.
       if (!(isDirectSound && RatesToTry[i] > 200000))
-         if (Pa_IsFormatSupported(&pars, NULL, irate) == 0)
+         if (Pa_IsFormatSupported(&pars, nullptr, irate) == 0)
             supported.push_back(irate);
    }
 
@@ -565,8 +565,8 @@ wxString AudioIOBase::GetDeviceInfo()
 
       /* i18n-hint: Supported, meaning made available by the system */
       s << XO("Supported Rates:\n");
-      for (int k = 0; k < (int) rates.size(); k++) {
-         s << wxT("    ") << (int)rates[k] << wxT("\n");
+      for (long rate : rates) {
+         s << wxT("    ") << (int)rate << wxT("\n");
       }
 
       if (name == playDevice && info->maxOutputChannels > 0)
@@ -605,8 +605,8 @@ wxString AudioIOBase::GetDeviceInfo()
       supportedSampleRates = GetSupportedSampleRates(playDeviceNum, recDeviceNum);
 
       s << XO("Supported Rates:\n");
-      for (int k = 0; k < (int) supportedSampleRates.size(); k++) {
-         s << wxT("    ") << (int)supportedSampleRates[k] << wxT("\n");
+      for (long supportedSampleRate : supportedSampleRates) {
+         s << wxT("    ") << (int)supportedSampleRate << wxT("\n");
       }
    }
    else {

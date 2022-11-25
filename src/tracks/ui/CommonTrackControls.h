@@ -49,7 +49,7 @@ public:
 protected:
    // An override is supplied for derived classes to call through but it is
    // still marked pure virtual
-   virtual std::vector<UIHandlePtr> HitTest
+   std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,
        const SaucedacityProject *) override = 0;
 

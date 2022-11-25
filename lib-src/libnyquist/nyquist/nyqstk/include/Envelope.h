@@ -26,22 +26,22 @@ class Envelope : public Generator
  public:
 
   //! Default constructor.
-  Envelope(void);
+  Envelope();
 
   //! Copy constructor.
   Envelope( const Envelope& e );
 
   //! Class destructor.
-  virtual ~Envelope(void);
+  ~Envelope() override;
 
   //! Assignment operator.
   Envelope& operator= ( const Envelope& e );
 
   //! Set target = 1.
-  virtual void keyOn(void);
+  virtual void keyOn();
 
   //! Set target = 0.
-  virtual void keyOff(void);
+  virtual void keyOff();
 
   //! Set the \e rate.
   void setRate(StkFloat rate);
@@ -56,11 +56,11 @@ class Envelope : public Generator
   virtual void setValue(StkFloat value);
 
   //! Return the current envelope \e state (0 = at target, 1 otherwise).
-  virtual int getState(void) const;
+  virtual int getState() const;
 
  protected:
 
-  virtual StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
   StkFloat value_;
   StkFloat target_;

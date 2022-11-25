@@ -50,18 +50,18 @@ class MIDIParser {
 
  private:
 
-   int check_aborted(void);
+   int check_aborted();
 
-   int Mf_getc(void);
+   int Mf_getc();
    void Mf_error(char *);
    void Mf_on(int, int, int);
    void Mf_off(int, int, int);
    void Mf_header(int, int, int);
    void Mf_tempo(int);
 
-   void Mf_starttrack(void) {}
-   void Mf_endtrack(void) {}
-   void Mf_eot(void) {}
+   void Mf_starttrack() {}
+   void Mf_endtrack() {}
+   void Mf_eot() {}
    void Mf_pressure(int, int, int) {}
    void Mf_controller(int, int, int) {}
    void Mf_pitchbend(int, int, int) {}
@@ -86,17 +86,17 @@ class MIDIParser {
 
    int abort_flag;
 
-   long readvarinum(void);
-   long read32bit(void);
-   int read16bit(void);
-   void msgenlarge(void);
-   char *msg(void);
-   int readheader(void);
-   void readtrack(void);
-   void sysex(void);
-   void msginit(void);
-   int egetc(void);
-   int msgleng(void);
+   long readvarinum();
+   long read32bit();
+   int read16bit();
+   void msgenlarge();
+   char *msg();
+   int readheader();
+   void readtrack();
+   void sysex();
+   void msginit();
+   int egetc();
+   int msgleng();
 
    int readmt(char *, int);
    long to32bit(int, int, int, int);

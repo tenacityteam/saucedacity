@@ -21,16 +21,16 @@ class Generator : public Stk
 {
  public:
   //! Class constructor.
-  Generator( void );
+  Generator( );
 
   //! Class destructor.
-  virtual ~Generator( void );
+  ~Generator( ) override;
 
   //! Return the last output value.
-  virtual StkFloat lastOut( void ) const { return lastOutput_; };
+  virtual StkFloat lastOut( ) const { return lastOutput_; };
 
   //! Compute one sample and output.
-  StkFloat tick( void );
+  StkFloat tick( );
 
   //! Fill a channel of the StkFrames object with computed outputs.
   /*!
@@ -46,7 +46,7 @@ class Generator : public Stk
   // This abstract function must be implemented in all subclasses.
   // It is used to get around a C++ problem with overloaded virtual
   // functions.
-  virtual StkFloat computeSample( void ) = 0;
+  virtual StkFloat computeSample( ) = 0;
 
   StkFloat lastOutput_;
 

@@ -18,11 +18,11 @@
 #include "cext.h"
 #include "userio.h"
 
-#define calc_middle(top, bot)    (((top - bot) / 2 ) + bottom )
+#define calc_middle(top, bot)    ((((top) - (bot)) / 2 ) + bottom )
 
 #define kbyte 1000
-#define outof_mem(blocksize)     (blocksize == 0 )
-#define done_search(top, bot, middle)    ( (( (top - bot) < kbyte ) && \
+#define outof_mem(blocksize)     ((blocksize) == 0 )
+#define done_search(top, bot, middle)    ( (( ((top) - (bot)) < kbyte ) && \
 ( !toomuch_mem(middle)) ) || \
                       ( outof_mem( middle ))    )
 

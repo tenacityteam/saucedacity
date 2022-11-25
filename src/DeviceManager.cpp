@@ -70,7 +70,7 @@ wxString MakeDeviceSourceString(const DeviceSourceMap *map)
 DeviceSourceMap* DeviceManager::GetDefaultDevice(int hostIndex, int isInput)
 {
    if (hostIndex < 0 || hostIndex >= Pa_GetHostApiCount()) {
-      return NULL;
+      return nullptr;
    }
 
    const struct PaHostApiInfo *apiinfo = Pa_GetHostApiInfo(hostIndex);   // get info on API
@@ -84,7 +84,7 @@ DeviceSourceMap* DeviceManager::GetDefaultDevice(int hostIndex, int isInput)
    }
 
    wxLogDebug(wxT("GetDefaultDevice() no default device"));
-   return NULL;
+   return nullptr;
 }
 
 DeviceSourceMap* DeviceManager::GetDefaultOutputDevice(int hostIndex)
@@ -166,13 +166,13 @@ static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap> *
    // will be the highest available for play and record on the device, or
    // 44.1kHz if the info cannot be fetched.
 
-   PaStream *stream = NULL;
+   PaStream *stream = nullptr;
 
    PaStreamParameters parameters;
 
    parameters.device = deviceIndex;
    parameters.sampleFormat = paFloat32;
-   parameters.hostApiSpecificStreamInfo = NULL;
+   parameters.hostApiSpecificStreamInfo = nullptr;
    parameters.channelCount = 1;
 
    // If the device is for input, open a stream so we can use portmixer to query
@@ -189,10 +189,10 @@ static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap> *
 
       error = Pa_OpenStream(&stream,
                             &parameters,
-                            NULL,
+                            nullptr,
                             rate, paFramesPerBufferUnspecified,
                             paClipOff | paDitherOff,
-                            DummyPaStreamCallback, NULL);
+                            DummyPaStreamCallback, nullptr);
    }
 
    if (stream && !error) {

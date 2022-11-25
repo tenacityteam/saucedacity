@@ -166,13 +166,13 @@ TimerRecordDialog::TimerRecordDialog(
    m_TimeSpan_Duration = wxTimeSpan::Seconds(seconds);
    m_DateTime_End = m_DateTime_Start + m_TimeSpan_Duration;
 
-   m_pDatePickerCtrl_Start = NULL;
-   m_pTimeTextCtrl_Start = NULL;
+   m_pDatePickerCtrl_Start = nullptr;
+   m_pTimeTextCtrl_Start = nullptr;
 
-   m_pDatePickerCtrl_End = NULL;
-   m_pTimeTextCtrl_End = NULL;
+   m_pDatePickerCtrl_End = nullptr;
+   m_pTimeTextCtrl_End = nullptr;
 
-   m_pTimeTextCtrl_Duration = NULL;
+   m_pTimeTextCtrl_Duration = nullptr;
 
    // Do we allow the user to change the Automatic Save file?
    m_bProjectAlreadySaved = bAlreadySaved;

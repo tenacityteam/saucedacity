@@ -29,7 +29,7 @@ public:
 
    // Realtime effect processing
    bool RealtimeIsActive();
-   bool RealtimeIsSuspended();
+   [[nodiscard]] bool RealtimeIsSuspended() const;
    void RealtimeAddEffect(EffectClientInterface *effect);
    void RealtimeRemoveEffect(EffectClientInterface *effect);
    void RealtimeSetEffects(const EffectArray & mActive);

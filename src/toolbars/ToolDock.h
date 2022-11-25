@@ -140,7 +140,7 @@ public:
             }
             else {
                auto b = children.begin();
-               mIters.push_back( Triple { b, b, children.end() } );
+               mIters.emplace_back( b, b, children.end() );
             }
          }
 
@@ -167,7 +167,7 @@ public:
       }
 
       // This may be called on the end iterator, and then returns empty
-      std::vector<int> GetPath() const
+      [[nodiscard]] std::vector<int> GetPath() const
       {
          std::vector<int> path;
          path.reserve(mIters.size());
@@ -199,7 +199,7 @@ public:
          auto &forest = conf.mForest;
          if (!forest.empty()) {
             auto b = forest.begin();
-            mIters.push_back( Triple { b, b, forest.end() } );
+            mIters.emplace_back( b, b, forest.end() );
             mPlace.pTree = &*b;
          }
       }
@@ -228,7 +228,7 @@ public:
    };
 
    Iterator begin() { return Iterator { *this }; }
-   Iterator end() const { return Iterator {}; }
+   static Iterator end() { return Iterator {}; }
 
    Position Find(const ToolBar *bar) const;
 
@@ -267,7 +267,7 @@ public:
 
 private:
 
-   void Remove(Forest &forest, Forest::iterator iter);
+   static void Remove(Forest &forest, Forest::iterator iter);
    void RemoveNulls(Forest &forest);
 
    struct Tree
@@ -293,9 +293,9 @@ class ToolDock final : public wxPanelWrapper
 public:
 
    ToolDock( wxEvtHandler *manager, wxWindow *parent, int dockid );
-   ~ToolDock();
+   ~ToolDock() override;
 
-   bool AcceptsFocus() const override { return false; };
+   [[nodiscard]] bool AcceptsFocus() const override { return false; };
 
    void LoadConfig();
    void LayoutToolBars();

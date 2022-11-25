@@ -80,16 +80,16 @@ class VoiceKey {
    double mSilentWindowSize;           //Time in milliseconds of below-threshold windows required for silence
    double mSignalWindowSize;           //Time in milliseconds of above-threshold windows required for speech
 
-   double TestEnergy (const WaveTrack & t, sampleCount start,sampleCount len);
-   double TestSignChanges (
+   static double TestEnergy (const WaveTrack & t, sampleCount start,sampleCount len);
+   static double TestSignChanges (
       const WaveTrack & t, sampleCount start, sampleCount len);
-   double TestDirectionChanges(
+   static double TestDirectionChanges(
       const WaveTrack & t, sampleCount start, sampleCount len);
 
-   void TestEnergyUpdate (double & prevErg, int length, const float & drop, const float & add);
-   void TestSignChangesUpdate(double & currentsignchanges,int length, const float & a1,
+   static void TestEnergyUpdate (double & prevErg, int length, const float & drop, const float & add);
+   static void TestSignChangesUpdate(double & currentsignchanges,int length, const float & a1,
                               const float & a2, const float & z1, const float & z2);
-   void TestDirectionChangesUpdate(double & currentdirectionchanges,int length,
+   static void TestDirectionChangesUpdate(double & currentdirectionchanges,int length,
                                    int & atrend, const float & a1, const float & a2,
                                    int & ztrend, const float & z1, const float & z2);
 

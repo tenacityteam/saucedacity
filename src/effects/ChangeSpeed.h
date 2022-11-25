@@ -27,7 +27,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectChangeSpeed();
-   virtual ~EffectChangeSpeed();
+   ~EffectChangeSpeed() override;
 
    // ComponentInterface implementation
 

@@ -118,7 +118,7 @@ public:
     * Constructs a list of types, for use by file opening dialogs, that includes
     * all supported file types
     */
-   FileNames::FileTypes
+   static FileNames::FileTypes
    GetFileTypes( const FileNames::FileType &extraType = {} );
 
    /**
@@ -155,7 +155,7 @@ public:
     * @str string and appends string-tokens to a list @list.
     * @mod defines tokenizer's behaviour.
     */
-   void StringToList(wxString &str, wxString &delims, wxArrayString &list, wxStringTokenizerMode mod = wxTOKEN_RET_EMPTY_ALL);
+   static void StringToList(wxString &str, wxString &delims, wxArrayString &list, wxStringTokenizerMode mod = wxTOKEN_RET_EMPTY_ALL);
 
    /**
     * Returns a pointer to internal items array.
@@ -167,7 +167,7 @@ public:
     * Allocates NEW ExtImportItem, fills it with default data
     * and returns a pointer to it.
     */
-    std::unique_ptr<ExtImportItem> CreateDefaultImportItem();
+    static std::unique_ptr<ExtImportItem> CreateDefaultImportItem();
 
    // if false, the import failed and errorMessage will be set.
    bool Import( SaucedacityProject &project,
@@ -198,7 +198,7 @@ public:
       const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize,
       long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
-   virtual ~ImportStreamDialog();
+   ~ImportStreamDialog() override;
 
 private:
    ImportFileHandle *mFile;

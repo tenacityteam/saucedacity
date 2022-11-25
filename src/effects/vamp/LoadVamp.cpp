@@ -103,8 +103,7 @@ bool VampEffectsModule::Initialize()
 void VampEffectsModule::Terminate()
 {
    // Nothing to do here
-   return;
-}
+   }
 
 EffectFamilySymbol VampEffectsModule::GetOptionalFamilySymbol()
 {
@@ -134,9 +133,9 @@ PluginPaths VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED
 
    PluginLoader::PluginKeyList keys = loader->listPlugins();
 
-   for (PluginLoader::PluginKeyList::iterator i = keys.begin(); i != keys.end(); ++i)
+   for (auto & key : keys)
    {
-      std::unique_ptr<Plugin> vp{ PluginLoader::getInstance()->loadPlugin(*i, 48000) }; // rate doesn't matter here
+      std::unique_ptr<Plugin> vp{ PluginLoader::getInstance()->loadPlugin(key, 48000) }; // rate doesn't matter here
       if (!vp)
       {
          continue;
@@ -165,7 +164,7 @@ PluginPaths VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED
 
       int output = 0;
 
-      for (Plugin::OutputList::iterator j = outputs.begin(); j != outputs.end(); ++j)
+      for (auto j = outputs.begin(); j != outputs.end(); ++j)
       {
          if (j->sampleType == Plugin::OutputDescriptor::FixedSampleRate ||
                j->sampleType == Plugin::OutputDescriptor::OneSamplePerStep ||
@@ -193,7 +192,7 @@ PluginPaths VampEffectsModule::FindPluginPaths(PluginManagerInterface & WXUNUSED
             }
          }
 
-         wxString path = wxString::FromUTF8(i->c_str()) + wxT("/") + name;
+         wxString path = wxString::FromUTF8(key.c_str()) + wxT("/") + name;
          names.push_back(path);
 
          ++output;
@@ -287,7 +286,7 @@ std::unique_ptr<Vamp::Plugin> VampEffectsModule::FindPlugin(const PluginPath & p
 
    hasParameters = !vp->getParameterDescriptors().empty();
 
-   for (Plugin::OutputList::iterator j = outputs.begin(); j != outputs.end(); ++j)
+   for (auto j = outputs.begin(); j != outputs.end(); ++j)
    {
       if (j->sampleType == Plugin::OutputDescriptor::FixedSampleRate ||
             j->sampleType == Plugin::OutputDescriptor::OneSamplePerStep ||

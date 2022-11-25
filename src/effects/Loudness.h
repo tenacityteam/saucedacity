@@ -32,7 +32,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectLoudness();
-   virtual ~EffectLoudness();
+   ~EffectLoudness() override;
 
    // ComponentInterface implementation
 
@@ -64,13 +64,13 @@ private:
 
    void AllocBuffers();
    void FreeBuffers();
-   bool GetTrackRMS(WaveTrack* track, float& rms);
-   bool ProcessOne(TrackIterRange<WaveTrack> range, bool analyse);
-   void LoadBufferBlock(TrackIterRange<WaveTrack> range,
+   bool GetTrackRMS(WaveTrack* track, float& rms) const;
+   bool ProcessOne(const TrackIterRange<WaveTrack>& range, bool analyse);
+   void LoadBufferBlock(const TrackIterRange<WaveTrack>& range,
                         sampleCount pos, size_t len);
    bool AnalyseBufferBlock();
    bool ProcessBufferBlock();
-   void StoreBufferBlock(TrackIterRange<WaveTrack> range,
+   void StoreBufferBlock(const TrackIterRange<WaveTrack>& range,
                          sampleCount pos, size_t len);
 
    bool UpdateProgress();

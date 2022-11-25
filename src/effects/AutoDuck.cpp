@@ -99,14 +99,13 @@ EffectAutoDuck::EffectAutoDuck()
 
    SetLinearEffectFlag(true);
 
-   mControlTrack = NULL;
+   mControlTrack = nullptr;
 
-   mPanel = NULL;
+   mPanel = nullptr;
 }
 
 EffectAutoDuck::~EffectAutoDuck()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -215,10 +214,10 @@ bool EffectAutoDuck::Startup()
 
 bool EffectAutoDuck::Init()
 {
-   mControlTrack = NULL;
+   mControlTrack = nullptr;
 
    bool lastWasSelectedWaveTrack = false;
-   const WaveTrack *controlTrackCandidate = NULL;
+   const WaveTrack *controlTrackCandidate = nullptr;
 
    for (auto t : inputTracks()->Any())
    {
@@ -268,7 +267,7 @@ bool EffectAutoDuck::Init()
 
 void EffectAutoDuck::End()
 {
-   mControlTrack = NULL;
+   mControlTrack = nullptr;
 }
 
 bool EffectAutoDuck::Process()
@@ -364,9 +363,9 @@ bool EffectAutoDuck::Process()
                   double duckRegionEnd =
                      mControlTrack->LongSamplesToTime(i - curSamplesPause);
 
-                  regions.push_back(AutoDuckRegion(
+                  regions.emplace_back(
                      duckRegionStart - mOuterFadeDownLen,
-                     duckRegionEnd + mOuterFadeUpLen));
+                     duckRegionEnd + mOuterFadeUpLen);
 
                   inDuckRegion = false;
                }
@@ -391,9 +390,9 @@ bool EffectAutoDuck::Process()
       {
          double duckRegionEnd =
             mControlTrack->LongSamplesToTime(end - curSamplesPause);
-         regions.push_back(AutoDuckRegion(
+         regions.emplace_back(
             duckRegionStart - mOuterFadeDownLen,
-            duckRegionEnd + mOuterFadeUpLen));
+            duckRegionEnd + mOuterFadeUpLen);
       }
    }
 
@@ -405,9 +404,8 @@ bool EffectAutoDuck::Process()
 
       for( auto iterTrack : mOutputTracks->Selected< WaveTrack >() )
       {
-         for (size_t i = 0; i < regions.size(); i++)
+         for (auto & region : regions)
          {
-            const AutoDuckRegion& region = regions[i];
             if (ApplyDuckFade(trackNum, iterTrack, region.t0, region.t1))
             {
                cancel = true;
@@ -504,8 +502,6 @@ void EffectAutoDuck::PopulateOrExchange(ShuttleGui & S)
 
    }
    S.EndVerticalLay();
-
-   return;
 }
 
 bool EffectAutoDuck::TransferDataToWindow()
@@ -644,7 +640,7 @@ EffectAutoDuckPanel::EffectAutoDuckPanel(
    mParent = parent;
    mEffect = effect;
    mCurrentControlPoint = none;
-   mBackgroundBitmap = NULL;
+   mBackgroundBitmap = nullptr;
 
    ResetControlPoints();
 }
@@ -759,7 +755,7 @@ void EffectAutoDuckPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 
       for (int i = 0; i < AUTO_DUCK_PANEL_NUM_CONTROL_POINTS; i++)
       {
-         EControlPoint cp = (EControlPoint)i;
+         auto cp = (EControlPoint)i;
          int digits;
          float value;
 

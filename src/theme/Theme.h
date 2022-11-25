@@ -33,11 +33,11 @@ class ChoiceSetting;
 class SAUCEDACITY_DLL_API ThemeBase /* not final */
 {
 public:
-   ThemeBase(void);
+   ThemeBase();
    ThemeBase ( const ThemeBase & ) = delete;
    ThemeBase &operator =( const ThemeBase & ) = delete;
 public:
-   virtual ~ThemeBase(void);
+   virtual ~ThemeBase();
 
 public:
    virtual void EnsureInitialised()=0;
@@ -45,7 +45,7 @@ public:
    void RegisterImage( int &iIndex, const wxImage &Image, const wxString & Name );
    void RegisterColour( int &iIndex, const wxColour &Clr, const wxString & Name );
 
-   teThemeType GetFallbackThemeType();
+   static teThemeType GetFallbackThemeType();
    teThemeType ThemeTypeOfTypeName( const wxString & Name );
    void CreateImageCache(bool bBinarySave = true);
    bool ReadImageCache( teThemeType type = themeFromFile, bool bOkIfNotFound=false);
@@ -55,11 +55,11 @@ public:
    void WriteImageDefs( );
    void WriteImageMap( );
    static bool LoadPreferredTheme();
-   bool IsUsingSystemTextColour(){ return bIsUsingSystemTextColour;};
+   [[nodiscard]] bool IsUsingSystemTextColour() const{ return bIsUsingSystemTextColour;};
    void RecolourBitmap( int iIndex, wxColour From, wxColour To );
    void RecolourTheme();
 
-   int ColourDistance( wxColour & From, wxColour & To );
+   static int ColourDistance( wxColour & From, wxColour & To );
    wxColour & Colour( int iIndex );
    wxBitmap & Bitmap( int iIndex );
    wxImage  & Image( int iIndex );
@@ -77,9 +77,9 @@ public:
    void SetFlags( int flags ){ mFlow.mFlags = flags;};
 
    // Utility function that combines a bitmap and a mask, both in XPM format.
-   wxImage MaskedImage( char const ** pXpm, char const ** pMask );
+   static wxImage MaskedImage( char const ** pXpm, char const ** pMask );
    // Utility function that takes a 32 bit bitmap and makes it into an image.
-   wxImage MakeImageWithAlpha( wxBitmap & Bmp );
+   static wxImage MakeImageWithAlpha( wxBitmap & Bmp );
 
 protected:
    // wxImage, wxBitmap copy cheaply using reference counting
@@ -97,9 +97,9 @@ protected:
 class SAUCEDACITY_DLL_API Theme final : public ThemeBase
 {
 public:
-   Theme(void);
+   Theme();
 public:
-   ~Theme(void);
+   ~Theme() override;
 public:
    void EnsureInitialised() override;
    void RegisterImages();

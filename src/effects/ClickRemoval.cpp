@@ -80,8 +80,7 @@ EffectClickRemoval::EffectClickRemoval()
 }
 
 EffectClickRemoval::~EffectClickRemoval()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -378,8 +377,6 @@ void EffectClickRemoval::PopulateOrExchange(ShuttleGui & S)
          .AddSlider( {}, mClickWidth, MAX_Width, MIN_Width);
    }
    S.EndMultiColumn();
-
-   return;
 }
 
 bool EffectClickRemoval::TransferDataToWindow()

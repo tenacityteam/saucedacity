@@ -86,9 +86,9 @@ auto Effect::SetVetoDialogHook( VetoDialogHook hook )
 
 Effect::Effect()
 {
-   mClient = NULL;
+   mClient = nullptr;
 
-   mTracks = NULL;
+   mTracks = nullptr;
    mT0 = 0.0;
    mT1 = 0.0;
    mDuration = 0.0;
@@ -98,10 +98,10 @@ Effect::Effect()
    mPreviewFullSelection = false;
    mNumTracks = 0;
    mNumGroups = 0;
-   mProgress = NULL;
+   mProgress = nullptr;
 
-   mUIParent = NULL;
-   mUIDialog = NULL;
+   mUIParent = nullptr;
+   mUIDialog = nullptr;
    mUIFlags = 0;
 
    mNumAudioIn = 0;
@@ -656,8 +656,8 @@ bool Effect::CloseUI()
    if (mUIParent)
       mUIParent->RemoveEventHandler(this);
 
-   mUIParent = NULL;
-   mUIDialog = NULL;
+   mUIParent = nullptr;
+   mUIDialog = nullptr;
 
    return true;
 }
@@ -703,7 +703,7 @@ void Effect::ExportPresets()
          XO("Could not open file: \"%s\"").Format( path ),
          XO("Error Saving Effect Presets"),
          wxICON_EXCLAMATION,
-         NULL);
+         nullptr);
       return;
    }
 
@@ -714,7 +714,7 @@ void Effect::ExportPresets()
          XO("Error writing to file: \"%s\"").Format( path ),
          XO("Error Saving Effect Presets"),
          wxICON_EXCLAMATION,
-         NULL);
+         nullptr);
    }
 
    f.Close();
@@ -850,8 +850,6 @@ void Effect::SetDuration(double seconds)
    }
 
    mDuration = seconds;
-
-   return;
 }
 
 RegistryPath Effect::GetUserPresetsGroup(const RegistryPath & name)
@@ -1042,7 +1040,7 @@ bool Effect::Startup(EffectClientInterface *client)
    if (!SetHost(this))
    {
       // Bail if the client startup fails
-      mClient = NULL;
+      mClient = nullptr;
       return false;
    }
 
@@ -1292,7 +1290,7 @@ bool Effect::DoEffect(double projectRate,
       Names.push_back(wxT("control-f0"));
    if( mF1 != SelectedRegion::UndefinedFrequency )
       Names.push_back(wxT("control-f1"));
-   SetPresetParameters( &Names, NULL );
+   SetPresetParameters( &Names, nullptr );
 
 #endif
    CountWaveTracks();
@@ -1912,8 +1910,7 @@ void Effect::End()
 
 void Effect::PopulateOrExchange(ShuttleGui & WXUNUSED(S))
 {
-   return;
-}
+   }
 
 bool Effect::TransferDataToWindow()
 {
@@ -2042,7 +2039,7 @@ bool Effect::TrackGroupProgress(int whichGroup, double frac, const TranslatableS
 
 void Effect::GetBounds(
    const WaveTrack &track, const WaveTrack *pRight,
-   sampleCount *start, sampleCount *len)
+   sampleCount *start, sampleCount *len) const
 {
    auto t0 = std::max( mT0, track.GetStartTime() );
    auto t1 = std::min( mT1, track.GetEndTime() );
@@ -2099,7 +2096,7 @@ void Effect::CopyInputTracks(bool allSyncLockSelected)
 
 Track *Effect::AddToOutputTracks(const std::shared_ptr<Track> &t)
 {
-   mIMap.push_back(NULL);
+   mIMap.push_back(nullptr);
    mOMap.push_back(t.get());
    return mOutputTracks->Add(t);
 }
@@ -2115,7 +2112,7 @@ Effect::AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &
 }
 
 Effect::AddedAnalysisTrack::AddedAnalysisTrack(AddedAnalysisTrack &&that)
-{
+ noexcept {
    mpEffect = that.mpEffect;
    mpTrack = that.mpTrack;
    that.Commit();
@@ -2147,7 +2144,7 @@ Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
    // copy LabelTrack here, so it can be undone on cancel
    auto newTrack = pOrigTrack->Copy(pOrigTrack->GetStartTime(), pOrigTrack->GetEndTime());
 
-   mpTrack = static_cast<LabelTrack*>(newTrack.get());
+   mpTrack = dynamic_cast<LabelTrack*>(newTrack.get());
 
    // Why doesn't LabelTrack::Copy complete the job? :
    mpTrack->SetOffset(pOrigTrack->GetStartTime());
@@ -2162,7 +2159,7 @@ Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack
 }
 
 Effect::ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
-{
+ noexcept {
    mpEffect = that.mpEffect;
    mpTrack = that.mpTrack;
    mpOrigTrack = std::move(that.mpOrigTrack);
@@ -2237,7 +2234,7 @@ void Effect::ReplaceProcessedTracks(const bool bGoodResult)
       iterOut = mOutputTracks->erase(iterOut);
 
       const auto  t = mIMap[i];
-      if (t == NULL)
+      if (t == nullptr)
       {
          // This track is a NEW addition to output tracks; add it to mTracks
          mTracks->Add( o );
@@ -2406,7 +2403,7 @@ void Effect::Preview(bool dryOnly)
          if (src->GetSelected() || mPreviewWithNotSelected) {
             auto dest = src->Copy(mT0, t1);
             dest->SetSelected(src->GetSelected());
-            WaveTrackView::Get( *static_cast<WaveTrack*>(dest.get()) )
+            WaveTrackView::Get( *dynamic_cast<WaveTrack*>(dest.get()) )
                .SetDisplay(WaveTrackViewConstants::NoDisplay);
             mTracks->Add( dest );
          }

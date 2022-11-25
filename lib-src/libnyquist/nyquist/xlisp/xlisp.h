@@ -311,14 +311,14 @@ void dbg_gc_xlsave(LVAL *n);
 #else
 
 #define xlstkcheck(n)	{if (xlstack - (n) < xlstkbase) xlstkoverflow();}
-#define xlsave(n)	{*--xlstack = &n; n = NIL;}
-#define xlprotect(n)	{*--xlstack = &n;}
+#define xlsave(n)	{*--xlstack = &(n); (n) = NIL;}
+#define xlprotect(n)	{*--xlstack = &(n);}
 
 /* check the stack and protect a single pointer */
 #define xlsave1(n)	{if (xlstack <= xlstkbase) xlstkoverflow();\
-                         *--xlstack = &n; n = NIL;}
+                         *--xlstack = &(n); (n) = NIL;}
 #define xlprot1(n)	{if (xlstack <= xlstkbase) xlstkoverflow();\
-                         *--xlstack = &n;}
+                         *--xlstack = &(n);}
 
 /* macros to pop pointers off the stack */
 #define xlpop()		{++xlstack;}
@@ -387,7 +387,7 @@ void dbg_gc_xlsave(LVAL *n);
 typedef struct {
     const char *fd_name;	/* function name */
     int fd_type;	/* function type */
-    LVAL (*fd_subr)(void);	/* function entry point */
+    LVAL (*fd_subr)();	/* function entry point */
 } FUNDEF;
 
 /* execution context flags */
@@ -608,7 +608,7 @@ LVAL cons(LVAL x, LVAL y);
 LVAL cvstring(const char *str);
 LVAL new_string(int size);
 LVAL cvsymbol(const char *pname);
-LVAL cvsubr(LVAL (*fcn)(void), int type, int offset);
+LVAL cvsubr(LVAL (*fcn)(), int type, int offset);
 LVAL cvfile(FILE *fp);
 LVAL cvfixnum(FIXTYPE n);
 LVAL cvflonum(FLOTYPE n);
@@ -959,7 +959,7 @@ LVAL xinfo(void);
 
 /* xlsubr.c */
 
-LVAL xlsubr(const char *sname, int type, LVAL (*fcn)(void), int offset);
+LVAL xlsubr(const char *sname, int type, LVAL (*fcn)(), int offset);
 int xlgetkeyarg(LVAL key, LVAL *pval);
 void xltest(LVAL *pfcn, int *ptresult);
 int xlgkfixnum(LVAL key, LVAL *pval);

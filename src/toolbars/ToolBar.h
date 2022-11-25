@@ -105,9 +105,9 @@ class SAUCEDACITY_DLL_API ToolBar /* not final */
    ToolBar( SaucedacityProject &project,
       int type, const TranslatableString & label, const wxString & section,
       bool resizable = false);
-   virtual ~ToolBar();
+   ~ToolBar() override;
 
-   bool AcceptsFocus() const override { return false; };
+   [[nodiscard]] bool AcceptsFocus() const override { return false; };
 
    virtual void SetToDefaultSize();
    //NEW virtuals:
@@ -117,7 +117,7 @@ class SAUCEDACITY_DLL_API ToolBar /* not final */
    void UpdatePrefs() override;
    virtual void RegenerateTooltips() = 0;
 
-   int GetType();
+   int GetType() const;
    TranslatableString GetTitle();
    TranslatableString GetLabel();
    wxString GetSection();
@@ -132,10 +132,10 @@ public:
    // NEW virtual:
    virtual bool Expose(bool show = true);
 
-   bool IsResizable() const;
-   bool IsVisible() const;
-   bool IsDocked() const;
-   bool IsPositioned(){ return mPositioned; };
+   [[nodiscard]] bool IsResizable() const;
+   [[nodiscard]] bool IsVisible() const;
+   [[nodiscard]] bool IsDocked() const;
+   bool IsPositioned() const{ return mPositioned; };
    void SetVisible( bool bVisible );
    void SetPositioned(){ mPositioned = true;};
 
@@ -187,7 +187,7 @@ public:
    virtual void ResizingDone() {};
 
  protected:
-   void SetButton(bool down, AButton *button);
+   static void SetButton(bool down, AButton *button);
 
    static void MakeMacRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);
    static void MakeRecoloredImage(teBmps eBmpOut, teBmps eBmpIn);
@@ -198,21 +198,21 @@ public:
             int proportion = 0,
             int flag = wxALIGN_TOP,
             int border = 0,
-            wxObject *userData = NULL);
+            wxObject *userData = nullptr);
 
    // Takes ownership of sizer
    void Add(wxSizer *sizer,
              int proportion = 0,
              int flag = 0,
              int border = 0,
-             wxObject *userData = NULL);
+             wxObject *userData = nullptr);
 
    void Add(int width,
             int height,
             int proportion = 0,
             int flag = 0,
             int border = 0,
-            wxObject *userData = NULL);
+            wxObject *userData = nullptr);
 
    void AddSpacer(int size = 14);
    void AddStretchSpacer(int prop = 1);
@@ -223,7 +223,7 @@ public:
    void Updated();
 
    /// Returns the width in pixels of the resizer element
-   int GetResizeGrabberWidth();
+   static int GetResizeGrabberWidth();
 
    virtual void Populate() = 0;
    virtual void Repaint(wxDC *dc) = 0;

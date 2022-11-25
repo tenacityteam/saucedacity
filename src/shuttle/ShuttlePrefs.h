@@ -19,7 +19,7 @@ class ShuttlePrefs final : public Shuttle
 public:
    // constructors and destructors
    ShuttlePrefs(){;};
-   virtual ~ShuttlePrefs() {};
+   ~ShuttlePrefs() override {};
 
 public:
    bool TransferBool( const wxString & Name, bool & bValue, const bool & bDefault ) override;

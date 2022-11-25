@@ -8,8 +8,8 @@
 #include "Sitar.h"
 #include "ModalBar.h"
 #include "Flute.h"
-#include "stdlib.h"
-#include "string.h"
+#include <cstdlib>
+#include <cstring>
 
 using namespace Nyq;
 
@@ -22,7 +22,7 @@ struct instr {
 
 
 struct instr *initInstrument(int instr_type, int sample_rate) {
-	struct instr *in = (struct instr *) malloc(sizeof(struct instr));
+	auto *in = (struct instr *) malloc(sizeof(struct instr));
         Stk::setSampleRate(sample_rate);
 	switch(instr_type) {
 		case CLARINET: 
@@ -50,7 +50,7 @@ struct instr *initInstrument(int instr_type, int sample_rate) {
 		  in->instrObjPtr = new Flute(10.0);
 		  break;
 		default:
-			return NULL;
+			return nullptr;
 	}
 	return in;
 }

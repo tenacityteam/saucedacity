@@ -132,12 +132,12 @@ public:
                        bool selectedOnly,
                        double t0,
                        double t1,
-                       MixerSpec *mixerSpec = NULL,
-                       const Tags *metadata = NULL,
+                       MixerSpec *mixerSpec = nullptr,
+                       const Tags *metadata = nullptr,
                        int subformat = 0) = 0;
 
 protected:
-   std::unique_ptr<Mixer> CreateMixer(const TrackList &tracks,
+   static std::unique_ptr<Mixer> CreateMixer(const TrackList &tracks,
          bool selectionOnly,
          double startTime, double stopTime,
          unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
@@ -188,7 +188,7 @@ public:
       const TranslatableString &shortUndoDescription, bool force);
 
    Exporter( SaucedacityProject &project );
-   virtual ~Exporter();
+   ~Exporter() override;
 
    void SetFileDialogTitle( const TranslatableString & DialogTitle );
    void SetDefaultFormat( const FileExtension & Format ){ mFormatName = Format;};
@@ -208,14 +208,14 @@ public:
    bool ProcessFromTimerRecording(bool selectedOnly,
                                   double t0,
                                   double t1,
-                                  wxFileName fnFile,
+                                  const wxFileName& fnFile,
                                   int iFormat,
                                   int iSubFormat,
                                   int iFilterIndex);
    bool SetAutoExportOptions();
-   int GetAutoExportFormat();
-   int GetAutoExportSubFormat();
-   int GetAutoExportFilterIndex();
+   int GetAutoExportFormat() const;
+   int GetAutoExportSubFormat() const;
+   int GetAutoExportFilterIndex() const;
    wxFileName GetAutoExportFileName();
    void OnExtensionChanged(wxCommandEvent &evt);
    void OnHelp(wxCommandEvent &evt);
@@ -267,10 +267,10 @@ class ExportMixerPanel final : public wxPanelWrapper
 {
 public:
    ExportMixerPanel( wxWindow *parent, wxWindowID id,
-         MixerSpec *mixerSpec, wxArrayString trackNames,
+         MixerSpec *mixerSpec, const wxArrayString& trackNames,
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize);
-   virtual ~ExportMixerPanel();
+   ~ExportMixerPanel() override;
 
    void OnMouseEvent(wxMouseEvent & event);
    void OnPaint(wxPaintEvent & event);
@@ -287,8 +287,8 @@ private:
    wxArrayString mTrackNames;
    int mBoxWidth, mChannelHeight, mTrackHeight;
 
-   void SetFont( wxMemoryDC &memDC, const wxString &text, int width, int height );
-   double Distance( wxPoint &a, wxPoint &b );
+   static void SetFont( wxMemoryDC &memDC, const wxString &text, int width, int height );
+   static double Distance( wxPoint &a, wxPoint &b );
    bool IsOnLine( wxPoint p, wxPoint la, wxPoint lb );
 
    DECLARE_EVENT_TABLE()
@@ -306,7 +306,7 @@ public:
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize,
          long style = wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
-   virtual ~ExportMixerDialog();
+   ~ExportMixerDialog() override;
 
    MixerSpec* GetMixerSpec() { return mMixerSpec.get(); }
 
@@ -332,7 +332,7 @@ SAUCEDACITY_DLL_API TranslatableString AudacityExportMessageStr();
 /// We have many Export errors that are essentially anonymous
 /// and are distinguished only by an error code number.
 /// Rather than repeat the code, we have it just once.
-SAUCEDACITY_DLL_API void ShowExportErrorDialog(wxString ErrorCode,
+SAUCEDACITY_DLL_API void ShowExportErrorDialog(const wxString& ErrorCode,
    TranslatableString message = AudacityExportMessageStr(),
    const TranslatableString& caption = AudacityExportCaptionStr());
 

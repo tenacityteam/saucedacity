@@ -75,7 +75,7 @@ public:
    SpectrogramSettings();
    SpectrogramSettings(const SpectrogramSettings &other);
    SpectrogramSettings& operator= (const SpectrogramSettings &other);
-   ~SpectrogramSettings();
+   ~SpectrogramSettings() override;
 
    bool IsDefault() const
    {
@@ -84,7 +84,7 @@ public:
 
    bool Validate(bool quiet);
    void LoadPrefs();
-   void SavePrefs();
+   void SavePrefs() const;
 
    void UpdatePrefs() override;
 
@@ -96,7 +96,7 @@ public:
 
    // Need to be told what the bin unit is, as this structure does not know
    // the rate
-   float findBin( float frequency, float binUnit ) const;
+   static float findBin( float frequency, float binUnit ) ;
 
    // If "bins" is false, units are Hz
    NumberScale GetScale( float minFreq, float maxFreq ) const;

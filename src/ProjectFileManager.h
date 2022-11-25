@@ -44,7 +44,7 @@ public:
    explicit ProjectFileManager( SaucedacityProject &project );
    ProjectFileManager( const ProjectFileManager & ) = delete;
    ProjectFileManager &operator=( const ProjectFileManager & ) = delete;
-   ~ProjectFileManager();
+   ~ProjectFileManager() override;
 
    bool OpenProject();
    void CloseProject();
@@ -56,7 +56,7 @@ public:
    bool SaveAs(bool allowOverwrite = false);
    bool SaveAs(const FilePath &newFileName, bool addToHistory = true);
    // strProjectPathName is full path for aup except extension
-   bool SaveFromTimerRecording( wxFileName fnFile );
+   bool SaveFromTimerRecording( const wxFileName& fnFile );
    bool SaveCopy(const FilePath &fileName = wxT(""));
 
    /** @brief Show an open dialogue for opening audio files, and possibly other
@@ -105,7 +105,7 @@ public:
    void AddImportedTracks(const FilePath &fileName,
                      TrackHolders &&newTracks);
 
-   bool GetMenuClose() const { return mMenuClose; }
+   [[nodiscard]] bool GetMenuClose() const { return mMenuClose; }
    void SetMenuClose(bool value) { mMenuClose = value; }
 
 private:

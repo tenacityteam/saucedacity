@@ -101,7 +101,7 @@ public:
       std::vector< WaveClip * > movingClips;
       for ( auto &interval : MovingIntervals() ) {
          auto data =
-            static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+            dynamic_cast<WaveTrack::IntervalData*>( interval.Extra() );
          movingClips.push_back(data->GetClip().get());
       }
       double newAmount = 0;
@@ -112,7 +112,7 @@ public:
    Intervals Detach() override
    {
       for ( auto &interval: mMoving ) {
-         auto pData = static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+         auto pData = dynamic_cast<WaveTrack::IntervalData*>( interval.Extra() );
          auto pClip = pData->GetClip().get();
          // interval will still hold the clip, so ignore the return:
          (void) mpTrack->RemoveAndReturnClip(pClip);
@@ -126,10 +126,10 @@ public:
       double &desiredOffset, double tolerance) override
    {
       bool ok = true;
-      auto pOtherWaveTrack = static_cast<const WaveTrack*>(&otherTrack);
+      auto pOtherWaveTrack = dynamic_cast<const WaveTrack*>(&otherTrack);
       for ( auto &interval: intervals ) {
          auto pData =
-            static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+            dynamic_cast<WaveTrack::IntervalData*>( interval.Extra() );
          auto pClip = pData->GetClip().get();
          ok = pOtherWaveTrack->CanInsertClip(
             pClip, desiredOffset, tolerance );
@@ -142,7 +142,7 @@ public:
    bool Attach( Intervals intervals ) override
    {
       for (auto &interval : intervals) {
-         auto pData = static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+         auto pData = dynamic_cast<WaveTrack::IntervalData*>( interval.Extra() );
          auto pClip = pData->GetClip();
          if ( !mpTrack->AddClip( pClip ) )
             return false;
@@ -168,7 +168,7 @@ public:
    {
       for ( auto &interval : MovingIntervals() ) {
          auto data =
-            static_cast<WaveTrack::IntervalData*>( interval.Extra() );
+            dynamic_cast<WaveTrack::IntervalData*>( interval.Extra() );
          data->GetClip()->Offset( offset );
       }
    }
@@ -181,7 +181,7 @@ public:
       if (MovingIntervals().empty())
          return t0;
       else {
-         auto data = static_cast<WaveTrack::IntervalData*>(MovingIntervals()[0].Extra());
+         auto data = dynamic_cast<WaveTrack::IntervalData*>(MovingIntervals()[0].Extra());
          auto& clip = data->GetClip();
          if (t0 < clip->GetPlayStartTime())
             t0 = clip->GetPlayStartTime();

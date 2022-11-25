@@ -55,7 +55,7 @@ class BandedWG : public Instrmnt
   BandedWG();
 
   //! Class destructor.
-  ~BandedWG();
+  ~BandedWG() override;
 
   //! Reset and clear all internal state.
   void clear();
@@ -67,7 +67,7 @@ class BandedWG : public Instrmnt
   void setPreset(int preset);
 
   //! Set instrument parameters for a particular frequency.
-  void setFrequency(StkFloat frequency);
+  void setFrequency(StkFloat frequency) override;
 
   //! Apply bow velocity/pressure to instrument with given amplitude and rate of increase.
   void startBowing(StkFloat amplitude, StkFloat rate);
@@ -79,17 +79,17 @@ class BandedWG : public Instrmnt
   void pluck(StkFloat amp);
 
   //! Start a note with the given frequency and amplitude.
-  void noteOn(StkFloat frequency, StkFloat amplitude);
+  void noteOn(StkFloat frequency, StkFloat amplitude) override;
 
   //! Stop a note with the given amplitude (speed of decay).
-  void noteOff(StkFloat amplitude);
+  void noteOff(StkFloat amplitude) override;
 
   //! Perform the control change specified by \e number and \e value (0.0 - 128.0).
-  void controlChange(int number, StkFloat value);
+  void controlChange(int number, StkFloat value) override;
 
  protected:
 
-  StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
   bool doPluck_;
   bool trackVelocity_;

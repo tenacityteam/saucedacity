@@ -112,7 +112,7 @@ void ProjectManager::SaveWindowSize()
    bool validWindowForSaveWindowSize = FALSE;
    ProjectWindow * validProject = nullptr;
    bool foundIconizedProject = FALSE;
-   for ( auto pProject : AllProjects{} )
+   for ( const auto& pProject : AllProjects{} )
    {
       auto &window = ProjectWindow::Get( *pProject );
       if (!window.IsIconized()) {
@@ -189,7 +189,7 @@ public:
    {
    }
 
-   bool IsSupportedFormat(const wxDataFormat & format, Direction WXUNUSED(dir = Get)) const
+   [[nodiscard]] bool IsSupportedFormat(const wxDataFormat & format, Direction WXUNUSED(dir = Get)) const override
       // PRL:  This function does NOT override any inherited virtual!  What does it do?
    {
       if (format.GetType() == wxDF_FILENAME) {
@@ -219,7 +219,7 @@ public:
       SetDataObject(safenew FileObject());
    }
 
-   ~DropTarget()
+   ~DropTarget() override
    {
    }
 
@@ -788,7 +788,7 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
          SetActiveProject(AllProjects{}.begin()->get());
       }
       else {
-         SetActiveProject(NULL);
+         SetActiveProject(nullptr);
       }
    }
 
@@ -848,7 +848,7 @@ void ProjectManager::OpenFiles(SaucedacityProject *proj)
 {
    auto selectedFiles =
       ProjectFileManager::ShowOpenDialog(FileNames::Operation::Open);
-   if (selectedFiles.size() == 0) {
+   if (selectedFiles.empty()) {
       Importer::SetLastOpenType({});
       return;
    }

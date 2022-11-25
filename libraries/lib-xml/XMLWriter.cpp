@@ -20,7 +20,7 @@ the general functionality for creating XML in UTF8 encoding.
 #include <wx/ffile.h>
 #include <wx/intl.h>
 
-#include <string.h>
+#include <cstring>
 
 //table for xml encoding compatibility with expat decoding
 //see wxWidgets-2.8.12/src/expat/lib/xmltok_impl.h
@@ -91,7 +91,7 @@ void XMLWriter::EndTag(const wxString &name)
 {
    int i;
 
-   if (mTagstack.size() > 0) {
+   if (!mTagstack.empty()) {
       if (mTagstack[0] == name) {
          if (mHasKids[1]) {  // There will always be at least 2 at this point
             if (mInTag) {

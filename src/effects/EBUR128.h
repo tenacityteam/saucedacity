@@ -33,7 +33,7 @@ public:
    void ProcessSampleFromChannel(float x_in, size_t channel);
    void NextSample();
    double IntegrativeLoudness();
-   inline double IntegrativeLoudnessToLUFS(double loudness)
+   static inline double IntegrativeLoudnessToLUFS(double loudness)
       { return 10 * log10(loudness); }
 
 private:

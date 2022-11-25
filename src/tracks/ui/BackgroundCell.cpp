@@ -44,7 +44,7 @@ public:
       return { {}, &arrowCursor };
    }
 
-   virtual ~BackgroundHandle()
+   ~BackgroundHandle() override
    {}
 
    Result Click

@@ -39,9 +39,9 @@
 
 #include <wx/intl.h>
 #include <cmath>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "Prefs.h"
 #include "Internat.h"

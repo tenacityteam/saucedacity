@@ -18,7 +18,7 @@ class XML_API XMLStringWriter final : public wxString, public XMLWriter
 {
     public:
         XMLStringWriter(size_t initialSize = 0);
-        virtual ~XMLStringWriter();
+        ~XMLStringWriter() override;
 
         void Write(const wxString &data) override;
 };

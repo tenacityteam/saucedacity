@@ -37,7 +37,7 @@ namespace Journal
    // struct is meant for static construction
    struct RegisteredCommand{
       explicit RegisteredCommand(
-         const wxString &name, Dispatcher dispatcher );
+         const wxString &name, const Dispatcher& dispatcher );
    };
 
    //\brief type of the dictionary of registered commands

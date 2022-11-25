@@ -42,13 +42,13 @@ static wxStopWatch MasterWatch;
 static bool bStopWatchStarted = false;
 
 void diagnostics_do_diag( t_diag_struct * pDiag ){
-   wxLog * pLog = wxLog::SetActiveTarget(NULL);
+   wxLog * pLog = wxLog::SetActiveTarget(nullptr);
    // this macro is empty if wxWidgets is not compiled in debug mode
    wxLogDebug( wxT("%s"), pDiag->pMessage );
    wxLog::SetActiveTarget(pLog);
 }
 void diagnostics_do_diag_mem( t_diag_struct * pDiag, long amount ){
-   wxLog * pLog = wxLog::SetActiveTarget(NULL);
+   wxLog * pLog = wxLog::SetActiveTarget(nullptr);
    wxLogDebug( wxT("%s %l"), pDiag->pMessage, amount );
    wxLog::SetActiveTarget(pLog);
    pDiag->total += amount;
@@ -64,7 +64,7 @@ void diagnostics_do_diag_mem( t_diag_struct * pDiag, long amount ){
 }
 
 void diagnostics_do_perfmon_start( t_diag_struct * pDiag, t_diag_struct ** pRememberMe ){
-   if( *pRememberMe == NULL ){
+   if( *pRememberMe == nullptr ){
       *pRememberMe = pDiag;
       if( !bStopWatchStarted ){
          bStopWatchStarted = true;
@@ -76,7 +76,7 @@ void diagnostics_do_perfmon_start( t_diag_struct * pDiag, t_diag_struct ** pReme
 
 void diagnostics_do_perfmon_stop( t_diag_struct ** ppDiag ){
    t_diag_struct * pDiag = *ppDiag;
-   *ppDiag = NULL;
+   *ppDiag = nullptr;
    long amount = MasterWatch.Time() - pDiag->most_recent;
    pDiag->total += amount;
    pDiag->most_recent = amount;
@@ -88,7 +88,7 @@ void diagnostics_do_perfmon_stop( t_diag_struct ** ppDiag ){
       pDiag->most = amount;
    else if( amount < pDiag->least )
       pDiag->least = amount;
-   wxLog * pLog = wxLog::SetActiveTarget(NULL);
+   wxLog * pLog = wxLog::SetActiveTarget(nullptr);
    wxLogDebug( wxT("%s %f seconds"), pDiag->pMessage, ((float)amount)/1000.0f );
    wxLog::SetActiveTarget(pLog);
 }

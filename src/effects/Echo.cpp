@@ -52,8 +52,7 @@ EffectEcho::EffectEcho()
 }
 
 EffectEcho::~EffectEcho()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -115,7 +114,7 @@ bool EffectEcho::ProcessInitialize(sampleCount WXUNUSED(totalLen), ChannelNames 
       return false;
    }
 
-   return history != NULL;
+   return history != nullptr;
 }
 
 bool EffectEcho::ProcessFinalize()

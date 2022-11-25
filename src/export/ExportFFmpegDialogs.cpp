@@ -781,8 +781,8 @@ END_EVENT_TABLE()
 
 ExportFFmpegCustomOptions::ExportFFmpegCustomOptions(wxWindow *parent, int WXUNUSED(format))
 :  wxPanelWrapper(parent, wxID_ANY),
-   mFormat(NULL),
-   mCodec(NULL)
+   mFormat(nullptr),
+   mCodec(nullptr)
 {
    ShuttleGui S(this, eIsCreatingFromPrefs);
    PopulateOrExchange(S);
@@ -877,7 +877,7 @@ FFmpegPreset::~FFmpegPreset()
 
 FFmpegPresets::FFmpegPresets()
 {
-   mPreset = NULL;
+   mPreset = nullptr;
    mAbortImport = false;
 
    XMLFileReader xmlfile;
@@ -900,7 +900,7 @@ FFmpegPresets::~FFmpegPresets()
 
 void FFmpegPresets::ImportPresets(wxString &filename)
 {
-   mPreset = NULL;
+   mPreset = nullptr;
    mAbortImport = false;
 
    FFmpegPresetMap savePresets = mPresets;
@@ -912,7 +912,7 @@ void FFmpegPresets::ImportPresets(wxString &filename)
    }
 }
 
-void FFmpegPresets::ExportPresets(wxString &filename)
+void FFmpegPresets::ExportPresets(wxString &filename) const
 {
    GuardedCall( [&] {
       XMLFileWriter writer{ filename, XO("Error Saving FFmpeg Presets") };
@@ -936,7 +936,7 @@ void FFmpegPresets::GetPresetList(wxArrayString &list)
 
 void FFmpegPresets::DeletePreset(wxString &name)
 {
-   FFmpegPresetMap::iterator iter = mPresets.find(name);
+   auto iter = mPresets.find(name);
    if (iter != mPresets.end())
    {
       mPresets.erase(iter);
@@ -945,13 +945,13 @@ void FFmpegPresets::DeletePreset(wxString &name)
 
 FFmpegPreset *FFmpegPresets::FindPreset(wxString &name)
 {
-   FFmpegPresetMap::iterator iter = mPresets.find(name);
+   auto iter = mPresets.find(name);
    if (iter != mPresets.end())
    {
       return &iter->second;
    }
 
-   return NULL;
+   return nullptr;
 }
 
 // return false if overwrite was not allowed.
@@ -1012,7 +1012,7 @@ bool FFmpegPresets::SavePreset(ExportFFmpegOptions *parent, wxString &name)
    for (int id = FEFirstID; id < FELastID; id++)
    {
       wxWindow *wnd = dynamic_cast<wxWindow*>(parent)->FindWindowById(id,parent);
-      if (wnd != NULL)
+      if (wnd != nullptr)
       {
          switch(id)
          {
@@ -1083,7 +1083,7 @@ void FFmpegPresets::LoadPreset(ExportFFmpegOptions *parent, wxString &name)
    for (int id = FEFirstID; id < FELastID; id++)
    {
       wxWindow *wnd = parent->FindWindowById(id,parent);
-      if (wnd != NULL)
+      if (wnd != nullptr)
       {
          wxString readstr;
          long readlong;
@@ -1183,7 +1183,7 @@ bool FFmpegPresets::HandleXMLTag(const wxChar *tag, const wxChar **attrs)
                }
                if (action == wxNO)
                {
-                  mPreset = NULL;
+                  mPreset = nullptr;
                   return false;
                }
                *mPreset = FFmpegPreset();
@@ -1231,7 +1231,7 @@ XMLTagHandler *FFmpegPresets::HandleXMLChild(const wxChar *tag)
 {
    if (mAbortImport)
    {
-      return NULL;
+      return nullptr;
    }
 
    if (!wxStrcmp(tag, wxT("preset")))
@@ -1242,10 +1242,10 @@ XMLTagHandler *FFmpegPresets::HandleXMLChild(const wxChar *tag)
    {
       return this;
    }
-   return NULL;
+   return nullptr;
 }
 
-void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile) const
+void FFmpegPresets::WriteXMLHeader(XMLWriter &xmlFile)
 // may throw
 {
    xmlFile.Write(wxT("<?xml "));
@@ -1603,7 +1603,7 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
    { wxT("wav"), AUDACITY_AV_CODEC_ID_ADPCM_SWF },
    { wxT("wav"), AUDACITY_AV_CODEC_ID_VORBIS },
 
-   { NULL, AUDACITY_AV_CODEC_ID_NONE }
+   { nullptr, AUDACITY_AV_CODEC_ID_NONE }
 };
 
 /// AAC profiles
@@ -1712,7 +1712,7 @@ ApplicableFor ExportFFmpegOptions::apptable[] =
    {TRUE,FEVariableBlockLenID,AUDACITY_AV_CODEC_ID_WMAV2,"any"},
    {FALSE,FEVariableBlockLenID,AUDACITY_AV_CODEC_ID_NONE,"any"},
 
-   {FALSE,FFmpegExportCtrlID(0),AUDACITY_AV_CODEC_ID_NONE,NULL}
+   {FALSE,FFmpegExportCtrlID(0),AUDACITY_AV_CODEC_ID_NONE,nullptr}
 };
 
 namespace {
@@ -2004,8 +2004,6 @@ void ExportFFmpegOptions::PopulateOrExchange(ShuttleGui & S)
    Fit();
    SetMinSize(GetSize());
    Center();
-
-   return;
 }
 
 ///
@@ -2025,9 +2023,8 @@ void ExportFFmpegOptions::FindSelectedFormat(wxString **name, wxString **longnam
    if (nFormat == wxNOT_FOUND) return;
 
    // Return short name and description
-   if (name != NULL) *name = &mFormatNames[nFormat];
-   if (longname != NULL) *longname = &mFormatLongNames[nFormat];
-   return;
+   if (name != nullptr) *name = &mFormatNames[nFormat];
+   if (longname != nullptr) *longname = &mFormatLongNames[nFormat];
 }
 ///
 ///
@@ -2046,8 +2043,8 @@ void ExportFFmpegOptions::FindSelectedCodec(wxString **name, wxString **longname
    if (nCodec == wxNOT_FOUND) return;
 
    // Return short name and description
-   if (name != NULL) *name = &mCodecNames[nCodec];
-   if (longname != NULL) *longname = &mCodecLongNames[nCodec];
+   if (name != nullptr) *name = &mCodecNames[nCodec];
+   if (longname != nullptr) *longname = &mCodecLongNames[nCodec];
 }
 
 ///
@@ -2066,7 +2063,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AudacityAVC
    // Zero - format is not found at all
    int found = 0;
    wxString str(fmt);
-   for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
+   for (int i = 0; CompatibilityList[i].fmt != nullptr; i++)
    {
       if (str == CompatibilityList[i].fmt)
       {
@@ -2081,7 +2078,7 @@ int ExportFFmpegOptions::FetchCompatibleCodecList(const wxChar *fmt, AudacityAVC
          // Find the codec, that is claimed to be compatible
          std::unique_ptr<AVCodecWrapper> codec = mFFmpeg->CreateEncoder(mFFmpeg->GetAVCodecID(CompatibilityList[i].codec));
          // If it exists, is audio and has encoder
-         if (codec != NULL && codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue()))
+         if (codec != nullptr && codec->IsAudio() && mFFmpeg->av_codec_is_encoder(codec->GetWrappedValue()))
          {
             // If it was selected - remember its NEW index
             if ((ffmpegId >= 0) && codec->GetId() == ffmpegId)
@@ -2156,17 +2153,17 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(
 
    wxArrayString FromList;
    // Find all formats compatible to this codec in compatibility list
-   for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
+   for (int i = 0; CompatibilityList[i].fmt != nullptr; i++)
    {
       if (CompatibilityList[i].codec == id || (CompatibilityList[i].codec.value == AUDACITY_AV_CODEC_ID_NONE) )
       {
-         if ((selfmt != NULL) && (*selfmt == CompatibilityList[i].fmt)) index = mShownFormatNames.size();
+         if ((selfmt != nullptr) && (*selfmt == CompatibilityList[i].fmt)) index = mShownFormatNames.size();
          FromList.push_back(CompatibilityList[i].fmt);
          mShownFormatNames.push_back(CompatibilityList[i].fmt);
          auto tofmt = mFFmpeg->GuessOutputFormat(
             wxString(CompatibilityList[i].fmt).ToUTF8(), nullptr, nullptr);
 
-         if (tofmt != NULL)
+         if (tofmt != nullptr)
          {
             mShownFormatLongNames.push_back(wxString::Format(
                wxT("%s - %s"), CompatibilityList[i].fmt,
@@ -2175,9 +2172,9 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(
       }
    }
    bool found = false;
-   if (selfmt != NULL)
+   if (selfmt != nullptr)
    {
-      for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
+      for (int i = 0; CompatibilityList[i].fmt != nullptr; i++)
       {
          if (*selfmt == CompatibilityList[i].fmt)
          {
@@ -2196,9 +2193,9 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(
          {
             wxString ofmtname = wxString::FromUTF8(ofmt->GetName());
             found = false;
-            for (unsigned int i = 0; i < FromList.size(); i++)
+            for (const auto & i : FromList)
             {
-               if (ofmtname == FromList[i])
+               if (ofmtname == i)
                {
                   found = true;
                   break;
@@ -2206,7 +2203,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(
             }
             if (!found)
             {
-               if ((selfmt != NULL) &&
+               if ((selfmt != nullptr) &&
                   (*selfmt == wxString::FromUTF8(ofmt->GetName())))
                   index = mShownFormatNames.size();
 
@@ -2227,7 +2224,7 @@ int ExportFFmpegOptions::FetchCompatibleFormatList(
 ///
 void ExportFFmpegOptions::OnDeletePreset(wxCommandEvent& WXUNUSED(event))
 {
-   wxComboBox *preset = dynamic_cast<wxComboBox*>(FindWindowById(FEPresetID,this));
+   auto *preset = dynamic_cast<wxComboBox*>(FindWindowById(FEPresetID,this));
    wxString presetname = preset->GetValue();
    if (presetname.empty())
    {
@@ -2261,7 +2258,7 @@ void ExportFFmpegOptions::OnSavePreset(wxCommandEvent& WXUNUSED(event))
 // Return false if failed to save.
 bool ExportFFmpegOptions::SavePreset(bool bCheckForOverwrite)
 {
-   wxComboBox *preset = dynamic_cast<wxComboBox*>(FindWindowById(FEPresetID,this));
+   auto *preset = dynamic_cast<wxComboBox*>(FindWindowById(FEPresetID,this));
    wxString name = preset->GetValue();
    if (name.empty())
    {
@@ -2287,7 +2284,7 @@ bool ExportFFmpegOptions::SavePreset(bool bCheckForOverwrite)
 ///
 void ExportFFmpegOptions::OnLoadPreset(wxCommandEvent& WXUNUSED(event))
 {
-   wxComboBox *preset = dynamic_cast<wxComboBox*>(FindWindowById(FEPresetID,this));
+   auto *preset = dynamic_cast<wxComboBox*>(FindWindowById(FEPresetID,this));
    wxString presetname = preset->GetValue();
 
    mShownFormatNames = mFormatNames;
@@ -2416,7 +2413,7 @@ bool ExportFFmpegOptions::ReportIfBadCombination()
    // However, the list updating now seems to be working correctly
    // making it impossible to select illegal combinations
    bool bFound = false;
-   for (int i = 0; CompatibilityList[i].fmt != NULL; i++)
+   for (int i = 0; CompatibilityList[i].fmt != nullptr; i++)
    {
       if (*selfmt == CompatibilityList[i].fmt)
       {
@@ -2464,20 +2461,20 @@ void ExportFFmpegOptions::EnableDisableControls(AVCodecWrapper *cdc, wxString *s
             codec = true;
          }
          else if (
-            cdc != NULL &&
+            cdc != nullptr &&
             apptable[i].codec == mFFmpeg->GetAudacityCodecID(cdc->GetId()))
          {
             codec = true;
          }
 
          if (wxString::FromUTF8(apptable[i].format) == wxT("any")) format = true;
-         else if (selfmt != NULL &&
+         else if (selfmt != nullptr &&
             *selfmt == wxString::FromUTF8(apptable[i].format)) format = true;
          if (codec && format)
          {
             handled = apptable[i].control;
             wxWindow *item = FindWindowById(apptable[i].control,this);
-            if (item != NULL) item->Enable(apptable[i].enable);
+            if (item != nullptr) item->Enable(apptable[i].enable);
          }
       }
    }
@@ -2485,20 +2482,20 @@ void ExportFFmpegOptions::EnableDisableControls(AVCodecWrapper *cdc, wxString *s
 
 void ExportFFmpegOptions::DoOnFormatList()
 {
-   wxString *selfmt = NULL;
-   wxString *selfmtlong = NULL;
+   wxString *selfmt = nullptr;
+   wxString *selfmtlong = nullptr;
    FindSelectedFormat(&selfmt, &selfmtlong);
-   if (selfmt == NULL)
+   if (selfmt == nullptr)
    {
       return;
    }
 
-   wxString *selcdc = NULL;
-   wxString *selcdclong = NULL;
+   wxString *selcdc = nullptr;
+   wxString *selcdclong = nullptr;
    FindSelectedCodec(&selcdc, &selcdclong);
 
-   auto fmt = mFFmpeg->GuessOutputFormat(selfmt->ToUTF8(),NULL,NULL);
-   if (fmt == NULL)
+   auto fmt = mFFmpeg->GuessOutputFormat(selfmt->ToUTF8(),nullptr,nullptr);
+   if (fmt == nullptr)
    {
       //This shouldn't really happen
       mFormatName->SetLabel(wxString(_("Failed to guess format")));
@@ -2530,7 +2527,6 @@ void ExportFFmpegOptions::DoOnFormatList()
    EnableDisableControls(cdc.get(), selfmt);
    Layout();
    Fit();
-   return;
 }
 
 void ExportFFmpegOptions::DoOnCodecList()
@@ -2580,7 +2576,6 @@ void ExportFFmpegOptions::DoOnCodecList()
    EnableDisableControls(cdc.get(), selfmt);
    Layout();
    Fit();
-   return;
 }
 
 ///
@@ -2617,8 +2612,6 @@ void ExportFFmpegOptions::OnOK(wxCommandEvent& WXUNUSED(event))
    gPrefs->Flush();
 
    EndModal(wxID_OK);
-
-   return;
 }
 
 void ExportFFmpegOptions::OnGetURL(wxCommandEvent & WXUNUSED(event))

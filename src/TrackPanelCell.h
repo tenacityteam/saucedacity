@@ -39,7 +39,7 @@ class SAUCEDACITY_DLL_API /* not final */ TrackPanelNode
 {
 public:
    TrackPanelNode();
-   virtual ~TrackPanelNode() = 0;
+   ~TrackPanelNode() override = 0;
 };
 
 // A node of the TrackPanel that contains other nodes.
@@ -47,7 +47,7 @@ class SAUCEDACITY_DLL_API TrackPanelGroup /* not final */ : public TrackPanelNod
 {
 public:
    TrackPanelGroup();
-   virtual ~TrackPanelGroup();
+   ~TrackPanelGroup() override;
 
    enum class Axis { X, Y };
 
@@ -77,7 +77,7 @@ public:
    TrackPanelCell( const TrackPanelCell & ) = delete;
    TrackPanelCell &operator=( const TrackPanelCell & ) = delete;
 
-   virtual ~TrackPanelCell () = 0;
+   ~TrackPanelCell () override = 0;
 
    // May supply default cursor, status message, and tooltip, when there is no
    // handle to hit at the mouse position, or the handle does not supply them.

@@ -71,7 +71,7 @@ size_t MemoryStream::Chunk::Append(StreamChunk& dataView)
    const size_t bytesToWrite = std::min(ChunkSize - BytesUsed, dataSize);
    const size_t bytesLeft = dataSize - bytesToWrite;
 
-   const uint8_t* beginData = static_cast<const uint8_t*>(dataView.first);
+   const auto* beginData = static_cast<const uint8_t*>(dataView.first);
    const uint8_t* endData = beginData + bytesToWrite;
 
    // Some extreme micro optimization for MSVC (at least)
@@ -115,7 +115,7 @@ MemoryStream::Iterator MemoryStream::end() const
 MemoryStream::Iterator::Iterator(const MemoryStream* stream, bool isBegin)
     : mStream(stream)
     , mListIterator(isBegin ? mStream->mChunks.cbegin() : mStream->mChunks.cend())
-    , mShowLinearPart(isBegin && mStream->mLinearData.size() > 0)
+    , mShowLinearPart(isBegin && !mStream->mLinearData.empty())
 {
 }
 
@@ -129,7 +129,7 @@ MemoryStream::Iterator& MemoryStream::Iterator::operator++()
    return *this;
 }
 
-MemoryStream::Iterator MemoryStream::Iterator::operator++(int)
+const MemoryStream::Iterator MemoryStream::Iterator::operator++(int)
 {
    Iterator result { *this };
    this->operator++();

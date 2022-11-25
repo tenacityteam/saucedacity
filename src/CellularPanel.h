@@ -43,7 +43,7 @@ public:
    
    // Overridables:
    
-   virtual SaucedacityProject *GetProject() const = 0;
+   [[nodiscard]] virtual SaucedacityProject *GetProject() const = 0;
    
    // Get the root object defining a recursive subdivision of the panel's
    // area into cells
@@ -102,11 +102,11 @@ public:
 
    UIHandlePtr Target();
    
-   std::shared_ptr<TrackPanelCell> LastCell() const;
+   [[nodiscard]] std::shared_ptr<TrackPanelCell> LastCell() const;
    
    bool IsMouseCaptured();
    
-   wxCoord MostRecentXCoord() const;
+   [[nodiscard]] wxCoord MostRecentXCoord() const;
    
    void HandleCursorForPresentMouseState(bool doHit = true);
 

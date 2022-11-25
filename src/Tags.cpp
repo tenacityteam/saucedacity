@@ -328,7 +328,7 @@ void Tags::LoadDefaults()
    gPrefs->SetPath(path);
 }
 
-bool Tags::IsEmpty()
+bool Tags::IsEmpty() const
 {
    // At least one of these should be filled in, otherwise
    // it's assumed that the tags have not been set...
@@ -398,8 +398,8 @@ int Tags::GetNumUserGenres()
 void Tags::LoadDefaultGenres()
 {
    mGenres.clear();
-   for (size_t i = 0; i < WXSIZEOF(DefaultGenres); i++) {
-      mGenres.push_back(DefaultGenres[i]);
+   for (auto & DefaultGenre : DefaultGenres) {
+      mGenres.push_back(DefaultGenre);
    }
 }
 
@@ -506,7 +506,7 @@ void Tags::SetTag(const wxString & name, const wxString & value, const bool bSpe
    key.UpperCase();
 
    // Look it up
-   TagMap::iterator iter = mXref.find(key);
+   auto iter = mXref.find(key);
 
    // The special tags, if empty, should not exist.
    // However it is allowable for a custom tag to be empty.
@@ -599,7 +599,7 @@ XMLTagHandler *Tags::HandleXMLChild(const wxChar *tag)
       return this;
    }
 
-   return NULL;
+   return nullptr;
 }
 
 void Tags::WriteXML(XMLWriter &xmlFile) const
@@ -673,7 +673,7 @@ public:
 
    // Fix for Bug 1389
    // July 2016: ANSWER-ME: Does this need reporting upstream to wxWidgets?
-   virtual void StartingKey(wxKeyEvent& event) override
+   void StartingKey(wxKeyEvent& event) override
    {
        // Lifted from wxGridCellTextEditor and adapted to combo.
 
@@ -724,7 +724,7 @@ public:
    }
 
    // Clone is required by wxwidgets; implemented via copy constructor
-   wxGridCellEditor *Clone() const override
+   [[nodiscard]] wxGridCellEditor *Clone() const override
    {
       return safenew ComboEditor{ m_choices, m_allowOthers };
    }
@@ -816,7 +816,7 @@ TagsEditorDialog::TagsEditorDialog(wxWindow * parent,
 {
    SetName();
 
-   mGrid = NULL;
+   mGrid = nullptr;
 
    // Make a local copy of the passed in tags
    mLocal = *mTags;
@@ -891,7 +891,7 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
       }
       S.EndHorizontalLay();
 
-      if (mGrid == NULL) {
+      if (mGrid == nullptr) {
          mGrid = safenew Grid(S.GetParent(),
                           wxID_ANY,
                           wxDefaultPosition,
@@ -1131,8 +1131,7 @@ void TagsEditorDialog::OnChange(wxGridEvent & event)
       }
    }
 
-   return;
-}
+   }
 
 void TagsEditorDialog::OnEdit(wxCommandEvent & WXUNUSED(event))
 {
@@ -1290,8 +1289,6 @@ void TagsEditorDialog::OnLoad(wxCommandEvent & WXUNUSED(event))
 
    // Go fill up the window
    TransferDataToWindow();
-
-   return;
 }
 
 void TagsEditorDialog::OnSave(wxCommandEvent & WXUNUSED(event))
@@ -1494,7 +1491,7 @@ void TagsEditorDialog::SetEditors()
          mGrid->SetCellEditor(i, 1, mGrid->GetDefaultEditorForType(wxT("Combo")));
       }
       else {
-         mGrid->SetCellEditor(i, 1, NULL); //mGrid->GetDefaultEditor());
+         mGrid->SetCellEditor(i, 1, nullptr); //mGrid->GetDefaultEditor());
       }
    }
 }
@@ -1522,7 +1519,7 @@ void TagsEditorDialog::PopulateGenres()
    editor->DecRef();
 }
 
-bool TagsEditorDialog::IsWindowRectValid(const wxRect *windowRect) const
+bool TagsEditorDialog::IsWindowRectValid(const wxRect *windowRect)
 {
    wxDisplay display;
    wxPoint topLeft(windowRect->GetTopLeft().x, windowRect->GetTopLeft().y);

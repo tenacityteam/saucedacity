@@ -134,7 +134,7 @@ struct Entry {
    TranslatableString prompt;
    wxString setting;
 };
-static const std::vector< Entry > &GetModuleData()
+const std::vector< Entry > &GetModuleData()
 {
    struct ModuleData : public std::vector< Entry > {
       ModuleData() {

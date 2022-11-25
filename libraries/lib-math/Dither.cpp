@@ -45,9 +45,9 @@ and get deterministic behaviour.
 // (Note: this file should be included first)
 #include "float_cast.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <cmath>
-#include <string.h>
+#include <cstring>
 //#include <sys/types.h>
 //#include <memory.h>
 //#include <assert.h>
@@ -179,10 +179,10 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
        char *d, *s; \
        unsigned int ii; \
        int x; \
-       for (d = (char*)dst, s = (char*)src, ii = 0; \
-            ii < len; \
-            ii++, d += SAMPLE_SIZE(dstFormat) * dstStride, \
-                 s += SAMPLE_SIZE(srcFormat) * srcStride) \
+       for (d = (char*)(dst), s = (char*)(src), ii = 0; \
+            ii < (len); \
+            ii++, d += SAMPLE_SIZE(dstFormat) * (dstStride), \
+                 s += SAMPLE_SIZE(srcFormat) * (srcStride)) \
           DITHER_STEP(dither, store, load, d, s); \
    } while (0)
 
@@ -197,11 +197,11 @@ const float Dither::SHAPED_BS[] = { 2.033f, -2.165f, 1.959f, -1.590f, 0.6149f };
 // Implement a dither. There are only 3 cases where we must dither,
 // in all other cases, no dithering is necessary.
 #define DITHER(dither, dst, dstFormat, dstStride, src, srcFormat, srcStride, len) \
-    do { if (srcFormat == int24Sample && dstFormat == int16Sample) \
+    do { if ((srcFormat) == int24Sample && (dstFormat) == int16Sample) \
         DITHER_INT24_TO_INT16(dither, dst, dstStride, src, srcStride, len); \
-    else if (srcFormat == floatSample && dstFormat == int16Sample) \
+    else if ((srcFormat) == floatSample && (dstFormat) == int16Sample) \
         DITHER_FLOAT_TO_INT16(dither, dst, dstStride, src, srcStride, len); \
-    else if (srcFormat == floatSample && dstFormat == int24Sample) \
+    else if ((srcFormat) == floatSample && (dstFormat) == int24Sample) \
         DITHER_FLOAT_TO_INT24(dither, dst, dstStride, src, srcStride, len); \
     else { wxASSERT(false); } \
     } while (0)

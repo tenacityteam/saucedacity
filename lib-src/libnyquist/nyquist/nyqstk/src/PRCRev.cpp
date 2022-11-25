@@ -15,7 +15,7 @@
 /***************************************************/
 
 #include "PRCRev.h"
-#include <math.h>
+#include <cmath>
 
 using namespace Nyq;
 

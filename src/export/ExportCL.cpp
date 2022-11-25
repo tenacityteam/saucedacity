@@ -58,7 +58,7 @@ class ExportCLOptions final : public wxPanelWrapper
 {
 public:
    ExportCLOptions(wxWindow *parent, int format);
-   virtual ~ExportCLOptions();
+   ~ExportCLOptions() override;
 
    void PopulateOrExchange(ShuttleGui & S);
    bool TransferDataToWindow() override;
@@ -208,8 +208,6 @@ void ExportCLOptions::OnBrowse(wxCommandEvent& WXUNUSED(event))
    }
 
    mCmd->SetInsertionPointEnd();
-
-   return;
 }
 
 //----------------------------------------------------------------------------
@@ -243,12 +241,12 @@ public:
       Redirect();
    }
 
-   bool IsActive()
+   bool IsActive() const
    {
       return mActive;
    }
 
-   void OnTerminate(int WXUNUSED( pid ), int status)
+   void OnTerminate(int WXUNUSED( pid ), int status) override
    {
       Drain(GetInputStream(), mOutput);
       Drain(GetErrorStream(), mOutput);
@@ -257,7 +255,7 @@ public:
       mActive = false;
    }
 
-   int GetStatus()
+   int GetStatus() const
    {
       return mStatus;
    }
@@ -288,8 +286,8 @@ public:
                          bool selectedOnly,
                          double t0,
                          double t1,
-                         MixerSpec *mixerSpec = NULL,
-                         const Tags *metadata = NULL,
+                         MixerSpec *mixerSpec = nullptr,
+                         const Tags *metadata = nullptr,
                          int subformat = 0) override;
 
    // Optional   
@@ -298,7 +296,7 @@ public:
 private:
    void GetSettings();
 
-   std::vector<char> GetMetaChunk(const Tags *metadata);
+   static std::vector<char> GetMetaChunk(const Tags *metadata);
    wxString mCmd;
    bool mShow;
 
@@ -462,12 +460,12 @@ ProgressResult ExportCL::Export(SaucedacityProject *project,
    fmt.avgBytesPerSec  = wxUINT32_SWAP_ON_BE(fmt.sampleRate * fmt.blockAlign);
 
    // Retrieve tags if not given a set
-   if (metadata == NULL) {
+   if (metadata == nullptr) {
       metadata = &Tags::Get(*project);
    }
    auto metachunk = GetMetaChunk(metadata);
 
-   if (metachunk.size()) {
+   if (!metachunk.empty()) {
 
       id3.id3ID[0] = 'i';
       id3.id3ID[1] = 'd';
@@ -486,7 +484,7 @@ ProgressResult ExportCL::Export(SaucedacityProject *project,
    // write the headers and metadata
    os->Write(&riff, sizeof(riff));
    os->Write(&fmt, sizeof(fmt));
-   if (metachunk.size()) {
+   if (!metachunk.empty()) {
       os->Write(&id3, sizeof(id3));
       os->Write(metachunk.data(), metachunk.size());
    }
@@ -507,7 +505,7 @@ ProgressResult ExportCL::Export(SaucedacityProject *project,
                             mixerSpec);
 
    size_t numBytes = 0;
-   samplePtr mixed = NULL;
+   samplePtr mixed = nullptr;
    auto updateResult = ProgressResult::Success;
 
    {
@@ -698,7 +696,7 @@ std::vector<char> ExportCL::GetMetaChunk(const Tags *tags)
 
    id3_length_t len;
 
-   len = id3_tag_render(tp.get(), 0);
+   len = id3_tag_render(tp.get(), nullptr);
    if ((len % 2) != 0) {
       len++;   // Length must be even.
    }
@@ -722,7 +720,7 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
    ExtendPath ep;
 
    if (filename.GetExt().empty()) {
-      if (ShowWarningDialog(NULL,
+      if (ShowWarningDialog(nullptr,
                             wxT("MissingExtension"),
                             XO("You've specified a file name without an extension. Are you sure?"),
                             true) == wxID_CANCEL) {
@@ -740,7 +738,7 @@ bool ExportCL::CheckFileName(wxFileName &filename, int WXUNUSED(format))
 #endif
    );
 
-   if (argv.size() == 0) {
+   if (argv.empty()) {
       ShowExportErrorDialog(
          ":745",
          XO("Program name appears to be missing."));

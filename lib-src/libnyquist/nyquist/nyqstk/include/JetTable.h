@@ -28,11 +28,11 @@ public:
   JetTable();
 
   //! Class destructor.
-  ~JetTable();
+  ~JetTable() override;
 
 protected:
 
-  StkFloat computeSample( StkFloat input );
+  StkFloat computeSample( StkFloat input ) override;
 
 };
 

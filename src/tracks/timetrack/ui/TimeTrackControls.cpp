@@ -56,7 +56,7 @@ void TimeTrackMenuTable::DestroyMenu()
 
 void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
 {
-   TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<TimeTrack*>(mpData->pTrack);
    if (pTrack) {
       long lower = (long)(pTrack->GetRangeLower() * 100.0 + 0.5);
       long upper = (long)(pTrack->GetRangeUpper() * 100.0 + 0.5);
@@ -94,7 +94,7 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
 
 void TimeTrackMenuTable::OnTimeTrackLin(wxCommandEvent & /*event*/)
 {
-   TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(false);
    SaucedacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )
@@ -106,7 +106,7 @@ void TimeTrackMenuTable::OnTimeTrackLin(wxCommandEvent & /*event*/)
 
 void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
 {
-   TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<TimeTrack*>(mpData->pTrack);
    pTrack->SetDisplayLog(true);
    SaucedacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )
@@ -118,7 +118,7 @@ void TimeTrackMenuTable::OnTimeTrackLog(wxCommandEvent & /*event*/)
 
 void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 {
-   TimeTrack *const pTrack = static_cast<TimeTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<TimeTrack*>(mpData->pTrack);
    SaucedacityProject *const project = &mpData->project;
    if (pTrack->GetInterpolateLog()) {
       pTrack->SetInterpolateLog(false);
@@ -135,8 +135,8 @@ void TimeTrackMenuTable::OnTimeTrackLogInt(wxCommandEvent & /*event*/)
 
 BEGIN_POPUP_MENU(TimeTrackMenuTable)
    static const auto findTrack = []( PopupMenuHandler &handler ){
-      return static_cast<TimeTrack*>(
-         static_cast<TimeTrackMenuTable&>( handler ).mpData->pTrack );
+      return dynamic_cast<TimeTrack*>(
+         dynamic_cast<TimeTrackMenuTable&>( handler ).mpData->pTrack );
    };
 
    BeginSection( "Scales" );

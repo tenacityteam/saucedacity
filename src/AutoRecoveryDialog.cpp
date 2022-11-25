@@ -38,7 +38,7 @@ class AutoRecoveryDialog final : public wxDialogWrapper
 public:
    explicit AutoRecoveryDialog(SaucedacityProject *proj);
 
-   bool HasRecoverables() const;
+   [[nodiscard]] bool HasRecoverables() const;
    FilePaths GetRecoverables();
 
 private:
@@ -79,7 +79,7 @@ AutoRecoveryDialog::AutoRecoveryDialog(SaucedacityProject *project)
 
 bool AutoRecoveryDialog::HasRecoverables() const
 {
-   return mFiles.size() > 0;
+   return !mFiles.empty();
 }
 
 FilePaths AutoRecoveryDialog::GetRecoverables()
@@ -154,7 +154,7 @@ void AutoRecoveryDialog::PopulateList()
 
    FilePaths active = ActiveProjects::GetAll();
 
-   for (auto file : active)
+   for (const auto& file : active)
    {
       wxFileName fn = file;
       if (fn.FileExists())
@@ -182,7 +182,7 @@ void AutoRecoveryDialog::PopulateList()
    mFileList->DeleteAllItems();
    wxVector<wxVariant> data;
 
-   for (auto file : files)
+   for (const auto& file : files)
    {
       wxFileName fn = file;
       if (fn != activeFile)

@@ -35,8 +35,7 @@ EffectSilence::EffectSilence()
 }
 
 EffectSilence::~EffectSilence()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -87,8 +86,6 @@ void EffectSilence::PopulateOrExchange(ShuttleGui & S)
       S.EndHorizontalLay();
    }
    S.EndVerticalLay();
-
-   return;
 }
 
 bool EffectSilence::TransferDataToWindow()

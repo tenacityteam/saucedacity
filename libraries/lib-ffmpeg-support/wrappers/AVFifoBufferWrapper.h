@@ -26,7 +26,7 @@ public:
       const FFmpegFunctions& ffmpeg, int size) noexcept;
 
    AVFifoBuffer* GetWrappedValue() noexcept;
-   const AVFifoBuffer* GetWrappedValue() const noexcept;
+   [[nodiscard]] const AVFifoBuffer* GetWrappedValue() const noexcept;
 
    virtual ~AVFifoBufferWrapper();
 

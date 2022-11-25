@@ -106,27 +106,27 @@ FactoryPresets[] =
    // Defaults:                                   0       false   -6.0       -70.0(off)     50.0     50.0     1
    //
    // xgettext:no-c-format
-   { XO("Hard clip -12dB, 80% make-up gain"),     { 0,        0,      -12.0,      -70.0,      0.0,     80.0,    0 } },
+   { XO("Hard clip -12dB, 80% make-up gain"),     { 0,        false,      -12.0,      -70.0,      0.0,     80.0,    0 } },
    // xgettext:no-c-format
-   { XO("Soft clip -12dB, 80% make-up gain"),     { 1,        0,      -12.0,      -70.0,      50.0,    80.0,    0 } },
-   { XO("Fuzz Box"),                              { 1,        0,      -30.0,      -70.0,      80.0,    80.0,    0 } },
-   { XO("Walkie-talkie"),                         { 1,        0,      -50.0,      -70.0,      60.0,    80.0,    0 } },
-   { XO("Blues drive sustain"),                   { 2,        0,       -6.0,      -70.0,      30.0,    80.0,    0 } },
-   { XO("Light Crunch Overdrive"),                { 3,        0,       -6.0,      -70.0,      20.0,    80.0,    0 } },
-   { XO("Heavy Overdrive"),                       { 4,        0,       -6.0,      -70.0,      90.0,    80.0,    0 } },
-   { XO("3rd Harmonic (Perfect Fifth)"),          { 5,        0,       -6.0,      -70.0,     100.0,    60.0,    0 } },
-   { XO("Valve Overdrive"),                       { 6,        1,       -6.0,      -70.0,      30.0,    40.0,    0 } },
-   { XO("2nd Harmonic (Octave)"),                 { 6,        1,       -6.0,      -70.0,      50.0,     0.0,    0 } },
-   { XO("Gated Expansion Distortion"),            { 7,        0,       -6.0,      -70.0,      30.0,    80.0,    0 } },
-   { XO("Leveller, Light, -70dB noise floor"),    { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    1 } },
-   { XO("Leveller, Moderate, -70dB noise floor"), { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    2 } },
-   { XO("Leveller, Heavy, -70dB noise floor"),    { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    3 } },
-   { XO("Leveller, Heavier, -70dB noise floor"),  { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    4 } },
-   { XO("Leveller, Heaviest, -70dB noise floor"), { 8,        0,       -6.0,      -70.0,       0.0,    50.0,    5 } },
-   { XO("Half-wave Rectifier"),                   { 9,        0,       -6.0,      -70.0,      50.0,    50.0,    0 } },
-   { XO("Full-wave Rectifier"),                   { 9,        0,       -6.0,      -70.0,     100.0,    50.0,    0 } },
-   { XO("Full-wave Rectifier (DC blocked)"),      { 9,        1,       -6.0,      -70.0,     100.0,    50.0,    0 } },
-   { XO("Percussion Limiter"),                    {10,        0,      -12.0,      -70.0,     100.0,    30.0,    0 } },
+   { XO("Soft clip -12dB, 80% make-up gain"),     { 1,        false,      -12.0,      -70.0,      50.0,    80.0,    0 } },
+   { XO("Fuzz Box"),                              { 1,        false,      -30.0,      -70.0,      80.0,    80.0,    0 } },
+   { XO("Walkie-talkie"),                         { 1,        false,      -50.0,      -70.0,      60.0,    80.0,    0 } },
+   { XO("Blues drive sustain"),                   { 2,        false,       -6.0,      -70.0,      30.0,    80.0,    0 } },
+   { XO("Light Crunch Overdrive"),                { 3,        false,       -6.0,      -70.0,      20.0,    80.0,    0 } },
+   { XO("Heavy Overdrive"),                       { 4,        false,       -6.0,      -70.0,      90.0,    80.0,    0 } },
+   { XO("3rd Harmonic (Perfect Fifth)"),          { 5,        false,       -6.0,      -70.0,     100.0,    60.0,    0 } },
+   { XO("Valve Overdrive"),                       { 6,        true,       -6.0,      -70.0,      30.0,    40.0,    0 } },
+   { XO("2nd Harmonic (Octave)"),                 { 6,        true,       -6.0,      -70.0,      50.0,     0.0,    0 } },
+   { XO("Gated Expansion Distortion"),            { 7,        false,       -6.0,      -70.0,      30.0,    80.0,    0 } },
+   { XO("Leveller, Light, -70dB noise floor"),    { 8,        false,       -6.0,      -70.0,       0.0,    50.0,    1 } },
+   { XO("Leveller, Moderate, -70dB noise floor"), { 8,        false,       -6.0,      -70.0,       0.0,    50.0,    2 } },
+   { XO("Leveller, Heavy, -70dB noise floor"),    { 8,        false,       -6.0,      -70.0,       0.0,    50.0,    3 } },
+   { XO("Leveller, Heavier, -70dB noise floor"),  { 8,        false,       -6.0,      -70.0,       0.0,    50.0,    4 } },
+   { XO("Leveller, Heaviest, -70dB noise floor"), { 8,        false,       -6.0,      -70.0,       0.0,    50.0,    5 } },
+   { XO("Half-wave Rectifier"),                   { 9,        false,       -6.0,      -70.0,      50.0,    50.0,    0 } },
+   { XO("Full-wave Rectifier"),                   { 9,        false,       -6.0,      -70.0,     100.0,    50.0,    0 } },
+   { XO("Full-wave Rectifier (DC blocked)"),      { 9,        true,       -6.0,      -70.0,     100.0,    50.0,    0 } },
+   { XO("Percussion Limiter"),                    {10,        false,      -12.0,      -70.0,     100.0,    30.0,    0 } },
 };
 
 TranslatableString defaultLabel(int index)
@@ -185,8 +185,7 @@ EffectDistortion::EffectDistortion()
 }
 
 EffectDistortion::~EffectDistortion()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -330,9 +329,9 @@ RegistryPaths EffectDistortion::GetFactoryPresets()
 {
    RegistryPaths names;
 
-   for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
+   for (const auto & FactoryPreset : FactoryPresets)
    {
-      names.push_back( FactoryPresets[i].name.Translation() );
+      names.push_back( FactoryPreset.name.Translation() );
    }
 
    return names;
@@ -490,8 +489,6 @@ void EffectDistortion::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
    }
    S.EndVerticalLay();
-
-   return;
 }
 
 bool EffectDistortion::TransferDataToWindow()
@@ -547,8 +544,6 @@ void EffectDistortion::InstanceInit(EffectDistortionState & data, float sampleRa
       data.queuesamples.pop();
 
    MakeTable();
-
-   return;
 }
 
 size_t EffectDistortion::InstanceProcess(EffectDistortionState& data, float** inBlock, float** outBlock, size_t blockLen)
@@ -1135,17 +1130,17 @@ void EffectDistortion::CubicTable()
       }
    }
    else {
-      for (int i = 0; i < TABLESIZE; i++) {
-         mTable[i] = gain * Cubic(x);
+      for (double & i : mTable) {
+         i = gain * Cubic(x);
          for (int j = 0; j < mParams.mRepeats; j++) {
-            mTable[i] = gain * Cubic(mTable[i] * amount);
+            i = gain * Cubic(i * amount);
          }
          x += stepsize;
       }
    }
 }
 
-double EffectDistortion::Cubic(double x)
+double EffectDistortion::Cubic(double x) const
 {
    if (mParams.mParam1 == 0.0)
       return x;
@@ -1163,8 +1158,8 @@ void EffectDistortion::EvenHarmonicTable()
    double step = 1.0 / STEPS;
    double xval = -1.0;
 
-   for (int i = 0; i < TABLESIZE; i++) {
-      mTable[i] = ((1 + amount) * xval) -
+   for (double & i : mTable) {
+      i = ((1 + amount) * xval) -
                   (xval * (amount / std::tanh(C)) * std::tanh(C * xval));
       xval += step;
    }

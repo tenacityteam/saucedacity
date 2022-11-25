@@ -19,7 +19,7 @@ class WaveTrackAffordanceHandle final : public AffordanceHandle
 {
    std::shared_ptr<WaveClip> mTarget;
 public:
-   WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<WaveClip>& target);
+   WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, std::shared_ptr<WaveClip>  target);
 
    Result Click(const TrackPanelMouseEvent& event, SaucedacityProject* project) override;
 

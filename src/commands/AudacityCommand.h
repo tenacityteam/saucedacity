@@ -43,7 +43,7 @@ class SAUCEDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    //CommandOutputTargets * mOutput;
  public:
    AudacityCommand();
-   virtual ~AudacityCommand();
+   ~AudacityCommand() override;
    
    // Type of a registered function that, if it returns true,
    // causes ShowInterface to return early without making any dialog
@@ -60,7 +60,7 @@ class SAUCEDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
 
    //These two must be implemented by instances.
    ComponentInterfaceSymbol GetSymbol() override = 0;
-   virtual TranslatableString GetDescription() override
+   TranslatableString GetDescription() override
    {wxFAIL_MSG( "Implement a Description for this command");return XO("FAIL");};
 
    // Name of page in the Audacity alpha manual
@@ -118,7 +118,7 @@ class SAUCEDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    // effect, after either successful or failed or exception-aborted processing.
    // Invoked inside a "finally" block so it must be no-throw.
    virtual void End(){;};
-   virtual void PopulateOrExchange(ShuttleGui & WXUNUSED(S)){return;};
+   virtual void PopulateOrExchange(ShuttleGui & WXUNUSED(S)){};
    virtual bool TransferDataToWindow();
    virtual bool TransferDataFromWindow();
 

@@ -32,7 +32,7 @@ public:
       mFFmpeg.av_init_packet(mAVPacket);
    }
 
-   AudacityAVBufferRef* GetBuf() const noexcept override
+   [[nodiscard]] AudacityAVBufferRef* GetBuf() const noexcept override
    {
       if (mAVPacket != nullptr)
          return reinterpret_cast<AudacityAVBufferRef*>(mAVPacket->buf);
@@ -40,7 +40,7 @@ public:
       return {};
    }
 
-   int64_t GetPresentationTimestamp() const noexcept override
+   [[nodiscard]] int64_t GetPresentationTimestamp() const noexcept override
    {
       if (mAVPacket != nullptr)
          return mAVPacket->pts;
@@ -48,7 +48,7 @@ public:
       return {};
    }
 
-   int64_t GetDecompressionTimestamp() const noexcept override
+   [[nodiscard]] int64_t GetDecompressionTimestamp() const noexcept override
    {
       if (mAVPacket != nullptr)
          return mAVPacket->dts;
@@ -56,7 +56,7 @@ public:
       return {};
    }
 
-   uint8_t* GetData() const noexcept override
+   [[nodiscard]] uint8_t* GetData() const noexcept override
    {
       if (mAVPacket != nullptr)
          return mAVPacket->data;
@@ -64,7 +64,7 @@ public:
       return {};
    }
 
-   int GetSize() const noexcept override
+   [[nodiscard]] int GetSize() const noexcept override
    {
       if (mAVPacket != nullptr)
          return mAVPacket->size;
@@ -111,7 +111,7 @@ public:
       mAVPacket->pts = AV_NOPTS_VALUE;
    }
 
-   int GetStreamIndex() const noexcept override
+   [[nodiscard]] int GetStreamIndex() const noexcept override
    {
       if (mAVPacket != nullptr)
          return mAVPacket->stream_index;
@@ -125,7 +125,7 @@ public:
          mAVPacket->stream_index = index;
    }
 
-   int GetFlags() const noexcept override
+   [[nodiscard]] int GetFlags() const noexcept override
    {
       if (mAVPacket != nullptr)
          return mAVPacket->flags;
@@ -133,7 +133,7 @@ public:
       return {};
    }
 
-   int GetDuration() const noexcept override
+   [[nodiscard]] int GetDuration() const noexcept override
    {
       if (mAVPacket != nullptr)
          return mAVPacket->duration;
@@ -141,7 +141,7 @@ public:
       return {};
    }
 
-   int64_t GetPos() const noexcept override
+   [[nodiscard]] int64_t GetPos() const noexcept override
    {
       if (mAVPacket != nullptr)
          return mAVPacket->pos;
@@ -149,7 +149,7 @@ public:
       return {};
    }
 
-   int64_t GetConvergenceDuration() const noexcept override
+   [[nodiscard]] int64_t GetConvergenceDuration() const noexcept override
    {
       if (mAVPacket != nullptr)
 #if LIBAVFORMAT_VERSION_MAJOR <= 58
@@ -163,7 +163,7 @@ public:
       return {};
    }
 
-   std::unique_ptr<AVPacketWrapper> Clone() const noexcept override
+   [[nodiscard]] std::unique_ptr<AVPacketWrapper> Clone() const noexcept override
    {
       // Guarantee non-null return, which is assumed elsewhere
       auto copy = std::make_unique<AVPacketWrapperImpl>(mFFmpeg);

@@ -13,6 +13,7 @@
 #define __AUDACITY_TRACK__
 
 
+#include <utility>
 #include <vector>
 #include <list>
 #include <functional>
@@ -202,9 +203,9 @@ public:
    ConstTrackInterval( ConstTrackInterval&& ) = default;
    ConstTrackInterval &operator=( ConstTrackInterval&& ) = default;
 
-   double Start() const { return start; }
-   double End() const { return end; }
-   const TrackIntervalData *Extra() const { return pExtra.get(); }
+   [[nodiscard]] double Start() const { return start; }
+   [[nodiscard]] double End() const { return end; }
+   [[nodiscard]] const TrackIntervalData *Extra() const { return pExtra.get(); }
 
 private:
    double start, end;
@@ -222,7 +223,7 @@ public:
    TrackInterval(TrackInterval&&) = default;
    TrackInterval &operator= (TrackInterval&&) = default;
 
-   TrackIntervalData *Extra() const { return pExtra.get(); }
+   [[nodiscard]] TrackIntervalData *Extra() const { return pExtra.get(); }
 };
 
 //! Template generated base class for Track lets it host opaque UI related objects
@@ -409,7 +410,7 @@ private:
    Track();
    Track(const Track &orig);
 
-   virtual ~ Track();
+   ~ Track() override;
 
    void Init(const Track &orig);
 
@@ -842,7 +843,7 @@ public:
    void WriteXMLAttributes(XMLWriter &WXUNUSED(xmlFile)) const {}
 
    // Return true iff the attribute is recognized.
-   bool HandleXMLAttribute(const wxChar * /*attr*/, const wxChar * /*value*/)
+   static bool HandleXMLAttribute(const wxChar * /*attr*/, const wxChar * /*value*/)
    { return false; }
 };
 
@@ -948,7 +949,7 @@ public:
          TrackNodePointer end, //!< Remember upper bound
          FunctionType pred = {} //!< %Optional filter
    )
-      : mBegin( begin ), mIter( iter ), mEnd( end )
+      : mBegin(std::move( begin )), mIter(std::move( iter )), mEnd(std::move( end ))
       , mPred( std::move(pred) )
    {
       // Establish the class invariant
@@ -969,7 +970,7 @@ public:
    /*! Advance to the first position at or after the old position that
    satisfies the type constraint, or to the end */
    template < typename TrackType2 >
-      auto Filter() const
+      [[nodiscard]] auto Filter() const
          -> typename std::enable_if<
             std::is_base_of< TrackType, TrackType2 >::value &&
                (!std::is_const<TrackType>::value ||
@@ -980,7 +981,7 @@ public:
       return { this->mBegin, this->mIter, this->mEnd, this->mPred };
    }
 
-   const FunctionType &GetPredicate() const
+   [[nodiscard]] const FunctionType &GetPredicate() const
    { return this->mPred; }
 
    //! Safe to call even when at the end
@@ -995,7 +996,7 @@ public:
    }
 
    //! @copydoc operator++
-   TrackIter operator ++ (int)
+   const TrackIter operator ++ (int)
    {
       TrackIter result { *this };
       this-> operator ++ ();
@@ -1018,7 +1019,7 @@ public:
    }
 
    //! @copydoc operator--
-   TrackIter operator -- (int)
+   const TrackIter operator -- (int)
    {
       TrackIter result { *this };
       this->operator -- ();
@@ -1039,7 +1040,7 @@ public:
    }
 
    //! This might be called operator + , but it's not constant-time as with a random access iterator
-   TrackIter advance(
+   [[nodiscard]] TrackIter advance(
       long amount //!< may be negative
    ) const
    {
@@ -1071,7 +1072,7 @@ private:
    and **mIter is of the appropriate subclass, and mPred is null or mPred(&**mIter) is true. */
 
    //! Test satisfaction of the invariant, while initializing, incrementing, or decrementing
-   bool valid() const
+   [[nodiscard]] bool valid() const
    {
       // assume mIter != mEnd
       const auto pTrack = track_cast< TrackType * >( &**this->mIter.first );
@@ -1149,7 +1150,7 @@ template <
    }
 
    template< typename TrackType2 >
-      TrackIterRange< TrackType2 > Filter() const
+      [[nodiscard]] TrackIterRange< TrackType2 > Filter() const
    {
       return {
          this-> first.template Filter< TrackType2 >(),
@@ -1220,15 +1221,15 @@ struct TrackListEvent : public wxCommandEvent
    explicit
    TrackListEvent(
       wxEventType commandType,
-      const std::weak_ptr<Track> &pTrack = {}, int code = -1)
+      std::weak_ptr<Track> pTrack = {}, int code = -1)
    : wxCommandEvent{ commandType }
-   , mpTrack{ pTrack }
+   , mpTrack{std::move( pTrack )}
    , mCode{ code }
    {}
 
    TrackListEvent( const TrackListEvent& ) = default;
 
-   wxEvent *Clone() const override {
+   [[nodiscard]] wxEvent *Clone() const override {
       // wxWidgets will own the event object
       return safenew TrackListEvent(*this); }
 
@@ -1306,7 +1307,7 @@ class SAUCEDACITY_DLL_API TrackList final
    void Swap(TrackList &that);
 
    // Destructor
-   virtual ~TrackList();
+   ~TrackList() override;
 
    // Find the owning project, which may be null
    SaucedacityProject *GetOwner() { return mOwner; }

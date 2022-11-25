@@ -28,7 +28,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectDtmf();
-   virtual ~EffectDtmf();
+   ~EffectDtmf() override;
 
    // ComponentInterface implementation
 
@@ -43,7 +43,7 @@ public:
    // EffectClientInterface implementation
 
    unsigned GetAudioOutCount() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
    bool DefineParams( ShuttleParams & S ) override;
    bool GetAutomationParameters(CommandParameters & parms) override;

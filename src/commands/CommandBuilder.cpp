@@ -45,10 +45,9 @@ CommandBuilder::CommandBuilder(SaucedacityProject *project,
 }
 
 CommandBuilder::~CommandBuilder()
-{
-}
+= default;
 
-bool CommandBuilder::WasValid()
+bool CommandBuilder::WasValid() const
 {
    return mValid;
 }
@@ -102,13 +101,12 @@ void CommandBuilder::BuildCommand(SaucedacityProject *project,
       // Fall back to hoping the Batch Command system can handle it
 #endif
       OldStyleCommandType *type = CommandDirectory::Get()->LookUp(wxT("BatchCommand"));
-      wxASSERT(type != NULL);
+      wxASSERT(type != nullptr);
       mCommand = type->Create(project, nullptr);
       mCommand->SetParameter(wxT("CommandName"), cmdName);
       mCommand->SetParameter(wxT("ParamString"), cmdParamsArg);
       auto aCommand = std::make_shared<ApplyAndSendResponse>(mCommand, output);
       Success(aCommand);
-      return;
 #ifdef OLD_BATCH_SYSTEM
    }
 

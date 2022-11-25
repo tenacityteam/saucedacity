@@ -46,12 +46,11 @@ AttachableScrollBar::AttachableScrollBar(
    long style) :
    wxScrollBar( parent, id, pos, size, style )
 {
-   mpViewInfo = NULL;
+   mpViewInfo = nullptr;
 }
 
-AttachableScrollBar::~AttachableScrollBar(void)
-{
-}
+AttachableScrollBar::~AttachableScrollBar()
+= default;
 
 // Essentially a float to int conversion.
 void AttachableScrollBar::SetScrollBarFromViewInfo()
@@ -94,7 +93,7 @@ void AttachableScrollBar::SetViewInfo( ViewInfo * view )
 
 void AttachableScrollBar::OnScroll(wxScrollEvent & event)
 {
-   if( mpViewInfo == NULL )
+   if( mpViewInfo == nullptr )
    {
       event.Skip();
       return;

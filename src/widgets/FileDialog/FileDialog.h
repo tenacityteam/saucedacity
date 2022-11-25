@@ -23,13 +23,13 @@ class SAUCEDACITY_DLL_API FileDialogBase : public wxFileDialogBase
 {
 public:
    FileDialogBase();
-   virtual ~FileDialogBase() {};
+   ~FileDialogBase() override {};
 
    // FileDialogBase
 
    typedef void (*UserPaneCreatorFunction)(wxWindow *parent, wxUIntPtr userdata);
 
-   virtual bool HasUserPaneCreator() const;
+   [[nodiscard]] virtual bool HasUserPaneCreator() const;
    virtual void SetUserPaneCreator(UserPaneCreatorFunction creator, wxUIntPtr userdata);
 
    virtual void SetFileExtension(const wxString& extension) {};
@@ -75,7 +75,7 @@ FileSelector(const wxString& message = wxFileSelectorPromptStr,
              const wxString& default_extension = wxEmptyString,
              const wxString& wildcard = wxFileSelectorDefaultWildcardStr,
              int flags = 0,
-             wxWindow *parent = NULL,
+             wxWindow *parent = nullptr,
              int x = wxDefaultCoord, int y = wxDefaultCoord);
 
 // An extended version of FileSelector
@@ -83,10 +83,10 @@ wxString
 FileSelectorEx(const wxString& message = wxFileSelectorPromptStr,
                const wxString& default_path = wxEmptyString,
                const wxString& default_filename = wxEmptyString,
-               int *indexDefaultExtension = NULL,
+               int *indexDefaultExtension = nullptr,
                const wxString& wildcard = wxFileSelectorDefaultWildcardStr,
                int flags = 0,
-               wxWindow *parent = NULL,
+               wxWindow *parent = nullptr,
                int x = wxDefaultCoord, int y = wxDefaultCoord);
 
 #endif

@@ -34,7 +34,7 @@ public:
 
    virtual ~NoteTrackVZoomHandle();
 
-   std::shared_ptr<NoteTrack> GetTrack() const { return mpTrack.lock(); }
+   [[nodiscard]] std::shared_ptr<NoteTrack> GetTrack() const { return mpTrack.lock(); }
 
    void Enter(bool forward, SaucedacityProject *) override;
 

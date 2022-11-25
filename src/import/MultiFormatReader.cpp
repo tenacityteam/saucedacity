@@ -38,11 +38,11 @@ MachineEndianness::MachineEndianness()
 
 
 MultiFormatReader::MultiFormatReader(const char* filename)
-   : mpFid(NULL)
+   : mpFid(nullptr)
 {
    mpFid = fopen(filename, "rb");
       
-   if (mpFid == NULL)
+   if (mpFid == nullptr)
    {
       throw std::runtime_error("Error opening file");
    }
@@ -50,7 +50,7 @@ MultiFormatReader::MultiFormatReader(const char* filename)
 
 MultiFormatReader::~MultiFormatReader()
 {
-   if (mpFid != NULL)
+   if (mpFid != nullptr)
    {
       fclose(mpFid);
    }
@@ -58,7 +58,7 @@ MultiFormatReader::~MultiFormatReader()
 
 void MultiFormatReader::Reset()
 {
-   if (mpFid != NULL)
+   if (mpFid != nullptr)
    {
       rewind(mpFid);
    }
@@ -110,7 +110,7 @@ size_t MultiFormatReader::ReadSamples(void* buffer, size_t len, size_t stride,
 size_t MultiFormatReader::Read(void* buffer, size_t size, size_t len, size_t stride)
 {
    size_t actRead = 0;
-   uint8_t* pWork = (uint8_t*) buffer;
+   auto* pWork = (uint8_t*) buffer;
    
    if (stride > 1)
    {
@@ -135,7 +135,7 @@ size_t MultiFormatReader::Read(void* buffer, size_t size, size_t len, size_t str
    
 void MultiFormatReader::SwapBytes(void* buffer, size_t size, size_t len)
 {
-   uint8_t* pResBuffer = (uint8_t*) buffer;
+   auto* pResBuffer = (uint8_t*) buffer;
    uint8_t* pCurBuffer;
    
    if (size > 8)

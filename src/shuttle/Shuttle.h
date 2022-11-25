@@ -37,7 +37,7 @@ class Shuttle /* not final */ {
    virtual bool TransferLongLong( const wxString & Name, wxLongLong_t & iValue, const wxLongLong_t &iDefault );
    virtual bool TransferString( const wxString & Name, wxString & strValue, const wxString &strDefault );
    virtual bool TransferEnum( const wxString & Name, int & iValue,
-      const int nChoices, const wxString * pFirstStr);
+      int nChoices, const wxString * pFirstStr);
    virtual bool TransferWrappedType( const wxString & Name, WrappedType & W );
    // We expect the ExchangeWithMaster function to change from one type of
    // archive to another.
@@ -49,7 +49,7 @@ class ShuttleCli final : public Shuttle
 public:
    wxString mParams;
    ShuttleCli() {}
-   virtual ~ShuttleCli() {}
+   ~ShuttleCli() override {}
    bool ExchangeWithMaster(const wxString & Name) override;
 };
 
@@ -65,20 +65,20 @@ public:
    wxString mParams;
    bool *pOptionalFlag;
    CommandParameters * mpEap;
-   ShuttleParams() { mpEap = NULL; pOptionalFlag = NULL; }
+   ShuttleParams() { mpEap = nullptr; pOptionalFlag = nullptr; }
    virtual ~ShuttleParams() {}
    bool ShouldSet();
-   virtual ShuttleParams & Optional( bool & WXUNUSED(var) ){ pOptionalFlag = NULL;return *this;};
+   virtual ShuttleParams & Optional( bool & WXUNUSED(var) ){ pOptionalFlag = nullptr;return *this;};
    virtual ShuttleParams & OptionalY( bool & var ){ return Optional( var );};
    virtual ShuttleParams & OptionalN( bool & var ){ return Optional( var );};
-   virtual void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin=false, const bool vmax=false, const bool vscl=false );
-   virtual void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 );
-   virtual void Define( int & var,      const wxChar * key, const int vdefault, const int vmin=0, const int vmax=100000, const int vscl=1 );
-   virtual void Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f );
-   virtual void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl=1.0f );
-   virtual void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl=1.0f );
-   virtual void Define( wxString &var, const wxChar * key, const wxString vdefault, const wxString vmin = {}, const wxString vmax = {}, const wxString vscl = {} );
-   virtual void DefineEnum( int &var, const wxChar * key, const int vdefault,
+   virtual void Define( bool & var,     const wxChar * key, bool vdefault, bool vmin=false, bool vmax=false, bool vscl=false );
+   virtual void Define( size_t & var,   const wxChar * key, int vdefault, int vmin=0, int vmax=100000, int vscl=1 );
+   virtual void Define( int & var,      const wxChar * key, int vdefault, int vmin=0, int vmax=100000, int vscl=1 );
+   virtual void Define( float & var,    const wxChar * key, float vdefault, float vmin, float vmax, float vscl=1.0f );
+   virtual void Define( double & var,   const wxChar * key, float vdefault, float vmin, float vmax, float vscl=1.0f );
+   virtual void Define( double & var,   const wxChar * key, double vdefault, double vmin, double vmax, double vscl=1.0f );
+   virtual void Define( wxString &var, const wxChar * key, wxString vdefault, wxString vmin = {}, wxString vmax = {}, wxString vscl = {} );
+   virtual void DefineEnum( int &var, const wxChar * key, int vdefault,
       const EnumValueSymbol strings[], size_t nStrings );
 };
 
@@ -89,14 +89,14 @@ class SAUCEDACITY_DLL_API ShuttleGetAutomation final : public ShuttleParams
 {
 public:
    ShuttleParams & Optional( bool & var ) override;
-   void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
-   void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
-   void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
-   void Define( float & var,    const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
-   void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
-   void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
-   void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
-   void DefineEnum( int &var, const wxChar * key, const int vdefault,
+   void Define( bool & var,     const wxChar * key, bool vdefault, bool vmin, bool vmax, bool vscl ) override;
+   void Define( int & var,      const wxChar * key, int vdefault, int vmin, int vmax, int vscl ) override;
+   void Define( size_t & var,   const wxChar * key, int vdefault, int vmin, int vmax, int vscl ) override;
+   void Define( float & var,    const wxChar * key, float vdefault, float vmin, float vmax, float vscl ) override;
+   void Define( double & var,   const wxChar * key, float vdefault, float vmin, float vmax, float vscl ) override;
+   void Define( double & var,   const wxChar * key, double vdefault, double vmin, double vmax, double vscl ) override;
+   void Define( wxString &var,  const wxChar * key, wxString vdefault, wxString vmin, wxString vmax, wxString vscl ) override;
+   void DefineEnum( int &var, const wxChar * key, int vdefault,
       const EnumValueSymbol strings[], size_t nStrings ) override;
 };
 
@@ -113,14 +113,14 @@ public:
    bool CouldGet(const wxString &key);
    void SetForValidating( CommandParameters * pEap){ mpEap=pEap; bOK=true;bWrite=false;};
    void SetForWriting(CommandParameters * pEap){ mpEap=pEap;bOK=true;bWrite=true;};
-   void Define( bool & var,     const wxChar * key, const bool vdefault, const bool vmin, const bool vmax, const bool vscl ) override;
-   void Define( int & var,      const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
-   void Define( size_t & var,   const wxChar * key, const int vdefault, const int vmin, const int vmax, const int vscl ) override;
-   void Define( float & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
-   void Define( double & var,   const wxChar * key, const float vdefault, const float vmin, const float vmax, const float vscl ) override;
-   void Define( double & var,   const wxChar * key, const double vdefault, const double vmin, const double vmax, const double vscl ) override;
-   void Define( wxString &var,  const wxChar * key, const wxString vdefault, const wxString vmin, const wxString vmax, const wxString vscl ) override;
-   void DefineEnum( int &var, const wxChar * key, const int vdefault,
+   void Define( bool & var,     const wxChar * key, bool vdefault, bool vmin, bool vmax, bool vscl ) override;
+   void Define( int & var,      const wxChar * key, int vdefault, int vmin, int vmax, int vscl ) override;
+   void Define( size_t & var,   const wxChar * key, int vdefault, int vmin, int vmax, int vscl ) override;
+   void Define( float & var,   const wxChar * key, float vdefault, float vmin, float vmax, float vscl ) override;
+   void Define( double & var,   const wxChar * key, float vdefault, float vmin, float vmax, float vscl ) override;
+   void Define( double & var,   const wxChar * key, double vdefault, double vmin, double vmax, double vscl ) override;
+   void Define( wxString &var,  const wxChar * key, wxString vdefault, wxString vmin, wxString vmax, wxString vscl ) override;
+   void DefineEnum( int &var, const wxChar * key, int vdefault,
       const EnumValueSymbol strings[], size_t nStrings ) override;
 };
 
@@ -132,9 +132,9 @@ class ShuttleDefaults final : public ShuttleParams
 {
 public:
    wxString Result;
-   virtual ShuttleParams & Optional( bool & var )override{  var = true; pOptionalFlag = NULL;return *this;};
-   virtual ShuttleParams & OptionalY( bool & var )override{ var = true; pOptionalFlag = NULL;return *this;};
-   virtual ShuttleParams & OptionalN( bool & var )override{ var = false;pOptionalFlag = NULL;return *this;};
+   ShuttleParams & Optional( bool & var )override{  var = true; pOptionalFlag = nullptr;return *this;};
+   ShuttleParams & OptionalY( bool & var )override{ var = true; pOptionalFlag = nullptr;return *this;};
+   ShuttleParams & OptionalN( bool & var )override{ var = false;pOptionalFlag = nullptr;return *this;};
 
    void Define( bool & var,          const wxChar * WXUNUSED(key),  const bool     vdefault, 
       const bool     WXUNUSED(vmin), const bool     WXUNUSED(vmax), const bool     WXUNUSED(vscl) ) 

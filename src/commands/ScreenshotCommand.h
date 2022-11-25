@@ -114,9 +114,9 @@ private:
    wxString mFileName;
    int mCaptureMode;
 
-   wxString MakeFileName(const wxString &path, const wxString &basename);
+   static wxString MakeFileName(const wxString &path, const wxString &basename);
 
-   wxRect GetBackgroundRect();
+   static wxRect GetBackgroundRect();
 
    bool CaptureToolbar(const CommandContext & Context, ToolManager *man, int type, const wxString &name);
    bool CaptureDock(const CommandContext & Context, wxWindow *win, const wxString &fileName);
@@ -129,13 +129,13 @@ private:
       const wxString &basename,
          wxWindow *window, wxRect rect, 
          bool bg = false);
-   wxRect GetWindowRect(wxTopLevelWindow *w);
+   static wxRect GetWindowRect(wxTopLevelWindow *w);
    wxRect GetFullWindowRect(wxTopLevelWindow *w);
-   wxRect GetScreenRect();
-   wxRect GetPanelRect(TrackPanel * panel);
-   wxRect GetRulerRect(AdornedRulerPanel *ruler);
-   wxRect GetTracksRect(TrackPanel * panel);
-   wxRect GetTrackRect( SaucedacityProject * pProj, TrackPanel * panel,int n);
+   static wxRect GetScreenRect();
+   static wxRect GetPanelRect(TrackPanel * panel);
+   static wxRect GetRulerRect(AdornedRulerPanel *ruler);
+   static wxRect GetTracksRect(TrackPanel * panel);
+   static wxRect GetTrackRect( SaucedacityProject * pProj, TrackPanel * panel,int n);
    wxString WindowFileName(SaucedacityProject * proj, wxTopLevelWindow *w);
 
 public:

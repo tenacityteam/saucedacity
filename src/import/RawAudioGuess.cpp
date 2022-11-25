@@ -74,7 +74,7 @@ static float JumpStat(float *data, size_t len)
    return avg;
 }
 
-static float SecondDStat(float *data, size_t len)
+static float SecondDStat(const float *data, size_t len)
 {
    float v1=0, v2=0;
    float a1=0, a2=0;
@@ -107,7 +107,7 @@ static void ExtractFloats(bool doublePrec,
                           bool bigendian,
                           bool stereo,
                           size_t offset,
-                          char *rawData, size_t dataSize,
+                          const char *rawData, size_t dataSize,
                           float *data1, float *data2, size_t *len1, size_t *len2)
 {
    size_t rawCount = 0;
@@ -216,7 +216,7 @@ static void Extract(bool bits16,
          "Error:_Importing_raw_audio"
       };
 
-   size_t dataSize = (size_t)dataSizeIn;
+   auto dataSize = (size_t)dataSizeIn;
 
    if (bits16) {
       if (sign && bigendian)
@@ -547,12 +547,12 @@ static int Guess8Bit(unsigned numTests, const ArrayOf<char> rawData[], size_t da
    for (unsigned test = 0; test < numTests; test++) {
       float signL, signR, unsignL, unsignR;
 
-      Extract(0, 1, 1, 0, /* 8-bit signed stereo */
+      Extract(false, true, true, false, /* 8-bit signed stereo */
               false, rawData[test].get(), dataSize,
               data1.get(), data2.get(), &len1, &len2);
       signL = JumpStat(data1.get(), len1);
       signR = JumpStat(data2.get(), len2);
-      Extract(0, 0, 1, 0, /* 8-bit unsigned stereo */
+      Extract(false, false, true, false, /* 8-bit unsigned stereo */
               false, rawData[test].get(), dataSize,
               data1.get(), data2.get(), &len1, &len2);
       unsignL = JumpStat(data1.get(), len1);
@@ -591,11 +591,11 @@ static int Guess8Bit(unsigned numTests, const ArrayOf<char> rawData[], size_t da
    for (unsigned test = 0; test < numTests; test++) {
       float leftChannel, rightChannel, combinedChannel;
 
-      Extract(0, guessSigned, 1, 0, 0, rawData[test].get(), dataSize, data1.get(),
+      Extract(false, guessSigned, true, false, false, rawData[test].get(), dataSize, data1.get(),
               data2.get(), &len1, &len2);
       leftChannel = JumpStat(data1.get(), len1);
       rightChannel = JumpStat(data2.get(), len2);
-      Extract(0, guessSigned, 0, 0, 0, rawData[test].get(), dataSize, data1.get(),
+      Extract(false, guessSigned, false, false, false, rawData[test].get(), dataSize, data1.get(),
               data2.get(), &len1, &len2);
       combinedChannel = JumpStat(data1.get(), len1);
 
@@ -622,7 +622,7 @@ static int Guess8Bit(unsigned numTests, const ArrayOf<char> rawData[], size_t da
       for (unsigned test = 0; test < numTests; test++) {
          float redundant;
 
-         Extract(0, guessSigned, 0, 0, 0, rawData[test].get(), dataSize,
+         Extract(false, guessSigned, false, false, false, rawData[test].get(), dataSize,
                  data1.get(), data2.get(), &len1, &len2);
          redundant = RedundantStereo(data1.get(), len1);
 
@@ -703,12 +703,12 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
 
       /* Test signed/unsigned of the MSB */
 
-      Extract(0, 1, 1, 0, /* 8-bit signed stereo */
-              0, rawData2.get(), dataSize / 2, data1.get(), data2.get(), &len1, &len2);
+      Extract(false, true, true, false, /* 8-bit signed stereo */
+              false, rawData2.get(), dataSize / 2, data1.get(), data2.get(), &len1, &len2);
       signL = JumpStat(data1.get(), len1);
       signR = JumpStat(data2.get(), len2);
-      Extract(0, 0, 1, 0, /* 8-bit unsigned stereo */
-              0, rawData2.get(), dataSize / 2, data1.get(), data2.get(), &len1, &len2);
+      Extract(false, false, true, false, /* 8-bit unsigned stereo */
+              false, rawData2.get(), dataSize / 2, data1.get(), data2.get(), &len1, &len2);
       unsignL = JumpStat(data1.get(), len1);
       unsignR = JumpStat(data2.get(), len2);
 
@@ -748,11 +748,11 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
       for (size_t i = 0; i < dataSize / 2; i++)
          rawData2[i] = rawData[test][2 * i + (evenMSB ? 0 : 1)];
 
-      Extract(0, guessSigned, 1, 0, 0,
+      Extract(false, guessSigned, true, false, false,
               rawData2.get(), dataSize / 2, data1.get(), data2.get(), &len1, &len2);
       leftChannel = JumpStat(data1.get(), len1);
       rightChannel = JumpStat(data2.get(), len2);
-      Extract(0, guessSigned, 0, 0, 0,
+      Extract(false, guessSigned, false, false, false,
               rawData2.get(), dataSize / 2, data1.get(), data2.get(), &len1, &len2);
       combinedChannel = JumpStat(data1.get(), len1);
 
@@ -785,7 +785,7 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
          for (size_t i = 0; i < dataSize / 2; i++)
             rawData2[i] = rawData[test][2 * i + (evenMSB ? 0 : 1)];
 
-         Extract(0, guessSigned, 0, 0, 0, rawData2.get(), dataSize / 2,
+         Extract(false, guessSigned, false, false, false, rawData2.get(), dataSize / 2,
                  data1.get(), data2.get(), &len1, &len2);
 
          redundant = RedundantStereo(data1.get(), len1);
@@ -820,7 +820,7 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
     */
 
    guessBigEndian = evenMSB;
-   guessOffset = 0;
+   guessOffset = false;
 
   #if RAW_GUESS_DEBUG
    wxFprintf(af, "evenMSB: %d BE: %d\n", evenMSB, guessBigEndian);
@@ -843,7 +843,7 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
                rawData[test][2 * i + (evenMSB ? 0 : 1)];
 
       former = 0.0;
-      Extract(1, guessSigned, guessStereo, guessBigEndian, guessOffset,
+      Extract(true, guessSigned, guessStereo, guessBigEndian, guessOffset,
               rawData[test].get(), dataSize-4, data1.get(), data2.get(), &len1, &len2);
 
       offs=(!guessBigEndian);
@@ -857,7 +857,7 @@ static int Guess16Bit(unsigned numTests, const ArrayOf<char> rawData[],
       }
 
       latter = 0.0;
-      Extract(1, guessSigned, guessStereo, !guessBigEndian,
+      Extract(true, guessSigned, guessStereo, !guessBigEndian,
               !guessOffset, rawData[test].get(), dataSize, data1.get(), data2.get(),
               &len1, &len2);
 
@@ -962,7 +962,7 @@ static int GuessIntFormats(unsigned numTests, const ArrayOf<char> rawData[], siz
    for (unsigned test = 0; test < numTests; test++) {
       float even, odd;
 
-      Extract(0, 1, 1, 0, /* 8-bit signed stereo */
+      Extract(false, true, true, false, /* 8-bit signed stereo */
               false, rawData[test].get(), dataSize,
               data1.get(), data2.get(), &len1, &len2);
       even = AmpStat(data1.get(), len1);

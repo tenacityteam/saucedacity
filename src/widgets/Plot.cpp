@@ -24,6 +24,8 @@
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
 
+#include <memory>
+
 Plot::Plot(wxWindow *parent, wxWindowID winid,
    float x_min, float x_max, float y_min, float y_max,
    const TranslatableString& xlabel, const TranslatableString& ylabel,
@@ -34,13 +36,13 @@ Plot::Plot(wxWindow *parent, wxWindowID winid,
    m_xmin(x_min), m_xmax(x_max), m_ymin(y_min), m_ymax(y_max),
    m_plots(count)
 {
-   m_xruler = std::unique_ptr<Ruler>(safenew Ruler);
+   m_xruler = std::make_unique<Ruler>();
    m_xruler->SetOrientation(wxHORIZONTAL);
    m_xruler->SetFormat(static_cast<Ruler::RulerFormat>(xformat));
    m_xruler->SetUnits(xlabel);
    m_xruler->SetFlip(true);
 
-   m_yruler = std::unique_ptr<Ruler>(safenew Ruler);
+   m_yruler = std::make_unique<Ruler>();
    m_yruler->SetOrientation(wxVERTICAL);
    m_yruler->SetFormat(static_cast<Ruler::RulerFormat>(yformat));
    m_yruler->SetUnits(ylabel);
@@ -63,11 +65,11 @@ void Plot::OnPaint(wxPaintEvent & evt)
 
    m_xruler->SetBounds(0, 0, width, height);
    m_xruler->SetRange(m_xmin, m_xmax);
-   m_xruler->GetMaxSize(NULL, &h);
+   m_xruler->GetMaxSize(nullptr, &h);
 
    m_yruler->SetBounds(0, 0, width, height);
    m_yruler->SetRange(m_ymax, m_ymin);
-   m_yruler->GetMaxSize(&w, NULL);
+   m_yruler->GetMaxSize(&w, nullptr);
 
    m_xruler->SetBounds(w, height - h, width, height);
    m_yruler->SetBounds(0, 0, w, height - h);
@@ -91,7 +93,7 @@ void Plot::OnPaint(wxPaintEvent & evt)
    for(const auto& plot : m_plots)
    {
       wxASSERT(plot.xdata.size() == plot.ydata.size());
-      if(plot.xdata.size() == 0)
+      if(plot.xdata.empty())
          continue;
       dc.SetPen(*plot.pen);
 
@@ -118,12 +120,12 @@ void Plot::OnSize(wxSizeEvent & evt)
    Refresh(false);
 }
 
-int Plot::XToScreen(float x, wxRect& rect)
+int Plot::XToScreen(float x, wxRect& rect) const
 {
    return rect.x + lrint((x-m_xmin)*rect.width/(m_xmax-m_xmin));
 }
 
-int Plot::YToScreen(float y, wxRect& rect)
+int Plot::YToScreen(float y, wxRect& rect) const
 {
    return rect.y + rect.height - lrint((y-m_ymin)*rect.height/(m_ymax-m_ymin));
 }

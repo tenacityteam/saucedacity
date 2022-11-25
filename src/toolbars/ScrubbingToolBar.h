@@ -41,7 +41,7 @@ class ScrubbingToolBar final : public ToolBar {
 public:
 
    ScrubbingToolBar( SaucedacityProject &project );
-   virtual ~ScrubbingToolBar();
+   ~ScrubbingToolBar() override;
 
    static ScrubbingToolBar &Get( SaucedacityProject &project );
    static const ScrubbingToolBar &Get( const SaucedacityProject &project );

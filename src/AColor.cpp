@@ -443,13 +443,13 @@ void AColor::Solo(wxDC * dc, bool on, bool selected)
    }
 }
 
-bool AColor::gradient_inited = 0;
+bool AColor::gradient_inited = false;
 
 void AColor::ReInit()
 {
    inited=false;
    Init();
-   gradient_inited=0;
+   gradient_inited=false;
    PreComputeGradient();
 }
 
@@ -641,7 +641,7 @@ unsigned char AColor::gradient_pre[ColorGradientTotal][colorSchemes][gradientSte
 
 void AColor::PreComputeGradient() {
    if (gradient_inited) return;
-   gradient_inited = 1;
+   gradient_inited = true;
 
    // Keep in correspondence with enum SpectrogramSettings::ColorScheme
 

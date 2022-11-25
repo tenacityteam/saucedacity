@@ -27,8 +27,8 @@ class SAUCEDACITY_DLL_API ButtonHandle /* not final */ : public UIHandle
    ButtonHandle(const ButtonHandle&) = delete;
 
 public:
-   std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
-   bool IsClicked() const { return mIsClicked; }
+   [[nodiscard]] std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
+   [[nodiscard]] bool IsClicked() const { return mIsClicked; }
 
 protected:
    explicit ButtonHandle
@@ -36,7 +36,7 @@ protected:
 
    ButtonHandle &operator=(const ButtonHandle&) = default;
 
-   virtual ~ButtonHandle();
+   ~ButtonHandle() override;
 
    // This NEW abstract virtual simplifies the duties of further subclasses.
    // This class will decide whether to refresh the clicked cell for button state
@@ -49,25 +49,25 @@ protected:
    virtual TranslatableString Tip(
       const wxMouseState &state, SaucedacityProject &project) const = 0;
 
-   void Enter(bool forward, SaucedacityProject *) final override;
+   void Enter(bool forward, SaucedacityProject *) final ;
 
    Result Click
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject)
-      final override;
+      final ;
 
    Result Drag
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject)
-      final override;
+      final ;
 
    HitTestPreview Preview
       (const TrackPanelMouseState &state, SaucedacityProject *pProject)
-      final override;
+      final ;
 
    Result Release
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject,
-       wxWindow *pParent) final override;
+       wxWindow *pParent) final ;
 
-   Result Cancel(SaucedacityProject *pProject) final override;
+   Result Cancel(SaucedacityProject *pProject) final ;
 
    std::weak_ptr<Track> mpTrack;
    wxRect mRect;

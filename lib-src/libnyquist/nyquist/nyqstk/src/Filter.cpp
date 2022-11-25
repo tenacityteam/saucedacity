@@ -28,7 +28,7 @@
 /***************************************************/
 
 #include "Filter.h"
-#include <stdio.h>
+#include <cstdio>
 
 using namespace Nyq;
 
@@ -46,7 +46,7 @@ Filter :: Filter()
 Filter :: Filter( std::vector<StkFloat> &bCoefficients, std::vector<StkFloat> &aCoefficients )
 {
   // Check the arguments.
-  if ( bCoefficients.size() == 0 || aCoefficients.size() == 0 ) {
+  if ( bCoefficients.empty() || aCoefficients.empty() ) {
     errorString_ << "Filter: a and b coefficient vectors must both have size > 0!";
     handleError( StkError::FUNCTION_ARGUMENT );
   }
@@ -69,7 +69,7 @@ Filter :: ~Filter()
 {
 }
 
-void Filter :: clear(void)
+void Filter :: clear()
 {
   unsigned int i;
   for (i=0; i<inputs_.size(); i++)
@@ -81,7 +81,7 @@ void Filter :: clear(void)
 void Filter :: setCoefficients( std::vector<StkFloat> &bCoefficients, std::vector<StkFloat> &aCoefficients, bool clearState )
 {
   // Check the arguments.
-  if ( bCoefficients.size() == 0 || aCoefficients.size() == 0 ) {
+  if ( bCoefficients.empty() || aCoefficients.empty() ) {
     errorString_ << "Filter::setCoefficients: a and b coefficient vectors must both have size > 0!";
     handleError( StkError::FUNCTION_ARGUMENT );
   }
@@ -122,7 +122,7 @@ void Filter :: setCoefficients( std::vector<StkFloat> &bCoefficients, std::vecto
 void Filter :: setNumerator( std::vector<StkFloat> &bCoefficients, bool clearState )
 {
   // Check the argument.
-  if ( bCoefficients.size() == 0 ) {
+  if ( bCoefficients.empty() ) {
     errorString_ << "Filter::setNumerator: coefficient vector must have size > 0!";
     handleError( StkError::FUNCTION_ARGUMENT );
   }
@@ -142,7 +142,7 @@ void Filter :: setNumerator( std::vector<StkFloat> &bCoefficients, bool clearSta
 void Filter :: setDenominator( std::vector<StkFloat> &aCoefficients, bool clearState )
 {
   // Check the argument.
-  if ( aCoefficients.size() == 0 ) {
+  if ( aCoefficients.empty() ) {
     errorString_ << "Filter::setDenominator: coefficient vector must have size > 0!";
     handleError( StkError::FUNCTION_ARGUMENT );
   }
@@ -176,12 +176,12 @@ void Filter :: setGain(StkFloat gain)
   gain_ = gain;
 }
 
-StkFloat Filter :: getGain(void) const
+StkFloat Filter :: getGain() const
 {
   return gain_;
 }
 
-StkFloat Filter :: lastOut(void) const
+StkFloat Filter :: lastOut() const
 {
   return outputs_[0];
 }

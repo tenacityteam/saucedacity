@@ -25,7 +25,7 @@ class CutlineHandle final : public UIHandle
 
 public:
    explicit CutlineHandle
-      ( const std::shared_ptr<WaveTrack> &pTrack,
+      ( std::shared_ptr<WaveTrack> pTrack,
         WaveTrackLocation location );
 
    CutlineHandle &operator=(const CutlineHandle&) = default;
@@ -38,7 +38,7 @@ public:
        const SaucedacityProject *pProject,
        const std::shared_ptr<WaveTrack> &pTrack);
 
-   virtual ~CutlineHandle();
+   ~CutlineHandle() override;
 
    const WaveTrackLocation &GetLocation() { return mLocation; }
    std::shared_ptr<WaveTrack> GetTrack() { return mpTrack; }

@@ -43,7 +43,7 @@
 #ifndef __AUDACITY_COMMAND_PARAMETERS_H__
 #define __AUDACITY_COMMAND_PARAMETERS_H__
 
-#include <locale.h>
+#include <clocale>
 
 #include <wx/cmdline.h> // for wxCmdLineParser::ConvertStringToArgs
 #include <wx/fileconf.h> // to inherit
@@ -77,29 +77,29 @@ public:
       SetParameters(parms);
    }
 
-   virtual ~CommandParameters();
+   ~CommandParameters() override;
 
-   virtual bool HasGroup(const wxString & strName) const override
+   [[nodiscard]] bool HasGroup(const wxString & strName) const override
    {
       return wxFileConfig::HasGroup(NormalizeName(strName));
    }
 
-   virtual bool HasEntry(const wxString& strName) const override
+   [[nodiscard]] bool HasEntry(const wxString& strName) const override
    {
       return wxFileConfig::HasEntry(NormalizeName(strName));
    }
 
-   virtual bool DoReadString(const wxString & key, wxString *pStr) const override
+   bool DoReadString(const wxString & key, wxString *pStr) const override
    {
       return wxFileConfig::DoReadString(NormalizeName(key), pStr);
    }
 
-   virtual bool DoReadLong(const wxString & key, long *pl) const override
+   bool DoReadLong(const wxString & key, long *pl) const override
    {
       return wxFileConfig::DoReadLong(NormalizeName(key), pl);
    }
 
-   virtual bool DoReadDouble(const wxString & key, double *pd) const override
+   bool DoReadDouble(const wxString & key, double *pd) const override
    {
       wxString str;
       if (Read(key, &str))
@@ -117,17 +117,17 @@ public:
       return false;
    }
 
-   virtual bool DoWriteString(const wxString & key, const wxString & szValue) override
+   bool DoWriteString(const wxString & key, const wxString & szValue) override
    {
       return wxFileConfig::DoWriteString(NormalizeName(key), szValue);
    }
 
-   virtual bool DoWriteLong(const wxString & key, long lValue) override
+   bool DoWriteLong(const wxString & key, long lValue) override
    {
       return wxFileConfig::DoWriteLong(NormalizeName(key), lValue);
    }
 
-   virtual bool DoWriteDouble(const wxString & key, double value) override
+   bool DoWriteDouble(const wxString & key, double value) override
    {
       return DoWriteString(key, wxString::Format(wxT("%.8g"), value));
    }
@@ -289,10 +289,10 @@ public:
 
       auto parsed = wxCmdLineParser::ConvertStringToArgs(parms);
 
-      for (size_t i = 0, cnt = parsed.size(); i < cnt; i++)
+      for (const auto & i : parsed)
       {
-         wxString key = parsed[i].BeforeFirst(wxT('=')).Trim(false).Trim(true);
-         wxString val = parsed[i].AfterFirst(wxT('=')).Trim(false).Trim(true);
+         wxString key = i.BeforeFirst(wxT('=')).Trim(false).Trim(true);
+         wxString val = i.AfterFirst(wxT('=')).Trim(false).Trim(true);
 
          if (!wxFileConfig::Write(key, Unescape(val)))
          {
@@ -303,7 +303,7 @@ public:
       return true;
    }
 
-   wxString NormalizeName(const wxString & name) const
+   static wxString NormalizeName(const wxString & name)
    {
       wxString cleaned = name;
 
@@ -317,7 +317,7 @@ public:
       return cleaned;
    }
 
-   wxString Escape(wxString val)
+   static wxString Escape(wxString val)
    {
       val.Replace(wxT("\\"), wxT("\\\\"), true);
       val.Replace(wxT("\""), wxT("\\\""), true);
@@ -326,7 +326,7 @@ public:
       return val;
    }
 
-   wxString Unescape(wxString val)
+   static wxString Unescape(wxString val)
    {
       val.Replace(wxT("\\n"), wxT("\n"), true);
       val.Replace(wxT("\\\""), wxT("\""), true);

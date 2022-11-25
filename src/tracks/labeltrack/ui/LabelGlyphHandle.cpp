@@ -27,6 +27,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/cursor.h>
 #include <wx/translation.h>
 
+#include <utility>
+
 LabelTrackHit::LabelTrackHit( const std::shared_ptr<LabelTrack> &pLT )
    : mpLT{ pLT }
 {
@@ -65,10 +67,10 @@ void LabelTrackHit::OnLabelPermuted( LabelTrackEvent &e )
 }
 
 LabelGlyphHandle::LabelGlyphHandle
-(const std::shared_ptr<LabelTrack> &pLT,
- const wxRect &rect, const std::shared_ptr<LabelTrackHit> &pHit)
-   : mpHit{ pHit }
-   , mpLT{ pLT }
+(std::shared_ptr<LabelTrack> pLT,
+ const wxRect &rect, std::shared_ptr<LabelTrackHit> pHit)
+   : mpHit{std::move( pHit )}
+   , mpLT{std::move( pLT )}
    , mRect{ rect }
 {
 }
@@ -333,7 +335,7 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
 
               // Do this after, for its effect on TrackPanel's memory of last selected
               // track (which affects shift-click actions)
-              selectionState.SelectTrack(*pTrack.get(), true, true);
+              selectionState.SelectTrack(*pTrack, true, true);
 
               // PRL: bug1659 -- make selection change undo correctly
               updated = !ProjectAudioIO::Get(project).IsAudioActive();

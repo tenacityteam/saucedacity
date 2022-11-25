@@ -36,13 +36,13 @@ class PluckTwo : public Instrmnt
   PluckTwo(StkFloat lowestFrequency);
 
   //! Class destructor.
-  virtual ~PluckTwo();
+  ~PluckTwo() override;
 
   //! Reset and clear all internal state.
   void clear();
 
   //! Set instrument parameters for a particular frequency.
-  virtual void setFrequency(StkFloat frequency);
+  void setFrequency(StkFloat frequency) override;
 
   //! Detune the two strings by the given factor.  A value of 1.0 produces unison strings.
   void setDetune(StkFloat detune);
@@ -62,11 +62,11 @@ class PluckTwo : public Instrmnt
   void setBaseLoopGain(StkFloat aGain);
 
   //! Stop a note with the given amplitude (speed of decay).
-  virtual void noteOff(StkFloat amplitude);
+  void noteOff(StkFloat amplitude) override;
 
  protected:
 
-  virtual StkFloat computeSample( void ) = 0;
+  StkFloat computeSample( ) override = 0;
 
   DelayA  delayLine_;
   DelayA  delayLine2_;

@@ -43,6 +43,8 @@
 #include <lib-basic-ui/BasicUI.h>
 
 #include <unordered_set>
+#include <utility>
+#include <utility>
 
 #include <wx/menu.h>
 #include <wx/windowptr.h>
@@ -189,9 +191,9 @@ void MenuVisitor::DoSeparator()
 namespace MenuTable {
 
 MenuItem::MenuItem( const Identifier &internalName,
-   const TranslatableString &title_, BaseItemPtrs &&items_ )
+   TranslatableString title_, BaseItemPtrs &&items_ )
 : ConcreteGroupItem< false, ToolbarMenuVisitor >{
-   internalName, std::move( items_ ) }, title{ title_ }
+   internalName, std::move( items_ ) }, title{std::move( title_ )}
 {
    wxASSERT( !title.empty() );
 }
@@ -200,20 +202,20 @@ MenuItem::~MenuItem() {}
 ConditionalGroupItem::ConditionalGroupItem(
    const Identifier &internalName, Condition condition_, BaseItemPtrs &&items_ )
 : ConcreteGroupItem< false, ToolbarMenuVisitor >{
-   internalName, std::move( items_ ) }, condition{ condition_ }
+   internalName, std::move( items_ ) }, condition{std::move( std::move(condition_) )}
 {
 }
 ConditionalGroupItem::~ConditionalGroupItem() {}
 
 CommandItem::CommandItem(const CommandID &name_,
-         const TranslatableString &label_in_,
+         TranslatableString label_in_,
          CommandFunctorPointer callback_,
          CommandFlag flags_,
-         const CommandManager::Options &options_,
+         CommandManager::Options options_,
          CommandHandlerFinder finder_)
-: SingleItem{ name_ }, label_in{ label_in_ }
-, finder{ finder_ }, callback{ callback_ }
-, flags{ flags_ }, options{ options_ }
+: SingleItem{ name_ }, label_in{std::move( label_in_ )}
+, finder{std::move( std::move(finder_) )}, callback{ callback_ }
+, flags{ flags_ }, options{std::move( options_ )}
 {}
 CommandItem::~CommandItem() {}
 
@@ -224,7 +226,7 @@ CommandGroupItem::CommandGroupItem(const Identifier &name_,
          bool isEffect_,
          CommandHandlerFinder finder_)
 : SingleItem{ name_ }, items{ std::move(items_) }
-, finder{ finder_ }, callback{ callback_ }
+, finder{std::move( std::move(finder_) )}, callback{ callback_ }
 , flags{ flags_ }, isEffect{ isEffect_ }
 {}
 CommandGroupItem::~CommandGroupItem() {}
@@ -498,7 +500,7 @@ void MenuCreator::RebuildMenuBar(SaucedacityProject &project)
    // Delete the menus, since we will soon recreate them.
    // Rather oddly, the menus don't vanish as a result of doing this.
    {
-      auto &window = static_cast<wxFrameEx&>( GetProjectFrame( project ) );
+      auto &window = dynamic_cast<wxFrameEx&>( GetProjectFrame( project ) );
       wxWindowPtr<wxMenuBar> menuBar{ window.GetMenuBar() };
       window.DetachMenuBar();
       // menuBar gets deleted here
@@ -582,7 +584,7 @@ CommandFlag MenuManager::GetUpdateFlags( bool checkActive ) const
 
 void MenuManager::ModifyAllProjectToolbarMenus()
 {
-   for (auto pProject : AllProjects{}) {
+   for (const auto& pProject : AllProjects{}) {
       auto &project = *pProject;
       MenuManager::Get(project).ModifyToolbarMenus(project);
    }
@@ -677,7 +679,7 @@ void MenuManager::UpdateMenus( bool checkActive )
 
 void MenuCreator::RebuildAllMenuBars()
 {
-   for( auto p : AllProjects{} ) {
+   for( const auto& p : AllProjects{} ) {
       MenuManager::Get(*p).RebuildMenuBar(*p);
 #if defined(__WXGTK__)
       // Workaround for:

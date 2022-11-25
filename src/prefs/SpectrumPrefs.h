@@ -43,7 +43,7 @@ class SpectrumPrefs final : public PrefsPanel
  public:
    SpectrumPrefs(wxWindow * parent, wxWindowID winid,
       SaucedacityProject *pProject, WaveTrack *wt);
-   virtual ~SpectrumPrefs();
+   ~SpectrumPrefs() override;
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
 
@@ -108,5 +108,5 @@ class SpectrumPrefs final : public PrefsPanel
 /// A PrefsPanel::Factory that creates one SpectrumPrefs panel.
 /// This factory can be parametrized by a single track, to change settings
 /// non-globally
-extern PrefsPanel::Factory SpectrumPrefsFactory( WaveTrack *wt = 0 );
+extern PrefsPanel::Factory SpectrumPrefsFactory( WaveTrack *wt = nullptr );
 #endif

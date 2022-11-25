@@ -27,12 +27,10 @@ const ComponentInterfaceSymbol EffectInvert::Symbol
 namespace{ BuiltinEffectsModule::Registration< EffectInvert > reg; }
 
 EffectInvert::EffectInvert()
-{
-}
+= default;
 
 EffectInvert::~EffectInvert()
-{
-}
+= default;
 
 // ComponentInterface implementation
 

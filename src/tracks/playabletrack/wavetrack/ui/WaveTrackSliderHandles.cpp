@@ -103,7 +103,7 @@ UIHandlePtr GainSliderHandle::HitTest
       auto sliderFn =
       []( SaucedacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return WaveTrackControls::GainSlider
-            (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
+            (sliderRect, dynamic_cast<WaveTrack*>( pTrack ), true,
              &TrackPanel::Get( *pProject ));
       };
       auto result =
@@ -212,7 +212,7 @@ UIHandlePtr PanSliderHandle::HitTest
       auto sliderFn =
       []( SaucedacityProject *pProject, const wxRect &sliderRect, Track *pTrack ) {
          return WaveTrackControls::PanSlider
-            (sliderRect, static_cast<WaveTrack*>( pTrack ), true,
+            (sliderRect, dynamic_cast<WaveTrack*>( pTrack ), true,
              &TrackPanel::Get( *pProject ));
       };
       auto result = std::make_shared<PanSliderHandle>(

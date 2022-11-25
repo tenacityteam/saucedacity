@@ -29,10 +29,10 @@ struct RecordingSchedule {
    double mPosition{};
    bool mLatencyCorrected{};
 
-   double TotalCorrection() const { return mLatencyCorrection - mPreRoll; }
-   double ToConsume() const;
-   double Consumed() const;
-   double ToDiscard() const;
+   [[nodiscard]] double TotalCorrection() const { return mLatencyCorrection - mPreRoll; }
+   [[nodiscard]] double ToConsume() const;
+   [[nodiscard]] double Consumed() const;
+   [[nodiscard]] double ToDiscard() const;
 };
 
 struct SAUCEDACITY_DLL_API PlaybackSchedule {
@@ -84,7 +84,7 @@ struct SAUCEDACITY_DLL_API PlaybackSchedule {
       const RecordingSchedule *pRecordingSchedule );
 
    /** \brief True if the end time is before the start time */
-   bool ReversedTime() const
+   [[nodiscard]] bool ReversedTime() const
    {
       return mT1 < mT0;
    }
@@ -93,7 +93,7 @@ struct SAUCEDACITY_DLL_API PlaybackSchedule {
     *
     * Returns a time in seconds.
     */
-   double GetTrackTime() const
+   [[nodiscard]] double GetTrackTime() const
    { return mTime.load(std::memory_order_relaxed); }
 
    /** \brief Set current track time value, unadjusted
@@ -106,40 +106,40 @@ struct SAUCEDACITY_DLL_API PlaybackSchedule {
     * Returns the bound if the value is out of bounds; does not wrap.
     * Returns a time in seconds.
     */
-   double ClampTrackTime( double trackTime ) const;
+   [[nodiscard]] double ClampTrackTime( double trackTime ) const;
 
    /** \brief Clamps mTime to be between mT0 and mT1
     *
     * Returns the bound if the value is out of bounds; does not wrap.
     * Returns a time in seconds.
     */
-   double LimitTrackTime() const;
+   [[nodiscard]] double LimitTrackTime() const;
 
    /** \brief Normalizes mTime, clamping it and handling gaps from cut preview.
     *
     * Clamps the time (unless scrubbing), and skips over the cut section.
     * Returns a time in seconds.
     */
-   double NormalizeTrackTime() const;
+   [[nodiscard]] double NormalizeTrackTime() const;
 
    void ResetMode() { mPlayMode = PLAY_STRAIGHT; }
 
-   bool PlayingStraight() const { return mPlayMode == PLAY_STRAIGHT; }
-   bool Looping() const         { return mPlayMode == PLAY_LOOPED; }
-   bool Scrubbing() const       { return mPlayMode == PLAY_SCRUB || mPlayMode == PLAY_KEYBOARD_SCRUB; }
-   bool PlayingAtSpeed() const  { return mPlayMode == PLAY_AT_SPEED; }
-   bool Interactive() const     { return Scrubbing() || PlayingAtSpeed(); }
+   [[nodiscard]] bool PlayingStraight() const { return mPlayMode == PLAY_STRAIGHT; }
+   [[nodiscard]] bool Looping() const         { return mPlayMode == PLAY_LOOPED; }
+   [[nodiscard]] bool Scrubbing() const       { return mPlayMode == PLAY_SCRUB || mPlayMode == PLAY_KEYBOARD_SCRUB; }
+   [[nodiscard]] bool PlayingAtSpeed() const  { return mPlayMode == PLAY_AT_SPEED; }
+   [[nodiscard]] bool Interactive() const     { return Scrubbing() || PlayingAtSpeed(); }
 
    // Returns true if a loop pass, or the sole pass of straight play,
    // is completed at the current value of mTime
-   bool PassIsComplete() const;
+   [[nodiscard]] bool PassIsComplete() const;
 
    // Returns true if time equals t1 or is on opposite side of t1, to t0
-   bool Overruns( double trackTime ) const;
+   [[nodiscard]] bool Overruns( double trackTime ) const;
 
    // Compute the NEW track time for the given one and a real duration,
    // taking into account whether the schedule is for looping
-   double AdvancedTrackTime(
+   [[nodiscard]] double AdvancedTrackTime(
       double trackTime, double realElapsed, double speed) const;
 
    // Use the function above in the callback after consuming samples from the
@@ -148,10 +148,10 @@ struct SAUCEDACITY_DLL_API PlaybackSchedule {
 
    // Convert time between mT0 and argument to real duration, according to
    // time track if one is given; result is always nonnegative
-   double RealDuration(double trackTime1) const;
+   [[nodiscard]] double RealDuration(double trackTime1) const;
 
    // How much real time left?
-   double RealTimeRemaining() const;
+   [[nodiscard]] double RealTimeRemaining() const;
 
    // Advance the real time position
    void RealTimeAdvance( double increment );

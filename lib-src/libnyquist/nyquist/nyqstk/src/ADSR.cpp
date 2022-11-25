@@ -31,8 +31,7 @@ ADSR :: ADSR() : Envelope()
 }
 
 ADSR :: ~ADSR()
-{
-}
+= default;
 
 void ADSR :: keyOn()
 {
@@ -150,7 +149,7 @@ void ADSR :: setValue(StkFloat value)
   rate_ = (StkFloat)  0.0;
 }
 
-int ADSR :: getState(void) const
+int ADSR :: getState() const
 {
   return state_;
 }

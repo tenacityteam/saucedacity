@@ -270,7 +270,7 @@ public:
 
    SliderTextCtrl* AddSliderTextCtrl(
       const TranslatableString &Prompt, double pos, double Max, double Min = 0,
-      int precision = 2, double* value = NULL, double scale = 0, double offset = 0);
+      int precision = 2, double* value = nullptr, double scale = 0, double offset = 0);
 
    // Pass the same initValue to the sequence of calls to AddRadioButton and
    // AddRadioButtonToGroup.
@@ -302,10 +302,10 @@ public:
       const wxString &Value);
    wxTextCtrl * AddTextBox(
       const TranslatableString &Caption,
-      const wxString &Value, const int nChars);
+      const wxString &Value, int nChars);
    wxTextCtrl * AddNumericTextBox(
       const TranslatableString &Caption,
-      const wxString &Value, const int nChars);
+      const wxString &Value, int nChars);
    wxTextCtrl * AddTextWindow(const wxString &Value);
    wxListBox * AddListBox(const wxArrayStringEx &choices);
 
@@ -405,19 +405,19 @@ public:
 
    bool DoStep( int iStep );
    int TranslateToIndex( const wxString &Value, const wxArrayStringEx &Choices );
-   wxString TranslateFromIndex( const int nIn, const wxArrayStringEx &Choices );
+   wxString TranslateFromIndex( int nIn, const wxArrayStringEx &Choices );
 
 //-- Tie functions both add controls and also read/write to them.
 
    wxTextCtrl * TieTextBox(
-      const TranslatableString &Caption, wxString & Value, const int nChars=0);
+      const TranslatableString &Caption, wxString & Value, int nChars=0);
    wxTextCtrl * TieTextBox(
-      const TranslatableString &Prompt, int &Selected, const int nChars=0);
+      const TranslatableString &Prompt, int &Selected, int nChars=0);
    wxTextCtrl * TieTextBox(
-      const TranslatableString &Prompt, double &Value, const int nChars=0);
+      const TranslatableString &Prompt, double &Value, int nChars=0);
 
-   wxTextCtrl * TieNumericTextBox( const TranslatableString &Prompt, int &Value, const int nChars=0);
-   wxTextCtrl * TieNumericTextBox( const TranslatableString &Prompt, double &Value, const int nChars=0);
+   wxTextCtrl * TieNumericTextBox( const TranslatableString &Prompt, int &Value, int nChars=0);
+   wxTextCtrl * TieNumericTextBox( const TranslatableString &Prompt, double &Value, int nChars=0);
 
    wxCheckBox * TieCheckBox( const TranslatableString &Prompt, bool & Var );
    wxCheckBox * TieCheckBoxOnRight( const TranslatableString & Prompt, bool & Var );
@@ -430,23 +430,23 @@ public:
 
    wxSlider * TieSlider(
       const TranslatableString &Prompt,
-      int &pos, const int max, const int min = 0);
+      int &pos, int max, int min = 0);
    wxSlider * TieSlider(
       const TranslatableString &Prompt,
-      double &pos, const double max, const double min = 0.0);
+      double &pos, double max, double min = 0.0);
    wxSlider * TieSlider(
       const TranslatableString &Prompt,
-      float &pos, const float fMin, const float fMax);
+      float &pos, float fMin, float fMax);
    wxSlider * TieVSlider(
       const TranslatableString &Prompt,
-      float &pos, const float fMin, const float fMax);
+      float &pos, float fMin, float fMax);
 
    // Must be called between a StartRadioButtonGroup / EndRadioButtonGroup pair,
    // and as many times as there are values in the enumeration.
    wxRadioButton * TieRadioButton();
 
    wxSpinCtrl * TieSpinCtrl( const TranslatableString &Prompt,
-      int &Value, const int max, const int min = 0 );
+      int &Value, int max, int min = 0 );
 
 
 //-- Variants of the standard Tie functions which do two step exchange in one go
@@ -479,28 +479,28 @@ public:
    virtual wxTextCtrl * TieTextBox(
       const TranslatableString &Prompt,
       const StringSetting &Setting,
-      const int nChars);
+      int nChars);
    virtual wxTextCtrl * TieIntegerTextBox(
       const TranslatableString & Prompt,
       const IntSetting &Setting,
-      const int nChars);
+      int nChars);
    virtual wxTextCtrl * TieNumericTextBox(
       const TranslatableString & Prompt,
       const DoubleSetting &Setting,
-      const int nChars);
+      int nChars);
    virtual wxSlider * TieSlider(
       const TranslatableString & Prompt,
       const IntSetting &Setting,
-      const int max,
-      const int min = 0);
+      int max,
+      int min = 0);
    virtual wxSpinCtrl * TieSpinCtrl(
       const TranslatableString &Prompt,
       const IntSetting &Setting,
-      const int max,
-      const int min);
+      int max,
+      int min);
 //-- End of variants.
    void SetBorder( int Border ) {miBorder = Border;};
-   int GetBorder() const noexcept;
+   [[nodiscard]] int GetBorder() const noexcept;
    void SetSizerProportion( int iProp ) {miSizerProp = iProp;};
    void SetStretchyCol( int i );
    void SetStretchyRow( int i );
@@ -510,7 +510,7 @@ public:
    {
       // This assertion justifies the use of safenew in many places where GetParent()
       // is used to construct a window
-      wxASSERT(mpParent != NULL);
+      wxASSERT(mpParent != nullptr);
       return mpParent;
    }
    ShuttleGuiBase & Prop( int iProp );
@@ -534,7 +534,7 @@ protected:
    long GetStyle( long Style );
 
 private:
-   void DoInsertListColumns(
+   static void DoInsertListColumns(
       wxListCtrl *pListCtrl,
       long listControlStyles,
       std::initializer_list<const ListControlColumn> columns );
@@ -573,15 +573,15 @@ private:
    wxCheckBox * DoTieCheckBoxOnRight( const TranslatableString & Prompt, WrappedType & WrappedRef );
    wxTextCtrl * DoTieTextBox(
       const TranslatableString &Prompt,
-      WrappedType &  WrappedRef, const int nChars);
+      WrappedType &  WrappedRef, int nChars);
    wxTextCtrl * DoTieNumericTextBox(
-      const TranslatableString &Prompt, WrappedType &  WrappedRef, const int nChars);
+      const TranslatableString &Prompt, WrappedType &  WrappedRef, int nChars);
    wxCheckBox * DoTieCheckBox( const TranslatableString &Prompt, WrappedType & WrappedRef );
    wxSlider * DoTieSlider(
       const TranslatableString &Prompt,
-      WrappedType & WrappedRef, const int max, const int min = 0 );
+      WrappedType & WrappedRef, int max, int min = 0 );
    wxSpinCtrl * DoTieSpinCtrl( const TranslatableString &Prompt,
-      WrappedType & WrappedRef, const int max, const int min = 0 );
+      WrappedType & WrappedRef, int max, int min = 0 );
 
    std::vector<EnumValueSymbol> mRadioSymbols;
    wxString mRadioSettingName; /// The setting controlled by a group.
@@ -637,7 +637,7 @@ enum
 
 SAUCEDACITY_DLL_API std::unique_ptr<wxSizer> CreateStdButtonSizer( wxWindow *parent,
                                long buttons = eOkButton | eCancelButton,
-                               wxWindow *extra = NULL );
+                               wxWindow *extra = nullptr );
 
 // ShuttleGui extends ShuttleGuiBase with Audacity specific extensions.
 class SAUCEDACITY_DLL_API ShuttleGui /* not final */ : public ShuttleGuiBase
@@ -648,7 +648,7 @@ public:
       bool vertical = true, // Choose layout direction of topmost level sizer
       wxSize minSize = { 250, 100 }
    );
-   ~ShuttleGui(void);
+   ~ShuttleGui() override;
 public:
    ShuttleGui & Optional( bool & bVar );
    ShuttleGui & Id(int id );
@@ -751,7 +751,7 @@ public:
    // The first of these buttons, if any, that is included will be default:
    // Apply, Yes, OK
    void AddStandardButtons(
-      long buttons = eOkButton | eCancelButton, wxWindow *extra = NULL );
+      long buttons = eOkButton | eCancelButton, wxWindow *extra = nullptr );
 
    wxSizerItem * AddSpace( int width, int height, int prop = 0 );
    wxSizerItem * AddSpace( int size ) { return AddSpace( size, size ); };

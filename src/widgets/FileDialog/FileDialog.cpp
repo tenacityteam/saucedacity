@@ -18,13 +18,13 @@ custom controls.
 
 FileDialogBase::FileDialogBase()
 {
-   m_creator = NULL;
+   m_creator = nullptr;
    m_userdata = 0;
 }
 
 bool FileDialogBase::HasUserPaneCreator() const
 {
-   return m_creator != NULL;
+   return m_creator != nullptr;
 }
 
 void FileDialogBase::SetUserPaneCreator(UserPaneCreatorFunction creator, wxUIntPtr userdata)

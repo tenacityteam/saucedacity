@@ -60,8 +60,7 @@ EffectRepeat::EffectRepeat()
 }
 
 EffectRepeat::~EffectRepeat()
-{
-}
+= default;
 
 // ComponentInterface implementation
 

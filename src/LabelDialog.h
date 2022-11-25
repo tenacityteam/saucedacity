@@ -51,9 +51,9 @@ class LabelDialog final : public wxDialogWrapper
 
                ViewInfo &viewinfo,
                double rate,
-               const NumericFormatSymbol & format,
-               const NumericFormatSymbol &freqFormat);
-   ~LabelDialog();
+               NumericFormatSymbol  format,
+               NumericFormatSymbol freqFormat);
+   ~LabelDialog() override;
 
     bool Show(bool show = true) override;
 
@@ -63,7 +63,7 @@ class LabelDialog final : public wxDialogWrapper
    void PopulateOrExchange( ShuttleGui & S );
    void PopulateLabels();
    void OnHelp(wxCommandEvent & event);
-   ManualPageID GetHelpPageName() {return "Labels_Editor";}
+   static ManualPageID GetHelpPageName() {return "Labels_Editor";}
 
    bool TransferDataToWindow() override;
    bool TransferDataFromWindow() override;

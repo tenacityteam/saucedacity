@@ -110,9 +110,9 @@ void PipeServer()
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
-#include <string.h>
+#include <cstring>
 
 const char fifotmpl[] = "/tmp/audacity_script_pipe.%s.%d";
 
@@ -123,8 +123,8 @@ extern "C" int DoSrvMore( char * pOut, size_t nMax );
 
 void PipeServer()
 {
-   FILE *fromFifo = NULL;
-   FILE *toFifo = NULL;
+   FILE *fromFifo = nullptr;
+   FILE *toFifo = nullptr;
    int rc;
    char buf[nBuff];
    char toFifoName[nBuff];
@@ -148,23 +148,23 @@ void PipeServer()
 
    // open to (incoming) pipe first.  
    toFifo = fopen(toFifoName, "r");
-   if (toFifo == NULL)
+   if (toFifo == nullptr)
    {
       perror("Unable to open fifo to server from script");
-      if (fromFifo != NULL)
+      if (fromFifo != nullptr)
          fclose(fromFifo);
       return;
    }
 
    // open from (outgoing) pipe second.  This could block if there is no reader.
    fromFifo = fopen(fromFifoName, "w");
-   if (fromFifo == NULL)
+   if (fromFifo == nullptr)
    {
       perror("Unable to open fifo from server to script");
       return;
    }
 
-   while (fgets(buf, sizeof(buf), toFifo) != NULL)
+   while (fgets(buf, sizeof(buf), toFifo) != nullptr)
    {
       int len = strlen(buf);
       if (len <= 1)
@@ -194,10 +194,10 @@ void PipeServer()
 
    printf("Read failed on fifo, quitting\n");
 
-   if (toFifo != NULL)
+   if (toFifo != nullptr)
       fclose(toFifo);
 
-   if (fromFifo != NULL)
+   if (fromFifo != nullptr)
       fclose(fromFifo);
 
    unlink(toFifoName);

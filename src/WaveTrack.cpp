@@ -918,7 +918,7 @@ void WaveTrack::ClearAndPaste(double t0, // Start of time to clear
       Paste(t0, src);
       {
          // First, merge the NEW clip(s) in with the existing clips
-         if (merge && splits.size() > 0)
+         if (merge && !splits.empty())
          {
             // Now t1 represents the absolute end of the pasted data.
             t1 = t0 + src->GetEndTime();
@@ -1544,9 +1544,8 @@ void WaveTrack::Disjoin(double t0, double t1)
       }
    }
 
-   for( unsigned int i = 0; i < regions.size(); i++ )
+   for(auto & region : regions)
    {
-      const Region &region = regions.at(i);
       SplitDelete(region.start, region.end );
    }
 }
@@ -1575,7 +1574,7 @@ void WaveTrack::Join(double t0, double t1)
    }
 
    //if there are no clips to DELETE, nothing to do
-   if( clipsToDelete.size() == 0 )
+   if( clipsToDelete.empty() )
       return;
 
    auto t = clipsToDelete[0]->GetSequenceStartTime();
@@ -1796,7 +1795,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const wxChar *tag)
    if (!wxStrcmp(tag, wxT("waveclip")))
       return CreateClip();
    else
-      return NULL;
+      return nullptr;
 }
 
 void WaveTrack::WriteXML(XMLWriter &xmlFile) const
@@ -1993,7 +1992,7 @@ bool WaveTrack::Get(samplePtr buffer, sampleFormat format,
       else if( fill==fillTwo )
       {
          wxASSERT( format==floatSample );
-         float * pBuffer = (float*)buffer;
+         auto * pBuffer = (float*)buffer;
          for(size_t i=0;i<len;i++)
             pBuffer[i]=2.0f;
       }
@@ -2168,7 +2167,7 @@ WaveClip* WaveTrack::GetClipAtSample(sampleCount sample)
          return clip.get();
    }
 
-   return NULL;
+   return nullptr;
 }
 
 // When the time is both the end of a clip and the start of the next clip, the
@@ -2200,7 +2199,7 @@ Envelope* WaveTrack::GetEnvelopeAtTime(double time)
    if (clip)
       return clip->GetEnvelope();
    else
-      return NULL;
+      return nullptr;
 }
 
 Sequence* WaveTrack::GetSequenceAtTime(double time)
@@ -2209,7 +2208,7 @@ Sequence* WaveTrack::GetSequenceAtTime(double time)
    if (clip)
       return clip->GetSequence();
    else
-      return NULL;
+      return nullptr;
 }
 
 WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
@@ -2438,10 +2437,10 @@ void WaveTrack::UpdateLocationsCache() const
          if (clip->WithinPlayRegion(cutlinePosition))
          {
              // Add cut line expander point
-             mDisplayLocationsCache.push_back(WaveTrackLocation{
+             mDisplayLocationsCache.emplace_back(
                 cutlinePosition,
                 WaveTrackLocation::locationCutLine
-             });
+             );
          }
          // If cutline is skipped, we still need to count it
          // so that curpos match num at the end
@@ -2454,12 +2453,12 @@ void WaveTrack::UpdateLocationsCache() const
                                           < WAVETRACK_MERGE_POINT_TOLERANCE)
          {
             // Add merge point
-            mDisplayLocationsCache.push_back(WaveTrackLocation{
+            mDisplayLocationsCache.emplace_back(
                previousClip->GetPlayEndTime(),
                WaveTrackLocation::locationMergePoint,
                GetClipIndex(previousClip),
                GetClipIndex(clip)
-            });
+            );
             curpos++;
          }
       }
@@ -2777,7 +2776,7 @@ const float *WaveTrackCache::GetFloats(
          // See comment below about casting
          if (!mPTrack->GetFloats( reinterpret_cast<float*>(buffer),
             start, remaining, fillZero, mayThrow))
-            return 0;
+            return nullptr;
       }
 
       // Overlap buffer was meant for the more general support of sample formats

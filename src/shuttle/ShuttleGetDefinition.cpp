@@ -14,8 +14,8 @@
 #include <lib-components/ComponentInterfaceSymbol.h>
 
 bool ShuttleGetDefinition::IsOptional(){
-   bool result = pOptionalFlag !=NULL;
-   pOptionalFlag = NULL;
+   bool result = pOptionalFlag !=nullptr;
+   pOptionalFlag = nullptr;
    return result;
 }
 

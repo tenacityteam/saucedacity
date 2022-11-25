@@ -63,7 +63,7 @@ class TranscriptionToolBar final : public ToolBar {
  public:
 
    TranscriptionToolBar( SaucedacityProject &project );
-   virtual ~TranscriptionToolBar();
+   ~TranscriptionToolBar() override;
 
    static TranscriptionToolBar &Get( SaucedacityProject &project );
    static const TranscriptionToolBar &Get( const SaucedacityProject &project );
@@ -114,7 +114,7 @@ class TranscriptionToolBar final : public ToolBar {
    void SetEnabled(bool enabled);
    void SetPlaying(bool down, bool looped, bool cutPreview);
 
-   double GetPlaySpeed() const { return mPlaySpeed / 100.0; }
+   [[nodiscard]] double GetPlaySpeed() const { return mPlaySpeed / 100.0; }
 
  private:
 
@@ -128,7 +128,7 @@ class TranscriptionToolBar final : public ToolBar {
       teBmps eFore, teBmps eDisabled,
       int id, unsigned altIdx);
    void GetSamples(const WaveTrack *t, sampleCount *s0, sampleCount *slen);
-   void SetButton(bool newstate, AButton *button);
+   static void SetButton(bool newstate, AButton *button);
    void RegenerateTooltips() override;
 
    AButton *mButtons[TTBNumButtons];

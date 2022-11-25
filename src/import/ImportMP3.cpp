@@ -89,7 +89,7 @@ class MP3ImportPlugin final : public ImportPlugin
 {
 public:
    MP3ImportPlugin();
-   ~MP3ImportPlugin();
+   ~MP3ImportPlugin() override;
 
    wxString GetPluginStringID() override;
    TranslatableString GetPluginFormatDescription() override;
@@ -102,7 +102,7 @@ class MP3ImportFileHandle final : public ImportFileHandle
 {
 public:
    MP3ImportFileHandle(const FilePath &filename);
-   ~MP3ImportFileHandle();
+   ~MP3ImportFileHandle() override;
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
@@ -141,7 +141,7 @@ private:
    static mad_flow error_cb(void *that,
                             struct mad_stream *stream,
                             struct mad_frame *frame);
-   mad_flow ErrorCB(struct mad_stream *stream, struct mad_frame *frame);
+   mad_flow ErrorCB(struct mad_stream *stream, struct mad_frame *frame) const;
 
 private:
    mad_decoder mDecoder;
@@ -265,7 +265,7 @@ ProgressResult MP3ImportFileHandle::Import(WaveTrackFactory *trackFactory,
    mPadding = 0;
 
    // Initialize decoder
-   mad_decoder_init(&mDecoder, this, input_cb, 0, filter_cb, output_cb, error_cb, 0);
+   mad_decoder_init(&mDecoder, this, input_cb, nullptr, filter_cb, output_cb, error_cb, nullptr);
 
    // Send the decoder on its way!
    auto res = mad_decoder_run(&mDecoder, MAD_DECODER_MODE_SYNC);
@@ -375,8 +375,7 @@ void MP3ImportFileHandle::CheckTags()
       CheckID3V2Tags(true);
    }
 
-   return;
-}
+   }
 
 void MP3ImportFileHandle::CheckAPETags(bool atEnd)
 {
@@ -658,7 +657,7 @@ bool MP3ImportFileHandle::FillBuffer()
 void MP3ImportFileHandle::LoadID3(Tags *tags)
 {
 #ifdef USE_LIBID3TAG
-   struct id3_file *id3file = NULL;
+   struct id3_file *id3file = nullptr;
    auto cleanup = finally([&]
    {
       if (id3file)
@@ -792,7 +791,7 @@ void MP3ImportFileHandle::LoadID3(Tags *tags)
       }
 
       // Now get the tag value
-      const id3_ucs4_t *ustr = NULL;
+      const id3_ucs4_t *ustr = nullptr;
 
       if (n == TAG_COMMENTS)
       {
@@ -1078,7 +1077,7 @@ mad_flow MP3ImportFileHandle::error_cb(void *that,
 }
 
 enum mad_flow MP3ImportFileHandle::ErrorCB(struct mad_stream *stream,
-                                           struct mad_frame *frame)
+                                           struct mad_frame *frame) const
 {
    // You always get a LOSTSYNC error at EOF, so just ignore it
    if (stream->error == MAD_ERROR_LOSTSYNC && mFilePos == mFileLen)

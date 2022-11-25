@@ -87,7 +87,7 @@ public:
    MenuManager( SaucedacityProject &project );
    MenuManager( const MenuManager & ) = delete;
    MenuManager &operator=( const MenuManager & ) = delete;
-   ~MenuManager();
+   ~MenuManager() override;
 
    static void Visit( ToolbarMenuVisitor &visitor );
 
@@ -102,7 +102,7 @@ public:
 
    // If checkActive, do not do complete flags testing on an
    // inactive project as it is needlessly expensive.
-   CommandFlag GetUpdateFlags( bool checkActive = false ) const;
+   [[nodiscard]] CommandFlag GetUpdateFlags( bool checkActive = false ) const;
    void UpdatePrefs() override;
 
    // Command Handling
@@ -113,7 +113,7 @@ public:
 
 
 private:
-   void TellUserWhyDisallowed(const TranslatableString & Name, CommandFlag flagsGot,
+   static void TellUserWhyDisallowed(const TranslatableString & Name, CommandFlag flagsGot,
       CommandFlag flagsRequired);
 
    void OnUndoRedo( wxCommandEvent &evt );

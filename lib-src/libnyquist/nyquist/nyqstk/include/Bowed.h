@@ -39,16 +39,16 @@ class Bowed : public Instrmnt
 {
  public:
   //! Class constructor, taking the lowest desired playing frequency.
-  Bowed(StkFloat lowestFrequency);
+  explicit Bowed(StkFloat lowestFrequency);
 
   //! Class destructor.
-  ~Bowed();
+  ~Bowed() override;
 
   //! Reset and clear all internal state.
   void clear();
 
   //! Set instrument parameters for a particular frequency.
-  void setFrequency(StkFloat frequency);
+  void setFrequency(StkFloat frequency) override;
 
   //! Set vibrato gain.
   void setVibrato(StkFloat gain);
@@ -60,17 +60,17 @@ class Bowed : public Instrmnt
   void stopBowing(StkFloat rate);
 
   //! Start a note with the given frequency and amplitude.
-  void noteOn(StkFloat frequency, StkFloat amplitude);
+  void noteOn(StkFloat frequency, StkFloat amplitude) override;
 
   //! Stop a note with the given amplitude (speed of decay).
-  void noteOff(StkFloat amplitude);
+  void noteOff(StkFloat amplitude) override;
 
   //! Perform the control change specified by \e number and \e value (0.0 - 128.0).
-  void controlChange(int number, StkFloat value);
+  void controlChange(int number, StkFloat value) override;
 
  protected:
 
-  StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
   DelayL   neckDelay_;
   DelayL   bridgeDelay_;

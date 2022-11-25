@@ -599,7 +599,7 @@ EffectRack &EffectRack::Get( SaucedacityProject &project )
 class EffectPanel final : public wxPanelWrapper
 {
 public:
-   EffectPanel(wxWindow *parent)
+   explicit EffectPanel(wxWindow *parent)
    :  wxPanelWrapper(parent)
    {
       // This fools NVDA into not saying "Panel" when the dialog gets focus
@@ -609,21 +609,20 @@ public:
       mAcceptsFocus = true;
    }
 
-   virtual ~EffectPanel()
-   {
-   }
+   ~EffectPanel() override
+   = default;
 
    // ============================================================================
    // wxWindow implementation
    // ============================================================================
 
-   bool AcceptsFocus() const override
+   [[nodiscard]] bool AcceptsFocus() const override
    {
       return mAcceptsFocus;
    }
 
    // So that wxPanel is not included in Tab traversal, when required - see wxWidgets bug 15581
-   bool AcceptsFocusFromKeyboard() const override
+   [[nodiscard]] bool AcceptsFocusFromKeyboard() const override
    {
       return mAcceptsFocus;
    }
@@ -735,7 +734,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    
    mParent = parent;
    mEffect = effect;
-   mCommand = NULL;
+   mCommand = nullptr;
    mClient = client;
    
    mProject = &project;
@@ -768,7 +767,7 @@ EffectUIHost::EffectUIHost(wxWindow *parent,
    SetExtraStyle(wxWS_EX_VALIDATE_RECURSIVELY);
    
    mParent = parent;
-   mEffect = NULL;
+   mEffect = nullptr;
    mCommand = command;
    mClient = client;
    
@@ -798,7 +797,7 @@ EffectUIHost::~EffectUIHost()
          Resume();
       
       mClient->CloseUI();
-      mClient = NULL;
+      mClient = nullptr;
    }
 }
 
@@ -1125,7 +1124,7 @@ void EffectUIHost::OnClose(wxCloseEvent & WXUNUSED(evt))
    if (mNeedsResume)
       Resume();
    mClient->CloseUI();
-   mClient = NULL;
+   mClient = nullptr;
    
    Destroy();
 }
@@ -1261,7 +1260,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    
    LoadUserPresets();
    
-   if (mUserPresets.size() == 0)
+   if (mUserPresets.empty())
    {
       menu.Append(kUserPresetsDummyID, _("User Presets"))->Enable(false);
    }
@@ -1277,7 +1276,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    
    menu.Append(kSaveAsID, _("Save Preset..."));
    
-   if (mUserPresets.size() == 0)
+   if (mUserPresets.empty())
    {
       menu.Append(kDeletePresetDummyID, _("Delete Preset"))->Enable(false);
    }
@@ -1298,7 +1297,7 @@ void EffectUIHost::OnMenu(wxCommandEvent & WXUNUSED(evt))
    {
       auto sub = std::make_unique<wxMenu>();
       sub->Append(kDefaultsID, _("Defaults"));
-      if (factory.size() > 0)
+      if (!factory.empty())
       {
          sub->AppendSeparator();
          for (size_t i = 0, cnt = factory.size(); i < cnt; i++)
@@ -1527,15 +1526,11 @@ void EffectUIHost::OnUserPreset(wxCommandEvent & evt)
    int preset = evt.GetId() - kUserPresetsID;
    
    mEffect->LoadUserPreset(mEffect->GetUserPresetsGroup(mUserPresets[preset]));
-   
-   return;
 }
 
 void EffectUIHost::OnFactoryPreset(wxCommandEvent & evt)
 {
    mEffect->LoadFactoryPreset(evt.GetId() - kFactoryPresetsID);
-   
-   return;
 }
 
 void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
@@ -1552,8 +1547,6 @@ void EffectUIHost::OnDeletePreset(wxCommandEvent & evt)
    }
    
    LoadUserPresets();
-   
-   return;
 }
 
 void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
@@ -1631,16 +1624,13 @@ void EffectUIHost::OnSaveAs(wxCommandEvent & WXUNUSED(evt))
       break;
    }
    
-   return;
-}
+   }
 
 void EffectUIHost::OnImport(wxCommandEvent & WXUNUSED(evt))
 {
    mClient->ImportPresets();
    
    LoadUserPresets();
-   
-   return;
 }
 
 void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
@@ -1648,22 +1638,16 @@ void EffectUIHost::OnExport(wxCommandEvent & WXUNUSED(evt))
    // may throw
    // exceptions are handled in SaucedacityApp::OnExceptionInMainLoop
    mClient->ExportPresets();
-   
-   return;
 }
 
 void EffectUIHost::OnOptions(wxCommandEvent & WXUNUSED(evt))
 {
    mClient->ShowOptions();
-   
-   return;
 }
 
 void EffectUIHost::OnDefaults(wxCommandEvent & WXUNUSED(evt))
 {
    mEffect->LoadFactoryDefaults();
-   
-   return;
 }
 
 wxBitmap EffectUIHost::CreateBitmap(const char * const xpm[], bool up, bool pusher)
@@ -1785,8 +1769,6 @@ void EffectUIHost::LoadUserPresets()
       mEffect->GetPrivateConfigSubgroups(mEffect->GetUserPresetsGroup(wxEmptyString), mUserPresets);
    
    std::sort( mUserPresets.begin(), mUserPresets.end() );
-   
-   return;
 }
 
 void EffectUIHost::InitializeRealtime()
@@ -2078,8 +2060,7 @@ void EffectDialog::Init()
 /// kind of dialog.
 void EffectDialog::PopulateOrExchange(ShuttleGui & WXUNUSED(S))
 {
-   return;
-}
+   }
 
 bool EffectDialog::TransferDataToWindow()
 {
@@ -2104,8 +2085,7 @@ bool EffectDialog::Validate()
 
 void EffectDialog::OnPreview(wxCommandEvent & WXUNUSED(evt))
 {
-   return;
-}
+   }
 
 void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
 {
@@ -2119,5 +2099,4 @@ void EffectDialog::OnOk(wxCommandEvent & WXUNUSED(evt))
       EndModal(true);
    }
 
-   return;
-}
+   }

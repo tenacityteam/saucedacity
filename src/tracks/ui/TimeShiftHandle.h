@@ -38,7 +38,7 @@ public:
 
    virtual ~TrackShifter() = 0;
    //! There is always an associated track
-   virtual Track &GetTrack() const = 0;
+   [[nodiscard]] virtual Track &GetTrack() const = 0;
 
    //! Possibilities for HitTest on the clicked track
    enum class HitTestResult {
@@ -69,14 +69,14 @@ public:
    using Intervals = std::vector<TrackInterval>;
 
    //! Return special intervals of the track that will not move
-   const Intervals &FixedIntervals() const { return mFixed; }
+   [[nodiscard]] const Intervals &FixedIntervals() const { return mFixed; }
 
    //! Return special intervals of the track that may move
-   const Intervals &MovingIntervals() const { return mMoving; }
+   [[nodiscard]] const Intervals &MovingIntervals() const { return mMoving; }
    
    //! Change intervals satisfying a predicate from fixed to moving
    void UnfixIntervals(
-      std::function< bool( const TrackInterval& ) > pred );
+      const std::function< bool( const TrackInterval& ) >& pred );
 
    //! Change all intervals from fixed to moving
    void UnfixAll();
@@ -152,7 +152,7 @@ public:
    // This function is used by the keyboard interface for time shifting.
    // It adjusts t0 after the move to take into account
    // any rounding errors if this is necessary.
-   virtual double AdjustT0(double t0) const;
+   [[nodiscard]] virtual double AdjustT0(double t0) const;
 
 protected:
    /*! Unfix any of the intervals that intersect the given one; may be useful to override `SelectInterval()` */
@@ -161,13 +161,13 @@ protected:
    /*! May be useful to override `MayMigrateTo()`, if certain other needed overrides are given.
        Returns true, iff: tracks have same type, and corresponding positions in their channel groups,
        which have same size */
-   bool CommonMayMigrateTo( Track &otherTrack );
+   bool CommonMayMigrateTo( Track &otherTrack ) const;
 
    //! Derived class constructor can initialize all intervals reported by the track as fixed, none moving
    /*! This can't be called by the base class constructor, when GetTrack() isn't yet callable */
    void InitIntervals();
 
-   bool AllFixed() const {
+   [[nodiscard]] bool AllFixed() const {
       return mAllFixed && mMoving.empty();
    }
 
@@ -184,7 +184,7 @@ class CoarseTrackShifter final : public TrackShifter {
 public:
    CoarseTrackShifter( Track &track );
    ~CoarseTrackShifter() override;
-   Track &GetTrack() const override { return *mpTrack; }
+   [[nodiscard]] Track &GetTrack() const override { return *mpTrack; }
 
    HitTestResult HitTest( double, const ViewInfo&, HitTestParams* ) override;
 
@@ -288,7 +288,7 @@ public:
        const wxMouseState &state, const wxRect &rect,
        const std::shared_ptr<Track> &pTrack);
 
-   virtual ~TimeShiftHandle();
+   ~TimeShiftHandle() override;
 
    void Enter(bool forward, SaucedacityProject *) override;
 

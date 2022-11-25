@@ -646,7 +646,7 @@ END_EVENT_TABLE()
 }
 
 NyqBench::NyqBench(wxWindow * parent)
-:  wxFrame(NULL,
+:  wxFrame(nullptr,
            wxID_ANY,
            wxEmptyString,
            wxDefaultPosition,
@@ -656,12 +656,12 @@ NyqBench::NyqBench(wxWindow * parent)
            wxMAXIMIZE_BOX |
            wxRESIZE_BORDER)
 {
-   mFindDlg = NULL;
+   mFindDlg = nullptr;
    mRunning = false;
-   mScriptBox = NULL;
-   mOutputBox = NULL;
-   mScript = NULL;
-   mOutput = NULL;
+   mScriptBox = nullptr;
+   mOutputBox = nullptr;
+   mScript = nullptr;
+   mOutput = nullptr;
 
    mPath = gPrefs->Read(wxT("NyqBench/Path"), wxEmptyString);
    mAutoLoad = (gPrefs->Read(wxT("NyqBench/AutoLoad"), 0L) != 0);
@@ -675,9 +675,9 @@ NyqBench::NyqBench(wxWindow * parent)
    SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE));
    ShuttleGui S(this, eIsCreating);
    PopulateOrExchange(S);
-   wxMenuBar *bar = new wxMenuBar();
+   auto *bar = new wxMenuBar();
 
-   wxMenu *menu = new wxMenu();
+   auto *menu = new wxMenu();
    menu->Append(wxID_NEW, wxT("&New\tCtrl+N"));
    menu->Append(wxID_OPEN, wxT("&Open...\tCtrl+O"));
    menu->Append(wxID_SAVE, wxT("&Save...\tCtrl+S"));
@@ -703,7 +703,7 @@ NyqBench::NyqBench(wxWindow * parent)
    menu->AppendSeparator();
    menu->Append(wxID_FIND, _("&Find...\tCtrl+F"));
    menu->AppendSeparator();
-   wxMenu *sub = new wxMenu();
+   auto *sub = new wxMenu();
    sub->Append(ID_MATCH, _("&Matching Paren\tF8"));
    sub->Append(ID_TOP, _("&Top S-expr\tF9"));
    sub->Append(ID_UP, _("&Higher S-expr\tF10"));
@@ -941,8 +941,6 @@ void NyqBench::PopulateOrExchange(ShuttleGui & S)
    S.EndHorizontalLay();
 
    S.AddSpace(1, 5);
-
-   return;
 }
 
 void NyqBench::OnClose(wxCloseEvent & e)
@@ -1129,10 +1127,10 @@ void NyqBench::OnFind(wxCommandEvent & e)
 {
    if (mFindDlg ) {
        delete mFindDlg;
-       mFindDlg = NULL;
+       mFindDlg = nullptr;
    }
    else {
-      NyqTextCtrl *w = (NyqTextCtrl *) FindFocus();
+      auto *w = (NyqTextCtrl *) FindFocus();
       if (w == mScript || w == mOutput) {
          mFindText = w;
 
@@ -1393,8 +1391,8 @@ void NyqBench::OnFindDialog(wxFindDialogEvent & e)
       gPrefs->Write(wxT("NyqBench/Find/Word"), (flags & wxFR_WHOLEWORD) != 0);
       gPrefs->Write(wxT("NyqBench/Find/Case"), (flags & wxFR_MATCHCASE) != 0);
 
-      mFindDlg = NULL;
-      mFindText = NULL;
+      mFindDlg = nullptr;
+      mFindText = nullptr;
 
       return;
    }

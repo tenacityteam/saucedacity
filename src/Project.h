@@ -46,16 +46,16 @@ class SAUCEDACITY_DLL_API AllProjects
 public:
    AllProjects() = default;
 
-   size_t size() const;
-   bool empty() const { return size() == 0; }
+   [[nodiscard]] size_t size() const;
+   [[nodiscard]] bool empty() const { return size() == 0; }
 
    using const_iterator = Container::const_iterator;
-   const_iterator begin() const;
-   const_iterator end() const;
+   [[nodiscard]] const_iterator begin() const;
+   [[nodiscard]] const_iterator end() const;
 
    using const_reverse_iterator = Container::const_reverse_iterator;
-   const_reverse_iterator rbegin() const;
-   const_reverse_iterator rend() const;
+   [[nodiscard]] const_reverse_iterator rbegin() const;
+   [[nodiscard]] const_reverse_iterator rend() const;
 
    using value_type = Container::value_type;
 
@@ -117,7 +117,7 @@ class SAUCEDACITY_DLL_API SaucedacityProject final
    using AttachedWindows = ::AttachedProjectWindows;
 
    SaucedacityProject();
-   virtual ~SaucedacityProject();
+   ~SaucedacityProject() override;
 
    wxFrame *GetFrame() { return mFrame; }
    const wxFrame *GetFrame() const { return mFrame; }
@@ -127,7 +127,7 @@ class SAUCEDACITY_DLL_API SaucedacityProject final
    const wxWindow *GetPanel() const { return mPanel; }
    void SetPanel( wxWindow *pPanel );
  
-   int GetProjectNumber(){ return mProjectNo;}
+   int GetProjectNumber() const{ return mProjectNo;}
 
    // Project name can be either empty or have the name of the project.
    //

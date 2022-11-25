@@ -32,10 +32,10 @@ public:
    explicit ProjectAudioIO( SaucedacityProject &project );
    ProjectAudioIO( const ProjectAudioIO & ) = delete;
    ProjectAudioIO &operator=( const ProjectAudioIO & ) = delete;
-   ~ProjectAudioIO();
+   ~ProjectAudioIO() override;
 
-   int GetAudioIOToken() const;
-   bool IsAudioActive() const;
+   [[nodiscard]] int GetAudioIOToken() const;
+   [[nodiscard]] bool IsAudioActive() const;
    void SetAudioIOToken(int token);
 
    MeterPanelBase *GetPlaybackMeter();

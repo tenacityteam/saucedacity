@@ -31,9 +31,9 @@ class SAUCEDACITY_DLL_API FlowPacker
         void GetNextPosition( int xSize, int ySize );
         void SetNewGroup( int iGroupSize );
         void SetColourGroup( );
-        wxRect Rect();
-        wxRect RectInner();
-        void RectMid( int &x, int &y );
+        [[nodiscard]] wxRect Rect() const;
+        wxRect RectInner() const;
+        void RectMid( int &x, int &y ) const;
 
         // These 4 should become private again...
         int mFlags;

@@ -25,17 +25,17 @@ class PitShift : public Effect
   PitShift();
 
   //! Class destructor.
-  ~PitShift();
+  ~PitShift() override;
 
   //! Reset and clear all internal state.
-  void clear();
+  void clear() override;
 
   //! Set the pitch shift factor (1.0 produces no shift).
   void setShift(StkFloat shift);
 
  protected:
 
-  StkFloat computeSample( StkFloat input );
+  StkFloat computeSample( StkFloat input ) override;
 
   DelayL delayLine_[2];
   StkFloat delay_[2];

@@ -157,12 +157,12 @@ void LabelTrackView::CopyTo( Track &track ) const
 
 LabelTrackView &LabelTrackView::Get( LabelTrack &track )
 {
-   return static_cast< LabelTrackView& >( TrackView::Get( track ) );
+   return dynamic_cast< LabelTrackView& >( TrackView::Get( track ) );
 }
 
 const LabelTrackView &LabelTrackView::Get( const LabelTrack &track )
 {
-   return static_cast< const LabelTrackView& >( TrackView::Get( track ) );
+   return dynamic_cast< const LabelTrackView& >( TrackView::Get( track ) );
 }
 
 std::shared_ptr<LabelTrack> LabelTrackView::FindLabelTrack()
@@ -706,7 +706,7 @@ void getXPos( const LabelStruct &ls, wxDC & dc, int * xPos1, int cursorPos)
    {
       int partWidth;
       // Calculate the width of the substring and add it to Xpos
-      dc.GetTextExtent(ls.title.Left(cursorPos), &partWidth, NULL);
+      dc.GetTextExtent(ls.title.Left(cursorPos), &partWidth, nullptr);
       *xPos1 += partWidth;
    }
 }
@@ -906,7 +906,7 @@ void LabelTrackView::Draw
       {
          // Calculate the width of the substring and add it to Xpos
          int partWidth;
-         dc.GetTextExtent(labelStruct.title.Left(mCurrentCursorPos), &partWidth, NULL);
+         dc.GetTextExtent(labelStruct.title.Left(mCurrentCursorPos), &partWidth, nullptr);
          xPos += partWidth;
       }
 
@@ -961,10 +961,10 @@ int LabelTrackView::FindCursorPosition(int labelIndex, wxCoord xPos)
       }
       subString = title.Left(charIndex);
       // Get the width of substring
-      dc.GetTextExtent(subString, &partWidth, NULL);
+      dc.GetTextExtent(subString, &partWidth, nullptr);
 
       // Get the width of the last character
-      dc.GetTextExtent(subString.Right(1), &oneWidth, NULL);
+      dc.GetTextExtent(subString.Right(1), &oneWidth, nullptr);
       bound = labelStruct.xText + partWidth - oneWidth * 0.5;
 
       if (xPos <= bound)
@@ -1025,7 +1025,7 @@ void LabelTrackView::calculateFontHeight(wxDC & dc)
    int charLeading;
 
    // Calculate the width of the substring and add it to Xpos
-   dc.GetTextExtent(wxT("(Test String)|[yp]"), NULL, &mFontHeight, &charDescent, &charLeading);
+   dc.GetTextExtent(wxT("(Test String)|[yp]"), nullptr, &mFontHeight, &charDescent, &charLeading);
 
    // The cursor will have height charHeight.  We don't include the descender as
    // part of the height because for phonetic fonts this leads to cursors which are
@@ -1166,9 +1166,9 @@ bool LabelTrackView::PasteSelectedText(
       }
 
       // Convert control characters to blanks
-      for (int i = 0; i < (int)text.length(); i++) {
-         if (wxIscntrl(text[i])) {
-            text[i] = wxT(' ');
+      for (auto && i : text) {
+         if (wxIscntrl(i)) {
+            i = wxT(' ');
          }
       }
    }

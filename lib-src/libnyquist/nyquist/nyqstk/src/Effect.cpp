@@ -10,7 +10,7 @@
 /***************************************************/
 
 #include "Effect.h"
-#include <math.h>
+#include <cmath>
 
 using namespace Nyq;
 

@@ -67,7 +67,7 @@ class ScreenshotBigDialog final : public wxFrame,
    // constructors and destructors
    ScreenshotBigDialog(
       wxWindow *parent, wxWindowID id, SaucedacityProject &project);
-   virtual ~ScreenshotBigDialog();
+   ~ScreenshotBigDialog() override;
 
    bool ProcessEvent(wxEvent & event) override;
 
@@ -165,7 +165,7 @@ class ScreenFrameTimer final : public wxTimer
       evt.reset(event.Clone());
    }
 
-   virtual ~ScreenFrameTimer()
+   ~ScreenFrameTimer() override
    {
       if (IsRunning())
       {
@@ -176,7 +176,7 @@ class ScreenFrameTimer final : public wxTimer
    void Notify() override
    {
       // Process timer notification just once, then destroy self
-      evt->SetEventObject(NULL);
+      evt->SetEventObject(nullptr);
       screenFrame->ProcessEvent(*evt);
    }
 
@@ -278,7 +278,7 @@ END_EVENT_TABLE();
 // Must not be called before CreateStatusBar!
 std::unique_ptr<ScreenshotCommand> ScreenshotBigDialog::CreateCommand()
 {
-   wxASSERT(mStatus != NULL);
+   wxASSERT(mStatus != nullptr);
    auto output =
       std::make_unique<CommandOutputTargets>(std::make_unique<NullProgressTarget>(),
                               std::make_shared<StatusBarTarget>(*mStatus),
@@ -307,8 +307,8 @@ ScreenshotBigDialog::ScreenshotBigDialog(
    , mProject{ project }
    , mContext( project )
 {
-   mDelayCheckBox = NULL;
-   mDirectoryTextBox = NULL;
+   mDelayCheckBox = nullptr;
+   mDirectoryTextBox = nullptr;
 
    mStatus = CreateStatusBar(3);
    mCommand = CreateCommand();
@@ -525,14 +525,14 @@ bool ScreenshotBigDialog::ProcessEvent(wxEvent & e)
           e.GetEventType() == wxEVT_COMMAND_BUTTON_CLICKED)
       {
          if( id >= IdAllDelayedEvents && id <= IdLastDelayedEvent &&
-          e.GetEventObject() != NULL) {
+          e.GetEventObject() != nullptr) {
             mTimer = std::make_unique<ScreenFrameTimer>(this, e);
             mTimer->Start(5000, true);
             return true;
          }
       }
 
-      if (e.IsCommandEvent() && e.GetEventObject() == NULL) {
+      if (e.IsCommandEvent() && e.GetEventObject() == nullptr) {
          e.SetEventObject(this);
       }
    }
@@ -661,7 +661,7 @@ void ScreenshotBigDialog::DoCapture(int captureMode)
    // Bug 2323: (100% hackage alert) Since the command target dialog is not
    // accessible from outside the command, this seems to be the only way we
    // can get the window on top of this dialog. 
-   auto w = static_cast<wxDialogWrapper *>(wxFindWindowByLabel(XO("Long Message").Translation()));
+   auto w = dynamic_cast<wxDialogWrapper *>(wxFindWindowByLabel(XO("Long Message").Translation()));
    if (w) {
       auto endmodal = [w](wxCommandEvent &evt)
       {

@@ -26,7 +26,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectAutoDuck();
-   virtual ~EffectAutoDuck();
+   ~EffectAutoDuck() override;
 
    // ComponentInterface implementation
 
@@ -91,7 +91,7 @@ class EffectAutoDuckPanel final : public wxPanelWrapper
 public:
    EffectAutoDuckPanel(
       wxWindow *parent, wxWindowID winid, EffectAutoDuck *effect);
-   virtual ~EffectAutoDuckPanel();
+   ~EffectAutoDuckPanel() override;
 
 private:
    enum EControlPoint
@@ -104,9 +104,9 @@ private:
       none = 99,
    };
 
-   bool AcceptsFocus() const override { return false; }
+   [[nodiscard]] bool AcceptsFocus() const override { return false; }
    // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
-   bool AcceptsFocusFromKeyboard() const override { return false; }
+   [[nodiscard]] bool AcceptsFocusFromKeyboard() const override { return false; }
 
 
    void OnPaint(wxPaintEvent & evt);

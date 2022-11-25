@@ -41,7 +41,7 @@ enum sampleFormat : unsigned
 // ----------------------------------------------------------------------------
 // Provide the number of bytes a specific sample will take
 // ----------------------------------------------------------------------------
-#define SAMPLE_SIZE(SampleFormat) (SampleFormat >> 16)
+#define SAMPLE_SIZE(SampleFormat) ((SampleFormat) >> 16)
 
 // ----------------------------------------------------------------------------
 // Generic pointer to sample data
@@ -70,7 +70,7 @@ class SampleBuffer {
 
 public:
    SampleBuffer()
-      : mPtr(0)
+      : mPtr(nullptr)
    {}
    SampleBuffer(size_t count, sampleFormat format)
       : mPtr((samplePtr)malloc(count * SAMPLE_SIZE(format)))
@@ -92,10 +92,10 @@ public:
    void Free()
    {
       free(mPtr);
-      mPtr = 0;
+      mPtr = nullptr;
    }
 
-   samplePtr ptr() const { return mPtr; }
+   [[nodiscard]] samplePtr ptr() const { return mPtr; }
 
 
 private:

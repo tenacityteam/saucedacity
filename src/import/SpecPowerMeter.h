@@ -24,8 +24,8 @@ class SpecPowerCalculation
    Floats mSigFR;
    Floats mSigFI;
 
-   float CalcBinPower(float* sig_f_r, float* sig_f_i, int loBin, int hiBin);
-   int Freq2Bin(float fc);
+   static float CalcBinPower(const float* sig_f_r, const float* sig_f_i, int loBin, int hiBin);
+   int Freq2Bin(float fc) const;
 public:
    SpecPowerCalculation(size_t sigLen);
    ~SpecPowerCalculation();

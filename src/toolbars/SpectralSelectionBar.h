@@ -30,7 +30,7 @@ class SpectralSelectionBar final : public ToolBar {
 public:
 
    SpectralSelectionBar( SaucedacityProject &project );
-   virtual ~SpectralSelectionBar();
+   ~SpectralSelectionBar() override;
 
    static SpectralSelectionBar &Get( SaucedacityProject &project );
    static const SpectralSelectionBar &Get( const SaucedacityProject &project );

@@ -43,7 +43,7 @@
 #define BREAK_LEVEL 1
 #define ABORT_LEVEL 2
 
-#define read_to_eol(ch) if (ch != CR) { char temp[100]; ggets(temp); }
+#define read_to_eol(ch) if ((ch) != CR) { char temp[100]; ggets(temp); }
 
 extern char fileopen_name[];
 extern int abort_flag;

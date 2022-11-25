@@ -19,7 +19,7 @@ namespace {
 
 bool sError = false;
 
-static Dictionary &sDictionary()
+Dictionary &sDictionary()
 {
    static Dictionary theDictionary;
    return theDictionary;
@@ -38,7 +38,7 @@ void SetError()
 }
 
 RegisteredCommand::RegisteredCommand(
-   const wxString &name, Dispatcher dispatcher )
+   const wxString &name, const Dispatcher& dispatcher )
 {
    if ( !sDictionary().insert( { name, dispatcher } ).second ) {
       wxLogDebug( wxString::Format (

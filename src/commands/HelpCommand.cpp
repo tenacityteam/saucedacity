@@ -80,7 +80,7 @@ bool HelpCommand::Apply(const CommandContext &context)
    {
       CommandContext LispyContext( 
          context.project,
-         std::make_unique<LispifiedCommandOutputTargets>( *context.pOutput.get() )
+         std::make_unique<LispifiedCommandOutputTargets>( *context.pOutput )
          );
       return ApplyInner( LispyContext );
    }
@@ -89,7 +89,7 @@ bool HelpCommand::Apply(const CommandContext &context)
    {
       CommandContext BriefContext( 
          context.project,
-         std::make_unique<BriefCommandOutputTargets>( *context.pOutput.get() )
+         std::make_unique<BriefCommandOutputTargets>( *context.pOutput )
          );
       return ApplyInner( BriefContext );
    }
@@ -97,7 +97,7 @@ bool HelpCommand::Apply(const CommandContext &context)
    return false;
 }
 
-bool HelpCommand::ApplyInner(const CommandContext & context){
+bool HelpCommand::ApplyInner(const CommandContext & context) const{
    EffectManager & em = EffectManager::Get();
    PluginID ID = em.GetEffectByIdentifier( mCommandName );
    if( ID.empty() )

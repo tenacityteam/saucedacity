@@ -49,7 +49,7 @@ class SAUCEDACITY_DLL_API ZoomInfo /* not final */
 {
 public:
    ZoomInfo(double start, double pixelsPerSecond);
-   ~ZoomInfo();
+   ~ZoomInfo() override;
 
    // Be sure we don't slice
    ZoomInfo(const ZoomInfo&) = delete;
@@ -71,7 +71,7 @@ public:
    // Instead, call twice to convert start and end times,
    // and take the difference.
    // origin specifies the pixel corresponding to time h
-   double PositionToTime(wxInt64 position,
+   [[nodiscard]] double PositionToTime(wxInt64 position,
       wxInt64 origin = 0
       , bool ignoreFisheye = false
    ) const;
@@ -87,23 +87,23 @@ public:
 
    // This always ignores the fisheye.  Use with caution!
    // You should prefer to call TimeToPosition twice, for endpoints, and take the difference!
-   double TimeRangeToPixelWidth(double timeRange) const;
+   [[nodiscard]] double TimeRangeToPixelWidth(double timeRange) const;
 
-   double OffsetTimeByPixels(double time, wxInt64 offset, bool ignoreFisheye = false) const
+   [[nodiscard]] double OffsetTimeByPixels(double time, wxInt64 offset, bool ignoreFisheye = false) const
    {
       return PositionToTime(offset + TimeToPosition(time, ignoreFisheye), ignoreFisheye);
    }
 
-   int GetWidth() const { return mWidth; }
+   [[nodiscard]] int GetWidth() const { return mWidth; }
    void SetWidth( int width ) { mWidth = width; }
 
-   int GetVRulerWidth() const { return mVRulerWidth; }
+   [[nodiscard]] int GetVRulerWidth() const { return mVRulerWidth; }
    void SetVRulerWidth( int width ) { mVRulerWidth = width; }
-   int GetVRulerOffset() const { return kTrackInfoWidth + kLeftMargin; }
-   int GetLabelWidth() const { return GetVRulerOffset() + GetVRulerWidth(); }
-   int GetLeftOffset() const { return GetLabelWidth() + 1;}
+   static int GetVRulerOffset() { return kTrackInfoWidth + kLeftMargin; }
+   [[nodiscard]] int GetLabelWidth() const { return GetVRulerOffset() + GetVRulerWidth(); }
+   [[nodiscard]] int GetLeftOffset() const { return GetLabelWidth() + 1;}
 
-   int GetTracksUsableWidth() const
+   [[nodiscard]] int GetTracksUsableWidth() const
    {
       return
          std::max( 0, GetWidth() - ( GetLeftOffset() + kRightMargin ) );
@@ -111,14 +111,14 @@ public:
 
    // Returns the time corresponding to the pixel column one past the track area
    // (ignoring any fisheye)
-   double GetScreenEndTime() const
+   [[nodiscard]] double GetScreenEndTime() const
    {
       auto width = GetTracksUsableWidth();
       return PositionToTime(width, 0, true);
    }
 
-   bool ZoomInAvailable() const;
-   bool ZoomOutAvailable() const;
+   [[nodiscard]] bool ZoomInAvailable() const;
+   [[nodiscard]] bool ZoomOutAvailable() const;
 
    static double GetDefaultZoom()
    { return 44100.0 / 512.0; }
@@ -129,7 +129,7 @@ public:
 
    // This function should not be used to convert positions to times and back
    // Use TimeToPosition and PositionToTime and OffsetTimeByPixels instead
-   double GetZoom() const;
+   [[nodiscard]] double GetZoom() const;
 
    static double GetMaxZoom( );
    static double GetMinZoom( );
@@ -161,20 +161,20 @@ public:
 
       NUM_STATES,
    };
-   FisheyeState GetFisheyeState() const
+   static FisheyeState GetFisheyeState()
    { return HIDDEN; } // stub
 
    // Return true if the mouse position is anywhere in the fisheye
    // origin specifies the pixel corresponding to time h
-   bool InFisheye(wxInt64 /*position*/, wxInt64 WXUNUSED(origin = 0)) const
+   static bool InFisheye(wxInt64 /*position*/, wxInt64 WXUNUSED(origin = 0))
    {return false;} // stub
 
    // These accessors ignore the fisheye hiding state.
    // Inclusive:
-   wxInt64 GetFisheyeLeftBoundary(wxInt64 WXUNUSED(origin = 0)) const
+   static wxInt64 GetFisheyeLeftBoundary(wxInt64 WXUNUSED(origin = 0))
    {return 0;} // stub
    // Exclusive:
-   wxInt64 GetFisheyeRightBoundary(wxInt64 WXUNUSED(origin = 0)) const
+   static wxInt64 GetFisheyeRightBoundary(wxInt64 WXUNUSED(origin = 0))
    {return 0;} // stub
 
    int mWidth{ 0 };

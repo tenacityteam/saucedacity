@@ -278,7 +278,7 @@ XMLTagHandler *TimeTrack::HandleXMLChild(const wxChar *tag)
    if (!wxStrcmp(tag, wxT("envelope")))
       return mEnvelope.get();
 
-  return NULL;
+  return nullptr;
 }
 
 void TimeTrack::WriteXML(XMLWriter &xmlFile) const

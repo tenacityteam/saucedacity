@@ -9,6 +9,8 @@
  **********************************************************************/
 
 #include "WaveClipTrimHandle.h"
+
+#include <utility>
 #include "ProjectAudioIO.h"
 #include "RefreshCode.h"
 
@@ -56,8 +58,8 @@ HitTestPreview WaveClipTrimHandle::HitPreview(const SaucedacityProject*, bool un
     };
 }
 
-WaveClipTrimHandle::WaveClipTrimHandle(const std::pair<double, double>& range, const std::vector<std::shared_ptr<WaveClip>>& clips, Border targetBorder)
-    : mRange(range), mClips(clips), mTargetBorder(targetBorder)
+WaveClipTrimHandle::WaveClipTrimHandle(std::pair<double, double>  range, std::vector<std::shared_ptr<WaveClip>>  clips, Border targetBorder)
+    : mRange(std::move(range)), mClips(std::move(clips)), mTargetBorder(targetBorder)
 {
 }
 
@@ -88,7 +90,7 @@ UIHandlePtr WaveClipTrimHandle::HitAnywhere(std::weak_ptr<WaveClipTrimHandle>& h
         if (!WaveTrackView::ClipDetailsVisible(*clip, zoomInfo, rect))
            continue;
 
-        auto clipRect = ClipParameters::GetClipRect(*clip.get(), zoomInfo, rect);
+        auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
         
         if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold)
         {

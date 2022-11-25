@@ -9,10 +9,12 @@
 **********************************************************************/
 #include "XMLFileWriter.h"
 
+#include <utility>
+
 XMLFileWriter::XMLFileWriter(
-   const FilePath &outputPath, const TranslatableString &caption, bool keepBackup )
+   const FilePath &outputPath, TranslatableString caption, bool keepBackup )
    : mOutputPath{ outputPath }
-   , mCaption{ caption }
+   , mCaption{std::move( caption )}
    , mKeepBackup{ keepBackup }
 // may throw
 {
@@ -65,7 +67,7 @@ void XMLFileWriter::Commit()
 void XMLFileWriter::PreCommit()
 // may throw
 {
-   while (mTagstack.size()) {
+   while (!mTagstack.empty()) {
       EndTag(mTagstack[0]);
    }
 

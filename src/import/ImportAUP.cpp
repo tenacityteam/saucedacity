@@ -75,7 +75,7 @@ class AUPImportPlugin final : public ImportPlugin
 {
 public:
    AUPImportPlugin();
-   ~AUPImportPlugin();
+   ~AUPImportPlugin() override;
 
    wxString GetPluginStringID() override;
    
@@ -91,7 +91,7 @@ class AUPImportFileHandle final : public ImportFileHandle,
 public:
    AUPImportFileHandle(const FilePath &name,
                        SaucedacityProject *project);
-   ~AUPImportFileHandle();
+   ~AUPImportFileHandle() override;
 
    TranslatableString GetFileDescription() override;
 
@@ -351,7 +351,7 @@ ProgressResult AUPImportFileHandle::Import(WaveTrackFactory *WXUNUSED(trackFacto
    wxASSERT( mUpdateResult == ProgressResult::Success );
 
    sampleCount processed = 0;
-   for (auto fi : mFiles)
+   for (const auto& fi : mFiles)
    {
       mUpdateResult = mProgress->Update(processed.as_long_long(), mTotalSamples.as_long_long());
       if (mUpdateResult != ProgressResult::Success)
@@ -538,7 +538,7 @@ void AUPImportFileHandle::HandleXMLEndTag(const wxChar *tag)
    
    mHandlers.pop_back();
 
-   if (mHandlers.size())
+   if (!mHandlers.empty())
    {
       node = mHandlers.back();
       mParentTag = node.parent;
@@ -665,7 +665,7 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
 
       wxString strValue = value;
 
-#define set(f, v) (mProjectAttrs.have ## f = true, mProjectAttrs.f = v)
+#define set(f, v) (mProjectAttrs.have ## f = true, mProjectAttrs.f = (v))
 
       // ViewInfo
       if (!wxStrcmp(attr, wxT("vpos")))
@@ -1028,19 +1028,19 @@ bool AUPImportFileHandle::HandleWaveClip(XMLTagHandler *&handler)
 
    if (mParentTag.IsSameAs(wxT("wavetrack")))
    {
-      WaveTrack *wavetrack = static_cast<WaveTrack *>(node.handler);
+      auto *wavetrack = dynamic_cast<WaveTrack *>(node.handler);
 
       handler = wavetrack->CreateClip();
    }
    else if (mParentTag.IsSameAs(wxT("waveclip")))
    {
       // Nested wave clips are cut lines
-      WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
+      auto *waveclip = dynamic_cast<WaveClip *>(node.handler);
 
       handler = waveclip->HandleXMLChild(mCurrentTag);
    }
 
-   mClip = static_cast<WaveClip *>(handler);
+   mClip = dynamic_cast<WaveClip *>(handler);
    mClips.push_back(mClip);
 
    return true;
@@ -1056,7 +1056,7 @@ bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
       // envelope as well.  (See HandleTimeTrack and HandleControlPoint)
       if (node.handler)
       {
-         TimeTrack *timetrack = static_cast<TimeTrack *>(node.handler);
+         auto *timetrack = dynamic_cast<TimeTrack *>(node.handler);
 
          handler = timetrack->GetEnvelope();
       }
@@ -1070,7 +1070,7 @@ bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
    // Nested wave clips are cut lines
    else if (mParentTag.IsSameAs(wxT("waveclip")))
    {
-      WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
+      auto *waveclip = dynamic_cast<WaveClip *>(node.handler);
 
       handler = waveclip->GetEnvelope();
    }
@@ -1088,7 +1088,7 @@ bool AUPImportFileHandle::HandleControlPoint(XMLTagHandler *&handler)
       // control points as well.  (See HandleTimeTrack and HandleEnvelope)
       if (node.handler)
       {
-         Envelope *envelope = static_cast<Envelope *>(node.handler);
+         auto *envelope = dynamic_cast<Envelope *>(node.handler);
 
          handler = envelope->HandleXMLChild(mCurrentTag);
       }
@@ -1101,7 +1101,7 @@ bool AUPImportFileHandle::HandleSequence(XMLTagHandler *&handler)
 {
    struct node node = mHandlers.back();
 
-   WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
+   auto *waveclip = dynamic_cast<WaveClip *>(node.handler);
 
    // Earlier versions of Audacity had a single implied waveclip, so for
    // these versions, we get or create the only clip in the track.
@@ -1612,7 +1612,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
       // read 16-bit data directly.  This is a pretty common
       // case, as most audio files are 16-bit.
       SampleBuffer temp(cnt * channels, int16Sample);
-      short *tmpptr = (short *) temp.ptr();
+      auto *tmpptr = (short *) temp.ptr();
 
       framesRead = SFCall<sf_count_t>(sf_readf_short, sf, tmpptr, cnt);
       if (framesRead != cnt)
@@ -1646,7 +1646,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
       // scaling, and pass us normalized data as floats.  We can
       // then convert to whatever format we want.
       SampleBuffer tmpbuf(cnt * channels, floatSample);
-      float *tmpptr = (float *) tmpbuf.ptr();
+      auto *tmpptr = (float *) tmpbuf.ptr();
 
       framesRead = SFCall<sf_count_t>(sf_readf_float, sf, tmpptr, cnt);
       if (framesRead != cnt)

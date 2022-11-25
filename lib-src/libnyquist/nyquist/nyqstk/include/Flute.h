@@ -47,13 +47,13 @@ class Flute : public Instrmnt
   Flute(StkFloat lowestFrequency);
 
   //! Class destructor.
-  ~Flute();
+  ~Flute() override;
 
   //! Reset and clear all internal state.
   void clear();
 
   //! Set instrument parameters for a particular frequency.
-  void setFrequency(StkFloat frequency);
+  void setFrequency(StkFloat frequency) override;
 
   //! Set the reflection coefficient for the jet delay (-1.0 - 1.0).
   void setJetReflection(StkFloat coefficient);
@@ -71,17 +71,17 @@ class Flute : public Instrmnt
   void stopBlowing(StkFloat rate);
 
   //! Start a note with the given frequency and amplitude.
-  void noteOn(StkFloat frequency, StkFloat amplitude);
+  void noteOn(StkFloat frequency, StkFloat amplitude) override;
 
   //! Stop a note with the given amplitude (speed of decay).
-  void noteOff(StkFloat amplitude);
+  void noteOff(StkFloat amplitude) override;
 
   //! Perform the control change specified by \e number and \e value (0.0 - 128.0).
-  void controlChange(int number, StkFloat value);
+  void controlChange(int number, StkFloat value) override;
 
  protected:
 
-  StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
   DelayL   jetDelay_;
   DelayL   boreDelay_;

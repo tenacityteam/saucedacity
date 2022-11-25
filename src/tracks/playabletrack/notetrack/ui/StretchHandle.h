@@ -56,8 +56,8 @@ private:
 
 public:
    explicit StretchHandle
-      ( const std::shared_ptr<NoteTrack> &pTrack,
-        const StretchState &stretchState );
+      ( std::shared_ptr<NoteTrack> pTrack,
+        StretchState stretchState );
 
    StretchHandle &operator=(const StretchHandle&) = default;
 
@@ -66,7 +66,7 @@ public:
        const TrackPanelMouseState &state, const SaucedacityProject *pProject,
        const std::shared_ptr<NoteTrack> &pTrack );
 
-   virtual ~StretchHandle();
+   ~StretchHandle() override;
 
    Result Click
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject) override;

@@ -30,9 +30,7 @@
 #include <lib-strings/Identifier.h>
 #include <lib-strings/wxArrayStringEx.h>
 
-namespace Journal {
-
-namespace Events {
+namespace Journal::Events {
 
 namespace {
 
@@ -62,7 +60,7 @@ static const ByCodeMap &ByCode();
 // This sub-object populates the journal system's dictionary for playback
 struct RegisteredEventType : RegisteredCommand {
    static bool DispatchEvent( wxArrayStringEx fields );
-   explicit RegisteredEventType( Code code )
+   explicit RegisteredEventType( const Code& code )
    : RegisteredCommand{ code.GET(), DispatchEvent }
    {}
 };
@@ -348,7 +346,7 @@ const Types &TypeCatalog()
    return result;
 }
 
-static const ByTypeMap &ByType()
+const ByTypeMap &ByType()
 {
    static std::once_flag flag;
    static ByTypeMap result;
@@ -359,7 +357,7 @@ static const ByTypeMap &ByType()
    return result;
 }
 
-static const ByCodeMap &ByCode()
+const ByCodeMap &ByCode()
 {
    static std::once_flag flag;
    static ByCodeMap result;
@@ -378,7 +376,7 @@ struct Watcher : public wxEventFilter
       wxEvtHandler::AddFilter( this );
    }
 
-   ~Watcher()
+   ~Watcher() override
    {
       wxEvtHandler::RemoveFilter( this );
    }
@@ -427,8 +425,6 @@ void Initialize()
 void Watch()
 {
    static Watcher instance;
-}
-
 }
 
 }

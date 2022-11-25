@@ -35,7 +35,7 @@ class Vector
  public:
    Vector();
    Vector(const Vector& copyFrom);
-   Vector(unsigned len, double *data=NULL);
+   Vector(unsigned len, double *data=nullptr);
    Vector(unsigned len, float *data);
    Vector& operator=(const Vector &other);
    ~Vector();
@@ -45,9 +45,9 @@ class Vector
 
    inline double& operator[](unsigned i) { return mData[i]; }
    inline double operator[](unsigned i) const { return mData[i]; }
-   inline unsigned Len() const { return mN; }
+   [[nodiscard]] inline unsigned Len() const { return mN; }
 
-   double Sum() const;
+   [[nodiscard]] double Sum() const;
 
  private:
    unsigned mN{ 0 };
@@ -58,15 +58,15 @@ class Matrix
 {
  public:
    Matrix(const Matrix& copyFrom);
-   Matrix(unsigned rows, unsigned cols, double **data=NULL);
+   Matrix(unsigned rows, unsigned cols, double **data=nullptr);
    ~Matrix();
 
    Matrix& operator=(const Matrix& other);
 
    inline Vector& operator[](unsigned i) { return mRowVec[i]; }
    inline Vector& operator[](unsigned i) const { return mRowVec[i]; }
-   inline unsigned Rows() const { return mRows; }
-   inline unsigned Cols() const { return mCols; }
+   [[nodiscard]] inline unsigned Rows() const { return mRows; }
+   [[nodiscard]] inline unsigned Cols() const { return mCols; }
 
    void SwapRows(unsigned i, unsigned j);
 
@@ -96,7 +96,7 @@ Vector operator*(const Vector &left, const Matrix &right);
 Vector operator*(const Matrix &left, const Vector &right);
 
 Matrix operator+(const Matrix &left, const Matrix &right);
-Matrix operator*(const Matrix &left, const double right);
+Matrix operator*(const Matrix &left, double right);
 
 // No operator* on matrices due to ambiguity
 Matrix ScalarMultiply(const Matrix &left, const Matrix &right);

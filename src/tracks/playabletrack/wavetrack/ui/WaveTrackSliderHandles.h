@@ -20,7 +20,7 @@ class GainSliderHandle final : public SliderHandle
 {
    GainSliderHandle(const GainSliderHandle&) = delete;
 
-   std::shared_ptr<WaveTrack> GetWaveTrack() const;
+   [[nodiscard]] std::shared_ptr<WaveTrack> GetWaveTrack() const;
 
 public:
    explicit GainSliderHandle
@@ -29,7 +29,7 @@ public:
 
    GainSliderHandle &operator=(const GainSliderHandle&) = default;
 
-   virtual ~GainSliderHandle();
+   ~GainSliderHandle() override;
 
 protected:
    float GetValue() override;
@@ -56,7 +56,7 @@ class PanSliderHandle final : public SliderHandle
 {
    PanSliderHandle(const PanSliderHandle&) = delete;
 
-   std::shared_ptr<WaveTrack> GetWaveTrack() const;
+   [[nodiscard]] std::shared_ptr<WaveTrack> GetWaveTrack() const;
 
 public:
    explicit PanSliderHandle
@@ -65,7 +65,7 @@ public:
 
    PanSliderHandle &operator=(const PanSliderHandle&) = default;
 
-   virtual ~PanSliderHandle();
+   ~PanSliderHandle() override;
 
 protected:
    float GetValue() override;

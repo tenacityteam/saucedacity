@@ -440,8 +440,7 @@ void eventwait(long timeout)
     int c = getc(stdin);
     ungetc(c, stdin);
     }
-    return;
-}
+    }
 #else
 void eventwait(long timeout)
 {
@@ -955,7 +954,7 @@ void midi_bend(int channel, int value)
 *
 ****************************************************************************/
 
-boolean midi_buffer(byte huge *buffer, ulong size)
+boolean midi_buffer(const byte huge *buffer, ulong size)
 {
     if (!buffer) return FALSE;
 #ifdef AMIGA

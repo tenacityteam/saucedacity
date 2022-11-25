@@ -13,6 +13,7 @@
 #include "SaucedacityException.h"
 
 #include <atomic>
+#include <utility>
 #include "BasicUI.h"
 
 SaucedacityException::SaucedacityException()
@@ -51,8 +52,8 @@ void SaucedacityException::EnqueueAction(
 std::atomic<int> sOutstandingMessages {};
 
 MessageBoxException::MessageBoxException(
-  ExceptionType exceptionType_, const TranslatableString& caption_)
-   : caption { caption_ }
+  ExceptionType exceptionType_, TranslatableString  caption_)
+   : caption {std::move( caption_ )}
    , exceptionType { exceptionType_ }
 {
   if (!caption.empty())

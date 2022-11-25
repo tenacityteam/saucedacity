@@ -25,7 +25,7 @@ but it will probably work fine if you use it on a high level.
 #define __AUDACITY_PROFILER__
 #include <mutex>
 #include <vector>
-#include <time.h>
+#include <ctime>
 
 // Saucedacity libraries
 #include <lib-utility/MemoryX.h>
@@ -76,7 +76,7 @@ class Profiler
       ///end the task timer.
       void End(const char* fileName, int lineNum, const char* taskDescription);
 
-      double ComputeAverageRunTime();
+      double ComputeAverageRunTime() const;
 
       ArrayOf<char> mFileName;
       int mLine;

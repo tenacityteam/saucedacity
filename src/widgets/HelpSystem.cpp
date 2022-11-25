@@ -73,7 +73,7 @@ public:
       MakeModal( true );
 #endif
    }
-   virtual ~HtmlTextHelpDialog()
+   ~HtmlTextHelpDialog() override
    {
 #if !wxCHECK_VERSION(3, 0, 0)
       MakeModal( false );
@@ -231,8 +231,6 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
    }
 
    html->SetRelatedStatusBar( 0 );
-
-   return;
 }
 
 // Shows help in browser, or possibly in own dialog.
@@ -499,11 +497,11 @@ void BrowserDialog::OnKeyDown(wxKeyEvent & event)
 void BrowserDialog::UpdateButtons()
 {
    wxWindow * pWnd;
-   if( (pWnd = FindWindowById( wxID_BACKWARD, this )) != NULL )
+   if( (pWnd = FindWindowById( wxID_BACKWARD, this )) != nullptr )
    {
       pWnd->Enable(mpHtml->HistoryCanBack());
    }
-   if( (pWnd = FindWindowById( wxID_FORWARD, this )) != NULL )
+   if( (pWnd = FindWindowById( wxID_FORWARD, this )) != nullptr )
    {
       pWnd->Enable(mpHtml->HistoryCanForward());
    }

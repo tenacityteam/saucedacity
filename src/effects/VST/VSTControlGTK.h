@@ -25,9 +25,9 @@ class VSTControl final : public VSTControlBase
 {
 public:
    VSTControl();
-   ~VSTControl();
+   ~VSTControl() override;
 
-   bool Create(wxWindow *parent, VSTEffectLink *link);
+   bool Create(wxWindow *parent, VSTEffectLink *link) override;
 
 private:
    Display *mXdisp;

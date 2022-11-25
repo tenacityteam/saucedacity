@@ -18,13 +18,13 @@
 /***************************************************/
 
 #include "Sitar.h"
-#include <math.h>
+#include <cmath>
 
 using namespace Nyq;
 
 Sitar :: Sitar(StkFloat lowestFrequency)
 {
-  unsigned long length = (unsigned long) (Stk::sampleRate() / lowestFrequency + 1);
+  auto length = (unsigned long) (Stk::sampleRate() / lowestFrequency + 1);
   delayLine_.setMaximumDelay( length );
   delay_ = 0.5 * length;
   delayLine_.setDelay( delay_ );

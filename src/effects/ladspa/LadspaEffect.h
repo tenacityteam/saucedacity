@@ -45,7 +45,7 @@ class LadspaEffect final : public wxEvtHandler,
 {
 public:
    LadspaEffect(const wxString & path, int index);
-   virtual ~LadspaEffect();
+   ~LadspaEffect() override;
 
    // ComponentInterface implementation
 
@@ -77,13 +77,13 @@ public:
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
+   [[nodiscard]] size_t GetBlockSize() const override;
 
    sampleCount GetLatency() override;
    size_t GetTailSize() override;
 
    bool IsReady() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
 
@@ -209,7 +209,7 @@ class LadspaEffectsModule final : public ModuleInterface
 {
 public:
    LadspaEffectsModule();
-   virtual ~LadspaEffectsModule();
+   ~LadspaEffectsModule() override;
 
    // ComponentInterface implementation
 
@@ -242,6 +242,6 @@ public:
 
    // LadspaEffectModule implementation
 
-   FilePaths GetSearchPaths();
+   static FilePaths GetSearchPaths();
 };
 

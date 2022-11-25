@@ -22,7 +22,7 @@
 #include "userio.h"
 #include "string.h"
 
-#define MIDIFILE_ERROR -1
+#define MIDIFILE_ERROR (-1)
 
 #ifdef PROTOTYPES
 #define NOARGS void
@@ -365,7 +365,6 @@ readtrack()              /* read a track chunk */
         }
         if ( Mf_endtrack )
                 (*Mf_endtrack)();
-        return;
 }
 
 static void

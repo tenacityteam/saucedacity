@@ -69,13 +69,13 @@ template< typename Object > struct Lockable< Object, NoLocking >
 template< typename Object > struct Lockable< Object, NonrecursiveLocking >
 : Object, std::mutex {
    using Lock = std::unique_lock< std::mutex >;
-   Lock lock() const { return Lock{ *this }; }
+   [[nodiscard]] Lock lock() const { return Lock{ *this }; }
 };
 //! Specialization for real locking with std::recursive_mutex
 template< typename Object > struct Lockable< Object, RecursiveLocking >
 : Object, std::recursive_mutex {
    using Lock = std::unique_lock< std::recursive_mutex >;
-   Lock lock() const { return Lock{ *this }; }
+   [[nodiscard]] Lock lock() const { return Lock{ *this }; }
 };
 
 //! Decorated reference to a ClientData::Lockable, with a current lock on it
@@ -98,8 +98,8 @@ template< typename Container > struct Copyable< Container, SkipCopying >
    Copyable() = default;
    Copyable( const Copyable & ) {}
    Copyable &operator=( const Copyable & ) { return *this; }
-   Copyable( Copyable && ) = default;
-   Copyable &operator=( Copyable&& ) = default;
+   Copyable( Copyable && )  noexcept = default;
+   Copyable &operator=( Copyable&& )  noexcept = default;
 };
 //! Specialization that copies pointers, not sub-objects; [strong guarantee](@ref Strong-guarantee) for assignment
 template< typename Container > struct Copyable< Container, ShallowCopying >
@@ -120,8 +120,8 @@ template< typename Container > struct Copyable< Container, ShallowCopying >
       }
       return *this;
    }
-   Copyable( Copyable && ) = default;
-   Copyable &operator=( Copyable&& ) = default;
+   Copyable( Copyable && )  noexcept = default;
+   Copyable &operator=( Copyable&& )  noexcept = default;
 };
 //! Specialization that clones sub-objects when copying;  [strong guarantee](@ref Strong-guarantee) for assignment
 template< typename Container > struct Copyable< Container, DeepCopying >
@@ -144,8 +144,8 @@ template< typename Container > struct Copyable< Container, DeepCopying >
       }
       return *this;
    }
-   Copyable( Copyable && ) = default;
-   Copyable &operator=( Copyable&& ) = default;
+   Copyable( Copyable && )  noexcept = default;
+   Copyable &operator=( Copyable&& )  noexcept = default;
 };
 
 }

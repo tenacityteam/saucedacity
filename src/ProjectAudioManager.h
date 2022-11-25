@@ -63,7 +63,7 @@ public:
    ProjectAudioManager &operator=( const ProjectAudioManager & ) = delete;
    ~ProjectAudioManager() override;
 
-   bool IsTimerRecordCancelled() { return mTimerRecordCanceled; }
+   bool IsTimerRecordCancelled() const { return mTimerRecordCanceled; }
    void SetTimerRecordCancelled() { mTimerRecordCanceled = true; }
    void ResetTimerRecordCancelled() { mTimerRecordCanceled = false; }
 

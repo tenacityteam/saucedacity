@@ -55,8 +55,8 @@ private:
    wxVariant mConverted;
 
 public:
-   Validator() {};
-   virtual ~Validator() {};
+   Validator() = default;;
+   virtual ~Validator() = default;;
    void SetConverted (const wxVariant &v)
    {
       mConverted = v;
@@ -75,20 +75,20 @@ public:
 
    /// Return a description (for error messages)
    /// should be of the form 'v must be $description'
-   virtual wxString GetDescription() const
+   [[nodiscard]] virtual wxString GetDescription() const
    {
       return wxT("any value");
    }
 
    /// This MUST be overridden, to avoid slicing!
    using Holder = std::unique_ptr<Validator>;
-   virtual Holder GetClone() const = 0;
+   [[nodiscard]] virtual Holder GetClone() const = 0;
 };
 
 class DefaultValidator final : public Validator
 {
 public:
-   virtual Holder GetClone() const
+   [[nodiscard]] Holder GetClone() const override
    {
       return std::make_unique<DefaultValidator>(*this);
    }
@@ -113,7 +113,7 @@ public:
       SetConverted(v);
       return make_iterator_range( mOptions ).contains( v.GetString() );
    }
-   wxString GetDescription() const override
+   [[nodiscard]] wxString GetDescription() const override
    {
       wxString desc = wxT("one of: ");
       int optionCount = mOptions.size();
@@ -125,7 +125,7 @@ public:
       desc += mOptions[optionCount-1];
       return desc;
    }
-   Holder GetClone() const override
+   [[nodiscard]] Holder GetClone() const override
    {
       auto v = std::make_unique<OptionValidator>();
       v->mOptions = mOptions;
@@ -144,11 +144,11 @@ public:
       SetConverted(val);
       return GetConverted().IsType(wxT("bool"));
    }
-   wxString GetDescription() const override
+   [[nodiscard]] wxString GetDescription() const override
    {
       return wxT("true/false or 1/0 or yes/no");
    }
-   Holder GetClone() const override
+   [[nodiscard]] Holder GetClone() const override
    {
       return std::make_unique<BoolValidator>();
    }
@@ -157,22 +157,22 @@ public:
 class BoolArrayValidator final : public Validator
 {
 public:
-   virtual bool Validate(const wxVariant &v) override
+   bool Validate(const wxVariant &v) override
    {
       wxString val;         // Validate a string of chars containing only 0, 1 and x.
       if (!v.Convert(&val))
          return false;
       SetConverted(val);
-      for(size_t i=0; i != val.length(); i++)
-         if( val[i] != '0' && val[i] != '1' && val[i] != 'x' && val[i] != 'X')
+      for(auto && i : val)
+         if( i != '0' && i != '1' && i != 'x' && i != 'X')
             return false;
       return true;
    }
-   wxString GetDescription() const override
+   [[nodiscard]] wxString GetDescription() const override
    {
       return wxT("0X101XX101...etc. where 0=false, 1=true, and X=don't care. Numbering starts at leftmost = track 0");
    }
-   Holder GetClone() const override
+   [[nodiscard]] Holder GetClone() const override
    {
       return std::make_unique<BoolArrayValidator>();
    }
@@ -188,11 +188,11 @@ public:
       SetConverted(val);
       return GetConverted().IsType(wxT("double"));
    }
-   wxString GetDescription() const override
+   [[nodiscard]] wxString GetDescription() const override
    {
       return wxT("a floating-point number");
    }
-   Holder GetClone() const override
+   [[nodiscard]] Holder GetClone() const override
    {
       return std::make_unique<DoubleValidator>();
    }
@@ -213,11 +213,11 @@ public:
       SetConverted(val);
       return ((mLower < val) && (val < mUpper));
    }
-   wxString GetDescription() const override
+   [[nodiscard]] wxString GetDescription() const override
    {
       return wxString::Format(wxT("between %f and %f"), mLower, mUpper);
    }
-   Holder GetClone() const override
+   [[nodiscard]] Holder GetClone() const override
    {
       return std::make_unique<RangeValidator>(mLower, mUpper);
    }
@@ -234,11 +234,11 @@ public:
       if (!GetConverted().IsType(wxT("double"))) return false;
       return ((long)val == val);
    }
-   wxString GetDescription() const override
+   [[nodiscard]] wxString GetDescription() const override
    {
       return wxT("an integer");
    }
-   Holder GetClone() const override
+   [[nodiscard]] Holder GetClone() const override
    {
       return std::make_unique<IntValidator>();
    }

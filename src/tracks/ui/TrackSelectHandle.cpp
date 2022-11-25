@@ -24,6 +24,8 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/cursor.h>
 #include <wx/translation.h>
 
+#include <utility>
+
 #include "../../../images/Cursors.h"
 
 #if defined(__WXMAC__)
@@ -48,8 +50,8 @@ namespace {
    }
 }
 
-TrackSelectHandle::TrackSelectHandle( const std::shared_ptr<Track> &pTrack )
-   : mpTrack( pTrack )
+TrackSelectHandle::TrackSelectHandle( std::shared_ptr<Track> pTrack )
+   : mpTrack(std::move( pTrack ))
 {}
 
 UIHandlePtr TrackSelectHandle::HitAnywhere

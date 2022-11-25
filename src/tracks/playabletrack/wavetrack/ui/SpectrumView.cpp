@@ -57,7 +57,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
 
 void SpectrumView::DoSetMinimized( bool minimized )
 {
-   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   auto wt = dynamic_cast<WaveTrack*>( FindTrack().get() );
 
 #ifdef EXPERIMENTAL_HALF_WAVE
    bool bHalfWave;
@@ -93,7 +93,7 @@ std::shared_ptr<TrackVRulerControls> SpectrumView::DoGetVRulerControls()
 namespace
 {
 
-static inline float findValue
+inline float findValue
 (const float *spectrum, float bin0, float bin1, unsigned nBins,
  bool autocorrelation, int gain, int range)
 {
@@ -258,8 +258,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    const auto half = settings.GetFFTLength() / 2;
    const double binUnit = rate / (2 * half);
-   const float *freq = 0;
-   const sampleCount *where = 0;
+   const float *freq = nullptr;
+   const sampleCount *where = nullptr;
    bool updated;
    {
       const double pps = averagePixelsPerSample * rate;
@@ -549,7 +549,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
       // in the loop above, and must be fetched from fft cache
       float* uncached;
       if (!zoomInfo.InFisheye(xx, -leftOffset)) {
-          uncached = 0;
+          uncached = nullptr;
       }
       else {
           int specIndex = (xx - fisheyeLeft) * nBins;
@@ -658,7 +658,7 @@ void SpectrumView::Draw(
       // If both channels are visible, we will duplicate this effort, but that
       // matters little.
       for( auto channel:
-          TrackList::Channels(static_cast<WaveTrack*>(FindTrack().get())) )
+          TrackList::Channels(dynamic_cast<WaveTrack*>(FindTrack().get())) )
          channel->UpdateLocationsCache();
 
       const auto wt = std::static_pointer_cast<const WaveTrack>(
@@ -713,7 +713,7 @@ struct SpectrogramSettingsHandler : PopupMenuHandler {
       return instance;
    }
 
-   void OnSpectrogramSettings(wxCommandEvent &);
+   void OnSpectrogramSettings(wxCommandEvent &) const;
 
    void InitUserData(void *pUserData) override
    {
@@ -726,7 +726,7 @@ struct SpectrogramSettingsHandler : PopupMenuHandler {
    }
 };
 
-void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
+void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &) const
 {
    class ViewSettingsDialog final : public PrefsDialog
    {
@@ -762,7 +762,7 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
       return;
    }
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto *const pTrack = dynamic_cast<WaveTrack*>(mpData->pTrack);
 
    PrefsPanel::Factories factories;
    // factories.push_back(WaveformPrefsFactory( pTrack ));

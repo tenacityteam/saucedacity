@@ -70,7 +70,7 @@ ScrubbingToolBar::~ScrubbingToolBar()
 ScrubbingToolBar &ScrubbingToolBar::Get( SaucedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<ScrubbingToolBar*>( toolManager.GetToolBar(ScrubbingBarID) );
+   return *dynamic_cast<ScrubbingToolBar*>( toolManager.GetToolBar(ScrubbingBarID) );
 }
 
 const ScrubbingToolBar &ScrubbingToolBar::Get( const SaucedacityProject &project )

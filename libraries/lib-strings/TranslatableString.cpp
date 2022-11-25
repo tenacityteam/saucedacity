@@ -122,7 +122,7 @@ wxString TranslatableString::DoChooseFormat(
 }
 
 TranslatableString &TranslatableString::Join(
-   const TranslatableString arg, const wxString &separator ) &
+   const TranslatableString& arg, const wxString &separator ) &
 {
    auto prevFormatter = mFormatter;
    mFormatter =

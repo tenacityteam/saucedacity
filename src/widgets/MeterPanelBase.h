@@ -24,14 +24,14 @@ public:
    virtual void Reset(double sampleRate, bool resetClipping) = 0;
    virtual void UpdateDisplay(unsigned numChannels,
                       int numFrames, float *sampleData) = 0;
-   virtual bool IsMeterDisabled() const = 0;
-   virtual float GetMaxPeak() const = 0;
+   [[nodiscard]] virtual bool IsMeterDisabled() const = 0;
+   [[nodiscard]] virtual float GetMaxPeak() const = 0;
 
-   virtual bool IsClipping() const = 0;
-   virtual int GetDBRange() const = 0;
+   [[nodiscard]] virtual bool IsClipping() const = 0;
+   [[nodiscard]] virtual int GetDBRange() const = 0;
 
-   bool AcceptsFocus() const override { return s_AcceptsFocus; }
-   bool AcceptsFocusFromKeyboard() const override { return true; }
+   [[nodiscard]] bool AcceptsFocus() const override { return s_AcceptsFocus; }
+   [[nodiscard]] bool AcceptsFocusFromKeyboard() const override { return true; }
 
 private:
    static bool s_AcceptsFocus;

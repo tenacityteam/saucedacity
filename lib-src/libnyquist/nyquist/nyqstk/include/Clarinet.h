@@ -43,16 +43,16 @@ class Clarinet : public Instrmnt
   /*!
     An StkError will be thrown if the rawwave path is incorrectly set.
   */
-  Clarinet(StkFloat lowestFrequency);
+  explicit Clarinet(StkFloat lowestFrequency);
 
   //! Class destructor.
-  ~Clarinet();
+  ~Clarinet() override;
 
   //! Reset and clear all internal state.
   void clear();
 
   //! Set instrument parameters for a particular frequency.
-  void setFrequency(StkFloat frequency);
+  void setFrequency(StkFloat frequency) override;
 
   //! Apply breath pressure to instrument with given amplitude and rate of increase.
   void startBlowing(StkFloat amplitude, StkFloat rate);
@@ -61,17 +61,17 @@ class Clarinet : public Instrmnt
   void stopBlowing(StkFloat rate);
 
   //! Start a note with the given frequency and amplitude.
-  void noteOn(StkFloat frequency, StkFloat amplitude);
+  void noteOn(StkFloat frequency, StkFloat amplitude) override;
 
   //! Stop a note with the given amplitude (speed of decay).
-  void noteOff(StkFloat amplitude);
+  void noteOff(StkFloat amplitude) override;
 
   //! Perform the control change specified by \e number and \e value (0.0 - 128.0).
-  void controlChange(int number, StkFloat value);
+  void controlChange(int number, StkFloat value) override;
 
  protected:
 
-  StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
   DelayL delayLine_;
   ReedTable reedTable_;

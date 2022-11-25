@@ -49,7 +49,7 @@ struct SnapResults {
    bool snappedPoint{ false };
    bool snappedTime{ false };
 
-   bool Snapped() const { return snappedPoint || snappedTime; }
+   [[nodiscard]] bool Snapped() const { return snappedPoint || snappedTime; }
 };
 
 class SAUCEDACITY_DLL_API SnapManager

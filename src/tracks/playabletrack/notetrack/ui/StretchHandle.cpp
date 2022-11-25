@@ -31,11 +31,12 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../../images/Cursors.h"
 
 #include <algorithm>
+#include <utility>
 
 StretchHandle::StretchHandle
-( const std::shared_ptr<NoteTrack> &pTrack, const StretchState &stretchState )
-   : mpTrack{ pTrack }
-   , mStretchState{ stretchState }
+( std::shared_ptr<NoteTrack> pTrack, StretchState stretchState )
+   : mpTrack{std::move( pTrack )}
+   , mStretchState{std::move( stretchState )}
 {}
 
 HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
@@ -53,7 +54,7 @@ HitTestPreview StretchHandle::HitPreview( StretchEnum stretchMode, bool unsafe )
       return { {}, &*disabledCursor };
    }
    else {
-      wxCursor *pCursor = NULL;
+      wxCursor *pCursor = nullptr;
       switch (stretchMode) {
       default:
          wxASSERT(false);
@@ -170,7 +171,7 @@ UIHandle::Result StretchHandle::Click
 
    if (event.LeftDClick() ||
        !event.LeftDown() ||
-       evt.pCell == NULL)
+       evt.pCell == nullptr)
       return Cancelled;
 
 
@@ -203,7 +204,7 @@ UIHandle::Result StretchHandle::Drag
    Track *clickedTrack=nullptr;
    if (evt.pCell)
       clickedTrack =
-         static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack().get();
+         dynamic_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack().get();
 
    if (clickedTrack == nullptr && mpTrack != nullptr)
       clickedTrack = mpTrack.get();
@@ -289,7 +290,7 @@ void StretchHandle::Stretch(SaucedacityProject *pProject, int mouseXCoordinate, 
 {
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   if (pTrack == NULL && mpTrack != NULL)
+   if (pTrack == nullptr && mpTrack != nullptr)
       pTrack = mpTrack.get();
 
   if (pTrack) pTrack->TypeSwitch( [&](NoteTrack *pNt) {

@@ -144,7 +144,7 @@ ExportMultipleDialog::ExportMultipleDialog(SaucedacityProject *project)
 
    this->CountTracksAndLabels();
 
-   mBook = NULL;
+   mBook = nullptr;
 
    ShuttleGui S(this, eIsCreatingFromPrefs);
 
@@ -776,7 +776,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
    wxString name;    // used to hold file name whilst we mess with it
    wxString title;   // un-messed-with title of file for tagging with
 
-   const LabelStruct *info = NULL;
+   const LabelStruct *info = nullptr;
    /* Examine all labels a first time, sort out all data but don't do any
     * exporting yet (so this run is quick but interactive) */
    while( l < mNumLabels ) {
@@ -838,7 +838,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByLabel(bool byName,
          // copy project metadata to start with
          setting.filetags = Tags::Get( *mProject );
          setting.filetags.LoadDefaults();
-         if (exportSettings.size()) {
+         if (!exportSettings.empty()) {
             setting.filetags = exportSettings.back().filetags;
          }
          // over-ride with values
@@ -982,7 +982,7 @@ ProgressResult ExportMultipleDialog::ExportMultipleByTrack(bool byName,
          // copy project metadata to start with
          setting.filetags = Tags::Get( *mProject );
          setting.filetags.LoadDefaults();
-         if (exportSettings.size()) {
+         if (!exportSettings.empty()) {
             setting.filetags = exportSettings.back().filetags;
          }
          // over-ride with values
@@ -1130,7 +1130,7 @@ ProgressResult ExportMultipleDialog::DoExport(std::unique_ptr<ProgressDialog> &p
                                                 selectedOnly,
                                                 t0,
                                                 t1,
-                                                NULL,
+                                                nullptr,
                                                 &tags,
                                                 mSubFormatIndex);
 

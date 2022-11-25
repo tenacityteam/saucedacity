@@ -64,7 +64,7 @@ class ImportRawDialog final : public wxDialogWrapper {
    ImportRawDialog(wxWindow * parent,
                    int encoding, unsigned channels,
                    int offset, double rate);
-   ~ImportRawDialog();
+   ~ImportRawDialog() override;
 
    void OnOK(wxCommandEvent & event);
    void OnCancel(wxCommandEvent & event);
@@ -163,7 +163,7 @@ void ImportRaw(const SaucedacityProject &project, wxWindow *parent, const wxStri
 
       if (!sndFile){
          char str[1000];
-         sf_error_str((SNDFILE *)NULL, str, 1000);
+         sf_error_str((SNDFILE *)nullptr, str, 1000);
          wxPrintf("%s\n", str);
 
          throw FileException{ FileException::Cause::Open, fileName };

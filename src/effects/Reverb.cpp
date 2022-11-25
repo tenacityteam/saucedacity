@@ -136,8 +136,7 @@ EffectReverb::EffectReverb()
 }
 
 EffectReverb::~EffectReverb()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -222,8 +221,8 @@ bool EffectReverb::ProcessFinalize()
 
 size_t EffectReverb::ProcessBlock(float **inBlock, float **outBlock, size_t blockLen)
 {
-   float *ichans[2] = {NULL, NULL};
-   float *ochans[2] = {NULL, NULL};
+   float *ichans[2] = {nullptr, nullptr};
+   float *ochans[2] = {nullptr, nullptr};
 
    for (unsigned int c = 0; c < mNumChans; c++)
    {
@@ -341,9 +340,9 @@ RegistryPaths EffectReverb::GetFactoryPresets()
 {
    RegistryPaths names;
 
-   for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++)
+   for (const auto & FactoryPreset : FactoryPresets)
    {
-      names.push_back( FactoryPresets[i].name.Translation() );
+      names.push_back( FactoryPreset.name.Translation() );
    }
 
    return names;
@@ -473,8 +472,6 @@ void EffectReverb::PopulateOrExchange(ShuttleGui & S)
          AddCheckBox(XXO("Wet O&nly"), DEF_WetOnly);
    }
    S.EndHorizontalLay();
-
-   return;
 }
 
 bool EffectReverb::TransferDataToWindow()

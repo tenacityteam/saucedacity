@@ -53,12 +53,12 @@ public:
       mMessage = message;
    }
 
-   virtual wxObject* Clone() const wxOVERRIDE
+   [[nodiscard]] wxObject* Clone() const wxOVERRIDE
    {
       return safenew FilesystemValidator(mMessage);
    }
 
-   virtual bool Validate(wxWindow* WXUNUSED(parent)) wxOVERRIDE
+   bool Validate(wxWindow* WXUNUSED(parent)) wxOVERRIDE
    {
       wxTextCtrl* tc = wxDynamicCast(GetWindow(), wxTextCtrl);
       if (!tc) {
@@ -72,12 +72,12 @@ public:
       return true;
    }
 
-   virtual bool TransferToWindow() wxOVERRIDE
+   bool TransferToWindow() wxOVERRIDE
    {
       return true;
    }
 
-   virtual bool TransferFromWindow() wxOVERRIDE
+   bool TransferFromWindow() wxOVERRIDE
    {
       return true;
    }
@@ -145,8 +145,8 @@ END_EVENT_TABLE()
 DirectoriesPrefs::DirectoriesPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint:  Directories, also called directories, in computer file systems */
 :  PrefsPanel(parent, winid, XO("Directories")),
-   mFreeSpace(NULL),
-   mTempText(NULL)
+   mFreeSpace(nullptr),
+   mTempText(nullptr)
 {
    Populate();
 }
@@ -322,7 +322,7 @@ void DirectoriesPrefs::OnTempBrowse(wxCommandEvent &evt)
       // (that doesn't exist) -- hence the constructor calls
       if (tmpDirPath != wxFileName(DefaultTempDir(), wxT("")) &&
             tmpDirPath != wxFileName(mTempText->GetValue(), wxT("")) &&
-            (dirsInPath.size() == 0 ||
+            (dirsInPath.empty() ||
              dirsInPath[dirsInPath.size()-1] != newDirName))
       {
          tmpDirPath.AppendDir(newDirName);
@@ -342,7 +342,7 @@ void DirectoriesPrefs::OnTempText(wxCommandEvent & WXUNUSED(evt))
       FilePath path = mTempText->GetValue();
 
       wxLongLong space;
-      wxGetDiskSpace(path, NULL, &space);
+      wxGetDiskSpace(path, nullptr, &space);
 
       label = wxDirExists(path)
          ? Internat::FormatSize(space)
@@ -355,7 +355,7 @@ void DirectoriesPrefs::OnTempText(wxCommandEvent & WXUNUSED(evt))
 void DirectoriesPrefs::OnBrowse(wxCommandEvent &evt)
 {
    long id = evt.GetId() - ButtonsStart;
-   wxTextCtrl *tc = (wxTextCtrl *) FindWindow(id + TextsStart);
+   auto *tc = (wxTextCtrl *) FindWindow(id + TextsStart);
 
    wxString location = tc->GetValue();
 

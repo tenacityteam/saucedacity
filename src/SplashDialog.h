@@ -27,7 +27,7 @@ public:
    static void DoHelpWelcome( SaucedacityProject &project );
 
    SplashDialog(wxWindow * parent);
-   virtual ~ SplashDialog();
+   ~ SplashDialog() override;
    void OnOK(wxCommandEvent & event);
    static void Show2( wxWindow * pParent );
 
@@ -35,7 +35,7 @@ public:
 
 private:
 
-   void OnChar(wxMouseEvent &event);
+   static void OnChar(wxMouseEvent &event);
    void Populate( ShuttleGui & S );
    void OnDontShow( wxCommandEvent & Evt );
 

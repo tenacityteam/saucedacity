@@ -16,7 +16,7 @@ public:
    {
    }
 
-   const char* GetName() const noexcept override
+   [[nodiscard]] const char* GetName() const noexcept override
    {
       if (mAVOutputFormat != nullptr)
          return mAVOutputFormat->name;
@@ -24,7 +24,7 @@ public:
       return {};
    }
 
-   const char* GetLongName() const noexcept override
+   [[nodiscard]] const char* GetLongName() const noexcept override
    {
       if (mAVOutputFormat != nullptr)
          return mAVOutputFormat->long_name;
@@ -32,7 +32,7 @@ public:
       return {};
    }
 
-   const char* GetMimeType() const noexcept override
+   [[nodiscard]] const char* GetMimeType() const noexcept override
    {
       if (mAVOutputFormat != nullptr)
          return mAVOutputFormat->mime_type;
@@ -40,7 +40,7 @@ public:
       return {};
    }
 
-   const char* GetExtensions() const noexcept override
+   [[nodiscard]] const char* GetExtensions() const noexcept override
    {
       if (mAVOutputFormat != nullptr)
          return mAVOutputFormat->extensions;
@@ -48,7 +48,7 @@ public:
       return {};
    }
 
-   AVCodecIDFwd GetAudioCodec() const noexcept override
+   [[nodiscard]] AVCodecIDFwd GetAudioCodec() const noexcept override
    {
       if (mAVOutputFormat != nullptr)
          return mAVOutputFormat->audio_codec;
@@ -56,7 +56,7 @@ public:
       return {};
    }
 
-   int GetFlags() const noexcept override
+   [[nodiscard]] int GetFlags() const noexcept override
    {
       if (mAVOutputFormat != nullptr)
          return mAVOutputFormat->flags;
@@ -64,7 +64,7 @@ public:
       return {};
    }
 
-   const struct AVCodecTag* const* GetCodecTag() const noexcept override
+   [[nodiscard]] const struct AVCodecTag* const* GetCodecTag() const noexcept override
    {
       if (mAVOutputFormat != nullptr)
          return mAVOutputFormat->codec_tag;

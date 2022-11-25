@@ -244,13 +244,13 @@ public:
    Site& operator =( const Site & other )
       { mData = other.mData; return *this; }
    Site( Site && other )
-      : mData( std::move(other.mData) )
+ noexcept       : mData( std::move(other.mData) )
       { }
    Site& operator =( Site && other )
-      { mData = std::move(other.mData); return *this; }
+ noexcept       { mData = std::move(other.mData); return *this; }
 
    //! How many attachment pointers are in the Site
-   size_t size() const { return mData.size(); }
+   [[nodiscard]] size_t size() const { return mData.size(); }
 
    //! How many static factories have been registered with this specialization of Site
    /*!
@@ -267,7 +267,7 @@ public:
    class RegisteredFactory
    {
    public:
-      RegisteredFactory(
+      explicit RegisteredFactory(
          DataFactory factory
       )
       {
@@ -276,7 +276,7 @@ public:
          factories.mObject.emplace_back( std::move( factory ) );
       }
       RegisteredFactory( RegisteredFactory &&other )
-      {
+ noexcept       {
          mIndex = other.mIndex;
          mOwner = other.mOwner;
          other.mOwner = false;

@@ -40,20 +40,20 @@ class SaucedacityProject;
 class SaucedacityApp final : public wxApp {
  public:
    SaucedacityApp();
-   ~SaucedacityApp();
-   bool OnInit(void) override;
+   ~SaucedacityApp() override;
+   bool OnInit() override;
    bool InitPart2();
-   int OnExit(void) override;
+   int OnExit() override;
    void OnFatalException() override;
    bool OnExceptionInMainLoop() override;
 
-   // These are currently only used on Mac OS, where it's
+   // These are currently only used on macOS, where it's
    // possible to have a menu bar but no windows open.  It doesn't
    // hurt any other platforms, though.
-   void OnMenuAbout(wxCommandEvent & event);
-   void OnMenuNew(wxCommandEvent & event);
-   void OnMenuOpen(wxCommandEvent & event);
-   void OnMenuPreferences(wxCommandEvent & event);
+   static void OnMenuAbout(wxCommandEvent & event);
+   static void OnMenuNew(wxCommandEvent & event);
+   static void OnMenuOpen(wxCommandEvent & event);
+   static void OnMenuPreferences(wxCommandEvent & event);
    void OnMenuExit(wxCommandEvent & event);
 
    void OnQueryEndSession(wxCloseEvent & event);
@@ -63,7 +63,7 @@ class SaucedacityApp final : public wxApp {
    void OnMRUClear(wxCommandEvent &event);
    void OnMRUFile(wxCommandEvent &event);
    // Backend for above - returns true for success, false for failure
-   bool MRUOpen(const FilePath &fileName);
+   static bool MRUOpen(const FilePath &fileName);
    // A wrapper of the above that does not throw
    bool SafeMRUOpen(const wxString &fileName);
 
@@ -105,7 +105,7 @@ class SaucedacityApp final : public wxApp {
 
    void InitCommandHandler();
 
-   bool InitTempDir();
+   static bool InitTempDir();
    bool CreateSingleInstanceChecker(const wxString &dir);
 
    std::unique_ptr<wxCmdLineParser> ParseCommandLine();
@@ -128,7 +128,7 @@ class SaucedacityApp final : public wxApp {
     * catastrophic happens.
     *
     **/
-   void CleanupIPCResources();
+   void CleanupIPCResources() const;
 #endif
 
  public:

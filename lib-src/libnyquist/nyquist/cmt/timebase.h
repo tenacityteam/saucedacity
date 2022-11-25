@@ -59,9 +59,9 @@ void            timebase_use(timebase_type base);
  ((base)->virt_base + (((rtime) - (base)->real_base) << 8) / (base)->rate))
 
 #define virt_to_real(base, vtime) ((base)->rate >= STOPRATE ? \
- ((base)->virt_base > vtime ? (base)->real_base : MAXTIME) : \
+ ((base)->virt_base > (vtime) ? (base)->real_base : MAXTIME) : \
  (base)->real_base + ((((vtime) - (base)->virt_base) * (base)->rate) >> 8))
 
 #define virt_to_real_256(base, vtime) ((base)->rate >= STOPRATE ? \
- ((base)->virt_base > vtime ? (base)->real_base << 8 : MAXTIME) : \
+ ((base)->virt_base > (vtime) ? (base)->real_base << 8 : MAXTIME) : \
  ((base)->real_base << 8) + ((((vtime) - (base)->virt_base) * (base)->rate)))

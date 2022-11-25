@@ -31,15 +31,15 @@ public:
 
    NoteTrackButtonHandle &operator=(const NoteTrackButtonHandle&) = default;
 
-   virtual ~NoteTrackButtonHandle();
+   ~NoteTrackButtonHandle() override;
 
    static UIHandlePtr HitTest
       (std::weak_ptr<NoteTrackButtonHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const std::shared_ptr<NoteTrack> &pTrack);
 
-   std::shared_ptr<NoteTrack> GetTrack() const { return mpTrack.lock(); }
-   int GetChannel() const { return mChannel; }
+   [[nodiscard]] std::shared_ptr<NoteTrack> GetTrack() const { return mpTrack.lock(); }
+   [[nodiscard]] int GetChannel() const { return mChannel; }
 
    static UIHandle::Result NeedChangeHighlight
       (const NoteTrackButtonHandle &oldState,

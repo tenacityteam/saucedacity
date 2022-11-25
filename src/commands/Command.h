@@ -30,8 +30,8 @@ class OldStyleCommand /* not final */
 public:
    SaucedacityProject &mProject;
 
-   OldStyleCommand(SaucedacityProject &project) : mProject{ project } {};
-   virtual ~OldStyleCommand() { }
+   explicit OldStyleCommand(SaucedacityProject &project) : mProject{ project } {};
+   virtual ~OldStyleCommand() = default;
    virtual ComponentInterfaceSymbol GetSymbol() = 0;
    virtual CommandSignature &GetSignature() = 0;
    virtual bool SetParameter(const wxString &paramName, const wxVariant &paramValue);
@@ -48,12 +48,12 @@ class DecoratedCommand /* not final */ : public OldStyleCommand
 protected:
    OldStyleCommandPointer mCommand;
 public:
-   DecoratedCommand(const OldStyleCommandPointer &cmd)
+   explicit DecoratedCommand(const OldStyleCommandPointer &cmd)
       : OldStyleCommand{ cmd->mProject }, mCommand(cmd)
    {
-      wxASSERT(cmd != NULL);
+      wxASSERT(cmd != nullptr);
    }
-   virtual ~DecoratedCommand();
+   ~DecoratedCommand() override;
    ComponentInterfaceSymbol GetSymbol() override;
    CommandSignature &GetSignature() override;
    bool SetParameter(const wxString &paramName, const wxVariant &paramValue) override;
@@ -101,7 +101,7 @@ public:
    /// ensures name and params are set appropriately for the command.
    CommandImplementation(SaucedacityProject &project, OldStyleCommandType &type);
 
-   virtual ~CommandImplementation();
+   ~CommandImplementation() override;
 
    /// An instance method for getting the command name (for consistency)
    ComponentInterfaceSymbol GetSymbol() override;

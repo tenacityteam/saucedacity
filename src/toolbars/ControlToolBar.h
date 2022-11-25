@@ -34,7 +34,7 @@ class SAUCEDACITY_DLL_API ControlToolBar final : public ToolBar {
  public:
 
    ControlToolBar( SaucedacityProject &project );
-   virtual ~ControlToolBar();
+   ~ControlToolBar() override;
 
    static ControlToolBar *Find( SaucedacityProject &project );
    static ControlToolBar &Get( SaucedacityProject &project );

@@ -24,9 +24,9 @@ ResponseQueue::ResponseQueue()
 { }
 
 ResponseQueue::~ResponseQueue()
-{ }
+= default;
 
-void ResponseQueue::AddResponse(Response response)
+void ResponseQueue::AddResponse(const Response& response)
 {
    wxMutexLocker locker(mMutex);
    mResponses.push(response);

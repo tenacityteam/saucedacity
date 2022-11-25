@@ -46,10 +46,11 @@ typedef uint64_t uintmax_t;
 */
 #endif
 
-#include <stddef.h>
+#include <cstddef>
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <utility>
 
 using namespace std;
 
@@ -108,23 +109,23 @@ protected:
 
 public:
   //! The constructor.
-  StkError(const std::string& message, Type type = StkError::UNSPECIFIED)
-    : message_(message), type_(type) {}
+  StkError(std::string  message, Type type = StkError::UNSPECIFIED)
+    : message_(std::move(message)), type_(type) {}
 
   //! The destructor.
-  virtual ~StkError(void) {};
+  virtual ~StkError() {};
 
   //! Prints thrown error message to stderr.
-  virtual void printMessage(void) { std::cerr << '\n' << message_ << "\n\n"; }
+  virtual void printMessage() { std::cerr << '\n' << message_ << "\n\n"; }
 
   //! Returns the thrown error message type.
-  virtual const Type& getType(void) { return type_; }
+  virtual const Type& getType() { return type_; }
 
   //! Returns the thrown error message string.
-  virtual const std::string& getMessage(void) { return message_; }
+  virtual const std::string& getMessage() { return message_; }
 
   //! Returns the thrown error message as a C string.
-  virtual const char *getMessageCString(void) { return message_.c_str(); }
+  virtual const char *getMessageCString() { return message_.c_str(); }
 };
 
 
@@ -141,7 +142,7 @@ public:
   static const StkFormat STK_FLOAT64; /*!< Normalized between plus/minus 1.0. */
 
   //! Static method which returns the current STK sample rate.
-  static StkFloat sampleRate(void) { return srate_; }
+  static StkFloat sampleRate() { return srate_; }
 
   //! Static method which sets the STK sample rate.
   /*!
@@ -155,10 +156,10 @@ public:
   static void setSampleRate(StkFloat rate) { if (rate > 0.0) srate_ = rate; }
 
   //! Static method which returns the current rawwave path.
-  static std::string rawwavePath(void) { return rawwavepath_; }
+  static std::string rawwavePath() { return rawwavepath_; }
 
   //! Static method which sets the STK rawwave path.
-  static void setRawwavePath(std::string path);
+  static void setRawwavePath(const std::string& path);
 
   //! Static method which byte-swaps a 16-bit data type.
   static void swap16(unsigned char *ptr);
@@ -176,7 +177,7 @@ public:
   static void handleError( const char *message, StkError::Type type );
 
   //! Static function for error reporting and handling using c++ strings.
-  static void handleError( std::string message, StkError::Type type );
+  static void handleError( const std::string& message, StkError::Type type );
 
   //! Toggle display of WARNING and STATUS messages.
   static void showWarnings( bool status ) { showWarnings_ = status; }
@@ -195,10 +196,10 @@ protected:
   std::ostringstream errorString_;
 
   //! Default constructor.
-  Stk(void);
+  Stk();
 
   //! Class destructor.
-  virtual ~Stk(void);
+  virtual ~Stk();
 
   //! Internal function for error reporting which assumes message in \c errorString_ variable.
   void handleError( StkError::Type type );
@@ -276,13 +277,13 @@ public:
     must be between 0 and channels() - 1.  No range checking is
     performed unless _STK_DEBUG_ is defined.
   */
-  StkFloat interpolate( StkFloat frame, unsigned int channel = 0 ) const;
+  [[nodiscard]] StkFloat interpolate( StkFloat frame, unsigned int channel = 0 ) const;
 
   //! Returns the total number of audio samples represented by the object.
-  size_t size() const { return size_; }; 
+  [[nodiscard]] size_t size() const { return size_; };
 
   //! Returns \e true if the object size is zero and \e false otherwise.
-  bool empty() const;
+  [[nodiscard]] bool empty() const;
 
   //! Resize self to represent the specified number of channels and frames.
   /*!
@@ -305,10 +306,10 @@ public:
   void resize( size_t nFrames, unsigned int nChannels, StkFloat value );
 
   //! Return the number of channels represented by the data.
-  unsigned int channels( void ) const { return nChannels_; };
+  [[nodiscard]] unsigned int channels( ) const { return nChannels_; };
 
   //! Return the number of sample frames represented by the data.
-  size_t frames( void ) const { return nFrames_; };
+  [[nodiscard]] size_t frames( ) const { return nFrames_; };
 
   //! Set the sample rate associated with the StkFrames data.
   /*!
@@ -322,10 +323,10 @@ public:
     By default, this value is set equal to the current STK sample
     rate at the time of instantiation.
    */
-  StkFloat dataRate( void ) const { return dataRate_; };
+  [[nodiscard]] StkFloat dataRate( ) const { return dataRate_; };
 
   //! Returns \c true if the data is in interleaved format, \c false if the data is non-interleaved.
-  bool interleaved( void ) const { return interleaved_; };
+  [[nodiscard]] bool interleaved( ) const { return interleaved_; };
 
   //! Set the flag to indicate whether the internal data is in interleaved (\c true) or non-interleaved (\c false) format.
   /*!

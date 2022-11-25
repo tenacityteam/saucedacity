@@ -21,7 +21,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectRepair();
-   virtual ~EffectRepair();
+   ~EffectRepair() override;
 
    // ComponentInterface implementation
 

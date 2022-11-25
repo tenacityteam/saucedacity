@@ -76,7 +76,7 @@ public:
    {
    }
 
-   ~PCMImportPlugin() { }
+   ~PCMImportPlugin() override { }
 
    wxString GetPluginStringID() override { return wxT("libsndfile"); }
    TranslatableString GetPluginFormatDescription() override;
@@ -89,7 +89,7 @@ class PCMImportFileHandle final : public ImportFileHandle
 {
 public:
    PCMImportFileHandle(const FilePath &name, SFFile &&file, SF_INFO info);
-   ~PCMImportFileHandle();
+   ~PCMImportFileHandle() override;
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
@@ -140,7 +140,7 @@ std::unique_ptr<ImportFileHandle> PCMImportPlugin::Open(
       // ImportPCM to not handle .mp3.  Of course, this will still fail for mp3s
       // that are mislabeled with a .wav or other extension.
       // So, in the future we may want to write a simple parser to detect mp3s here.
-      return NULL;
+      return nullptr;
    }
 #endif
 
@@ -329,8 +329,8 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
 
       SampleBuffer srcbuffer, buffer;
       wxASSERT(mInfo.channels >= 0);
-      while (NULL == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr() ||
-             NULL == buffer.Allocate(maxBlock, mFormat).ptr())
+      while (nullptr == srcbuffer.Allocate(maxBlock * mInfo.channels, mFormat).ptr() ||
+             nullptr == buffer.Allocate(maxBlock, mFormat).ptr())
       {
          maxBlock /= 2;
          if (maxBlock < 1)
@@ -539,7 +539,7 @@ ProgressResult PCMImportFileHandle::Import(WaveTrackFactory *trackFactory,
                   n = UTF8CTOWX(frame->description).BeforeFirst(wxT('/'));
                }
 
-               const id3_ucs4_t *ustr = NULL;
+               const id3_ucs4_t *ustr = nullptr;
 
                if (n == TAG_COMMENTS) {
                   ustr = id3_field_getfullstring(&frame->fields[3]);

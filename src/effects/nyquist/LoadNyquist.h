@@ -22,7 +22,7 @@ class NyquistEffectsModule final : public ModuleInterface
 {
 public:
    NyquistEffectsModule();
-   virtual ~NyquistEffectsModule();
+   ~NyquistEffectsModule() override;
 
    // ComponentInterface implementation
 

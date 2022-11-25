@@ -32,13 +32,13 @@ class SineWave : public Generator
 {
 public:
   //! Default constructor.
-  SineWave( void );
+  SineWave( );
 
   //! Class destructor.
-  virtual ~SineWave( void );
+  ~SineWave( ) override;
 
   //! Clear output and reset time pointer to zero.
-  void reset( void );
+  void reset( );
 
   //! Set the data read rate in samples.  The rate can be negative.
   /*!
@@ -76,7 +76,7 @@ public:
 
 protected:
 
-  StkFloat computeSample( void );
+  StkFloat computeSample( ) override;
 
   static StkFrames table_;
   StkFloat time_;

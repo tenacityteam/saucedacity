@@ -81,7 +81,7 @@ class SAUCEDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
    // The constructor is called once by each subclass at the beginning of the program.
    // Avoid allocating memory or doing time-consuming processing here.
    Effect();
-   virtual ~Effect();
+   ~Effect() override;
 
    // Type of a registered function that, if it returns true,
    // causes ShowInterface to return early without making any dialog
@@ -123,10 +123,10 @@ class SAUCEDACITY_DLL_API Effect /* not final */ : public wxEvtHandler,
 
    void SetSampleRate(double rate) override;
    size_t SetBlockSize(size_t maxBlockSize) override;
-   size_t GetBlockSize() const override;
+   [[nodiscard]] size_t GetBlockSize() const override;
 
    bool IsReady() override;
-   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) override;
+   bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) override;
    bool ProcessFinalize() override;
    size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) override;
 
@@ -343,13 +343,13 @@ protected:
    // (when doing stereo groups at a time)
    bool TrackGroupProgress(int whichGroup, double frac, const TranslatableString & = {});
 
-   int GetNumWaveTracks() { return mNumTracks; }
-   int GetNumWaveGroups() { return mNumGroups; }
+   [[nodiscard]] int GetNumWaveTracks() const { return mNumTracks; }
+   [[nodiscard]] int GetNumWaveGroups() const { return mNumGroups; }
 
    // Calculates the start time and length in samples for one or two channels
    void GetBounds(
       const WaveTrack &track, const WaveTrack *pRight,
-      sampleCount *start, sampleCount *len);
+      sampleCount *start, sampleCount *len) const;
 
    // Previewing linear effect can be optimised by pre-mixing. However this
    // should not be used for non-linear effects such as dynamic processors
@@ -361,7 +361,7 @@ protected:
    void SetPreviewFullSelectionFlag(bool previewDurationFlag);
 
    // Use this if the effect needs to know if it is previewing
-   bool IsPreviewing() { return mIsPreview; }
+   [[nodiscard]] bool IsPreviewing() const { return mIsPreview; }
 
    // Most effects only require selected tracks to be copied for Preview.
    // If IncludeNotSelectedPreviewTracks(true), then non-linear effects have
@@ -385,12 +385,12 @@ protected:
 
    public:
 
-      AddedAnalysisTrack() {}
+      AddedAnalysisTrack() = default;
 
       // So you can have a vector of them
-      AddedAnalysisTrack(AddedAnalysisTrack &&that);
+      AddedAnalysisTrack(AddedAnalysisTrack &&that) noexcept ;
 
-      LabelTrack *get() const { return mpTrack; }
+      [[nodiscard]] LabelTrack *get() const { return mpTrack; }
 
       // Call this to indicate successful completion of the analyzer.
       void Commit();
@@ -419,9 +419,9 @@ protected:
       ModifiedAnalysisTrack();
 
       // So you can have a vector of them
-      ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that);
+      ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that) noexcept ;
 
-      LabelTrack *get() const { return mpTrack; }
+      [[nodiscard]] LabelTrack *get() const { return mpTrack; }
 
       // Call this to indicate successful completion of the analyzer.
       void Commit();
@@ -442,7 +442,7 @@ protected:
    // If bGoodResult, replace mWaveTracks tracks in mTracks with successfully processed
    // mOutputTracks copies, get rid of old mWaveTracks, and set mWaveTracks to mOutputTracks.
    // Else clear and DELETE mOutputTracks copies.
-   void ReplaceProcessedTracks(const bool bGoodResult);
+   void ReplaceProcessedTracks(bool bGoodResult);
 
    // Use this to append a NEW output track.
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);
@@ -461,8 +461,8 @@ protected:
    double         mSampleRate;
    wxWeakRef<NotifyingSelectedRegion> mpSelectedRegion{};
    WaveTrackFactory   *mFactory;
-   const TrackList *inputTracks() const { return mTracks; }
-   const SaucedacityProject *FindProject() const;
+   [[nodiscard]] const TrackList *inputTracks() const { return mTracks; }
+   [[nodiscard]] const SaucedacityProject *FindProject() const;
    std::shared_ptr<TrackList> mOutputTracks; // used only if CopyInputTracks() is called.
    double         mT0;
    double         mT1;
@@ -608,7 +608,7 @@ inline long TrapLong(long x, long min, long max)
 
 #define ReadParam(type, name) \
    type name = DEF_ ## name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, MIN_ ## name, MAX_ ## name)) \
+   if (!parms.ReadAndVerify(KEY_ ## name, &(name), DEF_ ## name, MIN_ ## name, MAX_ ## name)) \
       return false;
 
 #define ReadBasic(type, name) \
@@ -616,17 +616,17 @@ inline long TrapLong(long x, long min, long max)
    wxUnusedVar(MIN_ ##name); \
    wxUnusedVar(MAX_ ##name); \
    wxUnusedVar(SCL_ ##name); \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name)) \
+   if (!parms.ReadAndVerify(KEY_ ## name, &(name), DEF_ ## name)) \
       return false;
 
 #define ReadAndVerifyEnum(name, list, listSize) \
    int name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, list, listSize)) \
+   if (!parms.ReadAndVerify(KEY_ ## name, &(name), DEF_ ## name, list, listSize)) \
       return false;
 
 #define ReadAndVerifyEnumWithObsoletes(name, list, listSize, obsoleteList, nObsolete) \
    int name; \
-   if (!parms.ReadAndVerify(KEY_ ## name, &name, DEF_ ## name, \
+   if (!parms.ReadAndVerify(KEY_ ## name, &(name), DEF_ ## name, \
                             list, listSize, obsoleteList, nObsolete)) \
       return false;
 

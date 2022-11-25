@@ -10,11 +10,12 @@ Paul Licameli split from PrefsDialog.cpp
 
 #include "PrefsPanel.h"
 #include <mutex>
+#include <utility>
 
 namespace {
 const auto PathStart = wxT("Preferences");
 
-static Registry::GroupItem &sRegistry()
+Registry::GroupItem &sRegistry()
 {
    static Registry::TransparentGroupItem<> registry{ PathStart };
    return registry;
@@ -25,9 +26,9 @@ struct PrefsItem final : Registry::ConcreteGroupItem<false> {
    bool expanded{ false };
 
    PrefsItem( const wxString &name,
-      const PrefsPanel::Factory &factory_, bool expanded_ )
+      PrefsPanel::Factory factory_, bool expanded_ )
          : ConcreteGroupItem<false>{ name }
-         , factory{ factory_ }, expanded{ expanded_ }
+         , factory{std::move( factory_ )}, expanded{ expanded_ }
    {}
 };
 

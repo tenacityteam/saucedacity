@@ -38,7 +38,7 @@ class SourceOutputStream final : public wxOutputStream
         SourceOutputStream(){};
 
         int OpenFile(const FilePath & Filename);
-        virtual ~SourceOutputStream();
+        ~SourceOutputStream() override;
 
     protected:
         size_t OnSysWrite(const void *buffer, size_t bufsize) override;

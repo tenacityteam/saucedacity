@@ -70,10 +70,10 @@ public:
    virtual ~MixerSpec();
 
    bool SetNumChannels( unsigned numChannels );
-   unsigned GetNumChannels() { return mNumChannels; }
+   unsigned GetNumChannels() const { return mNumChannels; }
 
-   unsigned GetMaxNumChannels() { return mMaxNumChannels; }
-   unsigned GetNumTracks() { return mNumTracks; }
+   unsigned GetMaxNumChannels() const { return mMaxNumChannels; }
+   unsigned GetNumTracks() const { return mNumTracks; }
 
    MixerSpec& operator=( const MixerSpec &mixerSpec );
 };

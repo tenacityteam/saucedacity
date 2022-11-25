@@ -18,6 +18,8 @@
 #include <wx/dcmemory.h>
 #include <wx/clipbrd.h>
 
+#include <utility>
+
 #include "../../ProjectWindow.h"
 #include "../../RefreshCode.h"
 
@@ -41,9 +43,9 @@ bool TextEditHelper::IsGoodEditKeyCode(int keyCode)
         (keyCode > WXK_WINDOWS_MENU);
 }
 
-TextEditHelper::TextEditHelper(const std::weak_ptr<TextEditDelegate>& delegate, const wxString& text, const wxFont& font)
+TextEditHelper::TextEditHelper(std::weak_ptr<TextEditDelegate>  delegate, const wxString& text, const wxFont& font)
     : mFont(font), 
-    mDelegate(delegate), 
+    mDelegate(std::move(delegate)),
     mText(text),
     mInitialCursorPos(0)
 {
@@ -89,7 +91,7 @@ void TextEditHelper::SelectAll()
     mCurrentCursorPos = mText.Length();
 }
 
-bool TextEditHelper::IsSelectionEmpty()
+bool TextEditHelper::IsSelectionEmpty() const
 {
     return mCurrentCursorPos == mInitialCursorPos;
 }
@@ -491,10 +493,10 @@ int TextEditHelper::FindCursorIndex(const wxPoint& point)
         }
         subString = mText.Left(charIndex);
         // Get the width of substring
-        dc.GetTextExtent(subString, &partWidth, NULL);
+        dc.GetTextExtent(subString, &partWidth, nullptr);
 
         // Get the width of the last character
-        dc.GetTextExtent(subString.Right(1), &oneWidth, NULL);
+        dc.GetTextExtent(subString.Right(1), &oneWidth, nullptr);
         
         if (layout == wxLayout_RightToLeft)
         {
@@ -658,9 +660,9 @@ bool TextEditHelper::PasteSelectedText(SaucedacityProject& project)
         }
 
         // Convert control characters to blanks
-        for (int i = 0; i < (int)text.length(); i++) {
-            if (wxIscntrl(text[i])) {
-                text[i] = wxT(' ');
+        for (auto && i : text) {
+            if (wxIscntrl(i)) {
+                i = wxT(' ');
             }
         }
     }

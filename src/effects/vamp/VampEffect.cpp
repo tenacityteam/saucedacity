@@ -147,15 +147,15 @@ unsigned VampEffect::GetAudioInCount()
 
 bool VampEffect::GetAutomationParameters(CommandParameters & parms)
 {
-   for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)
+   for (auto & mParameter : mParameters)
    {
-      wxString key = wxString::FromUTF8(mParameters[p].identifier.c_str());
-      float value = mPlugin->getParameter(mParameters[p].identifier);
-      float lower = mParameters[p].minValue;
-      float upper = mParameters[p].maxValue;
+      wxString key = wxString::FromUTF8(mParameter.identifier.c_str());
+      float value = mPlugin->getParameter(mParameter.identifier);
+      float lower = mParameter.minValue;
+      float upper = mParameter.maxValue;
 
-      if (mParameters[p].isQuantized &&
-          mParameters[p].quantizeStep == 1.0 &&
+      if (mParameter.isQuantized &&
+          mParameter.quantizeStep == 1.0 &&
           lower == 0.0 &&
           upper == 1.0)
       {
@@ -163,21 +163,21 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
 
          parms.Write(key, val);
       }
-      else if (mParameters[p].isQuantized &&
-               mParameters[p].quantizeStep == 1.0 &&
-               !mParameters[p].valueNames.empty())
+      else if (mParameter.isQuantized &&
+               mParameter.quantizeStep == 1.0 &&
+               !mParameter.valueNames.empty())
       {
          std::vector<EnumValueSymbol> choices;
          int val = 0;
 
-         for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)
+         for (size_t i = 0, choiceCount = mParameter.valueNames.size(); i < choiceCount; i++)
          {
-            wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
-            if (size_t(value - mParameters[p].minValue + 0.5) == i)
+            wxString choice = wxString::FromUTF8(mParameter.valueNames[i].c_str());
+            if (size_t(value - mParameter.minValue + 0.5) == i)
             {
                val = i;
             }
-            choices.push_back(choice);
+            choices.emplace_back(choice);
          }
 
          parms.WriteEnum(key, val, choices.data(), choices.size());
@@ -194,15 +194,15 @@ bool VampEffect::GetAutomationParameters(CommandParameters & parms)
 bool VampEffect::SetAutomationParameters(CommandParameters & parms)
 {
    // First pass verifies values
-   for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)
+   for (auto & mParameter : mParameters)
    {
-      wxString key = wxString::FromUTF8(mParameters[p].identifier.c_str());
-      float lower = mParameters[p].minValue;
-      float upper = mParameters[p].maxValue;
+      wxString key = wxString::FromUTF8(mParameter.identifier.c_str());
+      float lower = mParameter.minValue;
+      float upper = mParameter.maxValue;
       bool good = false;
 
-      if (mParameters[p].isQuantized &&
-          mParameters[p].quantizeStep == 1.0 &&
+      if (mParameter.isQuantized &&
+          mParameter.quantizeStep == 1.0 &&
           lower == 0.0 &&
           upper == 1.0)
       {
@@ -210,17 +210,17 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
 
          good = parms.Read(key, &val);
       }
-      else if (mParameters[p].isQuantized &&
-               mParameters[p].quantizeStep == 1.0 &&
-               !mParameters[p].valueNames.empty())
+      else if (mParameter.isQuantized &&
+               mParameter.quantizeStep == 1.0 &&
+               !mParameter.valueNames.empty())
       {
          std::vector<EnumValueSymbol> choices;
          int val;
 
-         for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)
+         for (size_t i = 0, choiceCount = mParameter.valueNames.size(); i < choiceCount; i++)
          {
-            wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
-            choices.push_back(choice);
+            wxString choice = wxString::FromUTF8(mParameter.valueNames[i].c_str());
+            choices.emplace_back(choice);
          }
 
          good = parms.ReadEnum(key, &val, choices.data(), choices.size()) && val != wxNOT_FOUND;
@@ -239,14 +239,14 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
    }
 
    // Second pass sets the variables
-   for (size_t p = 0, paramCount = mParameters.size(); p < paramCount; p++)
+   for (auto & mParameter : mParameters)
    {
-      wxString key = wxString::FromUTF8(mParameters[p].identifier.c_str());
-      float lower = mParameters[p].minValue;
-      float upper = mParameters[p].maxValue;
+      wxString key = wxString::FromUTF8(mParameter.identifier.c_str());
+      float lower = mParameter.minValue;
+      float upper = mParameter.maxValue;
 
-      if (mParameters[p].isQuantized &&
-          mParameters[p].quantizeStep == 1.0 &&
+      if (mParameter.isQuantized &&
+          mParameter.quantizeStep == 1.0 &&
           lower == 0.0 &&
           upper == 1.0)
       {
@@ -254,24 +254,24 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
 
          parms.Read(key, &val);
 
-         mPlugin->setParameter(mParameters[p].identifier, val ? upper : lower);
+         mPlugin->setParameter(mParameter.identifier, val ? upper : lower);
       }
-      else if (mParameters[p].isQuantized &&
-               mParameters[p].quantizeStep == 1.0 &&
-               !mParameters[p].valueNames.empty())
+      else if (mParameter.isQuantized &&
+               mParameter.quantizeStep == 1.0 &&
+               !mParameter.valueNames.empty())
       {
          std::vector<EnumValueSymbol> choices;
          int val = 0;
 
-         for (size_t i = 0, choiceCount = mParameters[p].valueNames.size(); i < choiceCount; i++)
+         for (size_t i = 0, choiceCount = mParameter.valueNames.size(); i < choiceCount; i++)
          {
-            wxString choice = wxString::FromUTF8(mParameters[p].valueNames[i].c_str());
-            choices.push_back(choice);
+            wxString choice = wxString::FromUTF8(mParameter.valueNames[i].c_str());
+            choices.emplace_back(choice);
          }
 
          parms.ReadEnum(key, &val, choices.data(), choices.size());
 
-         mPlugin->setParameter(mParameters[p].identifier, (float) val);
+         mPlugin->setParameter(mParameter.identifier, (float) val);
       }
       else
       {
@@ -279,9 +279,9 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
 
          parms.Read(key, &val);
 
-         if (mParameters[p].isQuantized)
+         if (mParameter.isQuantized)
          {
-            float qs = mParameters[p].quantizeStep;
+            float qs = mParameter.quantizeStep;
 
             if (qs != 0.0)
             {
@@ -289,7 +289,7 @@ bool VampEffect::SetAutomationParameters(CommandParameters & parms)
             }
          }
 
-         mPlugin->setParameter(mParameters[p].identifier, val);
+         mPlugin->setParameter(mParameter.identifier, val);
       }
    }
 
@@ -373,7 +373,7 @@ bool VampEffect::Process()
 
       // channelGroup now contains all but the first channel
       const WaveTrack *right =
-         channelGroup.size() ? *channelGroup.first++ : nullptr;
+         !channelGroup.empty() ? *channelGroup.first++ : nullptr;
       if (right)
          channels = 2;
 
@@ -718,9 +718,9 @@ bool VampEffect::TransferDataFromWindow()
 // VampEffect implementation
 
 void VampEffect::AddFeatures(LabelTrack *ltrack,
-                             Vamp::Plugin::FeatureSet &features)
+                             Vamp::Plugin::FeatureSet &features) const
 {
-   for (Vamp::Plugin::FeatureList::iterator fli = features[mOutput].begin();
+   for (auto fli = features[mOutput].begin();
         fli != features[mOutput].end(); ++fli)
    {
       Vamp::RealTime ftime0 = fli->timestamp;
@@ -731,7 +731,7 @@ void VampEffect::AddFeatures(LabelTrack *ltrack,
       double ltime1 = ftime1.sec + (double(ftime1.nsec) / 1000000000.0);
 
       wxString label = LAT1CTOWX(fli->label.c_str());
-      if (label == wxString())
+      if (label.empty())
       {
          if (fli->values.empty())
          {

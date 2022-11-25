@@ -58,9 +58,9 @@ protected:
    double mCurT1;
 
 private:
-   bool ProcessLabelTrack(LabelTrack *track, const TimeWarper &warper);
+   static bool ProcessLabelTrack(LabelTrack *track, const TimeWarper &warper);
 #ifdef USE_MIDI
-   bool ProcessNoteTrack(NoteTrack *track, const TimeWarper &warper);
+   bool ProcessNoteTrack(NoteTrack *track, const TimeWarper &warper) const;
 #endif
    bool ProcessOne(
       WaveTrack * t, sampleCount start, sampleCount end,
@@ -68,7 +68,7 @@ private:
    bool ProcessStereo(WaveTrack* leftTrack, WaveTrack* rightTrack,
                      sampleCount start, sampleCount end,
                       const TimeWarper &warper);
-   bool ProcessStereoResults(const size_t outputCount,
+   bool ProcessStereoResults(size_t outputCount,
                               WaveTrack* outputLeftTrack,
                               WaveTrack* outputRightTrack);
    void Finalize(WaveTrack* orig, WaveTrack* out, const TimeWarper &warper);

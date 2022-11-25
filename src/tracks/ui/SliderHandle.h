@@ -32,11 +32,11 @@ public:
 
    SliderHandle &operator=(const SliderHandle&) = default;
 
-   std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
-   bool IsClicked() const { return mIsClicked; }
+   [[nodiscard]] std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
+   [[nodiscard]] bool IsClicked() const { return mIsClicked; }
 
 protected:
-   virtual ~SliderHandle();
+   ~SliderHandle() override;
 
    // These NEW abstract virtuals simplify the duties of further subclasses.
    // This class will decide whether to refresh the clicked cell for slider state
@@ -55,21 +55,21 @@ protected:
 
    Result Click
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject)
-      final override;
+      final ;
 
    Result Drag
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject)
-      final override;
+      final ;
 
    HitTestPreview Preview
       (const TrackPanelMouseState &state, SaucedacityProject *pProject)
-      final override;
+      final ;
 
    Result Release
       (const TrackPanelMouseEvent &event, SaucedacityProject *pProject,
-       wxWindow *pParent) final override;
+       wxWindow *pParent) final ;
 
-   Result Cancel(SaucedacityProject *pProject) final override;
+   Result Cancel(SaucedacityProject *pProject) final ;
 
    // Derived class is expected to set these two before Click():
    std::weak_ptr<Track> mpTrack;

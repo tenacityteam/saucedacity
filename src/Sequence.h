@@ -12,6 +12,7 @@
 #define __AUDACITY_SEQUENCE__
 
 
+#include <utility>
 #include <vector>
 #include <functional>
 
@@ -36,12 +37,12 @@ class SeqBlock {
       : sb{}, start(0)
    {}
 
-   SeqBlock(const SampleBlockPtr &sb_, sampleCount start_)
-      : sb(sb_), start(start_)
+   SeqBlock(SampleBlockPtr sb_, sampleCount start_)
+      : sb(std::move(sb_)), start(start_)
    {}
 
    // Construct a SeqBlock with changed start, same file
-   SeqBlock Plus(sampleCount delta) const
+   [[nodiscard]] SeqBlock Plus(sampleCount delta) const
    {
       return SeqBlock(sb, start + delta);
    }
@@ -79,13 +80,13 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    Sequence( const Sequence& ) = delete;
    Sequence& operator= (const Sequence&) = delete;
 
-   ~Sequence();
+   ~Sequence() override;
 
    //
    // Editing
    //
 
-   sampleCount GetNumSamples() const { return mNumSamples; }
+   [[nodiscard]] sampleCount GetNumSamples() const { return mNumSamples; }
 
    bool Get(samplePtr buffer, sampleFormat format,
             sampleCount start, size_t len, bool mayThrow) const;
@@ -108,11 +109,11 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Return non-null, or else throw!
    // Must pass in the correct factory for the result.  If it's not the same
    // as in this, then block contents must be copied.
-   std::unique_ptr<Sequence> Copy( const SampleBlockFactoryPtr &pFactory,
+   [[nodiscard]] std::unique_ptr<Sequence> Copy( const SampleBlockFactoryPtr &pFactory,
       sampleCount s0, sampleCount s1) const;
    void Paste(sampleCount s0, const Sequence *src);
 
-   size_t GetIdealAppendLen() const;
+   [[nodiscard]] size_t GetIdealAppendLen() const;
    void Append(constSamplePtr buffer, sampleFormat format, size_t len);
 
    //! Append data, not coalescing blocks, returning a pointer to the new block.
@@ -136,7 +137,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    XMLTagHandler *HandleXMLChild(const wxChar *tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
-   bool GetErrorOpening() { return mErrorOpening; }
+   bool GetErrorOpening() const { return mErrorOpening; }
 
    //
    // Lock all of this sequence's sample blocks, keeping them
@@ -149,7 +150,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Manipulating Sample Format
    //
 
-   sampleFormat GetSampleFormat() const;
+   [[nodiscard]] sampleFormat GetSampleFormat() const;
 
    // Return true iff there is a change
    bool ConvertToSampleFormat(sampleFormat format, 
@@ -159,21 +160,21 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Retrieving summary info
    //
 
-   std::pair<float, float> GetMinMax(
+   [[nodiscard]] std::pair<float, float> GetMinMax(
       sampleCount start, sampleCount len, bool mayThrow) const;
-   float GetRMS(sampleCount start, sampleCount len, bool mayThrow) const;
+   [[nodiscard]] float GetRMS(sampleCount start, sampleCount len, bool mayThrow) const;
 
    //
    // Getting block size and alignment information
    //
 
    // This returns a possibly large or negative value
-   sampleCount GetBlockStart(sampleCount position) const;
+   [[nodiscard]] sampleCount GetBlockStart(sampleCount position) const;
 
    // These return a nonnegative number of samples meant to size a memory buffer
-   size_t GetBestBlockSize(sampleCount start) const;
-   size_t GetMaxBlockSize() const;
-   size_t GetIdealBlockSize() const;
+   [[nodiscard]] size_t GetBestBlockSize(sampleCount start) const;
+   [[nodiscard]] size_t GetMaxBlockSize() const;
+   [[nodiscard]] size_t GetIdealBlockSize() const;
 
    //
    // This should only be used if you really, really know what
@@ -181,7 +182,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    //
 
    BlockArray &GetBlockArray() { return mBlock; }
-   const BlockArray &GetBlockArray() const { return mBlock; }
+   [[nodiscard]] const BlockArray &GetBlockArray() const { return mBlock; }
 
  private:
 
@@ -212,7 +213,7 @@ class PROFILE_DLL_API Sequence final : public XMLTagHandler{
    // Private methods
    //
 
-   int FindBlock(sampleCount pos) const;
+   [[nodiscard]] int FindBlock(sampleCount pos) const;
 
    SeqBlock::SampleBlockPtr DoAppend(
       constSamplePtr buffer, sampleFormat format, size_t len, bool coalesce);

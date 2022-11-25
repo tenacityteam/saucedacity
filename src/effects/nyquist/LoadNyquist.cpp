@@ -147,9 +147,7 @@ bool NyquistEffectsModule::Initialize()
 
 void NyquistEffectsModule::Terminate()
 {
-   nyx_set_xlisp_path(NULL);
-
-   return;
+   nyx_set_xlisp_path(nullptr);
 }
 
 EffectFamilySymbol NyquistEffectsModule::GetOptionalFamilySymbol()
@@ -188,10 +186,10 @@ bool NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
          PluginManagerInterface::DefaultRegistrationCallback);
    }
 
-   for (size_t i = 0; i < WXSIZEOF(kShippedEffects); i++)
+   for (auto & kShippedEffect : kShippedEffects)
    {
       files.clear();
-      pm.FindFilesInPathList(kShippedEffects[i], pathList, files);
+      pm.FindFilesInPathList(kShippedEffect, pathList, files);
       for (size_t j = 0, cnt = files.size(); j < cnt; j++)
       {
          /*

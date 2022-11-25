@@ -37,7 +37,7 @@ struct FFMPEG_SUPPORT_API AVUtilFunctions
    int                (*av_fifo_size) (const AVFifoBuffer *f) = nullptr;
    int                (*av_fifo_generic_write) (AVFifoBuffer *f, void *src, int size, int (*func)(void*, void*, int)) = nullptr;
    int64_t            (*av_rescale_q) (int64_t a, AudacityAVRational bq, AudacityAVRational cq) = nullptr;
-   AVFrame*           (*av_frame_alloc) (void) = nullptr;
+   AVFrame*           (*av_frame_alloc) () = nullptr;
    void               (*av_frame_free) (AVFrame **frame) = nullptr;
    int                (*av_samples_get_buffer_size) (int *linesize, int nb_channels, int nb_samples, AVSampleFormatFwd sample_fmt, int align) = nullptr;
    int64_t            (*av_get_default_channel_layout) (int nb_channels) = nullptr;

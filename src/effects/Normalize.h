@@ -26,7 +26,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectNormalize();
-   virtual ~EffectNormalize();
+   ~EffectNormalize() override;
 
    // ComponentInterface implementation
 
@@ -62,8 +62,8 @@ private:
                      double &progress, float &offset, float &extent);
    bool AnalyseTrackData(const WaveTrack * track, const TranslatableString &msg, double &progress,
                      float &offset);
-   void AnalyseDataDC(float *buffer, size_t len);
-   void ProcessData(float *buffer, size_t len, float offset);
+   void AnalyseDataDC(const float *buffer, size_t len);
+   void ProcessData(float *buffer, size_t len, float offset) const;
 
    void OnUpdateUI(wxCommandEvent & evt);
    void UpdateUI();

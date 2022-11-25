@@ -76,7 +76,7 @@ public:
 
    ProjectFileIO( const ProjectFileIO & ) = delete;
    ProjectFileIO &operator=( const ProjectFileIO & ) = delete;
-   ~ProjectFileIO();
+   ~ProjectFileIO() override;
 
    // It seems odd to put this method in this class, but the results do depend
    // on what is discovered while opening the file, such as whether it is a
@@ -109,8 +109,8 @@ public:
    int64_t GetBlockUsage(SampleBlockID blockid);
 
    // Returns the bytes used for all blocks owned by the given track list
-   int64_t GetCurrentUsage(
-         const std::vector<const TrackList*> &trackLists) const;
+   static int64_t GetCurrentUsage(
+         const std::vector<const TrackList*> &trackLists) ;
 
    // Return the bytes used by all sample blocks in the project file, whether
    // they are attached to the active tracks or held by the Undo manager.
@@ -124,7 +124,7 @@ public:
    void ShowError(const GenericUI::WindowPlacement &placement,
                   const TranslatableString &dlogTitle,
                   const TranslatableString &message,
-                  const wxString &helpPage);
+                  const wxString &helpPage) const;
    const TranslatableString &GetLastError() const;
    const TranslatableString &GetLibraryError() const;
    int GetLastErrorCode() const;
@@ -183,10 +183,10 @@ public:
       const std::vector<const TrackList *> &tracks, bool force = false);
 
    // The last compact check did actually compact the project file if true
-   bool WasCompacted();
+   bool WasCompacted() const;
 
    // The last compact check found unused blocks in the project file
-   bool HadUnused();
+   bool HadUnused() const;
 
    // In one SQL command, delete sample blocks with ids in the given set, or
    // (when complement is true), with ids not in the given set.
@@ -208,7 +208,7 @@ public:
 private:
    void OnCheckpointFailure();
 
-   void WriteXMLHeader(XMLWriter &xmlFile) const;
+   static void WriteXMLHeader(XMLWriter &xmlFile) ;
    void WriteXML(XMLWriter &xmlFile, bool recording = false,
       const TrackList *tracks = nullptr) /* not override */;
 
@@ -248,7 +248,7 @@ private:
 
    bool CheckVersion();
    bool InstallSchema(sqlite3 *db, const char *schema = "main");
-   bool UpgradeSchema();
+   static bool UpgradeSchema();
 
    // Write project or autosave XML (binary) documents
    bool WriteDoc(const char *table, const ProjectSerializer &autosave, const char *schema = "main");

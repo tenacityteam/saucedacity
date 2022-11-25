@@ -21,7 +21,7 @@ public:
          mFFmpeg.av_free(mAVIOContext->buffer);
    }
 
-   unsigned char* GetBuffer() const noexcept override
+   [[nodiscard]] unsigned char* GetBuffer() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->buffer;
@@ -29,7 +29,7 @@ public:
       return {};
    }
 
-   int GetBufferSize() const noexcept override
+   [[nodiscard]] int GetBufferSize() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->buffer_size;
@@ -37,7 +37,7 @@ public:
       return {};
    }
 
-   unsigned char* GetBufPtr() const noexcept override
+   [[nodiscard]] unsigned char* GetBufPtr() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->buf_ptr;
@@ -45,7 +45,7 @@ public:
       return {};
    }
 
-   unsigned char* GetBufEnd() const noexcept override
+   [[nodiscard]] unsigned char* GetBufEnd() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->buf_end;
@@ -53,7 +53,7 @@ public:
       return {};
    }
 
-   void* GetOpaque() const noexcept override
+   [[nodiscard]] void* GetOpaque() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->opaque;
@@ -67,7 +67,7 @@ public:
          mAVIOContext->opaque = opaque;
    }
 
-   int64_t GetPos() const noexcept override
+   [[nodiscard]] int64_t GetPos() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->pos;
@@ -75,7 +75,7 @@ public:
       return {};
    }
 
-   int GetEofReached() const noexcept override
+   [[nodiscard]] int GetEofReached() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->eof_reached;
@@ -83,7 +83,7 @@ public:
       return {};
    }
 
-   int GetWriteFlag() const noexcept override
+   [[nodiscard]] int GetWriteFlag() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->write_flag;
@@ -97,7 +97,7 @@ public:
          mAVIOContext->write_flag = write_flag;
    }
 
-   int GetError() const noexcept override
+   [[nodiscard]] int GetError() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->error;
@@ -111,7 +111,7 @@ public:
          mAVIOContext->error = error;
    }
 
-   int GetSeekable() const noexcept override
+   [[nodiscard]] int GetSeekable() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->seekable;
@@ -125,7 +125,7 @@ public:
          mAVIOContext->seekable = seekable;
    }
 
-   int GetDirect() const noexcept override
+   [[nodiscard]] int GetDirect() const noexcept override
    {
       if (mAVIOContext != nullptr)
          return mAVIOContext->direct;

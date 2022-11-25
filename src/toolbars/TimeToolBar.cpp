@@ -50,8 +50,8 @@ END_EVENT_TABLE()
 
 TimeToolBar::TimeToolBar(SaucedacityProject &project)
 :  ToolBar(project, TimeBarID, XO("Time"), wxT("Time"), true),
-   mListener(NULL),
-   mAudioTime(NULL)
+   mListener(nullptr),
+   mAudioTime(nullptr)
 {
    project.Bind(EVT_PROJECT_SETTINGS_CHANGE, &TimeToolBar::OnSettingsChanged, this);
 }
@@ -63,7 +63,7 @@ TimeToolBar::~TimeToolBar()
 TimeToolBar &TimeToolBar::Get(SaucedacityProject &project)
 {
    auto &toolManager = ToolManager::Get(project);
-   return *static_cast<TimeToolBar*>(toolManager.GetToolBar(TimeBarID));
+   return *dynamic_cast<TimeToolBar*>(toolManager.GetToolBar(TimeBarID));
 }
 
 const TimeToolBar &TimeToolBar::Get(const SaucedacityProject &project)

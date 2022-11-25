@@ -66,7 +66,7 @@ public:
 
    static const StatusWidthFunctions &GetStatusWidthFunctions();
 
-   const TranslatableString &Get( StatusBarField field = mainStatusBarField ) const;
+   [[nodiscard]] const TranslatableString &Get( StatusBarField field = mainStatusBarField ) const;
    void Set(const TranslatableString &msg,
       StatusBarField field = mainStatusBarField);
 

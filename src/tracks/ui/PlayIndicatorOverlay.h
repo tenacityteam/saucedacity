@@ -27,12 +27,12 @@ class PlayIndicatorOverlayBase
 {
 public:
    PlayIndicatorOverlayBase(SaucedacityProject *project, bool isMaster);
-   virtual ~PlayIndicatorOverlayBase();
+   ~PlayIndicatorOverlayBase() override;
 
    void Update(int newIndicatorX) { mNewIndicatorX = newIndicatorX; }
 
 private:
-   unsigned SequenceNumber() const override;
+   [[nodiscard]] unsigned SequenceNumber() const override;
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 

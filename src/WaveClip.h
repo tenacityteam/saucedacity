@@ -53,14 +53,14 @@ public:
    {
    }
 
-   bool Matches(int dirty_, double pixelsPerSecond,
+   [[nodiscard]] bool Matches(int dirty_, double pixelsPerSecond,
       const SpectrogramSettings &settings, double rate) const;
 
    // Calculate one column of the spectrum
    bool CalculateOneSpectrum
       (const SpectrogramSettings &settings,
        WaveTrackCache &waveTrackCache,
-       const int xx, sampleCount numSamples,
+       int xx, sampleCount numSamples,
        double offset, double rate, double pixelsPerSecond,
        int lowerBoundX, int upperBoundX,
        const std::vector<float> &gainFactors,
@@ -140,7 +140,7 @@ public:
 
 public:
    WaveDisplay(int w)
-      : width(w), where(0), min(0), max(0), rms(0), bl(0)
+      : width(w), where(nullptr), min(nullptr), max(nullptr), rms(nullptr), bl(nullptr)
    {
    }
 
@@ -161,8 +161,8 @@ public:
          bl = &ownBl[0];
       }
       else {
-         min = max = rms = 0;
-         bl = 0;
+         min = max = rms = nullptr;
+         bl = nullptr;
       }
    }
 
@@ -198,7 +198,7 @@ public:
             bool copyCutlines,
             double t0, double t1);
 
-   virtual ~WaveClip();
+   ~WaveClip() override;
 
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
@@ -215,7 +215,7 @@ public:
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
-   void Resample(int rate, ProgressDialog *progress = NULL);
+   void Resample(int rate, ProgressDialog *progress = nullptr);
 
    void SetColourIndex( int index ){ mColourIndex = index;};
    int GetColourIndex( ) const { return mColourIndex;};
@@ -336,7 +336,7 @@ public:
 
    /** Insert silence - note that this is an efficient operation for large
     * amounts of silence */
-   void InsertSilence( double t, double len, double *pEnvelopeValue = nullptr );
+   void InsertSilence( double t, double len, const double *pEnvelopeValue = nullptr );
 
    /** Insert silence at the end, and causes the envelope to ramp
        linearly to the given value */
@@ -352,8 +352,8 @@ public:
     * in cutLineStart and cutLineEnd (if specified) if a cut line at this
     * position could be found. Return false otherwise. */
    bool FindCutLine(double cutLinePosition,
-                    double* cutLineStart = NULL,
-                    double *cutLineEnd = NULL) const;
+                    double* cutLineStart = nullptr,
+                    double *cutLineEnd = nullptr) const;
 
    /** Expand cut line (that is, re-insert audio, then DELETE audio saved in
     * cut line). Returns true if a cut line could be found and successfully

@@ -21,6 +21,8 @@
 #include <wx/sizer.h>
 #include <wx/string.h>
 
+#include <utility>
+
 #include "shuttle/ShuttleGui.h"
 #include "widgets/NumericTextCtrl.h"
 
@@ -30,16 +32,16 @@ END_EVENT_TABLE()
 
 TimeDialog::TimeDialog(wxWindow *parent,
                        const TranslatableString &title,
-                       const NumericFormatSymbol &format,
+                       NumericFormatSymbol format,
                        double rate,
                        double time,
-                       const TranslatableString &prompt)
+                       TranslatableString prompt)
 :  wxDialogWrapper(parent, wxID_ANY, title),
-   mPrompt(prompt),
-   mFormat(format),
+   mPrompt(std::move(prompt)),
+   mFormat(std::move(format)),
    mRate(rate),
    mTime(time),
-   mTimeCtrl(NULL)
+   mTimeCtrl(nullptr)
 {
    SetName();
    ShuttleGui S(this, eIsCreating);
@@ -94,7 +96,7 @@ bool TimeDialog::TransferDataFromWindow()
    return true;
 }
 
-const double TimeDialog::GetTimeValue()
+const double TimeDialog::GetTimeValue() const
 {
    return mTime;
 }

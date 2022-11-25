@@ -39,7 +39,7 @@ int sf_num_headers()
 {
    int count;
 
-   sf_command(NULL, SFC_GET_FORMAT_MAJOR_COUNT,
+   sf_command(nullptr, SFC_GET_FORMAT_MAJOR_COUNT,
               &count, sizeof(count));
 
    return count;
@@ -51,7 +51,7 @@ wxString sf_header_index_name(int format)
 
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = format;
-   sf_command(NULL, SFC_GET_FORMAT_MAJOR,
+   sf_command(nullptr, SFC_GET_FORMAT_MAJOR,
               &format_info, sizeof (format_info)) ;
 
    return LAT1CTOWX(format_info.name);
@@ -63,7 +63,7 @@ unsigned int sf_header_index_to_type(int i)
 
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = i;
-   sf_command (NULL, SFC_GET_FORMAT_MAJOR,
+   sf_command (nullptr, SFC_GET_FORMAT_MAJOR,
                &format_info, sizeof (format_info));
 
    return format_info.format & SF_FORMAT_TYPEMASK;
@@ -77,7 +77,7 @@ int sf_num_encodings()
 {
    int count ;
 
-   sf_command (NULL, SFC_GET_FORMAT_SUBTYPE_COUNT, &count, sizeof (int)) ;
+   sf_command (nullptr, SFC_GET_FORMAT_SUBTYPE_COUNT, &count, sizeof (int)) ;
 
    return count;
 }
@@ -88,7 +88,7 @@ wxString sf_encoding_index_name(int i)
 
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = i;
-   sf_command (NULL, SFC_GET_FORMAT_SUBTYPE,
+   sf_command (nullptr, SFC_GET_FORMAT_SUBTYPE,
                &format_info, sizeof (format_info));
    return sf_normalize_name(format_info.name);
 }
@@ -99,7 +99,7 @@ unsigned int sf_encoding_index_to_subtype(int i)
 
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = i;
-   sf_command (NULL, SFC_GET_FORMAT_SUBTYPE,
+   sf_command (nullptr, SFC_GET_FORMAT_SUBTYPE,
                &format_info, sizeof (format_info));
 
    return format_info.format & SF_FORMAT_SUBMASK;
@@ -115,7 +115,7 @@ wxString sf_header_name(int format)
 
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = (format & SF_FORMAT_TYPEMASK);
-   sf_command(NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
+   sf_command(nullptr, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
 
    return LAT1CTOWX(format_info.name);
 }
@@ -128,7 +128,7 @@ wxString sf_header_shortname(int format)
 
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = (format & SF_FORMAT_TYPEMASK);
-   sf_command(NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
+   sf_command(nullptr, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
 
    MallocString<> tmp { strdup( format_info.name ) };
    i = 0;
@@ -150,7 +150,7 @@ wxString sf_header_extension(int format)
 
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = (format & SF_FORMAT_TYPEMASK);
-   sf_command(NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
+   sf_command(nullptr, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
 
    return LAT1CTOWX(format_info.extension);
 }
@@ -161,7 +161,7 @@ wxString sf_encoding_name(int encoding)
 
    memset(&format_info, 0, sizeof(format_info));
    format_info.format = (encoding & SF_FORMAT_SUBMASK);
-   sf_command(NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
+   sf_command(nullptr, SFC_GET_FORMAT_INFO, &format_info, sizeof(format_info));
 
    return sf_normalize_name(format_info.name);
 }
@@ -170,7 +170,7 @@ int sf_num_simple_formats()
 {
    int count ;
 
-   sf_command (NULL, SFC_GET_SIMPLE_FORMAT_COUNT, &count, sizeof (int)) ;
+   sf_command (nullptr, SFC_GET_SIMPLE_FORMAT_COUNT, &count, sizeof (int)) ;
 
    return count;
 }
@@ -182,7 +182,7 @@ SF_FORMAT_INFO *sf_simple_format(int i)
    memset(&g_format_info, 0, sizeof(g_format_info));
 
    g_format_info.format = i;
-   sf_command (NULL, SFC_GET_SIMPLE_FORMAT,
+   sf_command (nullptr, SFC_GET_SIMPLE_FORMAT,
                &g_format_info, sizeof(g_format_info));
 
    return &g_format_info;
@@ -247,12 +247,12 @@ FileExtensions sf_get_all_extensions()
 
    memset(&format_info, 0, sizeof(format_info));
 
-   sf_command(NULL, SFC_GET_FORMAT_MAJOR_COUNT,
+   sf_command(nullptr, SFC_GET_FORMAT_MAJOR_COUNT,
               &count, sizeof(count));
 
    for(k=0; k<count; k++) {
       format_info.format = k;
-      sf_command(NULL, SFC_GET_FORMAT_MAJOR,
+      sf_command(nullptr, SFC_GET_FORMAT_MAJOR,
                  &format_info, sizeof (format_info)) ;
 
       exts.push_back(LAT1CTOWX(format_info.extension));

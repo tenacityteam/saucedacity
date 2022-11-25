@@ -101,7 +101,7 @@ void l_rest(long time);
 void l_restuntil(long time);
 void metronome(boolean onflag);
 void midi_bend(int channel, int value);
-boolean midi_buffer(byte *buffer, ulong size);
+boolean midi_buffer(const byte *buffer, ulong size);
 void midi_clock(void);
 void midi_cont(boolean onflag);
 void midi_ctrl(int channel, int control, int value);

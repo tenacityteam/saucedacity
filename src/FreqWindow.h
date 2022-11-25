@@ -42,7 +42,7 @@ public:
    FreqPlot(wxWindow *parent, wxWindowID winid);
 
    // We don't need or want to accept focus.
-   bool AcceptsFocus() const;
+   [[nodiscard]] bool AcceptsFocus() const override;
 
 private:
    void OnPaint(wxPaintEvent & event);
@@ -62,7 +62,7 @@ public:
    FrequencyPlotDialog(wxWindow *parent, wxWindowID id,
               SaucedacityProject &project,
               const TranslatableString & title, const wxPoint & pos);
-   virtual ~ FrequencyPlotDialog();
+   ~ FrequencyPlotDialog() override;
 
    bool Show( bool show = true ) override;
 

@@ -1,6 +1,6 @@
 // f0 -- frequency estimation
 
-#include <stdio.h>
+#include <cstdio>
 
 
 
@@ -38,7 +38,7 @@ float parabolic_interp(float x1, float x2, float x3, float y1, float y2, float y
 
 
 
-float f0_estimate(float *samples, int n, int m, float threshold, float *results, float *min)
+float f0_estimate(const float *samples, int n, int m, float threshold, float *results, float *min)
     // samples is a buffer of samples
     // n is the number of samples, equals twice longest period, must be even
     // m is the shortest period in samples
@@ -121,7 +121,7 @@ float best_f0(float *samples, int n, int m, float threshold, int Tmax)
  // results is an array of size n/2 - m + 1, the number of different lags
   // Tmax is the length of the search 
 {
-  float* results=new float[n/2-m+1];
+  auto* results=new float[n/2-m+1];
   float min=10000000.0;
   float temp;
   float best_f0;

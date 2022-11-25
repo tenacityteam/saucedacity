@@ -26,10 +26,10 @@
 #ifndef _AEFFECTX_H
 #define _AEFFECTX_H
 
-#define CCONST(a, b, c, d)( ( ( (int) a ) << 24 ) |      \
-            ( ( (int) b ) << 16 ) |    \
-            ( ( (int) c ) << 8 ) |     \
-            ( ( (int) d ) << 0 ) )
+#define CCONST(a, b, c, d)( ( ( (int) (a) ) << 24 ) |      \
+            ( ( (int) (b) ) << 16 ) |    \
+            ( ( (int) (c) ) << 8 ) |     \
+            ( ( (int) (d) ) << 0 ) )
 
 const int audioMasterAutomate = 0;
 const int audioMasterVersion = 1;
@@ -252,7 +252,7 @@ public:
 } ;
 
 
-#include <stdint.h>
+#include <cstdint>
 
 class AEffect
 {

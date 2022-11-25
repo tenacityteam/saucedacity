@@ -19,7 +19,7 @@ BEGIN_EVENT_TABLE(AuStaticText, wxWindow)
     EVT_ERASE_BACKGROUND(AuStaticText::OnErase)
 END_EVENT_TABLE()
  
-AuStaticText::AuStaticText(wxWindow* parent, wxString textIn) :
+AuStaticText::AuStaticText(wxWindow* parent, const wxString& textIn) :
  wxWindow(parent, wxID_ANY)
 {
    int textWidth, textHeight;
@@ -29,7 +29,7 @@ AuStaticText::AuStaticText(wxWindow* parent, wxString textIn) :
       fontSize = 9;
    #endif
    wxFont font(fontSize, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-   GetTextExtent(textIn, &textWidth, &textHeight, NULL, NULL, &font);
+   GetTextExtent(textIn, &textWidth, &textHeight, nullptr, nullptr, &font);
 
    SetFont( font );
    SetMinSize( wxSize(textWidth, textHeight) );

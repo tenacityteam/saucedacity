@@ -111,13 +111,13 @@ END_EVENT_TABLE()
 
 SelectionBar::SelectionBar( SaucedacityProject &project )
 : ToolBar(project, SelectionBarID, XO("Selection"), wxT("Selection")),
-  mListener(NULL), mRate(0.0),
+  mListener(nullptr), mRate(0.0),
   mStart(0.0), mEnd(0.0), mLength(0.0), mCenter(0.0), mAudio(0.0),
   mDrive1( StartTimeID), mDrive2( EndTimeID ),
   mSelectionMode(0),
-  mStartTime(NULL), mCenterTime(NULL), mLengthTime(NULL), mEndTime(NULL),
-  mAudioTime(NULL),
-  mChoice(NULL)
+  mStartTime(nullptr), mCenterTime(nullptr), mLengthTime(nullptr), mEndTime(nullptr),
+  mAudioTime(nullptr),
+  mChoice(nullptr)
 {
    // Make sure we have a valid rate as the NumericTextCtrl()s
    // created in Populate()
@@ -139,7 +139,7 @@ SelectionBar::~SelectionBar()
 SelectionBar &SelectionBar::Get( SaucedacityProject &project )
 {
    auto &toolManager = ToolManager::Get( project );
-   return *static_cast<SelectionBar*>( toolManager.GetToolBar(SelectionBarID) );
+   return *dynamic_cast<SelectionBar*>( toolManager.GetToolBar(SelectionBarID) );
 }
 
 const SelectionBar &SelectionBar::Get( const SaucedacityProject &project )
@@ -157,7 +157,7 @@ void SelectionBar::Create(wxWindow * parent)
 AuStaticText * SelectionBar::AddTitle(
    const TranslatableString & Title, wxSizer * pSizer ){
    const auto translated = Title.Translation();
-   AuStaticText * pTitle = safenew AuStaticText(this, translated );
+   auto * pTitle = safenew AuStaticText(this, translated );
    pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
    pSizer->Add( pTitle, 0, wxEXPAND | wxALIGN_CENTER_VERTICAL | wxRIGHT, 5 );
@@ -194,7 +194,7 @@ void SelectionBar::Populate()
    // Inner sizers have space on right only.
    // This choice makes for a nice border and internal spacing and places clear responsibility
    // on each sizer as to what spacings it creates.
-   wxFlexGridSizer *mainSizer = safenew wxFlexGridSizer(SIZER_COLS, 1, 1);
+   auto *mainSizer = safenew wxFlexGridSizer(SIZER_COLS, 1, 1);
    Add(mainSizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 5);
 
    // Top row (mostly labels)
@@ -522,12 +522,12 @@ void SelectionBar::OnUpdate(wxCommandEvent &evt)
    // ReCreateButtons() will get rid of our sizers and controls
    // so reset pointers first.
    for( i=0;i<5;i++)
-      *Ctrls[i]=NULL;
+      *Ctrls[i]=nullptr;
 
-   mChoice = NULL;
-   mRateBox = NULL;
-   mRateText = NULL;
-   mSnapTo = NULL;
+   mChoice = nullptr;
+   mRateBox = nullptr;
+   mRateText = nullptr;
+   mSnapTo = nullptr;
 
    ToolBar::ReCreateButtons();
 
@@ -776,7 +776,7 @@ void SelectionBar::OnFocus(wxFocusEvent &event)
 
 void SelectionBar::OnCaptureKey(wxCommandEvent &event)
 {
-   wxKeyEvent *kevent = (wxKeyEvent *)event.GetEventObject();
+   auto *kevent = (wxKeyEvent *)event.GetEventObject();
    wxWindow *w = FindFocus();
    int keyCode = kevent->GetKeyCode();
 

@@ -18,7 +18,7 @@ class UnwritableLocationErrorDialog final : public wxDialogWrapper
 {
 public:
    explicit UnwritableLocationErrorDialog(wxWindow* parent, const wxString& path);
-   virtual ~UnwritableLocationErrorDialog();
+   ~UnwritableLocationErrorDialog() override;
 
    void OnOk(wxCommandEvent& event);
    void OnError(wxCommandEvent& event);

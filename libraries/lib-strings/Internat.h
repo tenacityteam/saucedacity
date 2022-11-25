@@ -44,7 +44,7 @@ inline TranslatableString StringLiteral(const char* str)
 
 /// Same as the prior definition, but for wxString. Exactly the same as XO, which
 /// this function intends to replace over time.
-inline TranslatableString StringLiteral(wxString str)
+inline TranslatableString StringLiteral(const wxString& str)
 {
   return TranslatableString( str, {} );
 }
@@ -83,7 +83,7 @@ inline TranslatableString StringLiteral(wxString str)
 
    #else
 
-   #include <signal.h>
+   #include <csignal>
    // Raise a signal because it's even too early to use wxASSERT for this.
    #define _(s) ((wxTranslations::Get() || raise(SIGTRAP)), \
                 GetCustomTranslation((s)))

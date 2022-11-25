@@ -48,16 +48,16 @@ public:
       });
    };
 
-   ~wxTextCtrlWrapper()
+   ~wxTextCtrlWrapper() override
    {
    };
 
-   virtual bool AcceptsFocusFromKeyboard() const override
+   bool AcceptsFocusFromKeyboard() const override
    {
       return true;
    }
 
-   bool IsReadOnly()
+   bool IsReadOnly() const
    {
       return mReadOnly;
    }

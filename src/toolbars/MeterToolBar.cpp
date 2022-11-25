@@ -62,9 +62,9 @@ MeterToolBar::MeterToolBar(SaucedacityProject &project, int type)
    } else {
       mWhichMeters = kWithPlayMeter | kWithRecordMeter;
    }
-   mSizer = NULL;
-   mPlayMeter = NULL;
-   mRecordMeter = NULL;
+   mSizer = nullptr;
+   mPlayMeter = nullptr;
+   mRecordMeter = nullptr;
 }
 
 MeterToolBar::~MeterToolBar()
@@ -192,8 +192,8 @@ void MeterToolBar::OnSize( wxSizeEvent & event) //WXUNUSED(event) )
    width = sz.x; height = sz.y;
 
    int nMeters = 
-      ((mRecordMeter ==NULL) ? 0:1) +
-      ((mPlayMeter ==NULL) ? 0:1);
+      ((mRecordMeter ==nullptr) ? 0:1) +
+      ((mPlayMeter ==nullptr) ? 0:1);
 
    bool bHorizontal = ( width > height );
    bool bEndToEnd   = ( nMeters > 1 ) && wxMin( width, height ) < (60 * nMeters);

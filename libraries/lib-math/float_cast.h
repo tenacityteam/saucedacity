@@ -153,7 +153,7 @@
 	#define	__USE_ISOC9X   1
 	#define	__USE_ISOC99   1
 
-	#include	<math.h>
+	#include	<cmath>
 #else
 
    /* dmazzoni: modified these to do a proper rounding, even though

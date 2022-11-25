@@ -47,16 +47,16 @@ public:
    void OnFuncSecond(const CommandContext &);
 };
 
-void ModNullCallback::OnFuncFirst(const CommandContext &)
+static void ModNullCallback::OnFuncFirst(const CommandContext &)
 {
    int k=32;
 }
 
-void ModNullCallback::OnFuncSecond(const CommandContext &)
+static void ModNullCallback::OnFuncSecond(const CommandContext &)
 {
    int k=42;
 }
-ModNullCallback * pModNullCallback=NULL;
+ModNullCallback * pModNullCallback=nullptr;
 
 #define ModNullFN(X) static_cast<CommandFunctorPointer>((&ModNullCallback:: X))
 

@@ -261,7 +261,7 @@ namespace {
       bool seek;
       bool (Scrubber::*StatusTest)() const;
 
-      const TranslatableString &GetStatus() const { return status; }
+      [[nodiscard]] const TranslatableString &GetStatus() const { return status; }
    };
    using MenuItems = std::vector< MenuItem >;
    const MenuItems &menuItems()
@@ -893,7 +893,7 @@ bool Scrubber::Scrubs() const
    return (HasMark() || IsScrubbing()) && !ChoseSeeking();
 }
 
-bool Scrubber::ShouldDrawScrubSpeed()
+bool Scrubber::ShouldDrawScrubSpeed() const
 {
    return IsScrubbing() &&
       !mPaused && (
@@ -1021,7 +1021,7 @@ void Scrubber::OnSeek(const CommandContext&)
 
 #if 1
 namespace {
-   static const wxChar *scrubEnabledPrefName = wxT("/QuickPlay/ScrubbingEnabled");
+   const wxChar *scrubEnabledPrefName = wxT("/QuickPlay/ScrubbingEnabled");
 
    bool ReadScrubEnabledPref()
    {
@@ -1206,7 +1206,7 @@ void Scrubber::OnKeyboardScrubForwards(const CommandContext &context)
 
 namespace {
 
-static const auto finder =
+const auto finder =
    [](SaucedacityProject &project) -> CommandHandlerObject&
      { return Scrubber::Get( project ); };
 

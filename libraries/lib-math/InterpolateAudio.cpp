@@ -11,7 +11,7 @@
 #include "InterpolateAudio.h"
 
 #include <cmath>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include <wx/defs.h>
 

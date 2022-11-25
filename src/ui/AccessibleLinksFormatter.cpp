@@ -39,10 +39,10 @@ AccessibleLinksFormatter::AccessibleLinksFormatter(TranslatableString message)
 }
 
 AccessibleLinksFormatter& AccessibleLinksFormatter::FormatLink(
-   wxString placeholder, TranslatableString value, std::string targetURL)
+   const wxString& placeholder, TranslatableString value, std::string targetURL)
 {
    mFormatArguments.push_back({ 
-       std::move(placeholder), 
+       placeholder,
        std::move(value), 
        {}, 
        std::move(targetURL)
@@ -52,11 +52,11 @@ AccessibleLinksFormatter& AccessibleLinksFormatter::FormatLink(
 }
 
 AccessibleLinksFormatter& AccessibleLinksFormatter::FormatLink(
-   wxString placeholder, TranslatableString value,
+   const wxString& placeholder, TranslatableString value,
    LinkClickedHandler handler)
 {
    mFormatArguments.push_back({ 
-       std::move(placeholder), 
+       placeholder,
        std::move(value), 
        std::move(handler), 
        {} 
@@ -172,7 +172,7 @@ void AccessibleLinksFormatter::Populate(ShuttleGui& S) const
 }
 
 std::vector<AccessibleLinksFormatter::ProcessedArgument>
-AccessibleLinksFormatter::ProcessArguments(wxString translatedMessage) const
+AccessibleLinksFormatter::ProcessArguments(const wxString& translatedMessage) const
 {
    std::vector<ProcessedArgument> result;
    result.reserve(mFormatArguments.size());

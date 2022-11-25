@@ -60,10 +60,9 @@ CommandDirectory::CommandDirectory()
 }
 
 CommandDirectory::~CommandDirectory()
-{
-}
+= default;
 
-OldStyleCommandType *CommandDirectory::LookUp(const wxString &cmdName) const
+OldStyleCommandType *CommandDirectory::LookUp(const wxString &cmdName)
 {
    auto iter = sCmdMap().find(cmdName);
    if (iter == sCmdMap().end())
@@ -81,7 +80,7 @@ CommandMap &CommandDirectory::sCmdMap()
 
 void CommandDirectory::AddCommand(std::unique_ptr<OldStyleCommandType> type)
 {
-   wxASSERT(type != NULL);
+   wxASSERT(type != nullptr);
    // Internal string is shown but only in assertion message
    auto cmdName = type->GetSymbol().Internal();
    wxASSERT_MSG(sCmdMap().find(cmdName) == sCmdMap().end()

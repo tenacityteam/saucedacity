@@ -30,7 +30,7 @@ extern int nosc_enabled; /* enable polling for OSC messages */
 /* default stop time (for clipping) */
 #define MAX_STOP_TIME 10E20
 /* LISP-SRC: (SETF MAX-STOP-TIME 10E20) */
-#define MIN_START_TIME -10E20
+#define MIN_START_TIME (-10E20)
 /* LISP-SRC: (SETF MIN-START-TIME -10E20) */
 
 /* conversion from float to integer */
@@ -463,7 +463,7 @@ void table_unref(table_type table);
 sound_type sound_zero(time_type t0, rate_type sr);
     /* LISP: (SND-ZERO ANYNUM ANYNUM) */
 
-#define sound_get_next(s, n) ((*(s->get_next))(s, n))
+#define sound_get_next(s, n) ((*((s)->get_next))(s, n))
 
 #define susp_print_tree(s, n) (*((s)->print_tree))(s, n)
 
@@ -486,7 +486,7 @@ double step_to_hz(double);
 #define susp_check_samples_break(sound, sample_ptr, sample_cnt, x2_sample) \
     if (susp->sample_cnt == 0) { \
         susp_get_samples(sound, sample_ptr, sample_cnt); \
-        x2_sample = susp_current_sample(sound, sample_ptr); }
+        (x2_sample) = susp_current_sample(sound, sample_ptr); }
 
 
 /* susp_get_samples always gets next block (useful only in initialization code) */
@@ -550,15 +550,15 @@ double step_to_hz(double);
         susp_get_block_samples(sound, sample_block_ptr, \
                                sample_ptr, sample_cnt); \
         if (susp->sound->logical_stop_cnt != UNKNOWN && \
-            !(susp->logical_stop_bits & bit)) { \
-            susp->logical_stop_bits |= bit; \
+            !(susp->logical_stop_bits & (bit))) { \
+            susp->logical_stop_bits |= (bit); \
             susp->susp.log_stop_cnt = (int64_t) max(susp->susp.log_stop_cnt, \
                     (((susp->sound->logical_stop_cnt / \
                        susp->sound->sr + susp->sound->t0) - \
                       susp->susp.t0) * susp->susp.sr + 0.5)); } \
         if (susp->sample_ptr == zero_block->samples) { \
-            susp->terminate_bits |= bit; \
-            if (susp->terminate_bits == all) { \
+            susp->terminate_bits |= (bit); \
+            if (susp->terminate_bits == (all)) { \
                 susp->terminate_cnt = ROUNDBIG( \
                   (((susp->sound->current - susp->sample_cnt) / \
                     susp->sound->sr + susp->sound->t0) - \
@@ -575,8 +575,8 @@ double step_to_hz(double);
  * start times - maybe it should.
  */
 #define logical_stop_cnt_cvt(sound) \
-    (sound->logical_stop_cnt == UNKNOWN ? UNKNOWN : \
-     ROUNDBIG((sound->logical_stop_cnt / sound->sr) * susp->susp.sr))
+    ((sound)->logical_stop_cnt == UNKNOWN ? UNKNOWN : \
+     ROUNDBIG(((sound)->logical_stop_cnt / (sound)->sr) * susp->susp.sr))
 
 
 /* logical_stop_test tests to see if sound has logically stopped; if so,
@@ -611,11 +611,11 @@ double step_to_hz(double);
   sound, sample_ptr, sample_cnt, x2_sample) \
     if (susp->sample_cnt == 0) { \
       susp_get_samples(sound, sample_ptr, sample_cnt); \
-      x2_sample = susp_current_sample(sound, sample_ptr); \
+      (x2_sample) = susp_current_sample(sound, sample_ptr); \
       terminate_test(sample_ptr, sound, susp->sample_cnt); \
       if (susp->terminate_cnt < susp->susp.current + cnt + togo) { \
           break; }} \
-    else x2_sample = susp_current_sample(sound, sample_ptr); 
+    else (x2_sample) = susp_current_sample(sound, sample_ptr);
 
 /* susp_check_log_samples_break checks for new samples then checks for
  * logical stop conditions; breaks from inner loop
@@ -624,12 +624,12 @@ double step_to_hz(double);
   sound, sample_ptr, sample_cnt, x2_sample) \
     if (susp->sample_cnt == 0) { \
       susp_get_samples(sound, sample_ptr, sample_cnt); \
-      x2_sample = susp_current_sample(sound, sample_ptr); \
+      (x2_sample) = susp_current_sample(sound, sample_ptr); \
       logical_stop_test(sound, susp->sample_cnt); \
       if (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN && \
           (susp->susp.log_stop_cnt < susp->susp.current + cnt + togo)) { \
           break; }} \
-    else x2_sample = susp_current_sample(sound, sample_ptr);
+    else (x2_sample) = susp_current_sample(sound, sample_ptr);
 
 
 /* susp_check_term_log_samples_break checks for new samples then checks for
@@ -639,7 +639,7 @@ double step_to_hz(double);
   sound, sample_ptr, sample_cnt, x2_sample) \
     if (susp->sample_cnt == 0) { \
       susp_get_samples(sound, sample_ptr, sample_cnt); \
-      x2_sample = susp_current_sample(sound, sample_ptr); \
+      (x2_sample) = susp_current_sample(sound, sample_ptr); \
       terminate_test(sample_ptr, sound, susp->sample_cnt); \
       logical_stop_test(sound, susp->sample_cnt); \
       if ((susp->terminate_cnt != UNKNOWN && \
@@ -647,6 +647,6 @@ double step_to_hz(double);
           (!susp->logically_stopped && susp->susp.log_stop_cnt != UNKNOWN && \
            susp->susp.log_stop_cnt < susp->susp.current + cnt + togo)) { \
           break; }} \
-    else x2_sample = susp_current_sample(sound, sample_ptr);
+    else (x2_sample) = susp_current_sample(sound, sample_ptr);
         
 

@@ -75,7 +75,7 @@ flag-functions for interactivity, play-preview and whether the effect can run wi
 class COMPONENTS_API EffectDefinitionInterface  /* not final */ : public ComponentInterface
 {
 public:
-   virtual ~EffectDefinitionInterface();
+   ~EffectDefinitionInterface() override;
 
    // Type determines how it behaves.
    virtual EffectType GetType() = 0;
@@ -120,7 +120,7 @@ ConfigClientInterface to add Getters/setters for private and shared configs.
 class COMPONENTS_API EffectHostInterface  /* not final */ : public ConfigClientInterface
 {
 public:
-   virtual ~EffectHostInterface();
+   ~EffectHostInterface() override;
 
    virtual double GetDefaultDuration() = 0;
    virtual double GetDuration() = 0;
@@ -189,7 +189,7 @@ public:
          EffectHostInterface*, EffectUIClientInterface* )
    >;
 
-   virtual ~EffectClientInterface();
+   ~EffectClientInterface() override;
 
    virtual bool SetHost(EffectHostInterface *host) = 0;
 
@@ -202,13 +202,13 @@ public:
    virtual void SetSampleRate(double rate) = 0;
    // Suggest a block size, but the return is the size that was really set:
    virtual size_t SetBlockSize(size_t maxBlockSize) = 0;
-   virtual size_t GetBlockSize() const = 0;
+   [[nodiscard]] virtual size_t GetBlockSize() const = 0;
 
    virtual sampleCount GetLatency() = 0;
    virtual size_t GetTailSize() = 0;
 
    virtual bool IsReady() = 0;
-   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = NULL) = 0;
+   virtual bool ProcessInitialize(sampleCount totalLen, ChannelNames chanMap = nullptr) = 0;
    // This may be called during stack unwinding:
    virtual bool ProcessFinalize() /* noexcept */ = 0;
    virtual size_t ProcessBlock(float **inBlock, float **outBlock, size_t blockLen) = 0;

@@ -44,7 +44,7 @@ public:
       : CommandImplementation(project, type)
    { }
 
-   virtual ~BatchEvalCommand();
+   ~BatchEvalCommand() override;
    bool Apply(const CommandContext &context) override;
 };
 

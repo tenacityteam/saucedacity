@@ -39,7 +39,7 @@ class SAUCEDACITY_DLL_API EnvelopeHandle final : public UIHandle
 public:
    explicit EnvelopeHandle( Envelope *pEnvelope );
 
-   virtual ~EnvelopeHandle();
+   ~EnvelopeHandle() override;
 
    static UIHandlePtr HitAnywhere
       (std::weak_ptr<EnvelopeHandle> &holder, Envelope *envelope,
@@ -53,7 +53,7 @@ public:
        const wxMouseState &state, const wxRect &rect,
        const SaucedacityProject *pProject, const std::shared_ptr<WaveTrack> &wt);
 
-   Envelope *GetEnvelope() const { return mEnvelope; }
+   [[nodiscard]] Envelope *GetEnvelope() const { return mEnvelope; }
 
    void Enter(bool forward, SaucedacityProject *) override;
 

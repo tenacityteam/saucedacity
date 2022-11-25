@@ -103,11 +103,11 @@ public:
       });
     };
 
-   ~ReadOnlyText()
+   ~ReadOnlyText() override
    {
    };
 
-   wxSize DoGetBestClientSize() const override
+   [[nodiscard]] wxSize DoGetBestClientSize() const override
    {
        wxClientDC dc(wxConstCast(this, ReadOnlyText));
 

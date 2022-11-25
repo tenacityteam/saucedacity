@@ -35,8 +35,7 @@ const ComponentInterfaceSymbol SetLabelCommand::Symbol
 namespace{ BuiltinCommandsModule::Registration< SetLabelCommand > reg; }
 
 SetLabelCommand::SetLabelCommand()
-{
-}
+= default;
 
 
 bool SetLabelCommand::DefineParams( ShuttleParams & S ){ 

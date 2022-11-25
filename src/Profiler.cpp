@@ -30,7 +30,7 @@ but it will probably work fine if you use it on a high level.
 ///write to a profile at the end of the test.
 Profiler::~Profiler()
 {
-   if(mTasks.size())
+   if(!mTasks.empty())
    {
       //print everything out.  append to a log.
       FILE* log = fopen("AudacityProfilerLog.txt", "a");
@@ -89,10 +89,10 @@ Profiler* Profiler::Instance()
 ///find a taskProfile for the given task, otherwise create
 TaskProfile* Profiler::GetOrCreateTaskProfile(const char* fileName, int lineNum)
 {
-   for(int i=0;i<(int)mTasks.size();i++)
+   for(auto & mTask : mTasks)
    {
-      if(strcmp(fileName, mTasks[i]->mFileName.get())==0 && lineNum == mTasks[i]->mLine)
-         return mTasks[i].get();
+      if(strcmp(fileName, mTask->mFileName.get())==0 && lineNum == mTask->mLine)
+         return mTask.get();
    }
 
    auto tp = std::make_unique<TaskProfile>();
@@ -102,13 +102,13 @@ TaskProfile* Profiler::GetOrCreateTaskProfile(const char* fileName, int lineNum)
 
 TaskProfile* Profiler::GetTaskProfileByDescription(const char* description)
 {
-   for(int i=0;i<(int)mTasks.size();i++)
+   for(auto & mTask : mTasks)
    {
-      if(strcmp(description, mTasks[i]->mDescription.get())==0)
-         return mTasks[i].get();
+      if(strcmp(description, mTask->mDescription.get())==0)
+         return mTask.get();
    }
 
-   return NULL;
+   return nullptr;
 
 }
 
@@ -147,7 +147,7 @@ void TaskProfile::End(const char* WXUNUSED(fileName), int WXUNUSED(lineNum), con
    mNumHits++;
 }
 
-double TaskProfile::ComputeAverageRunTime()
+double TaskProfile::ComputeAverageRunTime() const
 {
    if(mNumHits)
       return (double) ((double)mCumTime/CLOCKS_PER_SEC)/mNumHits;

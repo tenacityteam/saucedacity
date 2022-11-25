@@ -167,7 +167,7 @@ class NoteTrackVRulerMenuTable
    NoteTrackVRulerMenuTable()
       : PopupMenuTable{ "NoteTrackVRuler" }
    {};
-   virtual ~NoteTrackVRulerMenuTable() {}
+   ~NoteTrackVRulerMenuTable() override {}
    DECLARE_POPUP_MENU(NoteTrackVRulerMenuTable);
 
 public:
@@ -315,7 +315,7 @@ UIHandle::Result NoteTrackVZoomHandle::Release
          *pProject, pTrack.get(), mRect, RefreshNone, event.m_y
       };
 
-      PopupMenuTable *const pTable =
+      auto *const pTable =
           (PopupMenuTable *) &NoteTrackVRulerMenuTable::Instance();
       auto pMenu = PopupMenuTable::BuildMenu(pParent, pTable, &data);
 

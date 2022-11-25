@@ -97,8 +97,7 @@ EffectDtmf::EffectDtmf()
 }
 
 EffectDtmf::~EffectDtmf()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -270,9 +269,9 @@ bool EffectDtmf::SetAutomationParameters(CommandParameters & parms)
    ReadAndVerifyString(Sequence);
 
    wxString symbols;
-   for (unsigned int i = 0; i < WXSIZEOF(kSymbols); i++)
+   for (auto & kSymbol : kSymbols)
    {
-      symbols += kSymbols[i];
+      symbols += kSymbol;
    }
 
    if (Sequence.find_first_not_of(symbols) != wxString::npos)
@@ -600,7 +599,7 @@ bool EffectDtmf::MakeDtmfTone(float *buffer, size_t len, float fs, wxChar tone, 
    return true;
 }
 
-void EffectDtmf::UpdateUI(void)
+void EffectDtmf::UpdateUI()
 {
    mDtmfDutyT->SetLabel(wxString::Format(wxT("%.1f %%"), dtmfDutyCycle));
    mDtmfDutyT->SetName(mDtmfDutyT->GetLabel()); // fix for bug 577 (NVDA/Narrator screen readers do not read static text in dialogs)

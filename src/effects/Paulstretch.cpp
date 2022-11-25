@@ -52,10 +52,10 @@ public:
    //in_bufsize is also a half of a FFT buffer (in samples)
    virtual ~PaulStretch();
 
-   void process(float *smps, size_t nsmps);
+   void process(const float *smps, size_t nsmps);
 
    size_t get_nsamples();//how many samples are required to be added in the pool next time
-   size_t get_nsamples_for_fill();//how many samples are required to be added for a complete buffer refill (at start of the song or after seek)
+   [[nodiscard]] size_t get_nsamples_for_fill() const;//how many samples are required to be added for a complete buffer refill (at start of the song or after seek)
 
 private:
    void process_spectrum(float *WXUNUSED(freq)) {};
@@ -104,8 +104,7 @@ EffectPaulstretch::EffectPaulstretch()
 }
 
 EffectPaulstretch::~EffectPaulstretch()
-{
-}
+= default;
 
 // ComponentInterface implementation
 
@@ -244,7 +243,7 @@ void EffectPaulstretch::OnText(wxCommandEvent & WXUNUSED(evt))
    EnableApply(mUIParent->TransferDataFromWindow());
 }
 
-size_t EffectPaulstretch::GetBufferSize(double rate)
+size_t EffectPaulstretch::GetBufferSize(double rate) const
 {
    // Audacity's fft requires a power of 2
    float tmp = rate * mTime_resolution / 2.0;
@@ -440,13 +439,12 @@ PaulStretch::PaulStretch(float rap_, size_t in_bufsize_, float samplerate_ )
 }
 
 PaulStretch::~PaulStretch()
-{
-}
+= default;
 
-void PaulStretch::process(float *smps, size_t nsmps)
+void PaulStretch::process(const float *smps, size_t nsmps)
 {
    //add NEW samples to the pool
-   if ((smps != NULL) && (nsmps != 0)) {
+   if ((smps != nullptr) && (nsmps != 0)) {
       if (nsmps > poolsize) {
          nsmps = poolsize;
       }
@@ -539,7 +537,7 @@ size_t PaulStretch::get_nsamples()
    return ri;
 }
 
-size_t PaulStretch::get_nsamples_for_fill()
+size_t PaulStretch::get_nsamples_for_fill() const
 {
    return poolsize;
 }

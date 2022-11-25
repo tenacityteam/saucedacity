@@ -8,7 +8,7 @@
 
 **********************************************************************/
 #ifndef __AUDACITY_PLUGIN_REGISTRATION_DIALOG__
-#define __AUDACITY_PLUGIN_REGISTRATION_DIALOG__
+#define AUDACITY_PLUGIN_REGISTRATION_DIALOG_
 
 #include "widgets/wxPanelWrapper.h" // to inherit
 #include <vector>

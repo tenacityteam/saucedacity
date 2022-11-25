@@ -35,12 +35,12 @@ class ExtImportPrefsDropTarget final : public wxDropTarget
 public:
    // Takes ownership of the argument
    ExtImportPrefsDropTarget(wxDataObject* dataObject = nullptr);
-   ~ExtImportPrefsDropTarget ();
-   wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def);
-   bool OnDrop(wxCoord x, wxCoord y);
-   wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def);
-   wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def);
-   void OnLeave();
+   ~ExtImportPrefsDropTarget () override;
+   wxDragResult OnData(wxCoord x, wxCoord y, wxDragResult def) override;
+   bool OnDrop(wxCoord x, wxCoord y) override;
+   wxDragResult OnEnter(wxCoord x, wxCoord y, wxDragResult def) override;
+   wxDragResult OnDragOver(wxCoord x, wxCoord y, wxDragResult def) override;
+   void OnLeave() override;
    void SetPrefs (ExtImportPrefs *prefs);
 private:
    ExtImportPrefs *mPrefs;
@@ -50,7 +50,7 @@ class ExtImportPrefs final : public PrefsPanel
 {
  public:
    ExtImportPrefs(wxWindow * parent, wxWindowID winid);
-   ~ExtImportPrefs();
+   ~ExtImportPrefs() override;
    ComponentInterfaceSymbol GetSymbol() override;
    TranslatableString GetDescription() override;
 

@@ -36,13 +36,13 @@ public:
    ScrubbingOverlay(SaucedacityProject *project);
 
 private:
-   unsigned SequenceNumber() const override;
+   [[nodiscard]] unsigned SequenceNumber() const override;
    std::pair<wxRect, bool> DoGetRectangle(wxSize size) override;
    void Draw(OverlayPanel &panel, wxDC &dc) override;
 
    void OnTimer(wxCommandEvent &event);
 
-   const Scrubber &GetScrubber() const;
+   [[nodiscard]] const Scrubber &GetScrubber() const;
    Scrubber &GetScrubber();
 
    SaucedacityProject *mProject;
@@ -229,7 +229,7 @@ struct ScrubForwarder
       mScrubber = Scrubber::Get( project ).shared_from_this();
    }
 
-   ~ScrubForwarder()
+   ~ScrubForwarder() override
    {
       if ( mWindow )
          mWindow->PopEventHandler();

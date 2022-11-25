@@ -90,6 +90,10 @@ CommandManager.  It holds the callback for one command.
 #include <wx/menu.h>
 #include <wx/tokenzr.h>
 
+#include <utility>
+
+#include <utility>
+
 #include "../Journal.h"
 #include "../JournalOutput.h"
 #include "../JournalRegistry.h"
@@ -126,7 +130,7 @@ struct MenuBarListEntry
 
 struct SubMenuListEntry
 {
-   SubMenuListEntry( const TranslatableString &name_ );
+   explicit SubMenuListEntry( TranslatableString name_ );
    SubMenuListEntry( SubMenuListEntry&& ) = default;
    ~SubMenuListEntry();
 
@@ -169,12 +173,10 @@ struct CommandListEntry
 };
 
 NonKeystrokeInterceptingWindow::~NonKeystrokeInterceptingWindow()
-{
-}
+= default;
 
 TopLevelKeystrokeHandlingWindow::~TopLevelKeystrokeHandlingWindow()
-{
-}
+= default;
 
 MenuBarListEntry::MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_)
    : name(name_), menubar(menubar_)
@@ -182,17 +184,15 @@ MenuBarListEntry::MenuBarListEntry(const wxString &name_, wxMenuBar *menubar_)
 }
 
 MenuBarListEntry::~MenuBarListEntry()
-{
-}
+= default;
 
-SubMenuListEntry::SubMenuListEntry( const TranslatableString &name_ )
-   : name(name_), menu( std::make_unique< wxMenu >() )
+SubMenuListEntry::SubMenuListEntry( TranslatableString name_ )
+   : name(std::move(name_)), menu( std::make_unique< wxMenu >() )
 {
 }
 
 SubMenuListEntry::~SubMenuListEntry()
-{
-}
+= default;
 
 ///
 static const SaucedacityProject::AttachedObjects::RegisteredFactory key{
@@ -385,7 +385,7 @@ wxMenuBar * CommandManager::GetMenuBar(const wxString & sMenu) const
          return entry.menubar;
    }
 
-   return NULL;
+   return nullptr;
 }
 
 
@@ -395,7 +395,7 @@ wxMenuBar * CommandManager::GetMenuBar(const wxString & sMenu) const
 wxMenuBar * CommandManager::CurrentMenuBar() const
 {
    if(mMenuBarList.empty())
-      return NULL;
+      return nullptr;
 
    return mMenuBarList.back().menubar;
 }
@@ -505,7 +505,7 @@ void CommandManager::EndSubMenu()
 wxMenu * CommandManager::CurrentSubMenu() const
 {
    if(mSubMenuList.empty())
-      return NULL;
+      return nullptr;
 
    return mSubMenuList.back().menu.get();
 }
@@ -517,7 +517,7 @@ wxMenu * CommandManager::CurrentSubMenu() const
 wxMenu * CommandManager::CurrentMenu() const
 {
    if(!mCurrentMenu)
-      return NULL;
+      return nullptr;
 
    wxMenu * tmpCurrentSubMenu = CurrentSubMenu();
 
@@ -583,7 +583,7 @@ void CommandManager::AddItem(SaucedacityProject &project,
 }
 
 auto CommandManager::Options::MakeCheckFn(
-   const wxString key, bool defaultValue ) -> CheckFn
+   const wxString& key, bool defaultValue ) -> CheckFn
 {
    return [=](SaucedacityProject&){ return gPrefs->ReadBool( key, defaultValue ); };
 }
@@ -603,7 +603,7 @@ auto CommandManager::Options::MakeCheckFn(
 void CommandManager::AddItemList(const CommandID & name,
                                  const ComponentInterfaceSymbol items[],
                                  size_t nItems,
-                                 CommandHandlerFinder finder,
+                                 const CommandHandlerFinder& finder,
                                  CommandFunctorPointer callback,
                                  CommandFlag flags,
                                  bool bIsEffect)
@@ -633,7 +633,7 @@ void CommandManager::AddGlobalCommand(const CommandID &name,
                                       const Options &options)
 {
    CommandListEntry *entry =
-      NewIdentifier(name, label_in, NULL, finder, callback,
+      NewIdentifier(name, label_in, nullptr, std::move(finder), callback,
                     {}, 0, 0, options);
 
    entry->enabled = false;
@@ -680,7 +680,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
 
    const wxString & accel = options.accel;
    bool bIsEffect = options.bIsEffect;
-   CommandID parameter = options.parameter == "" ? nameIn : options.parameter;
+   CommandID parameter = options.parameter.empty() ? nameIn : options.parameter;
 
    // if empty, new identifier's long label will be same as label, below:
    const auto &longLabel = options.longName;
@@ -745,7 +745,7 @@ CommandListEntry *CommandManager::NewIdentifier(const CommandID & nameIn,
       entry->labelPrefix = labelPrefix;
       entry->labelTop = mCurrentMenuName.Stripped();
       entry->menu = menu;
-      entry->finder = finder;
+      entry->finder = std::move(finder);
       entry->callback = callback;
       entry->isEffect = bIsEffect;
       entry->multi = multi;
@@ -840,10 +840,10 @@ wxString CommandManager::FormatLabelForMenu(const CommandListEntry *entry) const
 
 wxString CommandManager::FormatLabelForMenu(
    const TranslatableString &translatableLabel,
-   const NormalizedKeyString &keyStr) const
+   const NormalizedKeyString &keyStr)
 {
    auto label = translatableLabel.Translation();
-   auto key = keyStr.GET();
+   const auto& key = keyStr.GET();
    if (!key.empty())
    {
       // using GET to compose menu item name for wxWidgets
@@ -858,7 +858,7 @@ wxString CommandManager::FormatLabelForMenu(
 // catch them in normal wxWidgets processing, rather than passing the key presses on
 // to the controls that had the focus.  We would like all the menu accelerators to be
 // disabled, in fact.
-wxString CommandManager::FormatLabelWithDisabledAccel(const CommandListEntry *entry) const
+wxString CommandManager::FormatLabelWithDisabledAccel(const CommandListEntry *entry)
 {
    auto label = entry->label.Translation();
 #if 1
@@ -1107,7 +1107,7 @@ bool CommandManager::FilterKeyEvent(SaucedacityProject *project, const wxKeyEven
    
    auto pWindow = FindProjectFrame( project );
    CommandListEntry *entry = mCommandKeyHash[KeyEventToKeyString(evt)];
-   if (entry == NULL)
+   if (entry == nullptr)
    {
       return false;
    }
@@ -1132,7 +1132,7 @@ bool CommandManager::FilterKeyEvent(SaucedacityProject *project, const wxKeyEven
    // Bug 1557.  MixerBoard should count as 'destined for project'
    // MixerBoard IS a TopLevelWindow, and its parent is the project.
    if( pParent && pParent->GetParent() == pWindow ){
-      if( dynamic_cast< TopLevelKeystrokeHandlingWindow* >( pParent ) != NULL )
+      if( dynamic_cast< TopLevelKeystrokeHandlingWindow* >( pParent ) != nullptr )
          validTarget = true;
    }
    validTarget = validTarget && wxEventLoop::GetActive()->IsMain();
@@ -1291,8 +1291,7 @@ void CommandManager::RegisterLastAnalyzer(const CommandContext& context) {
       auto lastEffectDesc = XO("Repeat %s").Format(mNiceName);
       Modify(wxT("RepeatLastAnalyzer"), lastEffectDesc);
    }
-   return;
-}
+   }
 
 // Called by Selected Tools to mark them as Last Tools.
 // Note that Repeat data has previously been collected
@@ -1304,8 +1303,7 @@ void CommandManager::RegisterLastTool(const CommandContext& context) {
       auto lastEffectDesc = XO("Repeat %s").Format(mNiceName);
       Modify(wxT("RepeatLastTool"), lastEffectDesc);
    }
-   return;
-}
+   }
 
 // Used to invoke Repeat Last Analyzer Process for built-in, non-nyquist plug-ins.
 void CommandManager::DoRepeatProcess(const CommandContext& context, int id) {

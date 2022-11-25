@@ -38,10 +38,10 @@ class SlidingRmsPreprocessor : public SamplePreprocessor
    public:
       SlidingRmsPreprocessor(size_t windowSize, float gain = 2.0);
 
-      virtual float ProcessSample(float value);
-      virtual float ProcessSample(float valueL, float valueR);
-      virtual void Reset(float value = 0);
-      virtual void SetWindowSize(size_t windowSize);
+      float ProcessSample(float value) override;
+      float ProcessSample(float valueL, float valueR) override;
+      void Reset(float value = 0) override;
+      void SetWindowSize(size_t windowSize) override;
 
       static const size_t REFRESH_WINDOW_EVERY = 1048576; // 1 MB
 
@@ -61,10 +61,10 @@ class SlidingMaxPreprocessor : public SamplePreprocessor
    public:
       SlidingMaxPreprocessor(size_t windowSize);
 
-      virtual float ProcessSample(float value);
-      virtual float ProcessSample(float valueL, float valueR);
-      virtual void Reset(float value = 0);
-      virtual void SetWindowSize(size_t windowSize);
+      float ProcessSample(float value) override;
+      float ProcessSample(float valueL, float valueR) override;
+      void Reset(float value = 0) override;
+      void SetWindowSize(size_t windowSize) override;
 
    private:
       std::vector<float> mWindow;
@@ -80,12 +80,12 @@ class EnvelopeDetector
       EnvelopeDetector(size_t buffer_size);
 
       float ProcessSample(float value);
-      size_t GetBlockSize() const;
-      const float* GetBuffer(int idx) const;
+      [[nodiscard]] size_t GetBlockSize() const;
+      [[nodiscard]] const float* GetBuffer(int idx) const;
 
       virtual void CalcInitialCondition(float value);
-      inline float InitialCondition() const { return mInitialCondition; }
-      inline size_t InitialConditionSize() const { return mInitialBlockSize; }
+      [[nodiscard]] inline float InitialCondition() const { return mInitialCondition; }
+      [[nodiscard]] inline size_t InitialConditionSize() const { return mInitialBlockSize; }
 
       virtual void Reset(float value = 0) = 0;
       virtual void SetParams(float sampleRate, float attackTime,
@@ -111,15 +111,15 @@ class ExpFitEnvelopeDetector : public EnvelopeDetector
       ExpFitEnvelopeDetector(float rate, float attackTime, float releaseTime,
          size_t buffer_size);
 
-      virtual void Reset(float value);
-      virtual void SetParams(float sampleRate, float attackTime,
-         float releaseTime);
+      void Reset(float value) override;
+      void SetParams(float sampleRate, float attackTime,
+         float releaseTime) override;
 
    private:
       double mAttackFactor;
       double mReleaseFactor;
 
-      virtual void Follow();
+      void Follow() override;
 };
 
 class Pt1EnvelopeDetector : public EnvelopeDetector
@@ -127,13 +127,13 @@ class Pt1EnvelopeDetector : public EnvelopeDetector
    public:
       Pt1EnvelopeDetector(float rate, float attackTime, float releaseTime,
          size_t buffer_size, bool correctGain = true);
-      virtual void CalcInitialCondition(float value);
+      void CalcInitialCondition(float value) override;
 
-      virtual void Reset(float value);
-      virtual void SetParams(float sampleRate, float attackTime,
-         float releaseTime);
-      virtual float AttackFactor();
-      virtual float DecayFactor();
+      void Reset(float value) override;
+      void SetParams(float sampleRate, float attackTime,
+         float releaseTime) override;
+      float AttackFactor() override;
+      float DecayFactor() override;
 
    private:
       bool mCorrectGain;
@@ -141,7 +141,7 @@ class Pt1EnvelopeDetector : public EnvelopeDetector
       double mAttackFactor;
       double mReleaseFactor;
 
-      virtual void Follow();
+      void Follow() override;
 };
 
 struct PipelineBuffer
@@ -158,7 +158,7 @@ struct PipelineBuffer
       void swap(PipelineBuffer& other);
       void init(size_t size, bool stereo);
       void fill(float value, bool stereo);
-      inline size_t capacity() const { return mCapacity; }
+      [[nodiscard]] inline size_t capacity() const { return mCapacity; }
       void free();
 
    private:
@@ -172,7 +172,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectCompressor2();
-   virtual ~EffectCompressor2();
+   ~EffectCompressor2() override;
 
    // ComponentInterface implementation
 
@@ -211,22 +211,22 @@ public:
 
 private:
    // EffectCompressor2 implementation
-   double CompressorGain(double env);
+   [[nodiscard]] double CompressorGain(double env) const;
    std::unique_ptr<SamplePreprocessor> InitPreprocessor(
       double rate, bool preview = false);
-   std::unique_ptr<EnvelopeDetector> InitEnvelope(
-      double rate, size_t blockSize = 0, bool preview = false);
+   [[nodiscard]] std::unique_ptr<EnvelopeDetector> InitEnvelope(
+      double rate, size_t blockSize = 0, bool preview = false) const;
    size_t CalcBufferSize(double sampleRate);
 
-   inline size_t CalcLookaheadLength(double rate);
-   inline size_t CalcWindowLength(double rate);
+   [[nodiscard]] inline size_t CalcLookaheadLength(double rate) const;
+   [[nodiscard]] inline size_t CalcWindowLength(double rate) const;
 
    void AllocPipeline();
    void AllocRealtimePipeline();
    void FreePipeline();
    void SwapPipeline();
-   bool ProcessOne(TrackIterRange<WaveTrack> range);
-   bool LoadPipeline(TrackIterRange<WaveTrack> range, size_t len);
+   bool ProcessOne(const TrackIterRange<WaveTrack>& range);
+   bool LoadPipeline(const TrackIterRange<WaveTrack>& range, size_t len);
    void FillPipeline();
    void ProcessPipeline();
    inline float PreprocSample(PipelineBuffer& pbuf, size_t rp);
@@ -234,7 +234,7 @@ private:
    inline void CompressSample(float env, size_t wp);
    bool PipelineHasData();
    void DrainPipeline();
-   void StorePipeline(TrackIterRange<WaveTrack> range);
+   void StorePipeline(const TrackIterRange<WaveTrack>& range);
 
    bool UpdateProgress();
    void OnUpdateUI(wxCommandEvent & evt);

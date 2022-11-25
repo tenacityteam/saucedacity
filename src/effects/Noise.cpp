@@ -78,8 +78,7 @@ EffectNoise::EffectNoise()
 }
 
 EffectNoise::~EffectNoise()
-{
-}
+= default;
 
 // ComponentInterface implementation
 

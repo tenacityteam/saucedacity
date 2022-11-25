@@ -67,9 +67,9 @@ auto AudacityCommand::SetVetoDialogHook( VetoDialogHook hook )
 
 AudacityCommand::AudacityCommand()
 {
-   mProgress = NULL;
-   mUIParent = NULL;
-   mUIDialog = NULL;
+   mProgress = nullptr;
+   mUIParent = nullptr;
+   mUIDialog = nullptr;
    mUIDebug = false;
    mIsBatch = false;
    mNeedsInit = true;
@@ -134,7 +134,7 @@ wxDialog *AudacityCommand::CreateUI(wxWindow *parent, AudacityCommand * WXUNUSED
       // release() is safe because parent will own it
       return dlg.release();
    }
-   return NULL;
+   return nullptr;
 }
 
 bool AudacityCommand::GetAutomationParameters(wxString & parms)

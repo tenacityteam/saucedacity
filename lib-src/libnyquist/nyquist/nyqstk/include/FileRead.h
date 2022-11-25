@@ -51,7 +51,7 @@ public:
   FileRead( std::string fileName, bool typeRaw = false );
 
   //! Class destructor.
-  ~FileRead();
+  ~FileRead() override;
 
   //! Open the specified file and determine its formatting.
   /*!
@@ -60,19 +60,19 @@ public:
     provided to specify whether the input file is of type STK RAW
     (default = false).
   */
-  void open( std::string fileName, bool typeRaw = false );
+  void open( const std::string& fileName, bool typeRaw = false );
 
   //! If a file is open, close it.
-  void close( void );
+  void close( );
 
   //! Returns \e true if a file is currently open.
-  bool isOpen( void );
+  bool isOpen( );
 
   //! Return the file size in sample frames.
-  unsigned long fileSize( void ) const { return fileSize_; };
+  unsigned long fileSize( ) const { return fileSize_; };
 
   //! Return the number of audio channels in the file.
-  unsigned int channels( void ) const { return channels_; };
+  unsigned int channels( ) const { return channels_; };
 
   //! Return the file sample rate in Hz.
   /*!
@@ -80,7 +80,7 @@ public:
     their headers.  By definition, STK RAW files have a sample rate of
     22050 Hz.  MAT-files are assumed to have a rate of 44100 Hz.
   */
-  StkFloat fileRate( void ) const { return fileRate_; };
+  StkFloat fileRate( ) const { return fileRate_; };
 
   //! Read sample frames from the file into an StkFrames object.
   /*!

@@ -40,7 +40,7 @@ public:
    // Future: may generalize away from current Track class
    using Cell = TrackPanelCell;
 
-   virtual ~UIHandle() = 0;
+   ~UIHandle() override = 0;
 
    // Before clicking, the handle is notified that it has been "hit"
    // This might put the handle into its first rotated state
@@ -50,7 +50,7 @@ public:
 
    // Tell whether the handle has more than one TAB key rotation state.
    // Default is always false.
-   virtual bool HasRotation() const;
+   [[nodiscard]] virtual bool HasRotation() const;
 
    // If not previously in the last rotation state (or first if !forward),
    // change rotation state and return true; else return false
@@ -60,7 +60,7 @@ public:
    // Tell whether the handle has its own escape action.  In case it is already
    // clicked, it will not cancel on Escape key if true.
    // Default is always false.
-   virtual bool HasEscape() const;
+   [[nodiscard]] virtual bool HasEscape() const;
 
    // The handle may change state and mark itself for highlight change.
    // Default does nothing and returns false
@@ -119,7 +119,7 @@ public:
    virtual void OnProjectChange(SaucedacityProject *pProject);
 
 public:
-   Result GetChangeHighlight() const { return mChangeHighlight; }
+   [[nodiscard]] Result GetChangeHighlight() const { return mChangeHighlight; }
    void SetChangeHighlight(Result val) { mChangeHighlight = val; }
 
    // If AssignUIHandlePtr is used, then this function is also called before any

@@ -87,7 +87,7 @@ wxTextEntry *NumValidatorBase::GetTextEntry() const
 
    wxFAIL_MSG(wxT("Can only be used with wxTextCtrl or wxComboBox"));
 
-   return NULL;
+   return nullptr;
 }
 
 bool NumValidatorBase::Validate(wxWindow *parent)
@@ -150,7 +150,7 @@ NumValidatorBase::GetCurrentValueAndInsertionPoint(wxString& val,
    }
 }
 
-bool NumValidatorBase::IsMinusOk(const wxString& val, int pos) const
+bool NumValidatorBase::IsMinusOk(const wxString& val, int pos)
 {
    // Minus is only ever accepted in the beginning of the string.
    if ( pos != 0 )
@@ -242,9 +242,9 @@ void NumValidatorBase::OnPaste(wxClipboardTextEvent& event)
    int pos;
    GetCurrentValueAndInsertionPoint(val, pos);
 
-   for (size_t i = 0, cnt = toPaste.length(); i < cnt; i++)
+   for (auto && i : toPaste)
    {
-      const wxChar ch = toPaste[i];
+      const wxChar ch = i;
 
       // Check if this character is allowed in the current state.
       if ( IsCharOk(val, pos, ch) )

@@ -55,10 +55,10 @@ protected:
    // The default just calls the one-buffer-at-a-time method
    virtual bool TwoBufferProcessPass1
       (float *buffer1, size_t len1, float * WXUNUSED(buffer2), size_t WXUNUSED(len2))
-   { if(buffer1 != NULL) return ProcessPass1(buffer1, len1); else return true; }
+   { if(buffer1 != nullptr) return ProcessPass1(buffer1, len1); else return true; }
    virtual bool TwoBufferProcessPass2
       (float *buffer1, size_t len1, float * WXUNUSED(buffer2), size_t WXUNUSED(len2))
-   { if(buffer1 != NULL) return ProcessPass2(buffer1, len1); else return true; }
+   { if(buffer1 != nullptr) return ProcessPass2(buffer1, len1); else return true; }
 
    // End of NEW virtuals
 

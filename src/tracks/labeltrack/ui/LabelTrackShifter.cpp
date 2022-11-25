@@ -31,12 +31,12 @@ public:
       mpTrack->Unbind(
          EVT_LABELTRACK_DELETION, &LabelTrackShifter::OnLabelDeleted, this );
    }
-   Track &GetTrack() const override { return *mpTrack; }
+   [[nodiscard]] Track &GetTrack() const override { return *mpTrack; }
    
    static inline size_t& GetIndex(TrackInterval &interval)
    {
       auto pExtra =
-         static_cast<LabelTrack::IntervalData*>( interval.Extra() );
+         dynamic_cast<LabelTrack::IntervalData*>( interval.Extra() );
       return pExtra->index;
    }
 
@@ -205,7 +205,7 @@ private:
       }
 
       auto update = [=]( TrackInterval &interval ){
-         auto pExtra = static_cast<LabelTrack::IntervalData*>(interval.Extra());
+         auto pExtra = dynamic_cast<LabelTrack::IntervalData*>(interval.Extra());
          auto &index = pExtra->index;
          if ( index >= present )
             ++ index;
@@ -230,7 +230,7 @@ private:
       }
 
       auto update = [=]( TrackInterval &interval ){
-         auto pExtra = static_cast<LabelTrack::IntervalData*>(interval.Extra());
+         auto pExtra = dynamic_cast<LabelTrack::IntervalData*>(interval.Extra());
          auto &index = pExtra->index;
          if ( index > former )
             -- index;
